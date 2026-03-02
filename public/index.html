@@ -134,6 +134,32 @@
             color: #e74c3c;
         }
         
+        .military-section {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .military-item {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+        
+        .military-item .time {
+            color: #888;
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+        
+        .military-item .alert {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
         .sidebar {
             position: fixed;
             top: 60px;
@@ -381,6 +407,24 @@
             <div class="value" id="gold-price">--</div>
             <div class="change" id="gold-change">--</div>
         </div>
+        
+        <div class="military-section">
+            <h2>Live Intelligence</h2>
+            <div id="military-alerts">
+                <div class="military-item">
+                    <div class="time">2 min ago</div>
+                    <div class="alert">High activity: Strait of Hormuz</div>
+                </div>
+                <div class="military-item">
+                    <div class="time">15 min ago</div>
+                    <div class="alert">Air defense: Saudi East</div>
+                </div>
+                <div class="military-item">
+                    <div class="time">32 min ago</div>
+                    <div class="alert">Naval movement: Gulf of Oman</div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <div id="map"></div>
@@ -476,6 +520,18 @@
             }
         }
         
+        // Clear all markers
+        function clearMarkers() {
+            Object.values(markers).forEach(marker => {
+                if (map.hasLayer(marker)) {
+                    map.removeLayer(marker);
+                }
+            });
+            for (let key in markers) {
+                delete markers[key];
+            }
+        }
+        
         // Filter incidents
         function filterIncidents(country) {
             currentFilter = country;
@@ -490,9 +546,8 @@
                 }
             });
             
-            // Update map markers
-            Object.values(markers).forEach(marker => map.removeLayer(marker));
-            markers = {};
+            // Clear and re-add markers
+            clearMarkers();
             
             allIncidents.forEach(incident => {
                 if (country !== 'all' && incident.location.country !== country) return;
@@ -556,7 +611,7 @@
                 listEl.innerHTML = '';
                 
                 // Clear existing markers
-                Object.values(markers).forEach(marker => map.removeLayer(marker));
+                clearMarkers();
                 
                 data.incidents.forEach(incident => {
                     // Add marker

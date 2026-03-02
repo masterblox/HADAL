@@ -224,9 +224,9 @@
     <div class="header">
         <h1>Gulf Watch</h1>
         <div class="header-stats">
-            <div>Incidents: <span id="incident-count">-</span></div>
+            <div>Incidents: <span id="incident-count">Loading...</span></div>
             <div>Sources: <span>18</span></div>
-            <div>Updated: <span id="last-updated">-</span></div>
+            <div>Updated: <span id="last-updated">Loading...</span></div>
         </div>
     </div>
     
@@ -287,7 +287,10 @@
         // Load incidents
         async function loadIncidents() {
             try {
-                const response = await fetch('./incidents.json');
+                const response = await fetch('incidents.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 const data = await response.json();
                 
                 document.getElementById('incident-count').textContent = data.total_incidents;
@@ -362,9 +365,11 @@
                 
             } catch (error) {
                 console.error('Error loading incidents:', error);
+                document.getElementById('incident-count').textContent = 'Error';
+                document.getElementById('last-updated').textContent = 'Error';
                 document.getElementById('incident-list').innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #888;">
-                        Failed to load incidents.<br>Please try again later.
+                        Failed to load incidents.<br>Error: ${error.message}
                     </div>
                 `;
             }

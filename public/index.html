@@ -60,11 +60,16 @@
             font-weight: 500;
         }
         
+        .next-update {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
         #map {
             position: fixed;
             top: 60px;
             left: 0;
-            right: 0;
+            right: 400px;
             bottom: 0;
             z-index: 1;
         }
@@ -93,6 +98,37 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        .country-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        
+        .filter-btn.active {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            color: #fff;
+        }
+        
         .incident-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -111,6 +147,10 @@
         .incident-card.active {
             border-color: #e74c3c;
             background: rgba(231, 76, 60, 0.1);
+        }
+        
+        .incident-card.hidden {
+            display: none;
         }
         
         .incident-header {
@@ -154,6 +194,12 @@
             line-height: 1.5;
             color: #fff;
             margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .incident-title:hover {
+            color: #e74c3c;
         }
         
         .incident-meta {
@@ -205,6 +251,11 @@
         }
         
         @media (max-width: 768px) {
+            #map {
+                right: 0;
+                bottom: 50%;
+            }
+            
             .sidebar {
                 width: 100%;
                 top: auto;
@@ -212,10 +263,6 @@
                 bottom: 0;
                 border-left: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
-            
-            #map {
-                bottom: 50%;
             }
         }
     </style>
@@ -227,12 +274,29 @@
             <div>Incidents: <span id="incident-count">Loading...</span></div>
             <div>Sources: <span>18</span></div>
             <div>Updated: <span id="last-updated">Loading...</span></div>
+            <div>Next: <span id="next-update" class="next-update">--</span></div>
         </div>
     </div>
     
     <div id="map"></div>
     
     <div class="sidebar">
+        <h2>Filter by Country</h2>
+        <div class="country-filters" id="country-filters">
+            <button class="filter-btn active" data-country="all">All</button>
+            <button class="filter-btn" data-country="UAE">UAE</button>
+            <button class="filter-btn" data-country="Saudi Arabia">Saudi</button>
+            <button class="filter-btn" data-country="Qatar">Qatar</button>
+            <button class="filter-btn" data-country="Kuwait">Kuwait</button>
+            <button class="filter-btn" data-country="Bahrain">Bahrain</button>
+            <button class="filter-btn" data-country="Oman">Oman</button>
+            <button class="filter-btn" data-country="Israel">Israel</button>
+            <button class="filter-btn" data-country="Iran">Iran</button>
+            <button class="filter-btn" data-country="Lebanon">Lebanon</button>
+            <button class="filter-btn" data-country="Jordan">Jordan</button>
+            <button class="filter-btn" data-country="Egypt">Egypt</button>
+        </div>
+        
         <h2>Latest Incidents</h2>
         <div id="incident-list">
             <div class="loading">Loading incidents...</div>
@@ -255,8 +319,14 @@
             maxZoom: 19
         }).addTo(map);
         
-        // Store markers
+        // Store markers and incidents
         const markers = {};
+        let allIncidents = [];
+        let currentFilter = 'all';
+        let lastUpdateTime = null;
+        
+        // Countries for filtering
+        const countries = ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman', 'Israel', 'Iran', 'Lebanon', 'Jordan', 'Egypt'];
         
         // Get color by type
         function getTypeColor(type) {
@@ -284,6 +354,84 @@
             return `${Math.floor(seconds / 86400)}d ago`;
         }
         
+        // Update countdown timer
+        function updateCountdown() {
+            if (!lastUpdateTime) return;
+            
+            const now = new Date();
+            const nextUpdate = new Date(lastUpdateTime.getTime() + 60 * 60 * 1000); // +1 hour
+            const diff = nextUpdate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('next-update').textContent = 'Soon';
+            } else {
+                const minutes = Math.floor(diff / 60000);
+                const seconds = Math.floor((diff % 60000) / 1000);
+                document.getElementById('next-update').textContent = `${minutes}m ${seconds}s`;
+            }
+        }
+        
+        // Filter incidents
+        function filterIncidents(country) {
+            currentFilter = country;
+            const cards = document.querySelectorAll('.incident-card');
+            
+            cards.forEach(card => {
+                const incidentCountry = card.dataset.country;
+                if (country === 'all' || incidentCountry === country) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Update map markers
+            Object.values(markers).forEach(marker => map.removeLayer(marker));
+            markers = {};
+            
+            allIncidents.forEach(incident => {
+                if (country !== 'all' && incident.location.country !== country) return;
+                
+                const color = getTypeColor(incident.type);
+                const marker = L.circleMarker([incident.location.lat, incident.location.lng], {
+                    radius: 8,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+                
+                marker.bindPopup(`
+                    <div style="max-width: 250px;">
+                        <div style="font-size: 11px; text-transform: uppercase; color: ${color}; margin-bottom: 4px;">
+                            ${incident.type.replace('_', ' ')}
+                        </div>
+                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px;">
+                            ${incident.title}
+                        </div>
+                        <div style="font-size: 11px; color: #888;">
+                            ${incident.source} • ${timeAgo(incident.published)}
+                        </div>
+                    </div>
+                `);
+                
+                markers[incident.id] = marker;
+            });
+        }
+        
+        // Setup filter buttons
+        function setupFilters() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    filterIncidents(btn.dataset.country);
+                });
+            });
+        }
+        
         // Load incidents
         async function loadIncidents() {
             try {
@@ -293,11 +441,17 @@
                 }
                 const data = await response.json();
                 
+                allIncidents = data.incidents;
+                lastUpdateTime = new Date(data.generated_at);
+                
                 document.getElementById('incident-count').textContent = data.total_incidents;
                 document.getElementById('last-updated').textContent = timeAgo(data.generated_at);
                 
                 const listEl = document.getElementById('incident-list');
                 listEl.innerHTML = '';
+                
+                // Clear existing markers
+                Object.values(markers).forEach(marker => map.removeLayer(marker));
                 
                 data.incidents.forEach(incident => {
                     // Add marker
@@ -331,12 +485,13 @@
                     const card = document.createElement('div');
                     card.className = 'incident-card';
                     card.dataset.id = incident.id;
+                    card.dataset.country = incident.location.country;
                     card.innerHTML = `
                         <div class="incident-header">
                             <span class="incident-type type-${incident.type}">${incident.type.replace('_', ' ')}</span>
                             <span class="incident-status status-${incident.status}">${incident.status}</span>
                         </div>
-                        <div class="incident-title">${incident.title}</div>
+                        <a href="${incident.source_url}" target="_blank" class="incident-title" onclick="event.stopPropagation();">${incident.title}</a>
                         <div class="incident-meta">
                             <span>📍 ${incident.location.name}, ${incident.location.country}</span>
                             <span>•</span>
@@ -363,10 +518,13 @@
                     listEl.appendChild(card);
                 });
                 
+                // Apply current filter
+                filterIncidents(currentFilter);
+                
             } catch (error) {
                 console.error('Error loading incidents:', error);
                 document.getElementById('incident-count').textContent = 'Error';
-                document.getElementById('last-updated').textContent = 'Error';
+                document.getElementById('last-update').textContent = 'Error';
                 document.getElementById('incident-list').innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #888;">
                         Failed to load incidents.<br>Error: ${error.message}
@@ -375,10 +533,14 @@
             }
         }
         
-        // Load on startup
+        // Initialize
+        setupFilters();
         loadIncidents();
         
-        // Refresh every 5 minutes
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        
+        // Refresh data every 5 minutes
         setInterval(loadIncidents, 300000);
     </script>
 </body>

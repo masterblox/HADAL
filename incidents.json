@@ -1,0 +1,1366 @@
+{
+  "generated_at": "2026-03-02T18:16:05.653344",
+  "total_incidents": 85,
+  "incidents": [
+    {
+      "id": 87629281,
+      "title": "‘This war might push Iran to a bomb faster.’",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/quotable/2026/3/2/this-war-might-push-iran-to-a-bomb-faster?traffic_source=rss",
+      "published": "2026-03-02T17:49:23",
+      "type": "explosion",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 711782549,
+      "title": "Caine: US objective is to keep Iran from projecting power outside own borders",
+      "source": "Breaking Defense",
+      "source_url": "https://breakingdefense.com/2026/03/caine-us-objective-is-to-keep-iran-from-projecting-power-outside-own-borders/",
+      "published": "2026-03-02T17:38:37",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 940217742,
+      "title": "Britain increases military support for Gulf region",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/02/britain-steps-up-military-support-for-gulf-region/",
+      "published": "2026-03-02T17:38:32",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "UAE",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 85
+    },
+    {
+      "id": 925500260,
+      "title": "US jets shot down over Kuwait in 'apparent friendly fire incident', officials say",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c5y4v8gndz1o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-02T17:37:27",
+      "type": "security",
+      "status": "confirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Kuwait",
+        "lat": 29.3117,
+        "lng": 47.4818
+      },
+      "credibility": 95
+    },
+    {
+      "id": 677395345,
+      "title": "Qatar shoots down two Iranian bombers",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/gulf/2026/03/02/qatar-shoots-down-two-iranian-bombers/",
+      "published": "2026-03-02T17:30:57",
+      "type": "explosion",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Qatar",
+        "lat": 25.3548,
+        "lng": 51.1839
+      },
+      "credibility": 85
+    },
+    {
+      "id": 336061293,
+      "title": "How the US hit Iran with a banned AI",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/digital-dilemma/2026/3/2/how-the-us-hit-iran-with-a-banned-ai?traffic_source=rss",
+      "published": "2026-03-02T17:28:44",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 146083488,
+      "title": "Israel strikes Lebanon after Hezbollah rocket fire as Iran conflict widens",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c5y4v8g13wxo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-02T17:22:06",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 95
+    },
+    {
+      "id": 791109122,
+      "title": "Why did US and Israel attack Iran and how long could the war last?",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/cx2dyz6p3weo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-02T17:01:39",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 95
+    },
+    {
+      "id": 13322040,
+      "title": "Energy prices soar as Iran strikes Gulf, disrupts Strait of Hormuz",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/energy-prices-soar-as-iran-strikes-gulf-disrupts-strait-of-hormuz/",
+      "published": "2026-03-02T16:51:21",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 695455636,
+      "title": "Starmer lets US use bases for Iran clash: UK’s military, legal quagmire",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/features/2026/3/2/starmer-lets-us-use-bases-for-iran-clash-uks-military-legal-quagmire?traffic_source=rss",
+      "published": "2026-03-02T16:49:11",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 685569401,
+      "title": "‘Speed, surprise, and violence of action’: how US launched attack on Iran",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/2/speed-surprise-and-violence-of-action-how-us-launched-attack-on-iran?traffic_source=rss",
+      "published": "2026-03-02T16:47:31",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 204786366,
+      "title": "Lebanese civilians flee amid deadly Israeli strikes on Beirut suburbs",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/gallery/2026/3/2/lebanese-civilians-flee-amid-deadly-israeli-strikes-on-beirut-suburbs?traffic_source=rss",
+      "published": "2026-03-02T16:47:10",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Beirut",
+        "country": "Lebanon",
+        "lat": 33.8938,
+        "lng": 35.5018
+      },
+      "credibility": 90
+    },
+    {
+      "id": 984121408,
+      "title": "Starmer says UK involvement in US strikes on Iran is ‘defensive",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/2/starmer-says-uk-involvement-in-us-strikes-on-iran-is?traffic_source=rss",
+      "published": "2026-03-02T16:42:50",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 185298292,
+      "title": "Qatar says it downed two Iranian fighter jets as conflict widens",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/2/qatar-says-it-downed-two-iranian-fighter-jets-as-conflict-widens?traffic_source=rss",
+      "published": "2026-03-02T16:24:52",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Qatar",
+        "lat": 25.3548,
+        "lng": 51.1839
+      },
+      "credibility": 90
+    },
+    {
+      "id": 312523956,
+      "title": "Iran demands international action after attacks impact hospitals, schools",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/2/iran-demands-international-action-after-attacks-impact-hospitals-schools?traffic_source=rss",
+      "published": "2026-03-02T16:18:59",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 641333138,
+      "title": "Three US F-15s Shot Down in Kuwait in Friendly Fire, Pilots Safe",
+      "source": "Morocco World News",
+      "source_url": "https://www.moroccoworldnews.com/2026/03/281266/three-us-f-15s-shot-down-in-kuwait-in-friendly-fire-pilots-safe/",
+      "published": "2026-03-02T16:14:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Kuwait",
+        "lat": 29.3117,
+        "lng": 47.4818
+      },
+      "credibility": 70
+    },
+    {
+      "id": 54320463,
+      "title": "A New Front Opens in the Iran War - Sponsored Content",
+      "source": "Times of Israel",
+      "source_url": "https://toi.li/uPGCt4",
+      "published": "2026-03-02T16:10:59",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 175992479,
+      "title": "Jerusalem in crosshairs as Iran intensifies war rhetoric",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/02/jerusalem-in-crosshairs-as-iran-intensifies-war-rhetoric/",
+      "published": "2026-03-02T16:09:30",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Jerusalem",
+        "country": "Israel",
+        "lat": 31.7683,
+        "lng": 35.2137
+      },
+      "credibility": 85
+    },
+    {
+      "id": 872066958,
+      "title": "Iran's new wave of attacks escalates threat to the world's largest oil and gas hubs",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/business/energy/2026/03/02/iran-attacks-saudi-oil-qatar-gas/",
+      "published": "2026-03-02T16:06:24",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 529916832,
+      "title": "Hours after Trump announced ban on Claude AI, US military used it in Iran strikes — reports",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/hours-after-trump-announced-ban-on-claude-ai-us-military-used-it-in-iran-strikes-reports/",
+      "published": "2026-03-02T16:05:55",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 558273473,
+      "title": "Displacement deja vu as Lebanese struggle to make sense of Hezbollah's actions",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/02/displacement-deja-vu-as-lebanese-struggle-to-make-sense-of-hezbollahs-actions/",
+      "published": "2026-03-02T16:04:44",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "UAE",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 85
+    },
+    {
+      "id": 889439613,
+      "title": "Qatar halts natural gas production after Iranian attacks",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/2/qatar-halts-natural-gas-production-after-iranian-attacks?traffic_source=rss",
+      "published": "2026-03-02T15:29:56",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Qatar",
+        "lat": 25.3548,
+        "lng": 51.1839
+      },
+      "credibility": 90
+    },
+    {
+      "id": 278013902,
+      "title": "US-Iran Conflict: Bitcoin Falls 1% to $66,700 in 24 Hours, Oil Spikes 6%",
+      "source": "Morocco World News",
+      "source_url": "https://www.moroccoworldnews.com/2026/03/281247/us-iran-conflict-bitcoin-falls-1-to-66700-in-24-hours-oil-spikes-6/",
+      "published": "2026-03-02T15:27:15",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 70
+    },
+    {
+      "id": 430182276,
+      "title": "Where does an isolated Iran go from here?",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/podcasts/beyond-the-headlines/2026/03/02/where-does-an-isolated-iran-go-from-here/",
+      "published": "2026-03-02T15:17:45",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 329727695,
+      "title": "Iran 'prepared for long war' with US as Tehran is bombed for third day",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/2026/03/02/iran-prepared-for-long-war-with-us-as-tehran-is-bombed-for-third-day/",
+      "published": "2026-03-02T15:10:13",
+      "type": "explosion",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Tehran",
+        "country": "Iran",
+        "lat": 35.6892,
+        "lng": 51.389
+      },
+      "credibility": 85
+    },
+    {
+      "id": 856130462,
+      "title": "Two men shot dead by settlers in northern West Bank, Palestinian Authority says",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/two-men-shot-dead-by-settlers-in-northern-west-bank-palestinian-authority-says/",
+      "published": "2026-03-02T15:06:25",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "Israel",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 85
+    },
+    {
+      "id": 309993777,
+      "title": "The show goes on: UAE musicians continue performing live on stage",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/arts-culture/music-stage/2026/03/02/the-show-goes-on-uae-musicians-continue-performing-live-on-stage/",
+      "published": "2026-03-02T15:05:50",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 85
+    },
+    {
+      "id": 819365335,
+      "title": "Kuwait shaken as Iran’s retaliatory strikes cause turmoil in Gulf",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/gulf/2026/03/02/kuwait-majorly-affected-as-irans-retaliatory-strikes-against-gulf-continue/",
+      "published": "2026-03-02T15:03:59",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Kuwait",
+        "lat": 29.3117,
+        "lng": 47.4818
+      },
+      "credibility": 85
+    },
+    {
+      "id": 27976223,
+      "title": "Why killing Khamenei isn’t the death of Iran’s Islamic Republic",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/2/why-killing-khamenei-isnt-the-death-of-irans-islamic-republic?traffic_source=rss",
+      "published": "2026-03-02T14:59:44",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 673103321,
+      "title": "Iran conflict expands in Lebanon, Beirut demands Hezbollah ‘hand over its weapons’",
+      "source": "Breaking Defense",
+      "source_url": "https://breakingdefense.com/2026/03/iran-conflict-expands-in-lebanon-beirut-demands-hezbollah-hand-over-its-weapons/",
+      "published": "2026-03-02T14:58:22",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Beirut",
+        "country": "Lebanon",
+        "lat": 33.8938,
+        "lng": 35.5018
+      },
+      "credibility": 85
+    },
+    {
+      "id": 915719493,
+      "title": "No 'nation building' in Iran, Pentagon chief Hegseth says",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/us/2026/03/02/us-iran-pentagon-hegseth-caine/",
+      "published": "2026-03-02T14:56:01",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 481044174,
+      "title": "19 injured, one moderately, as Iranian missile hits Beersheba amid multiple barrages",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/19-injured-one-moderately-as-iranian-missile-hits-beersheba-amid-multiple-barrages/",
+      "published": "2026-03-02T14:52:58",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 777417857,
+      "title": "Three US fighter jets ‘mistakenly’ shot down over Kuwait",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/2/three-us-fighter-jets-mistakenly-shot-down-over-kuwait?traffic_source=rss",
+      "published": "2026-03-02T14:51:21",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Kuwait",
+        "lat": 29.3117,
+        "lng": 47.4818
+      },
+      "credibility": 90
+    },
+    {
+      "id": 284064440,
+      "title": "From Zoom megillahs to sirens during reading, all you need to know about Purim at war",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/from-zoom-megillahs-to-sirens-during-reading-all-you-need-to-know-about-purim-at-war/",
+      "published": "2026-03-02T14:44:47",
+      "type": "alert",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "Israel",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 85
+    },
+    {
+      "id": 612016779,
+      "title": "Sinking Iran’s proxies, Sinwar’s Al-Aqsa Flood left Khamenei high and dry",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/sinking-irans-proxies-sinwars-al-aqsa-flood-left-khamenei-high-and-dry/",
+      "published": "2026-03-02T14:41:29",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 511688052,
+      "title": "IDF strike kills Hezbollah intel chief; Lebanon to ban terror group’s military activity",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/idf-strike-kills-hezbollah-intel-chief-lebanon-to-ban-terror-groups-military-activity/",
+      "published": "2026-03-02T14:35:31",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Lebanon",
+        "lat": 33.8547,
+        "lng": 35.8623
+      },
+      "credibility": 85
+    },
+    {
+      "id": 310324409,
+      "title": "What is Iran’s military strategy? How has it changed since June 2025 war?",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/2/what-is-irans-military-strategy-how-it-has-changed-since-june-2025-war?traffic_source=rss",
+      "published": "2026-03-02T14:35:09",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 716424366,
+      "title": "Hegseth: US didn’t start war with Iran, but we are ‘finishing it’",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/2/hegseth-us-didnt-start-war-with-iran-but-we-are-finishing?traffic_source=rss",
+      "published": "2026-03-02T14:22:13",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 342606844,
+      "title": "Video shows Iranian missile strike hit Beersheba, Israel",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/2/video-shows-iranian-missile-strike-hit-beersheba-israel?traffic_source=rss",
+      "published": "2026-03-02T14:18:24",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90
+    },
+    {
+      "id": 384227083,
+      "title": "Dubai and Abu Dhabi airports resume limited flights following Iranian strikes",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/02/dubai-airport-to-begin-limited-flights-from-today/",
+      "published": "2026-03-02T14:17:02",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Dubai",
+        "country": "UAE",
+        "lat": 25.2048,
+        "lng": 55.2708
+      },
+      "credibility": 85
+    },
+    {
+      "id": 989920623,
+      "title": "‘Outrage over US-Israel attacks on Iran may have sparked violence in Texas’",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/quotable/2026/3/2/outrage-over-us-israel-attacks-on-iran-may-have-sparked-violence-in?traffic_source=rss",
+      "published": "2026-03-02T14:01:08",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90
+    },
+    {
+      "id": 300429011,
+      "title": "Iran's missiles can't erase the UAE's success story",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/opinion/comment/2026/03/02/irans-missiles-cant-erase-the-uaes-success-story/",
+      "published": "2026-03-02T14:00:00",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 85
+    },
+    {
+      "id": 392357414,
+      "title": "Phone banking and digital apps of some UAE banks disrupted",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/business/banking/2026/03/02/phone-banking-and-digital-apps-of-some-uae-banks-disrupted/",
+      "published": "2026-03-02T13:56:42",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 85
+    },
+    {
+      "id": 654391679,
+      "title": "'They hit so hard the house was shaking': Iranians describe impact of US-Israel attacks",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/cx2jyv3jp01o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-02T13:54:20",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 95
+    },
+    {
+      "id": 169208669,
+      "title": "Most UAE supermarket shelves fully restocked amid calls for calm",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/02/most-uae-supermarket-shelves-fully-restocked-amid-calls-for-calm/",
+      "published": "2026-03-02T13:51:55",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 85
+    },
+    {
+      "id": 846898829,
+      "title": "Pakistan calls troops, orders 3-day curfew as 24 killed in pro-Iran rallies",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/2/pakistan-calls-troops-orders-3-day-curfew-as-24-killed-in-pro-iran-rallies?traffic_source=rss",
+      "published": "2026-03-02T13:50:03",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 658154888,
+      "title": "Mental health hotlines and  online meditations: Free support for residents in the UAE",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/lifestyle/wellbeing/2026/03/02/mental-health-hotline-uae-free-meditations/",
+      "published": "2026-03-02T13:49:16",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 85
+    },
+    {
+      "id": 682258313,
+      "title": "How Iran's Shahed drone threat can be countered",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/02/how-irans-shahed-drone-threat-can-be-countered/",
+      "published": "2026-03-02T13:48:06",
+      "type": "drone",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 566791094,
+      "title": "Will the US-Israeli attacks impact Iran’s participation in World Cup 2026?",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/sports/2026/3/2/will-the-us-israeli-attacks-impact-irans-participation-in-world-cup-2026?traffic_source=rss",
+      "published": "2026-03-02T13:41:28",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90
+    },
+    {
+      "id": 835433426,
+      "title": "UK will allow US to use bases to strike Iranian missile sites, PM says",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/cqj9g11p1ezo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-02T13:31:10",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 169582893,
+      "title": "What is the biblical holiday of Purim, and why do Israelis link it to Khamenei’s death?",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/what-is-the-biblical-holiday-of-purim-and-why-do-israelis-link-it-to-khameneis-death/",
+      "published": "2026-03-02T12:59:24",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 85
+    },
+    {
+      "id": 760425459,
+      "title": "How to access UK's 'free' Gulf evacuation plans",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/uk/2026/03/02/how-to-access-uks-gulf-evacuation-plans-for-100000-citizens/",
+      "published": "2026-03-02T12:48:04",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "UAE",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 85
+    },
+    {
+      "id": 287868783,
+      "title": "France ready to ‘take part’ in defense of Gulf countries and Jordan against Iran",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/france-ready-to-take-part-in-defense-of-gulf-countries-and-jordan-against-iran/",
+      "published": "2026-03-02T12:09:33",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Jordan",
+        "lat": 30.5852,
+        "lng": 36.2384
+      },
+      "credibility": 85
+    },
+    {
+      "id": 687064090,
+      "title": "3 F-15s shot down by Kuwait in friendly fire incident, pilots safe, US says",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/your-military/2026/03/02/3-f-15s-shot-down-by-kuwait-in-friendly-fire-incident-pilots-safe-us-says/",
+      "published": "2026-03-02T11:57:51",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Kuwait",
+        "lat": 29.3117,
+        "lng": 47.4818
+      },
+      "credibility": 90
+    },
+    {
+      "id": 27732719,
+      "title": "Daily Briefing March 2 – IDF adds Hezbollah to decapitation campaign after it joins war",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/daily-briefing-march-2-idf-adds-hezbollah-to-decapitation-campaign-after-it-joins-war/",
+      "published": "2026-03-02T11:12:14",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "Israel",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 85
+    },
+    {
+      "id": 637401082,
+      "title": "Israeli scientists: ‘SuperAger’ brains make twice as many new neurons as their healthy peers",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/israeli-scientists-superager-brains-make-twice-as-many-new-neurons-as-their-healthy-peers/",
+      "published": "2026-03-02T10:58:36",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 85
+    },
+    {
+      "id": 157927651,
+      "title": "European military installations are  targeted in Iran retaliation",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/global/europe/2026/03/02/european-military-installations-are-targeted-in-iran-retaliation/",
+      "published": "2026-03-02T09:32:51",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 627201999,
+      "title": "Hopes and fears as US Iranians take to streets after toppling of supreme leader",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/cy4w728kl4ko?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-02T02:59:25",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 115962717,
+      "title": "CIA tracked Iranian leaders for months ahead of attacks that began with 3 strikes in 60 seconds",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/flashpoints/middle-east/2026/03/02/cia-tracked-iranian-leaders-for-months-ahead-of-attacks-that-began-with-3-strikes-in-60-seconds/",
+      "published": "2026-03-02T00:09:14",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 70780225,
+      "title": "Kaine to force Senate vote on Iran war, which Trump warns could last ‘weeks’",
+      "source": "Breaking Defense",
+      "source_url": "https://breakingdefense.com/2026/03/kaine-to-force-senate-vote-on-iran-war-which-trump-warns-could-last-weeks/",
+      "published": "2026-03-01T22:31:24",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 579480164,
+      "title": "Nine dead in missile attack on Israel as Iran strikes region",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c363zkp1pgxo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T22:24:27",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 95
+    },
+    {
+      "id": 6833168,
+      "title": "Allies of US in the Gulf bear brunt of Iran attacks",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c1jk922dgjgo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T22:19:03",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 559976078,
+      "title": "In maps: Strikes across Iran and the Middle East",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c4g0pnnj8xyo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T20:58:36",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 835780108,
+      "title": "Here’s how cyber could have been used to target Iran in Operation Epic Fury",
+      "source": "Breaking Defense",
+      "source_url": "https://breakingdefense.com/2026/03/heres-how-cyber-could-have-been-used-to-target-iran-in-operation-epic-fury/",
+      "published": "2026-03-01T20:19:57",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 742325217,
+      "title": "9 Iranian naval ships have been destroyed and sunk, Trump says",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/your-military/2026/03/01/9-iranian-naval-ships-have-been-destroyed-and-sunk-trump-says/",
+      "published": "2026-03-01T18:30:43",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 656664699,
+      "title": "Iran's regime is still intact - the coming days will show if it can hold out",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/cx2lgvg5rl1o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T18:05:06",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 775023196,
+      "title": "‘Nightmare scenario’ for GCC countries, region as Iran unloads drones and missiles",
+      "source": "Breaking Defense",
+      "source_url": "https://breakingdefense.com/2026/03/iran-attacks-uae-saudi-missiles-drones-gcc-air-defense/",
+      "published": "2026-03-01T16:43:12",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85
+    },
+    {
+      "id": 323820777,
+      "title": "At least 153 dead after reported strike on school, Iran says",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c1l7rvqq51eo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T15:32:26",
+      "type": "attack",
+      "status": "reported",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 131923198,
+      "title": "3 US troops killed, 5 seriously wounded in actions against Iran",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/your-military/2026/03/01/3-us-troops-killed-5-seriously-wounded-in-actions-against-iran/",
+      "published": "2026-03-01T15:03:01",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 303182804,
+      "title": "Months of planning behind US-Israeli mission to target Iran's supreme leader",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c86y5540vnno?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T14:45:56",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 95
+    },
+    {
+      "id": 578431175,
+      "title": "Lyse Doucet: This is an extraordinary moment Iran has been preparing for",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c98g91wgdd8o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T06:21:42",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 924782555,
+      "title": "Inside Iran, panic as strikes hit but for some it's a moment of relief",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c05v8jzjn40o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T05:17:07",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 663817046,
+      "title": "Trump was once wary of ordering regime change in Iran. Here’s what made him change his mind",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/pentagon-congress/2026/03/01/trump-was-once-wary-of-ordering-regime-change-in-iran-heres-what-made-him-change-his-mind/",
+      "published": "2026-03-01T03:05:08",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 517652319,
+      "title": "Iran’s Supreme Leader Ayatollah Ali Khamenei, who led the Islamic Republic since 1989, is dead at 86",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/flashpoints/middle-east/2026/03/01/irans-supreme-leader-ayatollah-ali-khamenei-who-led-the-islamic-republic-since-1989-is-dead-at-86/",
+      "published": "2026-03-01T02:44:59",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 265568100,
+      "title": "Bowen: A dangerous moment, but US and Israel see opportunity not to be missed",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/cn0z9012291o?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T02:03:31",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 95
+    },
+    {
+      "id": 212137759,
+      "title": "Ayatollah Khamenei's iron grip on power in Iran comes to an end",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/c3gdnpjvj4ko?at_medium=RSS&at_campaign=rss",
+      "published": "2026-03-01T01:47:42",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 95
+    },
+    {
+      "id": 694960534,
+      "title": "Iran Supreme Leader Ayatollah Ali Khamenei is dead, White House confirms",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/pentagon-congress/2026/02/28/iran-supreme-leader-ayatollah-ali-khamenei-is-dead-white-house-confirms/",
+      "published": "2026-02-28T22:14:28",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 542252951,
+      "title": "No US casualties reported following Iran’s retaliatory strikes, officials say",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/your-military/2026/02/28/no-us-casualties-reported-following-irans-retaliatory-strikes-officials-say/",
+      "published": "2026-02-28T20:23:43",
+      "type": "attack",
+      "status": "confirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 716554248,
+      "title": "War powers debate intensifies after Trump orders attack on Iran without approval by Congress",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/pentagon-congress/2026/02/28/war-powers-debate-intensifies-after-trump-orders-attack-on-iran-without-approval-by-congress/",
+      "published": "2026-02-28T20:00:50",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 701550132,
+      "title": "Israel says it struck more than 500 targets in Iran with 200 warplanes",
+      "source": "Breaking Defense",
+      "source_url": "https://breakingdefense.com/2026/02/israel-says-it-struck-more-than-500-targets-in-iran-with-200-warplanes/",
+      "published": "2026-02-28T18:58:39",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 85
+    },
+    {
+      "id": 548546901,
+      "title": "US confirms first combat use of LUCAS one-way attack drone in Iran strikes",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/your-military/2026/02/28/us-confirms-first-combat-use-of-lucas-one-way-attack-drone-in-iran-strikes/",
+      "published": "2026-02-28T18:41:36",
+      "type": "drone",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90
+    },
+    {
+      "id": 887968531,
+      "title": "World leaders fear broader escalation after major US and Israeli attack on Iran",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/global/mideast-africa/2026/02/28/world-leaders-fear-broader-escalation-after-major-us-and-israeli-attack-on-iran/",
+      "published": "2026-02-28T13:56:26",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90
+    },
+    {
+      "id": 458795090,
+      "title": "US, Israel launch ‘major combat operations’ in Iran",
+      "source": "Defense News",
+      "source_url": "https://www.defensenews.com/news/your-military/2026/02/28/us-israel-launch-major-combat-operations-in-iran/",
+      "published": "2026-02-28T12:51:48",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90
+    },
+    {
+      "id": 52495465,
+      "title": "US, Israel launch ‘massive and ongoing operation’ inside Iran",
+      "source": "Breaking Defense",
+      "source_url": "https://breakingdefense.com/2026/02/us-israel-launch-massive-and-ongoing-operation-inside-iran/",
+      "published": "2026-02-28T12:17:13",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 85
+    },
+    {
+      "id": 199893619,
+      "title": "Aid groups in Gaza and West Bank thrown lifeline as Israel court pauses ban threat",
+      "source": "BBC Middle East",
+      "source_url": "https://www.bbc.com/news/articles/cd6z382de8yo?at_medium=RSS&at_campaign=rss",
+      "published": "2026-02-27T20:31:27",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95
+    }
+  ]
+}

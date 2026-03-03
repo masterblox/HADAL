@@ -769,9 +769,9 @@
         
         // Initialize map
         const map = L.map('map', {
-            center: isMobile ? [25.5, 51.0] : [28.0, 45.0], // Mobile: centered on Gulf
-            zoom: isMobile ? 6 : 5, // Mobile: closer zoom on Gulf
-            minZoom: isMobile ? 6 : 4, // Mobile: don't allow zooming out
+            center: isMobile ? [26.0, 50.0] : [28.0, 45.0], // Mobile: centered on Gulf
+            zoom: isMobile ? 5 : 5, // Mobile: zoomed out to show more region
+            minZoom: isMobile ? 5 : 4, // Mobile: don't allow zooming out further
             maxZoom: 12,
             dragging: !isMobile, // Mobile: disable dragging
             touchZoom: !isMobile, // Mobile: disable pinch zoom

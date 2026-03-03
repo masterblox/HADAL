@@ -7,7 +7,7 @@ Outputs static JSON for Vercel hosting
 import feedparser
 import json
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Optional
 
 # MENA-focused RSS feeds
@@ -217,7 +217,7 @@ def is_threat_related(text: str) -> bool:
     return any(keyword in text_lower for keyword in KEYWORDS)
 
 def parse_date_from_url(url: str) -> Optional[datetime]:
-    """Try to extract date from URL (e.g., /2026/mar/02/)"""
+    """Try to extract date from URL (e.g., /2026/mar/02/), returns UTC datetime"""
     import re
     # Match patterns like /2026/mar/02/ or /2026/03/02/
     month_map = {
@@ -230,28 +230,28 @@ def parse_date_from_url(url: str) -> Optional[datetime]:
     if match:
         year, month_str, day = match.groups()
         month = month_map.get(month_str, 1)
-        return datetime(int(year), month, int(day))
+        return datetime(int(year), month, int(day), tzinfo=timezone.utc)
     
     # Try /YYYY/MM/DD/ format
     match = re.search(r'/(\d{4})/(\d{2})/(\d{2})/', url)
     if match:
         year, month, day = match.groups()
-        return datetime(int(year), int(month), int(day))
+        return datetime(int(year), int(month), int(day), tzinfo=timezone.utc)
     
     return None
 
 def parse_date(entry) -> Optional[datetime]:
-    """Parse date from RSS entry, preferring URL date if available"""
+    """Parse date from RSS entry, preferring URL date if available, returns UTC datetime"""
     # First try URL date (more reliable for some feeds like Guardian)
     url_date = parse_date_from_url(entry.get('link', ''))
     if url_date:
         return url_date
     
-    # Fall back to RSS date
+    # Fall back to RSS date - feedparser returns UTC tuples
     if hasattr(entry, 'published_parsed') and entry.published_parsed:
-        return datetime(*entry.published_parsed[:6])
+        return datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
     if hasattr(entry, 'updated_parsed') and entry.updated_parsed:
-        return datetime(*entry.updated_parsed[:6])
+        return datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
     return None
 
 def fetch_feed(feed_info: Dict) -> List[Dict]:
@@ -276,10 +276,10 @@ def fetch_feed(feed_info: Dict) -> List[Dict]:
             # Parse date
             published = parse_date(entry)
             if not published:
-                published = datetime.utcnow()
+                published = datetime.now(timezone.utc)
             
             # Skip if older than 72 hours
-            if datetime.utcnow() - published > timedelta(hours=72):
+            if datetime.now(timezone.utc) - published > timedelta(hours=72):
                 continue
             
             # Extract location
@@ -320,7 +320,7 @@ def fetch_all():
     """Fetch all feeds and generate output"""
     print("🔄 Gulf Watch RSS Fetcher")
     print("=" * 50)
-    print(f"⏰ {datetime.utcnow().isoformat()} UTC")
+    print(f"⏰ {datetime.now(timezone.utc).isoformat()} UTC")
     print()
     
     all_incidents = []
@@ -343,7 +343,7 @@ def fetch_all():
     
     # Generate output
     output = {
-        'generated_at': datetime.utcnow().isoformat(),
+        'generated_at': datetime.now(timezone.utc).isoformat(),
         'total_incidents': len(unique_incidents),
         'incidents': unique_incidents
     }

@@ -289,6 +289,45 @@
             border: 1px solid #FFD700;
         }
         
+        .footer {
+            margin-top: 30px;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            margin-bottom: 20px;
+        }
+        
+        .footer-text {
+            font-size: 12px;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .footer-text .heart {
+            color: #e74c3c;
+        }
+        
+        .footer-links {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: #fff;
+        }
+        
         .incident-title {
             font-size: 13px;
             line-height: 1.5;
@@ -463,6 +502,19 @@
         <h2>Latest Incidents</h2>
         <div id="incident-list">
             <div class="loading">Loading incidents...</div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-divider"></div>
+            <div class="footer-text">
+                Built with <span class="heart">❤️</span> and respect for the UAE<br>
+                and all countries in the Gulf Region
+            </div>
+            <div class="footer-links">
+                <a href="https://github.com/nKOxxx/gulf-watch-v2" target="_blank">GitHub</a> • 
+                <span id="source-count-footer">44 sources</span> • 
+                <span id="gov-count">25 government</span>
+            </div>
         </div>
     </div>
     

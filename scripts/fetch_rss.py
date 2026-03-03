@@ -57,43 +57,43 @@ FEEDS = [
     
     # Official Government Twitter/X Accounts (via Nitter RSS)
     # UAE
-    {"name": "UAE Ministry of Interior (Twitter)", "url": "https://nitter.net/moiuae/rss", "country": "UAE", "credibility": 100},
-    {"name": "UAE NCEMA (Twitter)", "url": "https://nitter.net/NCEMAUAE/rss", "country": "UAE", "credibility": 100},
-    {"name": "UAE Ministry of Defence (Twitter)", "url": "https://nitter.net/modgovae/rss", "country": "UAE", "credibility": 100},
-    {"name": "UAE National Guard (Twitter)", "url": "https://nitter.net/Uaengc/rss", "country": "UAE", "credibility": 100},
-    {"name": "UAE Government Media Office (Twitter)", "url": "https://nitter.net/UAEmediaoffice/rss", "country": "UAE", "credibility": 100},
-    {"name": "WAM News Agency (Twitter)", "url": "https://nitter.net/wamnews/rss", "country": "UAE", "credibility": 95},
-    {"name": "WAM English (Twitter)", "url": "https://nitter.net/WAMNEWS_ENG/rss", "country": "UAE", "credibility": 95},
-    {"name": "Dubai Media Office (Twitter)", "url": "https://nitter.net/DXBMediaOffice/rss", "country": "UAE", "credibility": 95},
-    {"name": "Abu Dhabi Civil Defence (Twitter)", "url": "https://nitter.net/CivilDefenceAD/rss", "country": "UAE", "credibility": 100},
-    {"name": "Dubai Civil Defence (Twitter)", "url": "https://nitter.net/DCDDubai/rss", "country": "UAE", "credibility": 100},
-    {"name": "Sharjah Civil Defence (Twitter)", "url": "https://nitter.net/civildefenceshj/rss", "country": "UAE", "credibility": 100},
-    {"name": "UAE GCAA (Twitter)", "url": "https://nitter.net/gcaauae/rss", "country": "UAE", "credibility": 95},
-    {"name": "UAE Ministry of Foreign Affairs (Twitter)", "url": "https://nitter.net/mofauae/rss", "country": "UAE", "credibility": 100},
+    {"name": "UAE Ministry of Interior", "url": "https://nitter.net/moiuae/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "UAE NCEMA", "url": "https://nitter.net/NCEMAUAE/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "UAE Ministry of Defence", "url": "https://nitter.net/modgovae/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "UAE National Guard", "url": "https://nitter.net/Uaengc/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "UAE Government Media Office", "url": "https://nitter.net/UAEmediaoffice/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "WAM News Agency", "url": "https://nitter.net/wamnews/rss", "country": "UAE", "credibility": 95, "is_government": True},
+    {"name": "WAM English", "url": "https://nitter.net/WAMNEWS_ENG/rss", "country": "UAE", "credibility": 95, "is_government": True},
+    {"name": "Dubai Media Office", "url": "https://nitter.net/DXBMediaOffice/rss", "country": "UAE", "credibility": 95, "is_government": True},
+    {"name": "Abu Dhabi Civil Defence", "url": "https://nitter.net/CivilDefenceAD/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "Dubai Civil Defence", "url": "https://nitter.net/DCDDubai/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "Sharjah Civil Defence", "url": "https://nitter.net/civildefenceshj/rss", "country": "UAE", "credibility": 100, "is_government": True},
+    {"name": "UAE GCAA", "url": "https://nitter.net/gcaauae/rss", "country": "UAE", "credibility": 95, "is_government": True},
+    {"name": "UAE Ministry of Foreign Affairs", "url": "https://nitter.net/mofauae/rss", "country": "UAE", "credibility": 100, "is_government": True},
     
     # Saudi Arabia
-    {"name": "Saudi Ministry of Interior (Twitter)", "url": "https://nitter.net/MOISaudiArabia/rss", "country": "Saudi Arabia", "credibility": 100},
-    {"name": "Saudi Civil Defense (Twitter)", "url": "https://nitter.net/SaudiDCD/rss", "country": "Saudi Arabia", "credibility": 100},
+    {"name": "Saudi Ministry of Interior", "url": "https://nitter.net/MOISaudiArabia/rss", "country": "Saudi Arabia", "credibility": 100, "is_government": True},
+    {"name": "Saudi Civil Defense", "url": "https://nitter.net/SaudiDCD/rss", "country": "Saudi Arabia", "credibility": 100, "is_government": True},
     
     # Qatar
-    {"name": "Qatar Ministry of Interior EN (Twitter)", "url": "https://nitter.net/MOI_QatarEn/rss", "country": "Qatar", "credibility": 100},
-    {"name": "Qatar Civil Defence (Twitter)", "url": "https://nitter.net/civildefenceqa/rss", "country": "Qatar", "credibility": 100},
+    {"name": "Qatar Ministry of Interior EN", "url": "https://nitter.net/MOI_QatarEn/rss", "country": "Qatar", "credibility": 100, "is_government": True},
+    {"name": "Qatar Civil Defence", "url": "https://nitter.net/civildefenceqa/rss", "country": "Qatar", "credibility": 100, "is_government": True},
     
     # Kuwait
-    {"name": "Kuwait Ministry of Interior EN (Twitter)", "url": "https://nitter.net/moi_kuw_en/rss", "country": "Kuwait", "credibility": 100},
-    {"name": "Kuwait Fire Force (Twitter)", "url": "https://nitter.net/kff_kw/rss", "country": "Kuwait", "credibility": 100},
+    {"name": "Kuwait Ministry of Interior EN", "url": "https://nitter.net/moi_kuw_en/rss", "country": "Kuwait", "credibility": 100, "is_government": True},
+    {"name": "Kuwait Fire Force", "url": "https://nitter.net/kff_kw/rss", "country": "Kuwait", "credibility": 100, "is_government": True},
     
     # Bahrain
-    {"name": "Bahrain Ministry of Interior (Twitter)", "url": "https://nitter.net/moi_bahrain/rss", "country": "Bahrain", "credibility": 100},
+    {"name": "Bahrain Ministry of Interior", "url": "https://nitter.net/moi_bahrain/rss", "country": "Bahrain", "credibility": 100, "is_government": True},
     
     # Oman
-    {"name": "Royal Oman Police (Twitter)", "url": "https://nitter.net/RoyalOmanPolice/rss", "country": "Oman", "credibility": 100},
+    {"name": "Royal Oman Police", "url": "https://nitter.net/RoyalOmanPolice/rss", "country": "Oman", "credibility": 100, "is_government": True},
     
     # Israel
-    {"name": "Israel Defense Forces (Twitter)", "url": "https://nitter.net/IDF/rss", "country": "Israel", "credibility": 95},
-    {"name": "Israel Ministry of Defense (Twitter)", "url": "https://nitter.net/Israel_MOD/rss", "country": "Israel", "credibility": 95},
-    {"name": "Magen David Adom (Twitter)", "url": "https://nitter.net/Mdais/rss", "country": "Israel", "credibility": 95},
-    {"name": "COGAT (Twitter)", "url": "https://nitter.net/cogatonline/rss", "country": "Israel", "credibility": 95},
+    {"name": "Israel Defense Forces", "url": "https://nitter.net/IDF/rss", "country": "Israel", "credibility": 95, "is_government": True},
+    {"name": "Israel Ministry of Defense", "url": "https://nitter.net/Israel_MOD/rss", "country": "Israel", "credibility": 95, "is_government": True},
+    {"name": "Magen David Adom", "url": "https://nitter.net/Mdais/rss", "country": "Israel", "credibility": 95, "is_government": True},
+    {"name": "COGAT", "url": "https://nitter.net/cogatonline/rss", "country": "Israel", "credibility": 95, "is_government": True},
 ]
 
 # Security/threat keywords
@@ -273,6 +273,7 @@ def fetch_feed(feed_info: Dict) -> List[Dict]:
                 'status': determine_status(title),
                 'location': location,
                 'credibility': feed_info['credibility'],
+                'is_government': feed_info.get('is_government', False),
             }
             
             incidents.append(incident)

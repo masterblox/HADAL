@@ -278,6 +278,17 @@
         .status-reported { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
         .status-unconfirmed { background: rgba(149, 165, 166, 0.2); color: #95a5a6; }
         
+        .government-badge {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            border: 1px solid #FFD700;
+        }
+        
         .incident-title {
             font-size: 13px;
             line-height: 1.5;
@@ -649,10 +660,12 @@
                     card.className = 'incident-card';
                     card.dataset.id = incident.id;
                     card.dataset.country = incident.location.country;
+                    const govBadge = incident.is_government ? '<span class="government-badge">🏛️ Government</span>' : '';
                     card.innerHTML = `
                         <div class="incident-header">
                             <span class="incident-type type-${incident.type}">${incident.type.replace('_', ' ')}</span>
                             <span class="incident-status status-${incident.status}">${incident.status}</span>
+                            ${govBadge}
                         </div>
                         <a href="${incident.source_url}" target="_blank" class="incident-title" onclick="event.stopPropagation();">${incident.title}</a>
                         <div class="incident-meta">

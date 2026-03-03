@@ -453,7 +453,7 @@
         <div class="header-stats">
             <div>Incidents: <span id="incident-count">Loading...</span></div>
             <div>Sources: <span>44</span></div>
-            <div>Updated: <span id="last-updated">Loading...</span></div>
+            <div>Updates: <span style="color: #2ecc71;">hourly</span></div>
             <div>Next: <span id="next-update" class="next-update">--</span></div>
         </div>
     </div>
@@ -707,7 +707,7 @@
                 lastUpdateTime = new Date(data.generated_at);
                 
                 document.getElementById('incident-count').textContent = data.total_incidents;
-                document.getElementById('last-updated').textContent = timeAgo(data.generated_at);
+                // Last updated time removed - now shows static "hourly"
                 
                 const listEl = document.getElementById('incident-list');
                 listEl.innerHTML = '';

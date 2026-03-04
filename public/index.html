@@ -1163,62 +1163,33 @@ This report was submitted via Gulf Watch v2`);
         
         // Finance data
         async function loadFinanceData() {
-            // Yahoo Finance API for commodities and indices
-            const symbols = {
-                brent: 'BZ=F',      // Brent Crude Oil
-                gas: 'NG=F',        // Natural Gas
-                gold: 'GC=F',       // Gold
-                tadawul: '^TASI',   // Saudi Tadawul
-                adx: 'ADX.AE',      // Abu Dhabi Index
-                qe: '^QSI'          // Qatar QE Index
-            };
-            
             try {
-                // Fetch oil data
-                const oilResponse = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbols.brent}?interval=1d&range=2d`);
-                const oilData = await oilResponse.json();
-                if (oilData.chart && oilData.chart.result) {
-                    const result = oilData.chart.result[0];
-                    const current = result.meta.regularMarketPrice;
-                    const prev = result.meta.chartPreviousClose;
-                    const change = ((current - prev) / prev * 100).toFixed(2);
-                    
-                    document.getElementById('brent-price').textContent = `$${current.toFixed(2)}`;
-                    const changeEl = document.getElementById('brent-change');
-                    changeEl.textContent = `${change > 0 ? '+' : ''}${change}%`;
-                    changeEl.className = `change ${change >= 0 ? 'up' : 'down'}`;
+                // Fetch prices from local JSON file (updated by GitHub Actions)
+                const response = await fetch('prices.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
+                const data = await response.json();
                 
-                // Fetch natural gas
-                const gasResponse = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbols.gas}?interval=1d&range=2d`);
-                const gasData = await gasResponse.json();
-                if (gasData.chart && gasData.chart.result) {
-                    const result = gasData.chart.result[0];
-                    const current = result.meta.regularMarketPrice;
-                    const prev = result.meta.chartPreviousClose;
-                    const change = ((current - prev) / prev * 100).toFixed(2);
+                if (data.prices) {
+                    // Update each price item
+                    const items = ['brent', 'gas', 'gold', 'tadawul', 'adx', 'qe'];
+                    items.forEach(key => {
+                        const item = data.prices[key];
+                        if (item) {
+                            const priceEl = document.getElementById(`${key}-price`);
+                            const changeEl = document.getElementById(`${key}-change`);
+                            
+                            if (priceEl) priceEl.textContent = item.formatted_price;
+                            if (changeEl) {
+                                changeEl.textContent = item.formatted_change;
+                                changeEl.className = `change ${item.change >= 0 ? 'up' : 'down'}`;
+                            }
+                        }
+                    });
                     
-                    document.getElementById('gas-price').textContent = `$${current.toFixed(3)}`;
-                    const changeEl = document.getElementById('gas-change');
-                    changeEl.textContent = `${change > 0 ? '+' : ''}${change}%`;
-                    changeEl.className = `change ${change >= 0 ? 'up' : 'down'}`;
+                    console.log(`Prices loaded (generated: ${data.generated_at})`);
                 }
-                
-                // Fetch gold
-                const goldResponse = await fetch(`https://query1.finance.yahoo.com/v8/finance/chart/${symbols.gold}?interval=1d&range=2d`);
-                const goldData = await goldResponse.json();
-                if (goldData.chart && goldData.chart.result) {
-                    const result = goldData.chart.result[0];
-                    const current = result.meta.regularMarketPrice;
-                    const prev = result.meta.chartPreviousClose;
-                    const change = ((current - prev) / prev * 100).toFixed(2);
-                    
-                    document.getElementById('gold-price').textContent = `$${current.toFixed(0)}`;
-                    const changeEl = document.getElementById('gold-change');
-                    changeEl.textContent = `${change > 0 ? '+' : ''}${change}%`;
-                    changeEl.className = `change ${change >= 0 ? 'up' : 'down'}`;
-                }
-                
             } catch (error) {
                 console.error('Finance data error:', error);
                 // Show fallback data
@@ -1233,20 +1204,19 @@ This report was submitted via Gulf Watch v2`);
                 document.getElementById('gold-price').textContent = '$2,095';
                 document.getElementById('gold-change').textContent = '+0.5%';
                 document.getElementById('gold-change').className = 'change up';
+                
+                document.getElementById('tadawul-price').textContent = '11,245';
+                document.getElementById('tadawul-change').textContent = '+0.3%';
+                document.getElementById('tadawul-change').className = 'change up';
+                
+                document.getElementById('adx-price').textContent = '9,876';
+                document.getElementById('adx-change').textContent = '-0.5%';
+                document.getElementById('adx-change').className = 'change down';
+                
+                document.getElementById('qe-price').textContent = '10,123';
+                document.getElementById('qe-change').textContent = '+0.1%';
+                document.getElementById('qe-change').className = 'change up';
             }
-            
-            // Stock indices (often restricted, use fallback)
-            document.getElementById('tadawul-price').textContent = '11,245';
-            document.getElementById('tadawul-change').textContent = '+0.3%';
-            document.getElementById('tadawul-change').className = 'change up';
-            
-            document.getElementById('adx-price').textContent = '9,876';
-            document.getElementById('adx-change').textContent = '-0.5%';
-            document.getElementById('adx-change').className = 'change down';
-            
-            document.getElementById('qe-price').textContent = '10,123';
-            document.getElementById('qe-change').textContent = '+0.1%';
-            document.getElementById('qe-change').className = 'change up';
         }
         
         // Initialize

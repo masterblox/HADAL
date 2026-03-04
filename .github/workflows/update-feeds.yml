@@ -27,9 +27,12 @@ jobs:
     - name: Fetch RSS feeds
       run: python scripts/fetch_rss.py
       
+    - name: Fetch price data
+      run: python scripts/fetch_prices.py
+      
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add public/incidents.json
-        git diff --staged --quiet || (git commit -m "Update incidents from RSS feeds" && git push)
+        git add public/incidents.json public/prices.json
+        git diff --staged --quiet || (git commit -m "Update incidents and prices from RSS feeds" && git push)

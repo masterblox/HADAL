@@ -781,6 +781,7 @@
         let allIncidents = [];
         let currentFilter = 'all';
         let lastUpdateTime = null;
+        let lastFetchTime = null;
         
         // Countries for filtering
         const countries = ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman', 'Israel', 'Iran', 'Lebanon'];
@@ -1019,35 +1020,21 @@
             });
         }
         
-        // Cache helper functions
-        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
-        
-        function getCacheKey(key) {
-            return `gulfwatch_${key}_last_fetch`;
-        }
-        
-        function shouldFetchFresh(key) {
-            const lastFetch = localStorage.getItem(getCacheKey(key));
-            const now = Date.now();
-            if (!lastFetch || (now - parseInt(lastFetch)) > CACHE_DURATION) {
-                localStorage.setItem(getCacheKey(key), now.toString());
-                return true;
-            }
-            return false;
-        }
-        
-        function getFetchUrl(baseUrl, key) {
-            // Add cache buster only when cache has expired
-            if (shouldFetchFresh(key)) {
-                return `${baseUrl}?v=${Date.now()}`;
-            }
-            return baseUrl;
+        // Cache helper - FORCE fresh data on every page load/refresh
+        // Mobile browsers are very aggressive with caching
+        function getFetchUrl(baseUrl) {
+            // Always add cache buster to prevent browser caching
+            // This ensures users always see fresh data after a refresh
+            return `${baseUrl}?_=${Date.now()}`;
         }
         
         // Load incidents
-        async function loadIncidents() {
+        async function loadIncidents(showLoading = false) {
             try {
-                const response = await fetch(getFetchUrl('incidents.json', 'incidents'));
+                // Track fetch time
+                lastFetchTime = new Date();
+                
+                const response = await fetch(getFetchUrl('incidents.json'), { cache: 'no-store' });
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
@@ -1193,7 +1180,10 @@ This report was submitted via Gulf Watch v2`);
         async function loadFinanceData() {
             try {
                 // Fetch prices from local JSON file (updated by GitHub Actions)
-                const response = await fetch(getFetchUrl('prices.json', 'prices'));
+                const response = await fetch(getFetchUrl('prices.json'), { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
@@ -1248,11 +1238,12 @@ This report was submitted via Gulf Watch v2`);
         // Update countdown every second
         setInterval(updateCountdown, 1000);
         
-        // Live Mode: Refresh data every 2 minutes (120 seconds)
-        setInterval(loadIncidents, 120000);
+        // Live Mode: Refresh data every 30 seconds for near real-time updates
+        // This ensures fresh data without requiring manual refresh
+        setInterval(() => loadIncidents(false), 30000);
         
-        // Refresh finance data every minute
-        setInterval(loadFinanceData, 60000);
+        // Refresh finance data every 30 seconds
+        setInterval(loadFinanceData, 30000);
         
         // Show live indicator
         function updateLiveIndicator() {
@@ -1265,6 +1256,22 @@ This report was submitted via Gulf Watch v2`);
         
         // Mobile: Simple scroll layout - no special nav needed
         // Map is static, feed scrolls below it
+        
+        // Refresh data when page becomes visible again (important for mobile)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                console.log('Page visible, refreshing data...');
+                loadIncidents();
+                loadFinanceData();
+            }
+        });
+        
+        // Also refresh on window focus (for desktop)
+        window.addEventListener('focus', () => {
+            console.log('Window focused, refreshing data...');
+            loadIncidents();
+            loadFinanceData();
+        });
     </script>
 </body>
 </html>

@@ -1,9 +1,298 @@
 {
-  "generated_at": "2026-03-06T12:27:38.995843+00:00",
-  "total_incidents": 264,
+  "generated_at": "2026-03-06T13:45:25.364763+00:00",
+  "total_incidents": 263,
   "incidents": [
     {
-      "id": 120238751,
+      "id": 111185124,
+      "title": "الدفاعات الجوية الإماراتية تتعامل مع 9 صواريخ باليستية و109 طائرات مسيّرة\n\n#وام \n\nhttps://www.wam.ae/a/bz2fnrp",
+      "source": "WAM News Agency",
+      "source_url": "https://nitter.net/wamnews/status/2029915570196697565#m",
+      "published": "2026-03-06T13:42:40+00:00",
+      "type": "air_defense",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "UAE",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 713850874,
+      "title": "UAE air defences intercept 9 ballistic missiles, 112 drones\n\nThe UAE Ministry of Defence announced that the country’s air defence systems detected 9 ballistic missiles today (6th March 2026), all of which were intercepted and destroyed.\n\nThe ministry also reported the detection of 112 drones, noting that air defence systems intercepted and destroyed 109 of them, while 3 drones fell within the country’s territory.\n\nIt added that since the start of the blatant Iranian attacks, a total of 205 ballistic missiles have been detected, of which 190 were destroyed, 13 fell into the sea, and 2 landed within the UAE.\n\nDuring the same period, 1,184 Iranian drones were detected, with 1,110 intercepted, while 74 drones fell within the country’s territory.\n\nThe ministry further stated that 8 cruise missiles were also detected and destroyed.\n\nAccording to the ministry, these attacks resulted in 3 fatalities of Pakistani, Nepali and Bangladeshi nationalities, in addition to 112 minor injuries among individuals of Emirati, Egyptian, Ethiopian, Filipino, Pakistani, Iranian, Indian, Bangladeshi, Sri Lankan, Azerbaijani, Yemeni, Ugandan, Eritrean, Lebanese, Afghan, Bahraini, Comorian and Turkish nationalities.\n\nThe Ministry of Defence affirmed that the UAE Armed Forces remain on high alert and at full readiness to deal with any threats and to firmly confront any attempts to undermine the country’s security, in a manner that ensures the protection of its sovereignty, security and stability, and safeguards its national interests and resources.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
+      "source": "UAE Ministry of Defence",
+      "source_url": "https://nitter.net/modgovae/status/2029912880666362324#m",
+      "published": "2026-03-06T13:31:59+00:00",
+      "type": "missile",
+      "status": "reported",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 100,
+      "is_government": true
+    },
+    {
+      "id": 370745046,
+      "title": "The Iranian regime’s terror network goes far beyond Israel.\nThis isn’t just Israel’s problem, it’s the entire region’s problem.",
+      "source": "Israel Defense Forces",
+      "source_url": "https://nitter.net/IDF/status/2029910168847192445#m",
+      "published": "2026-03-06T13:21:12+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 235994440,
+      "title": "UAE President receives phone call from Romanian Prime Minister on regional developments\n\n#WamNews \n\nhttps://www.wam.ae/a/bz2fvee",
+      "source": "WAM English",
+      "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029910081077469496#m",
+      "published": "2026-03-06T13:20:51+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 358004156,
+      "title": "الدفاعات الجوية الإماراتية تتصدى بنجاح للصواريخ الباليستية والجوالة والمسيرات الإيرانية.\n\nUAE Air Defences Successfully Intercept\nIranian Ballistic and Cruise Missiles and UAVs Attacks\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
+      "source": "UAE Ministry of Defence",
+      "source_url": "https://nitter.net/modgovae/status/2029907987633246303#m",
+      "published": "2026-03-06T13:12:32+00:00",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 100,
+      "is_government": true
+    },
+    {
+      "id": 596797040,
+      "title": "UAE President receives phone call from King of Belgium condemning Iranian attacks targeting the UAE\n\n#WamNews \n\nhttps://www.wam.ae/a/bz2fvec",
+      "source": "WAM English",
+      "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029904761575854447#m",
+      "published": "2026-03-06T12:59:43+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 570530086,
+      "title": "Al-Aqsa compound empty as Israel restricts access to holy sites",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/6/al-aqsa-compound-empty-as-israel-restricts-access-to-holy-sites?traffic_source=rss",
+      "published": "2026-03-06T12:58:48+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90,
+      "is_government": false
+    },
+    {
+      "id": 548244415,
+      "title": "ناقش المجلس الرمضاني الثامن ضمن سلسلة المجالس الرمضانية التي ينظمها الجهاز الوطني لمكافحة المخدرات خلال شهر رمضان المبارك، تحت شعار \"أسرة واعية.. وطن آمن\"، موضوع \"مرتكزات حماية الأبناء في المجتمع\"، وأقيم المجلس بالتعاون مع مجالس أبوظبي التابعة لمكتب شؤون المواطنين والمجتمع في ديوان الرئاسة، حيث استضافه مجلس \"منازف\" بمدينة العين وأدارته الإعلامية شيخة سعيد المسماري، وتناول المجلس عدداً من المحاور المرتبطة بحماية الأبناء وتعزيز دور الأسرة والمجتمع في الوقاية، حيث ناقش أهمية الوازع الديني والقدوة الحسنة في تنشئة الأبناء، وترسيخ القيم والسلوك الإيجابي.\n\n#وزارة_الداخلية_الإمارات #الامارات_أمن_وأمان\n#MOIUAE",
+      "source": "UAE Ministry of Interior",
+      "source_url": "https://nitter.net/moiuae/status/2029902289708966216#m",
+      "published": "2026-03-06T12:49:54+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 100,
+      "is_government": true
+    },
+    {
+      "id": 242039008,
+      "title": "‘Kurdish uprising in Iran unlikely without US-Israeli protection’",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/6/kurdish-uprising-in-iran-unlikely-without-us-israeli?traffic_source=rss",
+      "published": "2026-03-06T12:44:10+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90,
+      "is_government": false
+    },
+    {
+      "id": 213385825,
+      "title": "Iranian Kurd fighters ready for a ground operation ‘if opportunity arises’",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/6/iranian-kurd-fighters-ready-for-a-ground-operation-if-opportunity-arises?traffic_source=rss",
+      "published": "2026-03-06T12:41:59+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90,
+      "is_government": false
+    },
+    {
+      "id": 791865113,
+      "title": "Messi censured for meeting and applauding Trump amid US attacks on Iran",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/sports/2026/3/6/messi-censured-for-meeting-and-applauding-trump-amid-us-attacks-on-iran?traffic_source=rss",
+      "published": "2026-03-06T12:40:09+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90,
+      "is_government": false
+    },
+    {
+      "id": 814222153,
+      "title": "Moscow sees significant rise in demand for Russian oil, gas amid Iran war",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/6/moscow-sees-significant-rise-in-demand-for-russian-oil-gas-amid-iran-war?traffic_source=rss",
+      "published": "2026-03-06T12:37:42+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90,
+      "is_government": false
+    },
+    {
+      "id": 84893581,
+      "title": "US Suspends Embassy Operations in Kuwait Amid War in Middle East",
+      "source": "Morocco World News",
+      "source_url": "https://www.moroccoworldnews.com/2026/03/281775/us-suspends-embassy-operations-in-kuwait-amid-war-in-middle-east/",
+      "published": "2026-03-06T12:36:41+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Kuwait",
+        "lat": 29.3117,
+        "lng": 47.4818
+      },
+      "credibility": 70,
+      "is_government": false
+    },
+    {
+      "id": 106129011,
+      "title": "‘We know Shaheds’: Ukraine touts drone expertise in US-Israel war with Iran",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/6/we-know-shaheds-ukraine-touts-drone-expertise-in-us-israel-war-with-iran?traffic_source=rss",
+      "published": "2026-03-06T12:35:15+00:00",
+      "type": "drone",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90,
+      "is_government": false
+    },
+    {
+      "id": 407220422,
+      "title": "Can the Iranian regime be toppled from the air?",
+      "source": "Times of Israel",
+      "source_url": "https://www.timesofisrael.com/can-the-iran-regime-be-toppled-from-the-air/",
+      "published": "2026-03-06T12:25:27+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85,
+      "is_government": false
+    },
+    {
+      "id": 229261234,
+      "title": "RT by @moiuae: الدفاعات الجوية الإماراتية تتعامل مع 9 صواريخ باليستية و109 طائرة مسيّرة.\n\nرصدت الدفاعات الجوية الإماراتية اليوم (6 مارس 2026) عدد 9 من الصواريخ الباليستية وتم تدميرها. كما رصدت عدد 112 طائرة مسيّرة، حيث تم اعتراض 109 طائرة مسيّرة، بينما سقطت 3 منها داخل أراضي الدولة.\n\nومنذ بدء الاعتداء الإيراني السافر، تم رصد 205 صاروخاً باليستياً، حيث تم تدمير 190 صاروخاً باليستياً، فيما سقط 13 منها في مياه البحر، وسقط عدد 2 صاروخ داخل أراضي الدولة. كما تم رصد 1184 طائرة مسيّرة إيرانية واعتراض 1110 منها، فيما سقطت 74 طائرة مسيّرة داخل أراضي الدولة. كما تم أيضاً رصد وتدمير عدد 8 صواريخ جوالة.\n\nوخلفت هذه الاعتداءات 3 حالات وفاة من الجنسيات الباكستانية والنيبالية والبنغلادشية، و112حالة إصابة بسيطة من الجنسيات الإماراتية والمصرية والإثيوبية والفلبينية والباكستانية والإيرانية والهندية والبنغلادشية والسيرلانكية والأذربيجانية واليمنية والأوغندية والإريترية واللبنانية والأفغانية والبحرينية ومن جزر القمر والتركية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أي تهديدات، والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، بما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
+      "source": "UAE Ministry of Interior",
+      "source_url": "https://nitter.net/modgovae/status/2029896097079214216#m",
+      "published": "2026-03-06T12:25:17+00:00",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 100,
+      "is_government": true
+    },
+    {
+      "id": 236145812,
+      "title": "RT by @mofauae: الدفاعات الجوية الإماراتية تتعامل مع 9 صواريخ باليستية و109 طائرة مسيّرة.\n\nرصدت الدفاعات الجوية الإماراتية اليوم (6 مارس 2026) عدد 9 من الصواريخ الباليستية وتم تدميرها. كما رصدت عدد 112 طائرة مسيّرة، حيث تم اعتراض 109 طائرة مسيّرة، بينما سقطت 3 منها داخل أراضي الدولة.\n\nومنذ بدء الاعتداء الإيراني السافر، تم رصد 205 صاروخاً باليستياً، حيث تم تدمير 190 صاروخاً باليستياً، فيما سقط 13 منها في مياه البحر، وسقط عدد 2 صاروخ داخل أراضي الدولة. كما تم رصد 1184 طائرة مسيّرة إيرانية واعتراض 1110 منها، فيما سقطت 74 طائرة مسيّرة داخل أراضي الدولة. كما تم أيضاً رصد وتدمير عدد 8 صواريخ جوالة.\n\nوخلفت هذه الاعتداءات 3 حالات وفاة من الجنسيات الباكستانية والنيبالية والبنغلادشية، و112حالة إصابة بسيطة من الجنسيات الإماراتية والمصرية والإثيوبية والفلبينية والباكستانية والإيرانية والهندية والبنغلادشية والسيرلانكية والأذربيجانية واليمنية والأوغندية والإريترية واللبنانية والأفغانية والبحرينية ومن جزر القمر والتركية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أي تهديدات، والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، بما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
+      "source": "UAE Ministry of Foreign Affairs",
+      "source_url": "https://nitter.net/modgovae/status/2029896097079214216#m",
+      "published": "2026-03-06T12:25:17+00:00",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 100,
+      "is_government": true
+    },
+    {
+      "id": 415218962,
       "title": "The siren has been sounded .Citizens and residents are urged to remain calm and head to the nearest safe place",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029892452035830068#m",
@@ -20,7 +309,7 @@
       "is_government": true
     },
     {
-      "id": 846463711,
+      "id": 635511860,
       "title": "تم إطلاق صافرة الإنذار ، نرجو من المواطنين والمقيمين الهدوء والتوجه لأقرب مكان آمن ومتابعة الأخبار عبر القنوات الرسمية.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029892360423772569#m",
@@ -37,7 +326,7 @@
       "is_government": true
     },
     {
-      "id": 942314194,
+      "id": 715932788,
       "title": "لليوم الثاني على التوالي.. وساطة إماراتية - أمريكية جديدة بين روسيا وأوكرانيا تنجح في إطلاق 600 أسير حرب\n\nhttps://www.mofa.gov.ae/ar-ae/MediaHub/News/2026/3/6/UAE-USA",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2029892117729005784#m",
@@ -54,7 +343,7 @@
       "is_government": true
     },
     {
-      "id": 396065943,
+      "id": 315581743,
       "title": "Amid Iran war, will Russia exploit Ukraine’s shortage of Patriot missiles?",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/news/2026/3/6/amid-iran-war-will-russia-exploit-ukraines-shortage-of-patriot-missiles?traffic_source=rss",
@@ -71,7 +360,7 @@
       "is_government": false
     },
     {
-      "id": 385918402,
+      "id": 373985466,
       "title": "What is the PrSM missile that the US used for the first time in Iran?",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/news/2026/3/6/what-is-the-prsm-missile-that-the-us-used-for-the-first-time-in-iran?traffic_source=rss",
@@ -88,7 +377,7 @@
       "is_government": false
     },
     {
-      "id": 624276212,
+      "id": 581244900,
       "title": "Iranians mourn Khamenei as they gather for first Friday prayers during war",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/news/2026/3/6/iranians-mourn-khamenei-as-they-gather-for-first-friday-prayers-during-war?traffic_source=rss",
@@ -105,7 +394,7 @@
       "is_government": false
     },
     {
-      "id": 177476293,
+      "id": 23788493,
       "title": "The end of Iran’s strategic patience",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/opinions/2026/3/6/the-end-of-irans-strategic-patience?traffic_source=rss",
@@ -122,7 +411,7 @@
       "is_government": false
     },
     {
-      "id": 357783845,
+      "id": 233557363,
       "title": "White House to press defense firms to boost production as Iran strikes drain stockpiles",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/white-house-to-press-defense-firms-to-boost-production-as-iran-strikes-drain-stockpiles/",
@@ -139,7 +428,7 @@
       "is_government": false
     },
     {
-      "id": 427287596,
+      "id": 693498124,
       "title": "US Says Forces Destroy Over 30 Iranian Naval Vessels",
       "source": "Morocco World News",
       "source_url": "https://www.moroccoworldnews.com/2026/03/281763/us-says-forces-destroy-over-30-iranian-naval-vessels/",
@@ -156,7 +445,7 @@
       "is_government": false
     },
     {
-      "id": 942563039,
+      "id": 31321278,
       "title": "🎥 WATCH: ~50 Israeli Air Force fighter jets dismantled Ali Khamenei’s underground military bunker beneath the Iranian regime’s leadership compound in Tehran.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029878769142358298#m",
@@ -173,7 +462,7 @@
       "is_government": true
     },
     {
-      "id": 787618551,
+      "id": 952425724,
       "title": "A weak Iran would backfire on the United States",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/opinions/2026/3/6/a-weak-iran-would-backfire-on-the-united-states?traffic_source=rss",
@@ -190,7 +479,7 @@
       "is_government": false
     },
     {
-      "id": 976876955,
+      "id": 683602258,
       "title": "In maps: Seven days of strikes across the Middle East",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c4g0pnnj8xyo?at_medium=RSS&at_campaign=rss",
@@ -207,7 +496,7 @@
       "is_government": false
     },
     {
-      "id": 926622037,
+      "id": 881443673,
       "title": "Hitting our PR in Iran💪",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029875198783111569#m",
@@ -224,7 +513,7 @@
       "is_government": true
     },
     {
-      "id": 514911593,
+      "id": 139805750,
       "title": "Pastors pray for Trump as strikes on Iran continue",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/6/pastors-pray-for-trump-as-strikes-on-iran-continue?traffic_source=rss",
@@ -241,7 +530,7 @@
       "is_government": false
     },
     {
-      "id": 390512907,
+      "id": 770061720,
       "title": "Northern Governor inspects shelter centres, commends efforts to provide services https://www.policemc.gov.bh/en/news/76899/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029869465421107394#m",
@@ -258,7 +547,7 @@
       "is_government": true
     },
     {
-      "id": 107073386,
+      "id": 286555018,
       "title": "Huge explosion seen in Tehran as strikes on Iran continue",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/6/huge-explosion-seen-in-tehran-as-strikes-on-iran-continue?traffic_source=rss",
@@ -275,7 +564,7 @@
       "is_government": false
     },
     {
-      "id": 13426610,
+      "id": 663755709,
       "title": "UK arrests four Iranian nationals on suspicion of spying on London Jews for Tehran",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/uk-arrests-four-iranian-nationals-on-suspicion-of-spying-on-london-jews-for-tehran/",
@@ -292,7 +581,7 @@
       "is_government": false
     },
     {
-      "id": 464307064,
+      "id": 875149768,
       "title": "RT by @moiuae: التزامنا بالتوجيهات الصادرة عن دولتنا ومؤسساتها الرسمية يعكس وعياً وطنياً راسخاً.\nاحرصوا على تجنب تصوير أو نشر أو إعادة تداول محتوى يوضح مواقع حيوية وأمنية حساسة، أو ترويج معلومات غير موثوقة أو محتوى مُفبرك باستخدام التقنيات الحديثة.\nوعينا يحمي مجتمعنا.\n#الهيئة_الوطنية_للإعلام\n\nOur commitment to the guidance issued by our nation and its official institutions reflects a strong sense of national awareness.\nPlease avoid photographing, publishing, or re-sharing content revealing sensitive security sites or vital locations, and refrain from promoting unverified information or fabricated content created using modern technologies.\n\nOur awareness protects our community.\n#NMA",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/UAENMA/status/2029861888063066286#m",
@@ -309,7 +598,7 @@
       "is_government": true
     },
     {
-      "id": 466204695,
+      "id": 196002797,
       "title": "New video shows rescue of Iran sailors after US attack on ship",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/6/new-video-shows-rescue-of-iran-sailors-after-us-attack-on-ship?traffic_source=rss",
@@ -326,7 +615,7 @@
       "is_government": false
     },
     {
-      "id": 137559236,
+      "id": 768663420,
       "title": "RT by @SaudiDCD: أبرز أخبار وزارة الداخلية خلال الفترة من 11 إلى 17 رمضان 1447هـ، الموافق 28 فبراير إلى 06 مارس 2026م. \n\n#الداخلية_في_أسبوع",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2029859547310084155#m",
@@ -343,7 +632,7 @@
       "is_government": true
     },
     {
-      "id": 159559962,
+      "id": 295646160,
       "title": "#UAE, #Japan successfully conclude CEPA negotiations to strengthen economic ties\n\n#WamNews \n\nhttps://www.wam.ae/a/bz2fv31",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029858657589153874#m",
@@ -360,24 +649,7 @@
       "is_government": true
     },
     {
-      "id": 566963950,
-      "title": "سلامتنا في إلتزامنا\n-إرشادات التعامل في حال \nتوقف المصعد -\n• الإلتزام بالهدوء وعدم الإرتباك والقلق،\n• الضغط على زر الإنذار لطلب المساعدة.\n• عدم فتح باب المصعد في محاولة للهرب لعدم تعريض حياتك للخطر.\n• الإتصال على هاتف الطوارئ (112) لطلب المساعدة.\n• الجلوس على أرضية المصعد لتخفيف التوتر وإنتظار وصول المساعدة.\n\n#ktt_kw",
-      "source": "Kuwait Fire Force",
-      "source_url": "https://nitter.net/kff_kw/status/2029853065105289650#m",
-      "published": "2026-03-06T09:34:18+00:00",
-      "type": "alert",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "Kuwait",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 415691516,
+      "id": 758522241,
       "title": "Beit Shemesh family clings to God after 3 kids killed by Iran: ‘Faith isn’t built in a day’",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/beit-shemesh-family-clings-to-god-after-3-kids-killed-by-iran-faith-isnt-built-in-a-day/",
@@ -394,7 +666,7 @@
       "is_government": false
     },
     {
-      "id": 799552507,
+      "id": 516772943,
       "title": "Is BRICS bloc divided over US-Israel attacks on Iran?",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/news/2026/3/6/is-brics-bloc-divided-over-us-israel-attacks-on-iran?traffic_source=rss",
@@ -411,7 +683,7 @@
       "is_government": false
     },
     {
-      "id": 433392772,
+      "id": 537923051,
       "title": "Will the Houthis join Iran’s war?",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/opinions/2026/3/6/will-the-houthis-join-irans-war?traffic_source=rss",
@@ -428,7 +700,7 @@
       "is_government": false
     },
     {
-      "id": 839206418,
+      "id": 228416887,
       "title": "Notice regarding maintaining public safety when hearing the sound of explosions. #MoIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029845361536201048#m",
@@ -445,7 +717,7 @@
       "is_government": true
     },
     {
-      "id": 391400155,
+      "id": 515801179,
       "title": "UAE President receives phone call from King of Tonga condemning Iranian attacks targeting the UAE\n\n#WamNews \n\nhttps://www.wam.ae/a/bz2fv32",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029844601415385580#m",
@@ -462,58 +734,7 @@
       "is_government": true
     },
     {
-      "id": 301194708,
-      "title": "Some damage from recent missile barrage. No significant injuries known.",
-      "source": "Magen David Adom",
-      "source_url": "https://nitter.net/Mdais/status/2029843568731296229#m",
-      "published": "2026-03-06T08:56:34+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "Israel",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 815560911,
-      "title": "Cost to US for war on Iran is $3.7bn in first 100 hours, says think tank",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/news/2026/3/6/cost-to-us-for-war-on-iran-is-3-7bn-in-first-100-hours-says-think-tank?traffic_source=rss",
-      "published": "2026-03-06T08:35:27+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 90,
-      "is_government": false
-    },
-    {
-      "id": 899989250,
-      "title": "Tens of thousands in scramble for flights out of Middle East amid Iran war",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/economy/2026/3/6/scramble-for-flights-out-of-middle-east-amid-iran-war?traffic_source=rss",
-      "published": "2026-03-06T08:29:52+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 90,
-      "is_government": false
-    },
-    {
-      "id": 142015199,
+      "id": 717281419,
       "title": "Who is Mojtaba Khamenei, likely candidate to replace father as Iran’s supreme leader?",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/who-is-mojtaba-khamenei-likely-candidate-to-replace-father-as-irans-supreme-leader/",
@@ -530,7 +751,7 @@
       "is_government": false
     },
     {
-      "id": 692574229,
+      "id": 940382195,
       "title": "UAE President sends letter to Prime Minister of Japan\n\n#WamNews \n\nhttps://www.wam.ae/a/bz2fv07",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029834734877167837#m",
@@ -547,41 +768,7 @@
       "is_government": true
     },
     {
-      "id": 24722107,
-      "title": "Anger in Cyprus over UK bases as US-Israel war with Iran endangers island",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/features/2026/3/6/anger-in-cyprus-over-uk-bases-as-us-israel-war-with-iran-endangers-island?traffic_source=rss",
-      "published": "2026-03-06T08:03:18+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Israel",
-        "lat": 31.0461,
-        "lng": 34.8516
-      },
-      "credibility": 90,
-      "is_government": false
-    },
-    {
-      "id": 80163521,
-      "title": "Thousands displaced in Beirut after Israeli forced evacuation order",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/6/thousands-displaced-in-beirut-after-israeli-forced-evacuation-order?traffic_source=rss",
-      "published": "2026-03-06T08:00:11+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Beirut",
-        "country": "Lebanon",
-        "lat": 33.8938,
-        "lng": 35.5018
-      },
-      "credibility": 90,
-      "is_government": false
-    },
-    {
-      "id": 122649963,
+      "id": 825445928,
       "title": "UAE Attorney-General warns against sharing incident site images, misleading digital content\n\n#WamNews \n\nhttps://www.wam.ae/a/173udwn",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029822140640547251#m",
@@ -598,7 +785,7 @@
       "is_government": true
     },
     {
-      "id": 376723167,
+      "id": 999194407,
       "title": "R to @IDF: Below are the IDF Chief of the General Staff LTG Eyal Zamir’s full remarks on US-Israel cooperation in Operation Roaring Lion:\n\nhttp://bit.ly/4udsdWe",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029821641396473982#m",
@@ -615,24 +802,24 @@
       "is_government": true
     },
     {
-      "id": 9049107,
-      "title": "More than 120 killed in Israel’s Lebanon attacks as Beirut, south, east hit",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/news/2026/3/6/death-toll-in-israels-lebanon-attacks-over-120-as-beirut-south-east-hit?traffic_source=rss",
-      "published": "2026-03-06T07:23:30+00:00",
-      "type": "attack",
+      "id": 875646864,
+      "title": "RT by @moiuae: النائب العام للدولة يحذر من تداول صور ومقاطع مواقع الحوادث أو مواد مضللة عبر المنصات الرقمية\n\n#وام \n\nhttps://www.wam.ae/a/bz2fnae",
+      "source": "UAE Ministry of Interior",
+      "source_url": "https://nitter.net/wamnews/status/2029820011343446435#m",
+      "published": "2026-03-06T07:22:57+00:00",
+      "type": "security",
       "status": "unconfirmed",
       "location": {
-        "name": "Beirut",
-        "country": "Lebanon",
-        "lat": 33.8938,
-        "lng": 35.5018
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
       },
-      "credibility": 90,
-      "is_government": false
+      "credibility": 100,
+      "is_government": true
     },
     {
-      "id": 194895467,
+      "id": 17151548,
       "title": "Israeli researchers find cannabis compounds could lead to 1st drug for fatty liver disease",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/israeli-researchers-find-cannabis-compounds-could-lead-to-1st-drug-for-fatty-liver-disease/",
@@ -649,7 +836,7 @@
       "is_government": false
     },
     {
-      "id": 305136064,
+      "id": 822850439,
       "title": "RT by @moiuae: تؤكّد وزارة الاقتصاد والسياحة استمرار استقبال الزوار في مختلف الوجهات السياحية في دولة الإمارات، مع التزام المنشآت السياحية والفندقية والمعالم الثقافية والترفيهية بتقديم خدماتها وفق الأطر التنظيمية المعتمدة ومعايير السلامة والجودة.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/Economyae/status/2029806604519129209#m",
@@ -666,7 +853,7 @@
       "is_government": true
     },
     {
-      "id": 638498169,
+      "id": 685457174,
       "title": "⭕️ The IAF conducted a broad-scale wave of 26 strikes in the Dahieh area of Lebanon, targeting Hezbollah terrorist infrastructure.\n\nAmong the targets were an executive council’s command center and a facility storing UAVs used for attacks against Israel.\n\nPrior to the strikes, measures were taken to mitigate the risk of harm to civilians.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029803151759446071#m",
@@ -683,7 +870,7 @@
       "is_government": true
     },
     {
-      "id": 912259907,
+      "id": 48653596,
       "title": "Iranians tell ToI they praise Israel, US for Khamenei’s end, but fear what’s next",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/iranians-tell-toi-they-praise-israel-us-for-khameneis-end-but-fear-whats-next/",
@@ -700,7 +887,7 @@
       "is_government": false
     },
     {
-      "id": 779768820,
+      "id": 296050846,
       "title": "Hezbollah brought this on itself. \n\nDon’t threaten our people.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029784366553895277#m",
@@ -717,7 +904,7 @@
       "is_government": true
     },
     {
-      "id": 795391528,
+      "id": 888887273,
       "title": "GOP senator helps forcibly remove protester shouting ‘no one wants to fight for Israel’",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/gop-senator-helps-forcibly-remove-protester-shouting-no-one-wants-to-fight-for-israel/",
@@ -734,7 +921,7 @@
       "is_government": false
     },
     {
-      "id": 259685916,
+      "id": 523349893,
       "title": "Israel strikes Beirut after evacuation warning sparks panic",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cj32750e7j6o?at_medium=RSS&at_campaign=rss",
@@ -751,7 +938,7 @@
       "is_government": false
     },
     {
-      "id": 804148379,
+      "id": 78285412,
       "title": "US probe said to indicate American forces likely launched strike that hit Iran girls school",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/us-probe-said-to-indicate-american-forces-likely-launched-strike-that-hit-iran-girls-school/",
@@ -768,7 +955,7 @@
       "is_government": false
     },
     {
-      "id": 12338502,
+      "id": 96473832,
       "title": "Notice regarding importance of adherence to the instructions issued by the official authorities and demonstrate awareness and social responsibility all times.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029754359412670782#m",
@@ -785,7 +972,7 @@
       "is_government": true
     },
     {
-      "id": 622079765,
+      "id": 765884989,
       "title": "US, Israel say Iran missile fire down, most launchers taken out as offensive ramps up",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/us-israel-say-iran-missile-fire-down-most-launchers-taken-out-as-offensive-ramps-up/",
@@ -802,7 +989,7 @@
       "is_government": false
     },
     {
-      "id": 829867135,
+      "id": 918977560,
       "title": "In shadow of war, Israel’s Winter Paralympian is ready to ski – but not on Shabbat",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/in-shadow-of-war-israels-winter-paralympian-is-ready-to-ski-but-not-on-shabbat/",
@@ -819,7 +1006,7 @@
       "is_government": false
     },
     {
-      "id": 440360313,
+      "id": 632601715,
       "title": "In safety precaution, Israel bars Friday Ramadan prayers at Temple Mount amid Iran war",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/in-safety-precaution-israel-to-bar-friday-ramadan-prayers-at-temple-mount-amid-iran-war/",
@@ -836,7 +1023,7 @@
       "is_government": false
     },
     {
-      "id": 233042232,
+      "id": 988700658,
       "title": "Novelty no more, Team Israel goes to bat for local game with return to World Baseball Classic",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/novelty-no-more-team-israel-goes-to-bat-for-local-game-with-return-to-world-baseball-classic/",
@@ -853,7 +1040,7 @@
       "is_government": false
     },
     {
-      "id": 531634668,
+      "id": 185388249,
       "title": "US Submarine Sinks Iranian Warship Off Sri Lanka Coast",
       "source": "Morocco World News",
       "source_url": "https://www.moroccoworldnews.com/2026/03/281753/us-submarine-sinks-iranian-warship-off-sri-lanka-coast/",
@@ -870,7 +1057,7 @@
       "is_government": false
     },
     {
-      "id": 448430332,
+      "id": 129883243,
       "title": "Correction: MOI: Iranian aggression targeted a hotel & 2 residential buildings in Manama.  No loss of life were recorded.  Civil defence extinguished a fire in a flat in 1 of the 2  buildings",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029721534307131405#m",
@@ -887,7 +1074,7 @@
       "is_government": true
     },
     {
-      "id": 948113344,
+      "id": 407548961,
       "title": "تصحيح  ..  وزارة الداخلية : العدوان الإيراني يستهدف فندق ومبنيين سكنيين في العاصمة المنامة ، دون وقوع خسائر في الأرواح  ، فيما تمكن الدفاع المدني من السيطرة على حريق اندلع بشقة في أحد المبنيين.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029719517320884252#m",
@@ -904,24 +1091,7 @@
       "is_government": true
     },
     {
-      "id": 187640073,
-      "title": "Despite war, Israel releases ‘Michelle,’ its 2026 Eurovision song",
-      "source": "Times of Israel",
-      "source_url": "https://www.timesofisrael.com/despite-war-israel-releases-michelle-its-2026-eurovision-song/",
-      "published": "2026-03-06T00:42:00+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Israel",
-        "lat": 31.0461,
-        "lng": 34.8516
-      },
-      "credibility": 85,
-      "is_government": false
-    },
-    {
-      "id": 788054365,
+      "id": 541415578,
       "title": "R to @mofauae: UAE Condemns Iranian Drone Strike on Azerbaijan\n\nhttps://www.mofa.gov.ae/en/mediahub/news/2026/3/6/uae-azerbaijan",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2029709992723649012#m",
@@ -938,7 +1108,7 @@
       "is_government": true
     },
     {
-      "id": 915437087,
+      "id": 512440942,
       "title": "Middle East crisis live: Israel bombards Tehran and Beirut as US says attacks to intensify",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/live/2026/mar/06/iran-war-live-updates-us-temporarily-lets-india-buy-russian-oil-amid-energy-fears-israeli-military-launches-strikes-on-beirut",
@@ -955,7 +1125,7 @@
       "is_government": false
     },
     {
-      "id": 320623994,
+      "id": 700556094,
       "title": "US officials increase security over fear of attack by Iran amid US-Israel bombing",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/06/security-increase-iran-attack-us-israel-bombing",
@@ -972,8 +1142,25 @@
       "is_government": false
     },
     {
-      "id": 966235684,
-      "title": "Next supreme leader must not play into anti-Iran US propaganda, say reformists",
+      "id": 572452597,
+      "title": "US investigators believe strike on Iranian girls’ school probably carried out by US forces",
+      "source": "The Guardian",
+      "source_url": "https://www.theguardian.com/world/2026/mar/06/us-investigators-believe-strike-on-iranian-girls-school-likely-carried-out-by-us-forces",
+      "published": "2026-03-06T00:00:00+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 90,
+      "is_government": false
+    },
+    {
+      "id": 559117968,
+      "title": "Iran’s president says ‘some countries’ have begun mediation efforts to end war",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/06/new-supreme-leader-anti-iran-us-propaganda-reformists",
       "published": "2026-03-06T00:00:00+00:00",
@@ -989,7 +1176,7 @@
       "is_government": false
     },
     {
-      "id": 903889663,
+      "id": 815162629,
       "title": "‘Sense of doom’: fear and foreboding over Iran war among London’s divided diaspora",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/uk-news/2026/mar/06/iranian-exiles-in-london-sense-of-doom-us-israeli-war",
@@ -1006,7 +1193,7 @@
       "is_government": false
     },
     {
-      "id": 484934406,
+      "id": 856852991,
       "title": "‘We’re powerless … and hoping nothing hits us’: trapped on a tanker as Iran war escalates",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/business/2026/mar/06/seafarers-trapped-oil-tankers-standed-iran-war-strait-of-hormuz-shipping",
@@ -1023,7 +1210,7 @@
       "is_government": false
     },
     {
-      "id": 947588759,
+      "id": 474620830,
       "title": "Is regime change in Iran a possibility? – video",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/video/2026/mar/06/is-regime-change-in-iran-a-possibility-video",
@@ -1040,7 +1227,7 @@
       "is_government": false
     },
     {
-      "id": 407544440,
+      "id": 583023807,
       "title": "Influencers sold the world a fantasy Dubai – and now it’s gone in a puff of missile smoke | Gaby Hinsliff",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/commentisfree/2026/mar/06/influencers-sold-fantasy-dubai-missile-economic-migrants",
@@ -1057,7 +1244,7 @@
       "is_government": false
     },
     {
-      "id": 208526999,
+      "id": 810484420,
       "title": "Iran-backed militias intensify attacks against US, Israel and allies",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/06/iran-backed-militias-iraq-attacks-us-israel",
@@ -1074,7 +1261,7 @@
       "is_government": false
     },
     {
-      "id": 840071445,
+      "id": 376689754,
       "title": "Three Australians were on US submarine that sank Iranian warship, PM says",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/australia-news/2026/mar/06/australians-onboard-us-submarine-sank-iran-warship",
@@ -1091,7 +1278,7 @@
       "is_government": false
     },
     {
-      "id": 706819103,
+      "id": 902618621,
       "title": "Ukraine to help US and its allies counter Iranian drones in Middle East, says Zelenskyy",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/06/ukraine-zelenskyy-iran-war-help-us-israel-fight-drones",
@@ -1108,7 +1295,58 @@
       "is_government": false
     },
     {
-      "id": 794667885,
+      "id": 307015773,
+      "title": "Al Aqsa silent for Friday prayers as Iran war empties Jerusalem",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/06/al-aqsa-silent-for-friday-prayers-as-iran-war-empties-jerusalem/",
+      "published": "2026-03-06T00:00:00+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Jerusalem",
+        "country": "Israel",
+        "lat": 31.7683,
+        "lng": 35.2137
+      },
+      "credibility": 85,
+      "is_government": false
+    },
+    {
+      "id": 607162003,
+      "title": "‘Back to zero’: Israel's war wipes out Baalbek’s fragile recovery",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/06/back-to-zero-israels-war-in-lebanon-wipes-out-baalbeks-fragile-recovery/",
+      "published": "2026-03-06T00:00:00+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 85,
+      "is_government": false
+    },
+    {
+      "id": 485834548,
+      "title": "UAE destroys another nine ballistic missiles and 109 drones launched by Iran",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/06/uae-iran-missile-strikes/",
+      "published": "2026-03-06T00:00:00+00:00",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 85,
+      "is_government": false
+    },
+    {
+      "id": 377609625,
       "title": "First 100 hours of strikes in Iran cost US $3.7bn, report says",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/business/economy/2026/03/06/first-100-hours-of-strikes-in-iran-cost-us-37bn-report-says/",
@@ -1125,7 +1363,7 @@
       "is_government": false
     },
     {
-      "id": 796379723,
+      "id": 995109568,
       "title": "Russia and Ukraine swap 600 prisoners after second UAE-US mediation in two days",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/uae/2026/03/06/russia-ukraine-prisoner-swap-uae-us/",
@@ -1142,7 +1380,7 @@
       "is_government": false
     },
     {
-      "id": 568890431,
+      "id": 503490972,
       "title": "Iran strikes hotel and residential buildings in Manama, widening Gulf retaliation campaign",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/gulf/2026/03/06/iran-strikes-hotel-and-residential-buildings-in-manama-widening-gulf-retaliation-campaign/",
@@ -1159,7 +1397,7 @@
       "is_government": false
     },
     {
-      "id": 919094955,
+      "id": 644996236,
       "title": "Public warned that taking or resharing footage of drone and missile incidents is illegal in UAE",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/uae/2026/03/06/public-warned-that-taking-or-resharing-footage-of-drone-and-missile-incidents-is-illegal-in-uae/",
@@ -1176,7 +1414,7 @@
       "is_government": false
     },
     {
-      "id": 339270355,
+      "id": 446577286,
       "title": "Israeli actions in Lebanon ‘disproportionate', says Macron’s special envoy",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/europe/2026/03/06/israeli-actions-in-lebanon-disproportionate-says-macrons-special-envoy/",
@@ -1193,7 +1431,7 @@
       "is_government": false
     },
     {
-      "id": 739603802,
+      "id": 603337562,
       "title": "Mercedes boss hopes Bahrain and Saudi races go ahead but F1 not the priority",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/sport/f1/2026/03/06/mercedes-boss-hopes-bahrain-and-saudi-races-go-ahead-but-f1-not-the-priority/",
@@ -1210,7 +1448,7 @@
       "is_government": false
     },
     {
-      "id": 260209892,
+      "id": 59258559,
       "title": "UAE and Japan conclude trade deal negotiations to deepen economic ties",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/business/economy/2026/03/06/uae-and-japan-conclude-trade-deal-negotiations-to-deepen-economic-ties/",
@@ -1227,7 +1465,7 @@
       "is_government": false
     },
     {
-      "id": 796471204,
+      "id": 527612502,
       "title": "Tehran says no talks or ceasefire despite US claims of heavy losses to Iranian forces",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/2026/03/06/tehran-says-no-talks-or-ceasefire-despite-us-claims-of-heavy-losses-to-iranian-forces/",
@@ -1244,7 +1482,7 @@
       "is_government": false
     },
     {
-      "id": 382590907,
+      "id": 806514638,
       "title": "Four suspected Iranian spies arrested in London",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/uk/2026/03/06/four-suspected-iranian-spies-arrested-in-london/",
@@ -1261,7 +1499,7 @@
       "is_government": false
     },
     {
-      "id": 437176246,
+      "id": 427626090,
       "title": "Sheikh Hamdan discusses Iranian strikes with Saudi Arabia's Minister of Defence",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/uae/2026/03/06/sheikh-hamdan-discusses-iranian-strikes-with-saudi-arabias-minister-of-defence/",
@@ -1278,41 +1516,7 @@
       "is_government": false
     },
     {
-      "id": 667053927,
-      "title": "President Sheikh Mohamed receives more calls from global leaders following attacks by Iran",
-      "source": "The National UAE",
-      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/06/president-sheikh-mohamed-receives-more-calls-from-global-leaders-following-attacks-by-iran/",
-      "published": "2026-03-06T00:00:00+00:00",
-      "type": "attack",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 85,
-      "is_government": false
-    },
-    {
-      "id": 615041253,
-      "title": "Israel hits Beirut with series of strikes after forcing hundreds of thousands to flee suburbs",
-      "source": "The National UAE",
-      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/06/israel-hits-beirut-with-series-of-strikes-after-forcing-hundreds-of-thousands-to-flee-suburbs/",
-      "published": "2026-03-06T00:00:00+00:00",
-      "type": "attack",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Beirut",
-        "country": "Lebanon",
-        "lat": 33.8938,
-        "lng": 35.5018
-      },
-      "credibility": 85,
-      "is_government": false
-    },
-    {
-      "id": 257705998,
+      "id": 72996232,
       "title": "Iran can still fire drones and missiles — experts weigh the implications on the war",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/mideast-africa/2026/03/06/iran-can-still-fire-drones-and-missiles-experts-weigh-the-implications-on-the-war/",
@@ -1329,7 +1533,7 @@
       "is_government": false
     },
     {
-      "id": 343779621,
+      "id": 435797200,
       "title": "‘Race of attrition’: US military’s finite interceptor stockpile is being tested",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/your-military/2026/03/06/race-of-attrition-us-militarys-finite-interceptor-stockpile-is-being-tested/",
@@ -1346,7 +1550,7 @@
       "is_government": false
     },
     {
-      "id": 403184860,
+      "id": 137424675,
       "title": "RT by @mofauae: Abdullah bin Zayed Holds Phone Calls with Several Foreign Ministers to Discuss Regional Developments\n\nHis Highness Sheikh Abdullah bin Zayed Al Nahyan, Deputy Prime Minister and Minister of Foreign Affairs, held phone calls with a number of foreign ministers to discuss the latest regional and international developments, following the blatant Iranian missile attacks that targeted the UAE and several countries in the region.\n\nHis Highness held phone calls with His Excellency Cho Hyun, Foreign Minister of the brotherly Republic of Korea; His Excellency Ararat Mirzoyan, Minister of Foreign Affairs of Armenia; His Excellency Giorgos Gerapetritis, Minister of Foreign Affairs of Greece; His Excellency Lars Løkke Rasmussen, Minister of Foreign Affairs of Denmark; Her Excellency Gabriela Sommerfeld, Minister of Foreign Affairs and Human Mobility of Ecuador; His Excellency Bruno Rodríguez, Minister of Foreign Affairs of the Republic of Cuba; His Excellency Dato Erywan Yusof, the Second Minister of Foreign Affairs of Brunei Darussalam.\n\nHis Highness and the ministers exchanged views on the latest developments in the region and their implications for regional stability, the global economy, and energy security. They also discussed the importance of joint action to strengthen international efforts aimed at consolidating regional security and stability.\n\nH.H. Sheikh Abdullah bin Zayed Al Nahyan and the ministers strongly condemned and denounced the blatant Iranian missile attacks on the UAE and other countries in the region, stressing their categorical rejection of such acts, which constitute a flagrant violation of international law and the Charter of the United Nations, and a direct threat to countries’ security and stability.\n\nThey also affirmed the right of the targeted countries to take the necessary measures to safeguard their sovereignty, security, territorial integrity, and the safety of their citizens and residents, in accordance with international law.\n\nHis Highness and the ministers discussed the importance of the international community standing together at this stage, intensifying diplomatic and political efforts, and supporting peaceful means and responsible dialogue to strengthen regional security and stability.\n\nH.H. Sheikh Abdullah bin Zayed Al Nahyan expressed his appreciation to the ministers for their solidarity and support for the UAE, affirming that all residents and visitors in the country are safe, and reiterating the UAE’s commitment to working with its partners in the international community to strengthen security and stability in the region.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2029704397182415226#m",
@@ -1363,7 +1567,7 @@
       "is_government": true
     },
     {
-      "id": 739165409,
+      "id": 524297212,
       "title": "RT by @mofauae: عبدالله بن زايد يبحث خلال اتصالات هاتفية مع عدد من وزراء الخارجية الأوضاع في المنطقة\n\nبحث سمو الشيخ عبدالله بن زايد آل نهيان، نائب رئيس مجلس الوزراء وزير الخارجية، خلال اتصالات هاتفية مع عدد من وزراء الخارجية، التطورات الإقليمية والدولية الراهنة، والأوضاع في المنطقة في أعقاب الاعتداءات الصاروخية الإيرانية السافرة التي استهدفت دولة الإمارات وعدداً من الدول في المنطقة.\n\nوقد أجرى سموه مباحثات هاتفية مع معالي جو هيون، وزير خارجية جمهورية كوريا الشقيقة، ومعالي أرارات ميرزويان، وزير خارجية جمهورية أرمينيا، ومعالي جورجوس جرابيتريتيس وزير خارجية جمهورية اليونان ، ومعالي لارس لوكه راسموسن وزير خارجية مملكة الدنمارك، ومعالي غابرييلا سومرفيلد وزيرة الخارجية والحراك البشري في جمهورية الإكوادور ، ومعالي برونو رودريغيز وزير خارجية جمهورية كوبا ، ومعالي ايراون بيهين يوسف، الوزير الثاني للشؤون الخارجية بسلطنة بروناي دار السلام.\n\nوتبادل سموه وأصحاب المعالي الوزراء وجهات النظر حول التطورات الراهنة في المنطقة وتأثيراتها على الاستقرار الإقليمي والاقتصاد العالمي وأمن إمدادات الطاقة، وناقشوا أهمية العمل المشترك لتعزيز المساعي الدولية الرامية إلى ترسيخ الأمن والاستقرار في المنطقة.\n\nوأدان سموه وأصحاب المعالي الوزراء، واستنكروا بشدة، الاعتداءات الصاروخية الإيرانية السافرة التي استهدفت دولة الإمارات وعدداً من دول المنطقة، مؤكدين رفضهم القاطع لمثل هذه الأعمال التي تشكل انتهاكاً صارخاً لمبادئ القانون الدولي وميثاق الأمم المتحدة، وتهديداً مباشراً لأمن الدول واستقرارها.\n\nكما شددوا على حق الدول التي تعرضت لهذه الاعتداءات في اتخاذ الإجراءات اللازمة لحماية سيادتها وسلامة أراضيها، وصون أمن مواطنيها والمقيمين والزائرين على أراضيها، وفق ما يكفله القانون الدولي.\n\nوبحث سموه وأصحاب المعالي الوزراء أهمية تكاتف المجتمع الدولي في هذه المرحلة، وتكثيف الجهود الدبلوماسية والسياسية، ودعم المسارات السلمية والحوار المسؤول بما يسهم في تعزيز الأمن والاستقرار الإقليميين.\n\nوخلال الاتصالات، أعرب سمو الشيخ عبدالله بن زايد آل نهيان عن تقديره لمواقف التضامن والدعم التي عبر عنها أصحاب المعالي الوزراء تجاه دولة الإمارات، مؤكداً سلامة جميع المقيمين والزائرين في الدولة، ومجدداً التزام دولة الإمارات بالعمل مع شركائها في المجتمع الدولي لترسيخ دعائم الأمن والاستقرار في المنطقة.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2029704387241857332#m",
@@ -1380,7 +1584,7 @@
       "is_government": true
     },
     {
-      "id": 221432733,
+      "id": 728485241,
       "title": "MOI: Iranian aggression targets two hotels and a residential building in Manama, causing material damage but no loss of life.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029703919165665523#m",
@@ -1397,7 +1601,7 @@
       "is_government": true
     },
     {
-      "id": 137539240,
+      "id": 124386388,
       "title": "وزارة الداخلية : العدوان الإيراني يستهدف فندقين ومبنى سكني في العاصمة المنامة ، ووقوع أضرار مادية من دون خسائر في الأرواح .",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029702758794940716#m",
@@ -1414,7 +1618,7 @@
       "is_government": true
     },
     {
-      "id": 355756353,
+      "id": 323803219,
       "title": "Lekjaa at Regragui Tribute: Qatar World Cup Achievement Will Live On in Generations",
       "source": "Morocco World News",
       "source_url": "https://www.moroccoworldnews.com/2026/03/281746/lekjaa-at-regragui-tribute-qatar-world-cup-achievement-will-live-on-in-generations/",
@@ -1431,7 +1635,7 @@
       "is_government": false
     },
     {
-      "id": 671371452,
+      "id": 959644390,
       "title": "'What is the game plan?': The Iran war is unsettling China and its ambitions",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c2044vzrdpzo?at_medium=RSS&at_campaign=rss",
@@ -1448,7 +1652,7 @@
       "is_government": false
     },
     {
-      "id": 348282595,
+      "id": 507994718,
       "title": "The siren has been sounded . Citizens and residents are urged to remain calm and head to the nearest safe place",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029695753158021231#m",
@@ -1465,7 +1669,7 @@
       "is_government": true
     },
     {
-      "id": 853480575,
+      "id": 667277314,
       "title": "أخمد #الدفاع_المدني بالرياض - في حينه - حريقًا محدودًا في غرفة بجامع بحي الجزيرة إثر خلل في إحدى توصيلات الإضاءة الكهربائية، ولا إصابات.",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2029695167242895431#m",
@@ -1482,7 +1686,7 @@
       "is_government": true
     },
     {
-      "id": 870612695,
+      "id": 69534479,
       "title": "Moroccans Chant for Iran But Who’s Standing for Morocco?",
       "source": "Morocco World News",
       "source_url": "https://www.moroccoworldnews.com/2026/03/281741/moroccans-chant-for-iran-but-whos-standing-for-morocco/",
@@ -1499,7 +1703,7 @@
       "is_government": false
     },
     {
-      "id": 232575576,
+      "id": 630538919,
       "title": "UAE strongly condemns the targeting of the territory of the friendly Republic of Azerbaijan by Iranian drones, describing the hostile act as a dangerous escalation, a flagrant violation of state sovereignty, and a direct threat to regional security.\n\n#WamNews",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029694412662657444#m",
@@ -1516,7 +1720,7 @@
       "is_government": true
     },
     {
-      "id": 210537874,
+      "id": 425522404,
       "title": "الإمارات تُدين استهداف أذربيجان بطائرات مُسيّرة إيرانية\n\nhttp://mofa.gov.ae/ar-ae/MediaHub/News/2026/3/6/UAE-Azerbaijan",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2029692109129724140#m",
@@ -1533,7 +1737,7 @@
       "is_government": true
     },
     {
-      "id": 882121878,
+      "id": 259541362,
       "title": "R to @mofauae: Her Excellency Lana Nusseibeh, Minister of State, participated in an extraordinary meeting of Foreign Ministers from the Gulf Cooperation Council (GCC) and the European Union (EU). During the meeting Her Excellency reaffirmed the importance of continued cooperation between the GCC and the European Union to promote stability.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2029677564575289359#m",
@@ -1550,7 +1754,7 @@
       "is_government": true
     },
     {
-      "id": 29676235,
+      "id": 995752593,
       "title": "'We have been preparing': Why the boots on the ground in Iran could be Kurdish",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cm215nnjyr0o?at_medium=RSS&at_campaign=rss",
@@ -1567,7 +1771,7 @@
       "is_government": false
     },
     {
-      "id": 407666276,
+      "id": 824626052,
       "title": "'This is war': BBC speaks to Iranians at Iran-Turkey border",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/videos/c86yeqg86yvo?at_medium=RSS&at_campaign=rss",
@@ -1584,7 +1788,7 @@
       "is_government": false
     },
     {
-      "id": 674414576,
+      "id": 376788483,
       "title": "📷 | #الدفاع_المدني يشارك في معرض وزارة الداخلية للتعريف بالخدمات المقدمة لضيوف الرحمن في العاصمة المقدسة.\n\n#حياكم_الله",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2029665710419386849#m",
@@ -1601,7 +1805,7 @@
       "is_government": true
     },
     {
-      "id": 268066323,
+      "id": 893462793,
       "title": "The Ministry of Interior confirms that working hours at its departments and service centers continue as announced during the holy month of Ramadan, with the option to complete transactions easily through its electronic platforms.\n\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029663711300911587#m",
@@ -1618,7 +1822,7 @@
       "is_government": true
     },
     {
-      "id": 820693580,
+      "id": 714070478,
       "title": "Checkpoints everywhere and internet blackouts: Life in Iran as US-Israeli strikes intensify",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cj4zze5lzjpo?at_medium=RSS&at_campaign=rss",
@@ -1635,7 +1839,7 @@
       "is_government": false
     },
     {
-      "id": 51616289,
+      "id": 906901128,
       "title": "Mansour bin Zayed, Kuwaiti Crown Prince discuss regional developments during phone call\n\n#WamNews \n\nhttps://www.wam.ae/a/173udtd",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029661857490121005#m",
@@ -1652,7 +1856,7 @@
       "is_government": true
     },
     {
-      "id": 811240998,
+      "id": 954840302,
       "title": "بحث سموّ الشيخ حمدان بن محمد بن راشد آل مكتوم، ولي عهد دبي، نائب رئيس مجلس الوزراء وزير الدفاع، مع صاحب السموّ الملكي الأمير خالد بن سلمان بن عبدالعزيز آل سعود، وزير الدفاع في المملكة العربية السعودية الشقيقة، خلال اتصال هاتفي أهم المستجدات على الساحة الإقليمية، والاعتداءات السافرة التي تعرضت لها دولة الإمارات العربية المتحدة والمملكة العربية السعودية وعدد من الدول الشقيقة خلال الأيام القليلة الماضية.\n\nوقد أدان الجانبان الاعتداءات الغاشمة التي تمثل انتهاكاً واضحاً للمواثيق الدولية ولسيادة الدول وأمنها وسلامة شعوبها، بما لتلك الاعتداءات من تداعيات وخيمة على مستقبل الأمن والاستقرار على الصعيدين الإقليمي والدولي، فيما أكد الجانبان احتفاظ الدولتين بحقهما في اتخاذ كافة التدابير التي من شأنها حماية مقدراتهما وضمان سلامة كل من يعيش على أرض المملكة العربية السعودية ودولة الإمارات العربية المتحدة.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2029657005481414668#m",
@@ -1669,7 +1873,7 @@
       "is_government": true
     },
     {
-      "id": 789878657,
+      "id": 836094299,
       "title": "Drone Dominance: Pentagon to order 30,000 one-way drones in ‘next few days’",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/drone-dominance-pentagon-to-order-30000-one-way-drones-in-next-few-days/",
@@ -1686,7 +1890,7 @@
       "is_government": false
     },
     {
-      "id": 89778225,
+      "id": 725996669,
       "title": "Hamdan bin Mohammed discusses latest regional developments with Saudi Minister of Defence\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ugcv",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029652269256560839#m",
@@ -1703,7 +1907,7 @@
       "is_government": true
     },
     {
-      "id": 552927214,
+      "id": 468673480,
       "title": "His Highness Sheikh Hamdan bin Mohammed bin Rashid Al Maktoum, Crown Prince of Dubai, Deputy Prime Minister and Minister of Defence of the UAE, held a phone call today (Thursday) with His Royal Highness Prince Khalid bin Salman bin Abdulaziz Al Saud, Minister of Defence of the Kingdom of Saudi Arabia. \nDuring the call, the two sides discussed the latest developments in the region and the recent aggressions targeting the United Arab Emirates, the Kingdom of Saudi Arabia, and several other brotherly countries over the past few days. These incidents were strongly condemned and described as a clear violation of international conventions, as well as the sovereignty, security, and safety of nations. Both sides emphasised that such acts carry serious implications for regional and international security and stability. They also affirmed that their countries reserve the right to take all necessary measures to safeguard their capabilities and ensure the safety and security of all those living in both nations.",
       "source": "Dubai Media Office",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2029650453756293545#m",
@@ -1720,7 +1924,7 @@
       "is_government": true
     },
     {
-      "id": 73550320,
+      "id": 28720215,
       "title": "UAE participates in extraordinary EU–GCC Foreign Ministers meeting\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ugcu",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029649458938716441#m",
@@ -1737,7 +1941,7 @@
       "is_government": true
     },
     {
-      "id": 831577323,
+      "id": 626577797,
       "title": "🔴ELIMINATED: Hezbollah firepower management commander Zaid Ali Jumaa in Beirut.\n\nJumaa served as Hezbollah’s head of artillery in southern Lebanon and was responsible for launching thousands of rockets, missiles and UAVs from Lebanon toward Israel.\n\nHe also led the 2015 anti-tank missile attack in Mount Dov that killed an IDF officer and soldier.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029649131027763686#m",
@@ -1754,7 +1958,7 @@
       "is_government": true
     },
     {
-      "id": 291438263,
+      "id": 774651682,
       "title": "حمدان بن محمد يبحث مع وزير الدفاع السعودي مستجدات الوضع الراهن في المنطقة\n\n#وام \n\nhttps://www.wam.ae/a/bz1u8no",
       "source": "WAM News Agency",
       "source_url": "https://nitter.net/wamnews/status/2029646551451324669#m",
@@ -1771,7 +1975,7 @@
       "is_government": true
     },
     {
-      "id": 772503810,
+      "id": 67091332,
       "title": "Muharraq Governor thanks Crown Prince and Prime Minister for government support to repair homes damaged by Iranian aggression\n\nhttps://www.policemc.gov.bh/en/news/76882/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029644590857285758#m",
@@ -1788,7 +1992,7 @@
       "is_government": true
     },
     {
-      "id": 583578648,
+      "id": 820251450,
       "title": "سموّ الشيخ حمدان بن محمد بن راشد آل مكتوم، ولي عهد دبي، نائب رئيس مجلس الوزراء وزير الدفاع، وصاحب السموّ الملكي الأمير خالد بن سلمان بن عبدالعزيز آل سعود، وزير الدفاع في المملكة العربية السعودية الشقيقة، يبحثان خلال اتصال هاتفي اليوم (الخميس) أهم المستجدات على الساحة الإقليمية، والاعتداءات السافرة التي تعرضت لها دولة الإمارات العربية المتحدة والمملكة العربية السعودية وعدد من الدول الشقيقة خلال الأيام القليلة الماضية. وقد أدان الجانبان الاعتداءات الغاشمة التي تمثل انتهاكاً واضحاً للمواثيق الدولية ولسيادة الدول وأمنها وسلامة شعوبها، بما لتلك الاعتداءات من تداعيات وخيمة على مستقبل الأمن والاستقرار على الصعيدين الإقليمي والدولي، فيما أكد الجانبان احتفاظ الدولتين بحقهما في اتخاذ كافة التدابير التي من شأنها حماية مقدراتهما وضمان سلامة كل من يعيش على أرض الدولتين.",
       "source": "Dubai Media Office",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2029642208333451638#m",
@@ -1805,7 +2009,7 @@
       "is_government": true
     },
     {
-      "id": 678616891,
+      "id": 242598998,
       "title": "In just 100 hours, this is what the IDF achieved:",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029640963044356367#m",
@@ -1822,7 +2026,7 @@
       "is_government": true
     },
     {
-      "id": 74006803,
+      "id": 797737949,
       "title": "محافظ المحرق يشكر سمو ولي العهد رئيس مجلس الوزراء على تكفل الحكومة بمعالجة الأضرار التي لحقت بمنازل المواطنين بمدينة الحد الإسكانية جراء العدوان الإيراني\n\nhttps://www.policemc.gov.bh/news/76882/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029640521442840908#m",
@@ -1839,7 +2043,7 @@
       "is_government": true
     },
     {
-      "id": 260182675,
+      "id": 729851243,
       "title": "UAE President receives phone call from Prime Minister of Libya's Government of National Unity affirming solidarity with the UAE\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ugct",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029636347410141300#m",
@@ -1856,7 +2060,7 @@
       "is_government": true
     },
     {
-      "id": 390709945,
+      "id": 158416634,
       "title": "The Economic and Cyber Crimes Department at the General Directorate of Criminal Investigation has arrested 194 individuals for filming and circulating videos, as well as publishing misleading information and rumors that incite public opinion.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029633426274320546#m",
@@ -1873,7 +2077,7 @@
       "is_government": true
     },
     {
-      "id": 320677389,
+      "id": 544569281,
       "title": "دفع بدل مدة حجز المركبات\nPayment of Vehicle Impound Period Allowance\n\n#خدماتي_رقمية\n#MOI_go_digital\n#خدمات_وزارة_الداخلية\n#MOI_Services\n@uaedgov\n\nللدخول إلى الخدمة بشكل مباشر ، يرجى الضغط على الرابط التالي\n\nTo access the service directly, please click on the following link\n\nhttps://portal.moi.gov.ae/eservices/direct?scode=486",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/moiuae/status/2029633252328427891#m",
@@ -1890,7 +2094,7 @@
       "is_government": true
     },
     {
-      "id": 48764360,
+      "id": 556094767,
       "title": "His Highness The Amir Sheikh Tamim bin Hamad Al Thani visits the National Command Center (NCC) of the Ministry of Interior  #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029633090214105163#m",
@@ -1907,7 +2111,7 @@
       "is_government": true
     },
     {
-      "id": 843817049,
+      "id": 129542400,
       "title": "Iran's high-risk war strategy seems to centre on endurance and deterrence",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c93jj3gz8x0o?at_medium=RSS&at_campaign=rss",
@@ -1924,7 +2128,7 @@
       "is_government": false
     },
     {
-      "id": 368333563,
+      "id": 790455044,
       "title": "Air Force seeks additional vendors for radar-killing missile",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/air-force-seeks-additional-vendors-for-radar-killing-missile/",
@@ -1941,7 +2145,7 @@
       "is_government": false
     },
     {
-      "id": 858182438,
+      "id": 96170849,
       "title": "The Community Development Authority (CDA) in Dubai is engaging with senior citizens and People of Determination to check on their well-being and reaffirm its support for them. The initiative reflects the Authority’s human-centred approach, which prioritises close connection with the community, strengthens social reassurance, and promotes the values of solidarity that define UAE society. These efforts come within the framework of the ‘Year of the Family’ and support the objectives of the Dubai Social Agenda 33, which places the family at the centre of development and seeks to build a more cohesive and stable society that enhances quality of life. \n@CDA_Dubai",
       "source": "Dubai Media Office",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2029616473648549908#m",
@@ -1958,7 +2162,7 @@
       "is_government": true
     },
     {
-      "id": 846535874,
+      "id": 6876921,
       "title": "Iran school and nearby military base struck multiple times, satellite image reveals",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c5yqqyly9n0o?at_medium=RSS&at_campaign=rss",
@@ -1975,7 +2179,7 @@
       "is_government": false
     },
     {
-      "id": 25318829,
+      "id": 142611222,
       "title": "Four Arrested for Posting Videos Expressing Sympathy with Iranian Aggression, Constituting Treason\n\nhttps://www.policemc.gov.bh/en/news/76877/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029611354131247332#m",
@@ -1992,7 +2196,7 @@
       "is_government": true
     },
     {
-      "id": 960021361,
+      "id": 80006644,
       "title": "UAE President holds phone call with President of Azerbaijan and condemns Iranian attacks targeting Azerbaijan\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ug73",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029609260703961354#m",
@@ -2009,7 +2213,7 @@
       "is_government": true
     },
     {
-      "id": 331172259,
+      "id": 878052594,
       "title": "UAE President receives phone call from Dutch Prime Minister condemning Iranian attacks\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ug72",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029608338649206905#m",
@@ -2026,7 +2230,7 @@
       "is_government": true
     },
     {
-      "id": 354859912,
+      "id": 600036798,
       "title": "UAE President and Prime Minister of Bangladesh discuss implications of military escalation for regional security and stability\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ug48",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029608115986173977#m",
@@ -2043,7 +2247,7 @@
       "is_government": true
     },
     {
-      "id": 276551283,
+      "id": 281281102,
       "title": "UAE President receives phone call from Luxembourg Prime Minister condemning Iranian attacks\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ug46",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029607466628174273#m",
@@ -2060,7 +2264,7 @@
       "is_government": true
     },
     {
-      "id": 533760967,
+      "id": 113780713,
       "title": "UAE President receives phone call from Czech Prime Minister condemning Iranian attacks\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ug45",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029606739881120212#m",
@@ -2077,7 +2281,7 @@
       "is_government": true
     },
     {
-      "id": 822378420,
+      "id": 358933023,
       "title": "القبض على 4 أشخاص واحالتهم للنيابة العامة إثر نشرهم مقاطع مصورة تتضمن تعاطفا مع العدوان الإيراني بما يمثل خيانة للوطن\n\nhttps://www.policemc.gov.bh/news/76877/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029606271943336370#m",
@@ -2094,7 +2298,7 @@
       "is_government": true
     },
     {
-      "id": 867131252,
+      "id": 630940571,
       "title": "عبدالله بن زايد يلتقي رئيسة وزراء إيطاليا في روما، ويبحثان مجمل التطورات الإقليمية والدولية الراهنة خاصة في أعقاب الاعتداءات الصاروخية الإيرانية السافرة على الإمارات ودول في المنطقة\n\n#وام \n\nhttps://www.wam.ae/a/bz1u8ev",
       "source": "WAM News Agency",
       "source_url": "https://nitter.net/wamnews/status/2029602276235694365#m",
@@ -2111,7 +2315,7 @@
       "is_government": true
     },
     {
-      "id": 824767933,
+      "id": 822733170,
       "title": "RT by @mofauae: Abdullah bin Zayed ha incontrato @Antonio_Tajani, ha discusso le possibilità di cooperazione bilaterale tra 🇦🇪-🇮🇹 e ha scambiato opinioni sugli ultimi sviluppi regionali.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2029600213338345754#m",
@@ -2128,7 +2332,7 @@
       "is_government": true
     },
     {
-      "id": 857985412,
+      "id": 328835410,
       "title": "RT by @mofauae: Abdullah bin Zayed met with  @Antonio_Tajani and discussed avenues of bilateral cooperation between 🇦🇪-🇮🇹 and exchanged views on the latest regional developments.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2029600197857235408#m",
@@ -2145,7 +2349,7 @@
       "is_government": true
     },
     {
-      "id": 796898084,
+      "id": 909779403,
       "title": "RT by @mofauae: عبدالله بن زايد يلتقي معالي أنطونيو تاجاني، نائب رئيس الوزراء وزير الخارجية والتعاون الدولي في الجمهورية الإيطالية ويبحثان مسارات التعاون الثنائي بين 🇦🇪و🇮🇹، إضافةً إلى بحث التطورات الإقليمية الراهنة.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2029600184154407365#m",
@@ -2162,7 +2366,7 @@
       "is_government": true
     },
     {
-      "id": 293380192,
+      "id": 717681913,
       "title": "RT by @mofauae: Abdullah bin Zayed met with @GiorgiaMeloni, and discussed strengthening bilateral cooperation and the strategic partnership between 🇦🇪 & 🇮🇹. Both sides also reviewed the latest regional developments in the region.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2029599715499651293#m",
@@ -2179,7 +2383,7 @@
       "is_government": true
     },
     {
-      "id": 390531039,
+      "id": 295892087,
       "title": "RT by @mofauae: عبدالله بن زايد يلتقي معالي جورجا ميلوني رئيسة وزراء الجمهورية الإيطالية، ويبحثان تعزيز التعاون الثنائي والشراكة الاستراتيجية بين 🇦🇪و🇮🇹، إضافةً إلى بحث التطورات الإقليمية الراهنة في المنطقة.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2029599448100393295#m",
@@ -2196,7 +2400,7 @@
       "is_government": true
     },
     {
-      "id": 838052520,
+      "id": 729563461,
       "title": "MOI: The fire that broke out in one of the facilities in Maameer, which was targeted by the Iranian aggression, has been brought under control. Limited material damage was reported, with no loss of life.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029598739724136931#m",
@@ -2213,7 +2417,7 @@
       "is_government": true
     },
     {
-      "id": 815628810,
+      "id": 882329818,
       "title": "وزارة الداخلية : السيطرة على الحريق الذي اندلع بإحدى المنشآت في المعامير والتي استهدفها العدوان الإيراني ، ووقوع أضرار مادية محدودة من دون خسائر في الأرواح",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029598690415915076#m",
@@ -2230,7 +2434,7 @@
       "is_government": true
     },
     {
-      "id": 641495811,
+      "id": 808981208,
       "title": "Ang alerto ay para sa inyong kaligtasan… huwag lumabas para mag-picture!\nMagtungo agad sa ligtas na lugar at manatili roon hanggang mawala ang panganib.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029598151649443967#m",
@@ -2247,7 +2451,7 @@
       "is_government": true
     },
     {
-      "id": 149075955,
+      "id": 79322238,
       "title": "RT by @moiuae: في حال سقوط شظايا أو العثور على أجسام مشبوهة، يُرجى الابتعاد عن الموقع وعدم الاقتراب من أي أجزاء أو لمسها، مع ضرورة الإبلاغ الفوري للجهات المختصة لتمكينها من التعامل مع الحالة بشكل آمن وسريع. إن التزامكم بالتعليمات الصادرة عن الجهات الرسمية يسهم في تعزيز الاستجابة الفاعلة ويضمن سلامة المجتمع.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/Adcmc_ae/status/2029587770566656097#m",
@@ -2264,7 +2468,7 @@
       "is_government": true
     },
     {
-      "id": 538361561,
+      "id": 168640533,
       "title": "Alerta para su seguridad — no salga a filmar ni grabar. Diríjase inmediatamente a un lugar seguro y permanezca allí hasta que se dé la señal de todo despejado.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029587748269781270#m",
@@ -2281,24 +2485,7 @@
       "is_government": true
     },
     {
-      "id": 704066796,
-      "title": "UAE air defences intercept 6 ballistic missiles, 125 drones\n\n#WamNews \n\nhttps://www.wam.ae/a/bz1ufvk",
-      "source": "WAM English",
-      "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029583495232987450#m",
-      "published": "2026-03-05T15:43:07+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 910481313,
+      "id": 480934502,
       "title": "RT by @moiuae: Il a été observé que certaines personnes, après avoir reçu une alerte, quittent leur domicile ou leur lieu de résidence, ou immobilisent leur véhicule pour prendre des photographies.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029582509550555320#m",
@@ -2315,7 +2502,7 @@
       "is_government": true
     },
     {
-      "id": 836947343,
+      "id": 85348190,
       "title": "Il a été observé que certaines personnes, après avoir reçu une alerte, quittent leur domicile ou leur lieu de résidence, ou immobilisent leur véhicule pour prendre des photographies.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029582509550555320#m",
@@ -2332,7 +2519,7 @@
       "is_government": true
     },
     {
-      "id": 84158984,
+      "id": 349488830,
       "title": "RT by @moiuae: മുന്നറിയിപ്പ് — പുറത്തിറങ്ങി ഫോട്ടോയെടുക്കാനോ വീഡിയോ ചെയ്യാനോ പോകരുത്.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029582027771842907#m",
@@ -2349,24 +2536,7 @@
       "is_government": true
     },
     {
-      "id": 64314337,
-      "title": "Ministry of Defence:\n\n- UAE air defences are currently responding to incoming missile and drone threats from Iran\n\n- MOD asserts that the sounds heard are the result of the Air Defence Systems intercepting missiles and drones\n\n#WamNews",
-      "source": "WAM English",
-      "source_url": "https://nitter.net/WAMNEWS_ENG/status/2029581840290586733#m",
-      "published": "2026-03-05T15:36:33+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 919476145,
+      "id": 384660410,
       "title": "RT by @moiuae: تحفظ کی الرٹ — باہر نکل کر فلم یا ویڈیو بنانے کی کوشش نہ کریں۔\nفوراً محفوظ جگہ پر پہنچیں اور تمام کلیئر ہونے تک وہیں رہیں۔",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029581660040405129#m",
@@ -2383,7 +2553,7 @@
       "is_government": true
     },
     {
-      "id": 782291378,
+      "id": 379615970,
       "title": "RT by @moiuae: Alert for your safety — do not exit to film or record. Proceed immediately to a safe place and remain until the all-clear.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029581200227172757#m",
@@ -2400,7 +2570,7 @@
       "is_government": true
     },
     {
-      "id": 840726718,
+      "id": 273179212,
       "title": "Alert for your safety — do not exit to film or record. Proceed immediately to a safe place and remain until the all-clear.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029581200227172757#m",
@@ -2417,7 +2587,7 @@
       "is_government": true
     },
     {
-      "id": 137301341,
+      "id": 887031852,
       "title": "Urgent Bahrain TV: one facility in Maameer was targeted, and the relevant authorities are handling the incident.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2029581153901117579#m",
@@ -2434,7 +2604,7 @@
       "is_government": true
     },
     {
-      "id": 874358012,
+      "id": 962645175,
       "title": "RT by @moiuae: الإنذار لسلامتك .. لا تخرج للتصوير! توجه فورًا لمكان آمن واحتمِ حتى يُرفع الخطر.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029580955724427532#m",
@@ -2451,7 +2621,7 @@
       "is_government": true
     },
     {
-      "id": 610869638,
+      "id": 130679298,
       "title": "الإنذار لسلامتك .. لا تخرج للتصوير! توجه فورًا لمكان آمن واحتمِ حتى يُرفع الخطر.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029580955724427532#m",
@@ -2468,7 +2638,7 @@
       "is_government": true
     },
     {
-      "id": 642195564,
+      "id": 924863620,
       "title": "الآن تتعامل الدفاعات الجوية مع تهديد صاروخي، يرجى البقاء في مكان آمن ومتابعة التحذيرات والمستجدات على المواقع الرسمية.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029580832730652744#m",
@@ -2485,24 +2655,7 @@
       "is_government": true
     },
     {
-      "id": 653531804,
-      "title": "وزارة الدفاع: \n\n- تتعامل حالياً الدفاعات الجوية الإماراتية مع تهديدات صاروخية وطائرات مسيرة قادمة من إيران.\n\n-  الأصوات المسموعة في مناطق متفرقة من الدولة هي نتيجة اعتراض كل من منظومات الدفاع الجوي للصواريخ البالستية، والمقاتلات للطائرات المسيرة والجوالة.\n\n#وام",
-      "source": "WAM News Agency",
-      "source_url": "https://nitter.net/wamnews/status/2029579238027002028#m",
-      "published": "2026-03-05T15:26:12+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "UAE",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 529330340,
+      "id": 20619430,
       "title": "تتعامل حالياً الدفاعات الجوية الإماراتية مع تهديدات صاروخية وطائرات مسيرة قادمة من إيران\nوتؤكد وزارة الدفاع أن الأصوات المسموعة في مناطق متفرقة من الدولة هي نتيجة اعتراض كل من منظومات الدفاع الجوي للصواريخ البالستية، والمقاتلات للطائرات المسيرة والجوالة.\n\nUAE air defences are currently responding to incoming missile and drone threats from Iran\n\nMOD asserts that the sounds heard are the result of the Air Defence Systems intercepting missiles and drones\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2029576686292045957#m",
@@ -2519,24 +2672,7 @@
       "is_government": true
     },
     {
-      "id": 867854545,
-      "title": "RT by @UAEmediaoffice: تتعامل حالياً الدفاعات الجوية الإماراتية مع تهديدات صاروخية وطائرات مسيرة قادمة من إيران\nوتؤكد وزارة الدفاع أن الأصوات المسموعة في مناطق متفرقة من الدولة هي نتيجة اعتراض كل من منظومات الدفاع الجوي للصواريخ البالستية، والمقاتلات للطائرات المسيرة والجوالة.\n\nUAE air defences are currently responding to incoming missile and drone threats from Iran\n\nMOD asserts that the sounds heard are the result of the Air Defence Systems intercepting missiles and drones\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
-      "source": "UAE Government Media Office",
-      "source_url": "https://nitter.net/modgovae/status/2029576686292045957#m",
-      "published": "2026-03-05T15:16:04+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 418181875,
+      "id": 427097411,
       "title": "RT by @mofauae: تتعامل حالياً الدفاعات الجوية الإماراتية مع تهديدات صاروخية وطائرات مسيرة قادمة من إيران\nوتؤكد وزارة الدفاع أن الأصوات المسموعة في مناطق متفرقة من الدولة هي نتيجة اعتراض كل من منظومات الدفاع الجوي للصواريخ البالستية، والمقاتلات للطائرات المسيرة والجوالة.\n\nUAE air defences are currently responding to incoming missile and drone threats from Iran\n\nMOD asserts that the sounds heard are the result of the Air Defence Systems intercepting missiles and drones\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/modgovae/status/2029576686292045957#m",
@@ -2553,7 +2689,7 @@
       "is_government": true
     },
     {
-      "id": 331706519,
+      "id": 134418062,
       "title": "الآن تتعامل الدفاعات الجوية للتهديد الصاروخي، يرجى البقاء في مكان آمن ومتابعة التحذيرات والمستجدات على المواقع الرسمية.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/moiuae/status/2029576146652905802#m",
@@ -2570,7 +2706,7 @@
       "is_government": true
     },
     {
-      "id": 698198170,
+      "id": 545502496,
       "title": "Air defense systems are currently responding to a missile threat. Please remain in a safe location and follow official channels for warnings and updates.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2029575550193566142#m",
@@ -2587,7 +2723,7 @@
       "is_government": true
     },
     {
-      "id": 323060618,
+      "id": 357132082,
       "title": "🔴ELIMINATED: A Hamas commander responsible for training operatives in Lebanon.\n\nThe Israeli Navy struck and eliminated terrorist Wasim Attallah Ali in the area of Tripoli. He served as a Hamas commander responsible for training and exercises for the organization’s military wing in Lebanon.\n\nThis marks the first strike in the Tripoli area since the beginning of Operation “Roaring Lion.”",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029574965977120895#m",
@@ -2604,24 +2740,7 @@
       "is_government": true
     },
     {
-      "id": 427668352,
-      "title": "الدفاعات الجوية الإماراتية تتصدى بنجاح للصواريخ الباليستية والجوالة والمسيرات الإيرانية.\n\nUAE Air Defences Successfully Intercept\nIranian Ballistic and Cruise Missiles and UAVs Attacks\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
-      "source": "UAE Ministry of Defence",
-      "source_url": "https://nitter.net/modgovae/status/2029573223751512078#m",
-      "published": "2026-03-05T15:02:18+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 563942684,
+      "id": 912375134,
       "title": "RT by @mofauae: الدفاعات الجوية الإماراتية تتصدى بنجاح للصواريخ الباليستية والجوالة والمسيرات الإيرانية.\n\nUAE Air Defences Successfully Intercept\nIranian Ballistic and Cruise Missiles and UAVs Attacks\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/modgovae/status/2029573223751512078#m",
@@ -2638,7 +2757,7 @@
       "is_government": true
     },
     {
-      "id": 784096327,
+      "id": 291137747,
       "title": "فصل الأجهزة غير المستخدمة\nDisconnection of unused devices\n\n#رمضان_آمن \n\n#عاصمة_أكثر_أماناً_وسلامة \n#الدفاع_المدني_أبوظبي",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/CivilDefenceAD/status/2029572430528925994#m",
@@ -2655,7 +2774,7 @@
       "is_government": true
     },
     {
-      "id": 644411506,
+      "id": 523465937,
       "title": "UAE’s defense giant EDGE Group to equip Ecuador with border protection systems",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/uaes-defense-giant-edge-group-to-equip-ecuador-with-border-protection-systems/",
@@ -2672,7 +2791,7 @@
       "is_government": false
     },
     {
-      "id": 98350694,
+      "id": 584414789,
       "title": "R to @mofauae: Latest UAE–US Mediation Efforts Succeed with Exchange of 400 Captives Between Russia and Ukraine\n\nhttps://www.mofa.gov.ae/en/mediahub/news/2026/3/5/uae-usa",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2029567035827740860#m",
@@ -2689,24 +2808,126 @@
       "is_government": true
     },
     {
-      "id": 919627835,
-      "title": "RT by @Mdais: President of the State of Israel @IsraelPresident and First Lady Michal Herzog visited MDA National Headquarters in Ramla on Wednesday.\n\nMDA Director-General Eli Bin briefed them on MDA’s operations since the start of Operation Rising Lion. Nearly 39,000 MDA employees and volunteers have been dispatched across Israel, with no shortages of supplies.\n\nThey also toured MDA’s new Simulation and Training Center, including advanced training rooms and a Mobile Intensive Care Unit simulator.\n\n“I thank you for saving lives, for working 24/7, and for your vigilance, dedication and professionalism.”\n\nThe moment sirens sound, MDA teams are ready to respond, treat, and save lives.",
-      "source": "Magen David Adom",
-      "source_url": "https://nitter.net/AFMDA/status/2029565980834218231#m",
-      "published": "2026-03-05T14:33:32+00:00",
-      "type": "alert",
+      "id": 583665622,
+      "title": "R to @cogatonline: WRONG. More than 700 patients exited Gaza since the Rafah crossing reopened. Thousands of patients also exited through the Kerem Shalom crossing after the approval of the third countries.\n7/7《》",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029566753294942412#m",
+      "published": "2026-03-05T14:36:36+00:00",
+      "type": "security",
       "status": "unconfirmed",
       "location": {
-        "name": "Unknown City",
-        "country": "Israel",
-        "lat": 31.0461,
-        "lng": 34.8516
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
       },
       "credibility": 95,
       "is_government": true
     },
     {
-      "id": 557988887,
+      "id": 649071182,
+      "title": "R to @cogatonline: Yes, metal tent poles of a certain kind can be considered dual use. but we've worked with organizations to find replacements that aren’t dual use. Close to 660,000 tents and tarpaulins entered Gaza over the last few months, you seem to be ignoring that. Why?\n6/7》》》",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029566742637220029#m",
+      "published": "2026-03-05T14:36:33+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 24096433,
+      "title": "R to @cogatonline: No 500 trucks entered Gaza prior to October 7th, it was less that 270 and that included all kinds of commodities, including infrastructure. \nStop repeating slandering slogans just for the sake of traffic. They are completely false. \n5/7》》》",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029566734491931118#m",
+      "published": "2026-03-05T14:36:31+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 909414142,
+      "title": "R to @cogatonline: The crossings reopened after a temporary 2 day closure due to serious security threats from the iran missile attack. Hundreds of trucks went into Gaza over the last 2 days. This was not mentioned. \n4/7》》》",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029566724241051749#m",
+      "published": "2026-03-05T14:36:29+00:00",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 358038831,
+      "title": "R to @cogatonline: No, aid is not just sitting in warehouses outside Gaza. Hundreds of aid trucks are entering every day, in accordance with the agreement. X4 Gazas needs entered over the past 20 weeks. \n3/7》》》",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029566709787439537#m",
+      "published": "2026-03-05T14:36:25+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 366711169,
+      "title": "R to @cogatonline: There is no blanket ban on medicines. Throughout the war medicines of all kinds entered Gaza, coordinated through the right channels. Yes, high amounts of Glycerin are dual use, which Hamas can use to make weapons. Why would a humanitarian want to give this to terrorists?\n2/7",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029566693723230305#m",
+      "published": "2026-03-05T14:36:21+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 678088481,
+      "title": ".@latimes put out a libelous  opinion article about aid being blocked entering Gaza. Paragraphs filled with lies and disinformation, very surprising written by a so called \"humanitarian\". \n\nLets break some of them down one by one:\n\n1/7🧵🧵🧵》》》",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029566685087248501#m",
+      "published": "2026-03-05T14:36:19+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 250444586,
       "title": "#الدفاع_المدني بالرياض يخمد حريقًا محدودًا في مخلفات بحي النرجس، ولا إصابات.",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2029558084532646006#m",
@@ -2723,7 +2944,7 @@
       "is_government": true
     },
     {
-      "id": 914440725,
+      "id": 952299263,
       "title": "⭕️The IDF completed its 12th wave of strikes across Tehran.\n\n📍Alborz province: The headquarters of the special unit responsible for all internal security forces was targeted.\n\n📍Tehran: Targets belonging to the Iranian Revolutionary Guard Corps, the Basij organization, and a central command center for the armed Internal Security forces, were struck, as well as dozens of command centers and weapons sites.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029546882851033121#m",
@@ -2740,7 +2961,7 @@
       "is_government": true
     },
     {
-      "id": 360254759,
+      "id": 807946307,
       "title": "This is what we mean when we say Hezbollah's threat is on our border.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029542924422201659#m",
@@ -2757,7 +2978,7 @@
       "is_government": true
     },
     {
-      "id": 130951827,
+      "id": 466031401,
       "title": "وساطة إماراتية – أمريكية بين روسيا وأوكرانيا تنجح في إطلاق 400 أسير\n\nhttps://www.mofa.gov.ae/ar-ae/MediaHub/News/2026/3/5/UAE-USA",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2029542898027602289#m",
@@ -2774,7 +2995,24 @@
       "is_government": true
     },
     {
-      "id": 985589219,
+      "id": 549934306,
+      "title": "UAE air defences intercept 6 ballistic missiles, 125 drones\n\nThe Ministry of Defence announced today, March 5, 2026, that the UAE air defence systems detected seven ballistic missiles, intercepting and destroying six of them, while one ballistic missile fell inside the country.\n\nThe Ministry added that air defences also detected 131 drones, intercepting 125 of them, while six fell within the UAE territory.\n\nThe Ministry stated that since the start of the blatant Iranian aggression, 196 ballistic missiles were launched towards the UAE, with 181 destroyed, 13 falling into the sea and two landing within the country. A total of 1,072 Iranian drones have also been detected, of which 1,001 were intercepted, while 71 fell within the country. Eight cruise missiles were also detected and destroyed.\n\nThe attacks resulted in three fatalities of Pakistani, Nepali and Bangladeshi nationalities, as well as 94 minor injuries among individuals of Emirati, Egyptian, Ethiopian, Filipino, Pakistani, Iranian, Indian, Bangladeshi, Sri Lankan, Azerbaijani, Yemeni, Ugandan, Eritrean, Lebanese, Afghan, Bahraini, Comorian and Turkish nationalities.\n\nThe Ministry of Defence reiterated that it is fully prepared and ready to address any threats, and is taking all necessary measures to safeguard the country’s security, sovereignty, stability and national interests.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
+      "source": "UAE Ministry of Defence",
+      "source_url": "https://nitter.net/modgovae/status/2029540323756753139#m",
+      "published": "2026-03-05T12:51:34+00:00",
+      "type": "missile",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 100,
+      "is_government": true
+    },
+    {
+      "id": 205567836,
       "title": "RT by @mofauae: UAE air defences intercept 6 ballistic missiles, 125 drones\n\nThe Ministry of Defence announced today, March 5, 2026, that the UAE air defence systems detected seven ballistic missiles, intercepting and destroying six of them, while one ballistic missile fell inside the country.\n\nThe Ministry added that air defences also detected 131 drones, intercepting 125 of them, while six fell within the UAE territory.\n\nThe Ministry stated that since the start of the blatant Iranian aggression, 196 ballistic missiles were launched towards the UAE, with 181 destroyed, 13 falling into the sea and two landing within the country. A total of 1,072 Iranian drones have also been detected, of which 1,001 were intercepted, while 71 fell within the country. Eight cruise missiles were also detected and destroyed.\n\nThe attacks resulted in three fatalities of Pakistani, Nepali and Bangladeshi nationalities, as well as 94 minor injuries among individuals of Emirati, Egyptian, Ethiopian, Filipino, Pakistani, Iranian, Indian, Bangladeshi, Sri Lankan, Azerbaijani, Yemeni, Ugandan, Eritrean, Lebanese, Afghan, Bahraini, Comorian and Turkish nationalities.\n\nThe Ministry of Defence reiterated that it is fully prepared and ready to address any threats, and is taking all necessary measures to safeguard the country’s security, sovereignty, stability and national interests.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/modgovae/status/2029540323756753139#m",
@@ -2791,7 +3029,7 @@
       "is_government": true
     },
     {
-      "id": 1805861,
+      "id": 600914479,
       "title": "Do not gather at accident sites or share photos and videos of ongoing incidents. Such actions hinder response efforts and may result in legal accountability.\n#MoIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029537950657110468#m",
@@ -2808,24 +3046,7 @@
       "is_government": true
     },
     {
-      "id": 540173202,
-      "title": "Following the missile fire toward the State of Israel:\n\nAt this stage, no casualties are known.\n\nMDA EMTs and paramedics have been dispatched to search reported scenes. Additional MDA teams are treating a small number of people who were injured on their way to sheltered areas.",
-      "source": "Magen David Adom",
-      "source_url": "https://nitter.net/Mdais/status/2029528189052109210#m",
-      "published": "2026-03-05T12:03:21+00:00",
-      "type": "missile",
-      "status": "reported",
-      "location": {
-        "name": "Unknown City",
-        "country": "Israel",
-        "lat": 31.0461,
-        "lng": 34.8516
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 984564982,
+      "id": 746812619,
       "title": "Iran targets headquarters of Iranian Kurdish forces in Iraq",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c2k88y1147jo?at_medium=RSS&at_campaign=rss",
@@ -2842,24 +3063,7 @@
       "is_government": false
     },
     {
-      "id": 212448462,
-      "title": "RT by @moiuae: الدفاعات الجوية الإماراتية تتعامل مع 6 صواريخ باليستية و 131 طائرة مسيرة.\n\nرصدت الدفاعات الجوية الإماراتية اليوم (5 مارس 2026) 7 صواريخ باليستية حيث تم التعامل وتدمير عدد 6 صواريخ باليستية فيما سقط عدد 1 صاروخ باليستي داخل أراضي الدولة. كما رصدت 131 طائرة مسيرة، حيث تم اعتراض 125 طائرة مسيرة، بينما سقطت 6 في أراضي الدولة. \n\nومنذ بدء الاعتداء الإيراني السافر تم رصد عدد 196 صاروخاً باليستياً، حيث تم تدمير 181 صاروخاً باليستياً، فيما سقط 13 منها في مياه البحر، و سقط عدد 2 صاروخ على أراضي الدولة. كما تم رصد 1072 مسيرة إيرانية واعتراض 1001 منها، فيما وقعت 71 مسيرة داخل أراضي الدولة، كما تم ايضاً رصد وتدمير 8 صواريخ جوالة.\n\n وخلفت هذه الاعتداءات 3 حالات وفاة من الجنسية الباكستانية والنيبالية والبنغلادشية، و 94 حالة إصابة بسيطة من الجنسية الإماراتية، المصرية، الاثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السيرلانكية، الاذربيجانية، اليمنية، الاوغندية، الارتيرية، اللبنانية، الأفغانية، البحرينية، جزر القمر والتركية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
-      "source": "UAE Ministry of Interior",
-      "source_url": "https://nitter.net/modgovae/status/2029520996974407745#m",
-      "published": "2026-03-05T11:34:47+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 14363671,
+      "id": 595889589,
       "title": "الدفاعات الجوية الإماراتية تتعامل مع 6 صواريخ باليستية و 131 طائرة مسيرة.\n\nرصدت الدفاعات الجوية الإماراتية اليوم (5 مارس 2026) 7 صواريخ باليستية حيث تم التعامل وتدمير عدد 6 صواريخ باليستية فيما سقط عدد 1 صاروخ باليستي داخل أراضي الدولة. كما رصدت 131 طائرة مسيرة، حيث تم اعتراض 125 طائرة مسيرة، بينما سقطت 6 في أراضي الدولة. \n\nومنذ بدء الاعتداء الإيراني السافر تم رصد عدد 196 صاروخاً باليستياً، حيث تم تدمير 181 صاروخاً باليستياً، فيما سقط 13 منها في مياه البحر، و سقط عدد 2 صاروخ على أراضي الدولة. كما تم رصد 1072 مسيرة إيرانية واعتراض 1001 منها، فيما وقعت 71 مسيرة داخل أراضي الدولة، كما تم ايضاً رصد وتدمير 8 صواريخ جوالة.\n\n وخلفت هذه الاعتداءات 3 حالات وفاة من الجنسية الباكستانية والنيبالية والبنغلادشية، و 94 حالة إصابة بسيطة من الجنسية الإماراتية، المصرية، الاثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السيرلانكية، الاذربيجانية، اليمنية، الاوغندية، الارتيرية، اللبنانية، الأفغانية، البحرينية، جزر القمر والتركية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2029520996974407745#m",
@@ -2876,24 +3080,7 @@
       "is_government": true
     },
     {
-      "id": 381190600,
-      "title": "RT by @mofauae: الدفاعات الجوية الإماراتية تتعامل مع 6 صواريخ باليستية و 131 طائرة مسيرة.\n\nرصدت الدفاعات الجوية الإماراتية اليوم (5 مارس 2026) 7 صواريخ باليستية حيث تم التعامل وتدمير عدد 6 صواريخ باليستية فيما سقط عدد 1 صاروخ باليستي داخل أراضي الدولة. كما رصدت 131 طائرة مسيرة، حيث تم اعتراض 125 طائرة مسيرة، بينما سقطت 6 في أراضي الدولة. \n\nومنذ بدء الاعتداء الإيراني السافر تم رصد عدد 196 صاروخاً باليستياً، حيث تم تدمير 181 صاروخاً باليستياً، فيما سقط 13 منها في مياه البحر، و سقط عدد 2 صاروخ على أراضي الدولة. كما تم رصد 1072 مسيرة إيرانية واعتراض 1001 منها، فيما وقعت 71 مسيرة داخل أراضي الدولة، كما تم ايضاً رصد وتدمير 8 صواريخ جوالة.\n\n وخلفت هذه الاعتداءات 3 حالات وفاة من الجنسية الباكستانية والنيبالية والبنغلادشية، و 94 حالة إصابة بسيطة من الجنسية الإماراتية، المصرية، الاثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السيرلانكية، الاذربيجانية، اليمنية، الاوغندية، الارتيرية، اللبنانية، الأفغانية، البحرينية، جزر القمر والتركية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
-      "source": "UAE Ministry of Foreign Affairs",
-      "source_url": "https://nitter.net/modgovae/status/2029520996974407745#m",
-      "published": "2026-03-05T11:34:47+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 277186858,
+      "id": 328688392,
       "title": "Against the backdrop of the ongoing military campaign in Iran, IMOD Director General, Maj. Gen. (Res.) Amir Baram, visited a space facility jointly operated by Israel Aerospace Industries (IAI), the Ministry’s DDR&D, and the IDF. \n\nRead More: https://www.linkedin.com/feed/update/urn:li:activity:7435274857157713920",
       "source": "Israel Ministry of Defense",
       "source_url": "https://nitter.net/Israel_MOD/status/2029509801416233416#m",
@@ -2910,7 +3097,7 @@
       "is_government": true
     },
     {
-      "id": 298940715,
+      "id": 840933891,
       "title": "RT by @moiuae: Abu Dhabi authorities have responded to an incident of debris falling in two locations in ICAD 2, following the successful interception of drones by air defence systems. The incident resulted in minor and moderate injuries to six Pakistani and Nepali nationals.\n\nThe public is reminded to obtain information from official sources only, and to avoid the spreading of rumours or unverified information.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/ADMediaOffice/status/2029502877610496443#m",
@@ -2927,7 +3114,7 @@
       "is_government": true
     },
     {
-      "id": 503521612,
+      "id": 701365639,
       "title": "RT by @CivilDefenceAD: Abu Dhabi authorities have responded to an incident of debris falling in two locations in ICAD 2, following the successful interception of drones by air defence systems. The incident resulted in minor and moderate injuries to six Pakistani and Nepali nationals.\n\nThe public is reminded to obtain information from official sources only, and to avoid the spreading of rumours or unverified information.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/ADMediaOffice/status/2029502877610496443#m",
@@ -2944,7 +3131,7 @@
       "is_government": true
     },
     {
-      "id": 745478137,
+      "id": 496682401,
       "title": "RT by @moiuae: تعاملت الجهات المختصة في إمارة أبوظبي مع حادث نتيجة سقوط شظايا على موقعين في منطقة أيكاد 2، عقب الاعتراض الناجح للدفاعات الجوية لطائرة مسيرة، ما أدى إلى وقوع 6 إصابات بسيطة ومتوسطة من الجنسية الباكستانية والنيبالية. \n\nونهيب بالجمهور استقاء المعلومات من المصادر الرسمية فقط، وتجنُّب تداول الشائعات أو المعلومات غير الموثوقة.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/ADMediaOffice/status/2029502611477692563#m",
@@ -2961,7 +3148,7 @@
       "is_government": true
     },
     {
-      "id": 656518611,
+      "id": 90112285,
       "title": "RT by @CivilDefenceAD: تعاملت الجهات المختصة في إمارة أبوظبي مع حادث نتيجة سقوط شظايا على موقعين في منطقة أيكاد 2، عقب الاعتراض الناجح للدفاعات الجوية لطائرة مسيرة، ما أدى إلى وقوع 6 إصابات بسيطة ومتوسطة من الجنسية الباكستانية والنيبالية. \n\nونهيب بالجمهور استقاء المعلومات من المصادر الرسمية فقط، وتجنُّب تداول الشائعات أو المعلومات غير الموثوقة.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/ADMediaOffice/status/2029502611477692563#m",
@@ -2978,7 +3165,7 @@
       "is_government": true
     },
     {
-      "id": 796305826,
+      "id": 890095275,
       "title": "🎥WATCH: Footage from the historic shoot down of an Iranian Yak-130 fighter jet by an IAF “Adir” F-35I fighter jet",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029487309104554277#m",
@@ -2995,7 +3182,7 @@
       "is_government": true
     },
     {
-      "id": 879754633,
+      "id": 433175198,
       "title": "Wartime Procurement - Israel MOD to Acquire Dozens of JLTV Vehicles for Ground Forces in Approx $26M Deal\n\nRead More: https://www.linkedin.com/posts/israelimod_wartime-procurement-israel-mod-to-acquire-activity-7435218287451377664-GXU8?utm_source=share&utm_medium=member_ios&rcm=ACoAACoGTWsBhTxoJG7xP0ZwnL8No_iAzlkHrWo",
       "source": "Israel Ministry of Defense",
       "source_url": "https://nitter.net/Israel_MOD/status/2029453024775606728#m",
@@ -3012,7 +3199,7 @@
       "is_government": true
     },
     {
-      "id": 541039671,
+      "id": 568519738,
       "title": "US sub sinks Iranian warship in Indian Ocean, Hegseth says",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c0e55g03v2zo?at_medium=RSS&at_campaign=rss",
@@ -3029,7 +3216,7 @@
       "is_government": false
     },
     {
-      "id": 285724912,
+      "id": 285272912,
       "title": "⭕️Overnight Activity:\n\nIAF aircraft struck and dismantled an armed ballistic missile launcher in the area of Qom that was ready to fire at Israel.\nAn Iranian aerial defense system was also struck in Isfahan.\n\n❗️Prior to the strikes, the IDF took multiple measures to mitigate the risk of harm to civilians.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029442822701539825#m",
@@ -3046,7 +3233,7 @@
       "is_government": true
     },
     {
-      "id": 697900382,
+      "id": 30919366,
       "title": "Notice regarding the importance of staying away from circulating or publishing rumours and adherence to obtaining information from officially approved sources.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029437557243572234#m",
@@ -3063,7 +3250,7 @@
       "is_government": true
     },
     {
-      "id": 531787339,
+      "id": 521476876,
       "title": "أخمد #الدفاع_المدني بمكة المكرمة - في حينه - حريقًا محدودًا في غرفة بمبنى سكني بحي النزهة بسبب تماس كهربائي، ولا إصابات.",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2029369150276088099#m",
@@ -3080,7 +3267,7 @@
       "is_government": true
     },
     {
-      "id": 801690881,
+      "id": 995474329,
       "title": "In the framework of maintaining public safety, the Ministry of Interior announces that the relevant authorities are evacuating residents living in the vicinity of the U.S. Embassy as a temporary precautionary measure. \nSuitable accommodation has been provided for them as part of necessary preventive measures. Please follow official channels for reliable information. \n#MOIQATAR",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029357251916361823#m",
@@ -3097,7 +3284,7 @@
       "is_government": true
     },
     {
-      "id": 821772886,
+      "id": 832355321,
       "title": "Notice regarding the necessity of remaining inside homes and buildings and not going out except when necessary, while adhering to the official instructions issued by the competent authorities.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029347233359880650#m",
@@ -3114,7 +3301,7 @@
       "is_government": true
     },
     {
-      "id": 821117633,
+      "id": 482802221,
       "title": "US grants waiver to allow India to buy Russian oil amid Iran war",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/us-news/2026/mar/05/us-waiver-india-russian-oil",
@@ -3131,7 +3318,7 @@
       "is_government": false
     },
     {
-      "id": 859133070,
+      "id": 466679064,
       "title": "Explosions heard across Tel Aviv  – as it happened",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/live/2026/mar/05/iran-war-latest-updates-canada-carney-trump-israel-tehran-strikes",
@@ -3148,7 +3335,7 @@
       "is_government": false
     },
     {
-      "id": 719612325,
+      "id": 804445481,
       "title": "Israel launches huge strikes against south Beirut after mass evacuation order",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/05/israel-orders-people-evacuate-beirut-suburbs-lebanon-iran",
@@ -3165,7 +3352,7 @@
       "is_government": false
     },
     {
-      "id": 339554194,
+      "id": 345832077,
       "title": "Iran war briefing: Israeli military tells hundreds of thousands to leave Beirut",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/05/iran-war-briefing-israel-us-support-kurds-conflict-what-we-know-so-far-day-six",
@@ -3182,7 +3369,7 @@
       "is_government": false
     },
     {
-      "id": 648052264,
+      "id": 713728071,
       "title": "One beer, bed, then back on duty – the British pilot who made RAF history shooting down drones",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/uk-news/2026/mar/05/british-pilot-iranian-shahed-drones-raf-akrotiri-cyprus",
@@ -3199,7 +3386,7 @@
       "is_government": false
     },
     {
-      "id": 644658398,
+      "id": 641329935,
       "title": "Stock market falls resume as US-Israel war with Iran drives up oil and gas prices",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/05/stock-market-falls-resume-as-us-israel-war-with-iran-drives-up-oil-and-gas-prices",
@@ -3216,24 +3403,7 @@
       "is_government": false
     },
     {
-      "id": 124140813,
-      "title": "Who are the Kurds and why does Trump want them to join the war on Iran?",
-      "source": "The Guardian",
-      "source_url": "https://www.theguardian.com/world/2026/mar/05/who-are-the-kurds-and-why-does-trump-want-them-to-join-the-war-on-iran",
-      "published": "2026-03-05T00:00:00+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 90,
-      "is_government": false
-    },
-    {
-      "id": 980403982,
+      "id": 769199743,
       "title": "US and Mideast countries seek Kyiv’s drone expertise as Russia-Ukraine talks put on ice",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/industry/techwatch/2026/03/05/us-and-mideast-countries-seek-kyivs-drone-expertise-as-russia-ukraine-talks-put-on-ice/",
@@ -3250,7 +3420,7 @@
       "is_government": false
     },
     {
-      "id": 569788774,
+      "id": 30868322,
       "title": "Italy, allies send warships to protect Europe’s southeastern edge from Iran strikes",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/europe/2026/03/05/italy-allies-send-warships-to-protect-europes-southeastern-edge-from-iran-strikes/",
@@ -3267,7 +3437,7 @@
       "is_government": false
     },
     {
-      "id": 942409511,
+      "id": 68811417,
       "title": "Novel interceptor drones bend air-defense economics in Ukraine’s favor",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/europe/2026/03/05/novel-interceptor-drones-bend-air-defense-economics-in-ukraines-favor/",
@@ -3284,7 +3454,7 @@
       "is_government": false
     },
     {
-      "id": 241466909,
+      "id": 230695923,
       "title": "US Senate vote fails to rein in Trump war powers on Iran",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c5yjj28jjd0o?at_medium=RSS&at_campaign=rss",
@@ -3301,7 +3471,7 @@
       "is_government": false
     },
     {
-      "id": 622967005,
+      "id": 36723718,
       "title": "RT by @SaudiDCD: أندية وزارة الداخلية تحصل على جائزة الفئة الذهبية لأفضل ابتكار في تجربة العميل بالشراكة مع نادي الابتكار السعودي.",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2029341116739236071#m",
@@ -3318,7 +3488,7 @@
       "is_government": true
     },
     {
-      "id": 75495414,
+      "id": 68145843,
       "title": "Iran war powers resolution fails in Senate",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/iran-war-powers-resolution-fails-in-senate/",
@@ -3335,7 +3505,7 @@
       "is_government": false
     },
     {
-      "id": 468022731,
+      "id": 619827878,
       "title": "RT by @IDF: The full interview:",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/LTC_Shoshani/status/2029303055183716497#m",
@@ -3352,7 +3522,7 @@
       "is_government": true
     },
     {
-      "id": 263922363,
+      "id": 872340944,
       "title": "How depleted weapons stockpiles could affect the Iran conflict",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cdxzzqe82d2o?at_medium=RSS&at_campaign=rss",
@@ -3369,7 +3539,7 @@
       "is_government": false
     },
     {
-      "id": 702375265,
+      "id": 344706881,
       "title": "⭕️The IDF dismantled dozens of assets belonging to the Iranian regime’s ballistic missile array, including missile launchers & defense systems deployed in the area that constituted a threat to the Israeli Air Force’s aircraft.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2029289739212259565#m",
@@ -3386,7 +3556,7 @@
       "is_government": true
     },
     {
-      "id": 464321414,
+      "id": 628459100,
       "title": "دفع المخالفات المرورية\nTraffic fines Payment\n\n#خدماتي_رقمية\n#MOI_go_digital\n#خدمات_وزارة_الداخلية\n#MOI_Services\n@uaedgov\nللدخول إلى الخدمة بشكل مباشر ، يرجى الضغط على الرابط التالي\n\nTo access the service directly, please click on the following link\n\nhttps://portal.moi.gov.ae/eservices/direct?scode=10715",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/moiuae/status/2029280457419047000#m",
@@ -3403,7 +3573,7 @@
       "is_government": true
     },
     {
-      "id": 294580930,
+      "id": 326771050,
       "title": "📹| قوة #الدفاع_المدني بالمسجد النبوي الشريف.. جهود مستمرة لخدمة ضيوف الرحمن.\n\n#حياكم_الله",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2029276458103804414#m",
@@ -3420,7 +3590,7 @@
       "is_government": true
     },
     {
-      "id": 156966918,
+      "id": 517145940,
       "title": "RT by @moiuae: Authorities in Dubai confirm that sounds heard in various areas across the emirate were the result of successful air defence interception operations, with no injuries reported. Relevant teams continue to closely monitor developments and are taking all necessary measures to ensure the safety of everyone. The public is advised to rely exclusively on official sources for accurate updates.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2029266425492521359#m",
@@ -3437,24 +3607,7 @@
       "is_government": true
     },
     {
-      "id": 3017360,
-      "title": "بالتعاون مع مجالس أبوظبي التابعة لمكتب شؤون المواطنين والمجتمع في ديوان الرئاسة، ينظم الجهاز  الوطني لمكافحة المخدرات المجلس الرمضاني الثامن في مجلس منازف بمدينة العين بعنوان \"مرتكزات حماية الأبناء في المجتمع\"\n\n#وزارة_الداخلية_الإمارات #الامارات_أمن_وأمان\n#MOIUAE",
-      "source": "UAE Ministry of Interior",
-      "source_url": "https://nitter.net/moiuae/status/2029266323713450125#m",
-      "published": "2026-03-04T18:42:48+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 720449264,
+      "id": 946169483,
       "title": "RT by @moiuae: تؤكد الجهات المختصة في دبي أن الأصوات التي سُمعت في مناطق متفرقة من الإمارة ناتجة عن عمليات اعتراض ناجحة نفذتها أنظمة الدفاع الجوي بدون تسجيل أي إصابات. وتواصل الفرق المعنية متابعة المستجدات واتخاذ جميع الإجراءات اللازمة لضمان سلامة الجميع، داعيةً الجمهور إلى استقاء المعلومات من مصادرها الرسمية.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2029266031085273251#m",
@@ -3471,41 +3624,7 @@
       "is_government": true
     },
     {
-      "id": 2544892,
-      "title": "R to @moiuae: Warning\n\nThe Ministry of Interior warns of fraudulent emails circulating that invite recipients to fill out an emergency registration form and submit personal information, falsely claiming that it is required to obtain support, compensation, or insurance coverage.\n\nThe Ministry urges members of the public not to respond to these messages or share any personal information.\n\n#وزارة_الداخلية_الإمارات #الامارات_أمن_وأمان\n#MOIUAE",
-      "source": "UAE Ministry of Interior",
-      "source_url": "https://nitter.net/moiuae/status/2029262792034009441#m",
-      "published": "2026-03-04T18:28:46+00:00",
-      "type": "alert",
-      "status": "reported",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 469069575,
-      "title": "تحذر وزارة الداخلية من رسائل احتيالية تصل عبر البريد الإلكتروني، تدعو إلى تعبئة نموذج تسجيل للطوارئ وإرسال بيانات شخصية بزعم الحصول على دعم أو تعويض أو تغطية تأمينية.\n\nوتدعو الوزارة أفراد المجتمع إلى عدم الاستجابة لهذه الرسائل أو مشاركة أي بيانات شخصية.\n\n#وزارة_الداخلية_الإمارات #الامارات_أمن_وأمان\n#MOIUAE",
-      "source": "UAE Ministry of Interior",
-      "source_url": "https://nitter.net/moiuae/status/2029259025565794714#m",
-      "published": "2026-03-04T18:13:48+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 901439413,
+      "id": 81098683,
       "title": "Iran postpones Khamenei funeral as US-Israeli bombardment continues",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/clygglq6v9go?at_medium=RSS&at_campaign=rss",
@@ -3522,7 +3641,7 @@
       "is_government": false
     },
     {
-      "id": 965963807,
+      "id": 790081966,
       "title": "To prevent cybercrime, do not respond to suspicious calls or messages claiming to represent official entities. Avoid opening unknown links or sharing your personal information.\n\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029255613859950990#m",
@@ -3539,7 +3658,7 @@
       "is_government": true
     },
     {
-      "id": 834477795,
+      "id": 476448480,
       "title": "Defense execs invited to White House to talk munition production amid Iran strikes",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/defense-execs-invited-to-white-house-to-talk-munition-production-amid-iran-strikes/",
@@ -3556,7 +3675,7 @@
       "is_government": false
     },
     {
-      "id": 46938144,
+      "id": 232345562,
       "title": "Dassault CEO: FCAS jet program ‘dead’ if clash with Airbus not resolved",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/dassault-ceo-fcas-jet-program-dead-if-clash-with-airbus-not-resolved/",
@@ -3573,24 +3692,7 @@
       "is_government": false
     },
     {
-      "id": 855032439,
-      "title": "🎯STRUCK: A large Iranian terror regime military compound in eastern Tehran.\n\nStruck command centers in the compound include:\n\n* The IRGC headquarters\n* The Intelligence Directorate headquarters\n* The ‘Basij’ headquarters\n* The 'Quds Force' headquarters\n* The Internal Security forces headquarters\n* Cyber Warfare headquarters\n* The headquarters of the unit in Internal Security responsible for suppressing protests",
-      "source": "Israel Defense Forces",
-      "source_url": "https://nitter.net/IDF/status/2029246755921871302#m",
-      "published": "2026-03-04T17:25:02+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Tehran",
-        "country": "Iran",
-        "lat": 35.6892,
-        "lng": 51.389
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 746074090,
+      "id": 25274254,
       "title": "Adhere strictly to official instructions, remain in safe places, stay away from windows and exposed areas, and do not go out except in cases of absolute necessity.\n\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029210360251601062#m",
@@ -3607,7 +3709,7 @@
       "is_government": true
     },
     {
-      "id": 350710405,
+      "id": 588794998,
       "title": "Israel tells people in large parts of southern Lebanon to leave ahead of attacks",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cvg11pne0rro?at_medium=RSS&at_campaign=rss",
@@ -3624,7 +3726,7 @@
       "is_government": false
     },
     {
-      "id": 884348685,
+      "id": 250903776,
       "title": "Satellite images show Iranian navy and nuclear sites hit by US-Israeli strikes",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cdxzzkkkwjqo?at_medium=RSS&at_campaign=rss",
@@ -3641,7 +3743,7 @@
       "is_government": false
     },
     {
-      "id": 396823237,
+      "id": 333734520,
       "title": "التمارين الرياضية في رمضان .. Exercise in Ramadan\n\n#رمضان_آمن \n\n#عاصمة_أكثر_أماناً_وسلامة \n#الدفاع_المدني_أبوظبي",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/CivilDefenceAD/status/2029195995632763310#m",
@@ -3658,24 +3760,24 @@
       "is_government": true
     },
     {
-      "id": 418079894,
-      "title": "R to @UAEmediaoffice: The Ministry of Education and the Ministry of Higher Education and Scientific Research Announce Spring Break for Students and Academic and Administrative Staff Across Schools and Universities in UAE",
-      "source": "UAE Government Media Office",
-      "source_url": "https://nitter.net/UAEmediaoffice/status/2029176730016202951#m",
-      "published": "2026-03-04T12:46:47+00:00",
-      "type": "security",
+      "id": 969339389,
+      "title": "This was written 24 hours AFTER the crossings to Gaza reopened, following a temporary 2 day closure for security reasons of missile threat. \n\nIsrael isn't starving Gaza. Hundreds of trucks are entering every day. Gaza has more than enough food. \n\nBut since when do the facts bother Francesca from publishing lies?",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2029184359438192980#m",
+      "published": "2026-03-04T13:17:06+00:00",
+      "type": "missile",
       "status": "unconfirmed",
       "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
       },
-      "credibility": 100,
+      "credibility": 95,
       "is_government": true
     },
     {
-      "id": 294617398,
+      "id": 411728225,
       "title": "Notice regarding the importance of not approaching any unknown objects or debris and the need to report them immediately by calling (999).\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029165408352096468#m",
@@ -3692,7 +3794,7 @@
       "is_government": true
     },
     {
-      "id": 361499354,
+      "id": 459351752,
       "title": "RT by @CivilDefenceAD: حفظ الله جنودنا البواسل وكل عينٍ سهرت من أجل حماية أمن وسلامة المجتمع. أنتم خط الدفاع الأول وفخر الوطن.\n\nوحفظ الله ورعى دولة الإمارات، حكومةً وشعبًا، وسائر الدول الشقيقة، من كل ما يهدد الأمن والاستقرار ومن أي عدوان.\n\n#فخر_الوطن_الإمارات",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/FrontlineUAE/status/2029162256412622929#m",
@@ -3709,7 +3811,7 @@
       "is_government": true
     },
     {
-      "id": 907808601,
+      "id": 129477961,
       "title": "UAE air defences intercept 3 ballistic missiles, 129 drones\n\nThe Ministry of Defence announced that UAE air defence systems successfully intercepted three ballistic missiles today, 4th March 2026, and detected 129 drones, of which 121 were intercepted while eight fell within the territory of the state.\n\nThe ministry stated that since the start of the blatant Iranian aggression, 189 ballistic missiles launched towards the UAE have been detected, with 175 missiles destroyed, 13 falling into the sea and one missile landing within the territory of the state. A total of 941 Iranian drones have also been detected, of which 876 were intercepted, while 65 fell within the country. Eight cruise missiles were also detected and destroyed.\n\nThe attacks caused some collateral damage and resulted in three fatalities of Pakistani, Nepali and Bangladeshi nationalities, as well as 78 minor injuries among individuals of Emirati, Egyptian, Sudanese, Ethiopian, Filipino, Pakistani, Iranian, Indian, Bangladeshi, Sri Lankan, Azerbaijani, Yemeni, Ugandan, Eritrean, Lebanese and Afghan nationalities.\n\nThe ministry confirmed that the sounds heard in different parts of the country are the result of air defence systems intercepting ballistic missiles and fighter aircraft intercepting drones and cruise missiles. These operations caused minor to moderate material damage to a number of civilian facilities.\n\nThe ministry strongly condemned this military targeting, describing it as a blatant act of aggression and a flagrant violation of national sovereignty and international law. It affirmed that the UAE reserves its full right to respond to this escalation and to take all necessary measures to protect its territory, its people and its residents, in a manner that safeguards its sovereignty, security and stability and protects its national interests and capabilities.\n\nThe Ministry of Defence reiterated that it remains fully prepared and ready to address any threats and is taking all necessary measures to firmly confront anything that seeks to undermine the country’s security and stability. It added that the safety of citizens, residents and visitors remains a top priority that cannot be compromised.\n\nThe ministry also urged the public to obtain information from official sources within the country and to avoid circulating rumours or unverified information.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2029155607031476604#m",
@@ -3726,7 +3828,7 @@
       "is_government": true
     },
     {
-      "id": 690985554,
+      "id": 19152680,
       "title": "الدفاعات الجوية الإماراتية تعترض بنجاح 3 صواريخ باليستية و129 طائرة مسيرة\n\nأعلنت وزارة الدفاع أن الدفاعات الجوية الإماراتية تعاملت اليوم (4 مارس 2026) بنجاح مع 3 صواريخ باليستية ورصدت 129 طائرة مسيرة حيث تم اعتراض 121 طائرة مسيرة بينما سقطت 8 في أراضي الدولة.\n\nوأوضحت الوزارة أنه منذ بدء الاعتداء الإيراني السافر تم رصد 189 صاروخاً باليستياً تم إطلاقها تجاه الدولة، حيث تم تدمير 175 صاروخاً، فيما سقط 13 منها في مياه البحر، وصاروخ 1 سقط على أراضي الدولة، كما تم رصد 941 مسيرة إيرانية واعتراض 876 مسيرة، فيما وقعت 65 منها داخل أراض الدولة، كما تم رصد وتدمير عدد 8 صواريخ جوالة، وتسببت في بعض الأضرار الجانبية، كما أسفرت عن 3 حالات وفاة من الجنسية الباكستانية والنيبالية والبنغلادشية و78 حالة إصابة بسيطة من الجنسية الإماراتية، المصرية، السودانية، الاثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السيرلانكية، الاذربيجانية، اليمنية، الاوغندية، الارتيرية، اللبنانية والأفغانية.\n\nوتؤكد الوزارة أن الأصوات المسموعة في مناطق متفرقة من الدولة هي نتيجة اعتراض كل من منظومات الدفاع الجوي للصواريخ البالستية، والمقاتلات للطائرات المسيرة والجوالة، والذي أدى إلى حدوث أضرار مادية بسيطة ومتوسطة في عدد من الأعيان المدنية.\n\nوأدانت الوزارة بأشد العبارات هذا الاستهداف العسكري، معتبرةً ذلك عدواناً سافراً وانتهاكاً صارخاً للسيادة الوطنية وللقانون الدولي، وأن الدولة تحتفظ بحقها الكامل في الرد على هذا التصعيد واتخاذ جميع الإجراءات اللازمة لحماية أراضيها وشعبها والمقيمين فيها، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\nوأكدت وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات، وأنها تتخذ كافة الإجراءات اللازمة للتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة واستقرارها، وأضافت أن سلامة المواطنين والمقيمين والزوار تمثل أولوية قصوى لا يمكن التهاون فيها.\n\nوتهيب الوزارة بالجمهور الكريم استقاء المعلومات من المصادر الرسمية في الدولة، وتجنب تداول الشائعات أو المعلومات غير الموثوقة.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2029145463442800854#m",
@@ -3743,7 +3845,7 @@
       "is_government": true
     },
     {
-      "id": 713346367,
+      "id": 868216403,
       "title": "In emergency situations, parents’ behavior directly influences their children’s sense of safety and reassurance.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029120746153275780#m",
@@ -3760,7 +3862,7 @@
       "is_government": true
     },
     {
-      "id": 922096690,
+      "id": 630879610,
       "title": "R to @gcaauae: 🌙✈️ The UAE Permanent Mission to the ICAO Council hosted its Annual Ramadan Gathering, bringing together Council Members, international representatives, and ICAO colleagues. The evening was a reflection of the UAE’s enduring values of solidarity and generosity, reinforcing the spirit of international cooperation and cultural connection within the global aviation community.",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/gcaauae/status/2029120194698682629#m",
@@ -3777,7 +3879,7 @@
       "is_government": true
     },
     {
-      "id": 518402957,
+      "id": 604887778,
       "title": "🌙✈️ نظّمت البعثة الدائمة لدولة الإمارات لدى مجلس منظمة الطيران المدني الدولي (الإيكاو) في مونتريال الملتقى الرمضاني السنوي، في أمسيةٍ دبلوماسية جمعت أعضاء المجلس وممثلي الدول الشقيقة وكوادر المنظمة. جسّد الحدث قيم مجتمع الإمارات القائمة على التضامن والعطاء، وعكس الدور المحوري للدولة في تعزيز التواصل الإنساني والمهني داخل أسرة الطيران المدني الدولي.\n\n🌙✈️ The UAE Permanent Mission to the ICAO Council hosted its Annual Ramadan Gathering, bringing together Council Members, international representatives, and ICAO colleagues. The evening was a reflection of the UAE’s enduring values of solidarity and generosity, reinforcing the spirit of international cooperation and cultural connection within the global aviation community.",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/gcaauae/status/2029120169465803181#m",
@@ -3794,7 +3896,7 @@
       "is_government": true
     },
     {
-      "id": 321743635,
+      "id": 595943312,
       "title": "Warning against gathering or being present at accident sites, as well as photographing or publishing any videos or materials related to ongoing field developments.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029075641228841418#m",
@@ -3811,7 +3913,7 @@
       "is_government": true
     },
     {
-      "id": 301268017,
+      "id": 73027552,
       "title": "Notice regarding the importance of obtaining information from official and authorized sources, in order to avoid legal accountability.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2029031523035263109#m",
@@ -3828,7 +3930,7 @@
       "is_government": true
     },
     {
-      "id": 482239891,
+      "id": 276333093,
       "title": "'All red lines have been crossed': Gulf states weigh response to Iranian strikes",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cjrqqd8lw2wo?at_medium=RSS&at_campaign=rss",
@@ -3845,7 +3947,7 @@
       "is_government": false
     },
     {
-      "id": 842650310,
+      "id": 33786650,
       "title": "RT by @SaudiDCD: #مجلس_الوزراء ..",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2028986360405668036#m",
@@ -3862,7 +3964,7 @@
       "is_government": true
     },
     {
-      "id": 291355657,
+      "id": 44310274,
       "title": "During exceptional circumstances, families play a vital role in reassuring their children, guiding them to follow safety measures, and providing clear, age-appropriate information.\n\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2028984484981260623#m",
@@ -3879,7 +3981,7 @@
       "is_government": true
     },
     {
-      "id": 713331566,
+      "id": 147334226,
       "title": "Despite air dominance, US ‘can’t stop everything’ Iran fires, Hegseth says",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/flashpoints/2026/03/04/despite-air-dominance-us-cant-stop-everything-iran-fires-hegseth-says/",
@@ -3896,7 +3998,7 @@
       "is_government": false
     },
     {
-      "id": 471481537,
+      "id": 899033522,
       "title": "Bombs headed for Iran in Operation Epic Fury don names of US sailors",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/your-military/2026/03/04/bombs-headed-for-iran-in-operation-epic-fury-don-names-of-us-sailors/",
@@ -3913,7 +4015,7 @@
       "is_government": false
     },
     {
-      "id": 935605108,
+      "id": 892503796,
       "title": "US launches Precision Strike Missiles in Iran war in first combat use",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/your-military/2026/03/04/us-launches-precision-strike-missiles-in-iran-war-in-first-combat-use/",
@@ -3930,7 +4032,7 @@
       "is_government": false
     },
     {
-      "id": 756847625,
+      "id": 543395160,
       "title": "Mastermind of Iranian plot to assassinate Trump is dead, Hegseth claims",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/pentagon-congress/2026/03/04/mastermind-of-iranian-plot-to-assassinate-trump-is-dead-hegseth-claims/",
@@ -3947,7 +4049,7 @@
       "is_government": false
     },
     {
-      "id": 461724336,
+      "id": 941523459,
       "title": "The US Air Force just used its oldest bomber to attack Iran",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/your-military/2026/03/04/the-us-air-force-just-used-its-oldest-bomber-to-attack-iran/",
@@ -3964,7 +4066,7 @@
       "is_government": false
     },
     {
-      "id": 985008661,
+      "id": 290758687,
       "title": "Israeli F-35 notches first kill of a manned fighter in downing of Iranian Yak-130",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/mideast-africa/2026/03/04/israeli-f-35-notches-first-kill-of-a-manned-fighter-in-downing-of-iranian-yak-130/",
@@ -3981,7 +4083,7 @@
       "is_government": false
     },
     {
-      "id": 954208158,
+      "id": 818138419,
       "title": "US submarine sinks Iranian ship in first torpedo kill since WWII, Pentagon confirms",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/your-military/2026/03/04/us-submarine-sinks-iranian-ship-in-first-torpedo-kill-since-wwii-pentagon-confirms/",
@@ -3998,7 +4100,7 @@
       "is_government": false
     },
     {
-      "id": 721635491,
+      "id": 462451036,
       "title": "Gulf states warn of legal penalties in sharing of Iran strikes footage",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/mideast-africa/2026/03/04/gulf-states-warn-of-legal-penalties-in-sharing-of-iran-strikes-footage/",
@@ -4015,7 +4117,7 @@
       "is_government": false
     },
     {
-      "id": 120519581,
+      "id": 479898489,
       "title": "Funerals held for students and staff after strike on Iran school",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c98qpz144nvo?at_medium=RSS&at_campaign=rss",
@@ -4032,7 +4134,7 @@
       "is_government": false
     },
     {
-      "id": 656205433,
+      "id": 981343058,
       "title": "RT by @CivilDefenceAD: *Conduite à tenir en cas d'alerte*\n\nIl a été observé que certaines personnes, après avoir reçu une alerte, quittent leur domicile ou leur lieu de résidence, ou immobilisent leur véhicule pour prendre des photographies.\n\n⚠️ Il est important de rappeler que l'alerte est émise dans un souci de protection et de sécurité. Vous devez vous rendre immédiatement dans un lieu sûr et y rester jusqu'à l'annonce officielle de la levée de l'alerte pour votre zone.\n\n🚗 Si vous êtes au volant, continuez votre trajet en toute sécurité jusqu'à votre destination. À votre arrivée, dirigez-vous sans délai vers le lieu sûr le plus proche.\n\n⚖️ Le non-respect de ces consignes peut entraîner des poursuites ou des mesures prévues par la loi.\n\n🤝 Nous vous remercions de votre coopération afin de garantir votre sécurité ainsi que celle des autres.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/Adcmc_ae/status/2028945834306617555#m",
@@ -4049,7 +4151,7 @@
       "is_government": true
     },
     {
-      "id": 941228886,
+      "id": 675087401,
       "title": "RT by @CivilDefenceAD: *Qué hacer al escuchar una alerta*\n\nSe ha constatado que algunas personas, al recibir una alerta, abandonan sus domicilios o lugares de residencia, o detienen sus vehículos con el fin de tomar fotografías.\n\n⚠️ Se informa de que la alerta se emite exclusivamente por su seguridad. Deberá dirigirse de inmediato a un lugar seguro y permanecer en él hasta que se comunique oficialmente el aviso de fin de alerta para su zona.\n\n🚗 Si se encuentra conduciendo, continúe la marcha con normalidad hasta su destino. Una vez allí, diríjase sin demora al lugar seguro más cercano.\n\n⚖️ El incumplimiento de estas instrucciones podrá dar lugar a la adopción de las medidas legales correspondientes.\n\n🤝 Agradecemos su colaboración para garantizar su seguridad y la de los demás.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/Adcmc_ae/status/2028945819584581636#m",
@@ -4066,7 +4168,7 @@
       "is_government": true
     },
     {
-      "id": 880351231,
+      "id": 804303949,
       "title": "RT by @CivilDefenceAD: What To Do When You Hear a Warning Alert\n\nIt has been noted that, when receiving an alert, some members of the public leave their homes or places of residence, or even stop their cars to record videos.\n\n⚠️ The warning is issued for your safety. You must comply by heading to a safe place and taking shelter there until an “all clear” alert is issued for the area.\n\n🚗 If you are in your car, continue to your intended destination, and upon arrival, proceed to the nearest safe place.\n\n⚖️ Violating these instructions will subject you to legal accountability.\n\n🤝 We ask for your cooperation to ensure your protection.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/Adcmc_ae/status/2028945815620956242#m",
@@ -4083,7 +4185,7 @@
       "is_government": true
     },
     {
-      "id": 301826912,
+      "id": 97913891,
       "title": "RT by @CivilDefenceAD: *كيفيــة التصــرف عند سمـاع رسالــة الإنــذار*\nلوحظ قيام بعض الفئات من الجمهور عند تلقيهم الإنذار بالخروج من منازلهم أو محل إقامتهم أو إيقاف سياراتهم بهدف التصوير.\n\n⚠️ التحذير يُطلق من أجل سلامتكم\nيجب التقيد بالتوجه إلى مكان آمن والاحتماء فيه لحين إصدار إنذار زوال الخطر من المنطقة.\n\n🚗 إذا كنت في سيارتك، فأكمل طريقك إلى الجهة المقصودة، وعند الوصول اتجه لأقرب مكان آمن.\n\n⚖️ إن مخالفتك لهذه التعليمات تعرضك للمساءلة القانونية.\n\n🤝 نرجو منكم التعاون معنا لضمان حمايتكم وسلامة الجميع.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/Adcmc_ae/status/2028945811237945473#m",
@@ -4100,24 +4202,7 @@
       "is_government": true
     },
     {
-      "id": 26906812,
-      "title": "MDA Spokesperson: Following the missile fire toward the State of Israel:\n\nAt a scene in central Israel, MDA paramedics and EMTs are providing medical treatment to a 32-year-old woman in mild condition, fully conscious, with shrapnel injuries. Updates as required",
-      "source": "Magen David Adom",
-      "source_url": "https://nitter.net/Mdais/status/2028945302334406727#m",
-      "published": "2026-03-03T21:27:10+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Oman",
-        "lat": 21.4735,
-        "lng": 55.9754
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 74913767,
+      "id": 230918159,
       "title": "Rely only on official sources for information and refrain from sharing rumors. Together, we protect our community and uphold public safety.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2028939191057342904#m",
@@ -4134,24 +4219,7 @@
       "is_government": true
     },
     {
-      "id": 371005056,
-      "title": "R to @UAEmediaoffice: During the UAE Government Media Briefing..\nNational Emergency Crisis and Disaster Management Authority: National Readiness and Full Continuity of Life",
-      "source": "UAE Government Media Office",
-      "source_url": "https://nitter.net/UAEmediaoffice/status/2028932696534360163#m",
-      "published": "2026-03-03T20:37:05+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 413894914,
+      "id": 958581332,
       "title": "RT by @SaudiDCD: آمنــون .. \n\n#حياكم_الله",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2028930916597530702#m",
@@ -4168,41 +4236,7 @@
       "is_government": true
     },
     {
-      "id": 616190459,
-      "title": "خلال الإحاطة الإعلامية لحكومة الإمارات  . .\nوزارة الدفاع: حماية السيادة وجاهزية عسكرية كاملة",
-      "source": "UAE Government Media Office",
-      "source_url": "https://nitter.net/UAEmediaoffice/status/2028930515601121716#m",
-      "published": "2026-03-03T20:28:25+00:00",
-      "type": "air_defense",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "UAE",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 190290596,
-      "title": "RT by @DCDDubai: Dubai authorities have confirmed that a fire resulting from a drone-related incident near the US Consulate has been successfully contained. Emergency teams responded immediately. No injuries have been reported.",
-      "source": "Dubai Civil Defence",
-      "source_url": "https://nitter.net/DXBMediaOffice/status/2028920494951678281#m",
-      "published": "2026-03-03T19:48:36+00:00",
-      "type": "drone",
-      "status": "confirmed",
-      "location": {
-        "name": "Dubai",
-        "country": "UAE",
-        "lat": 25.2048,
-        "lng": 55.2708
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 861741460,
+      "id": 55341680,
       "title": "سعادة سيف محمد السويدي، مدير عام الهيئة العامة للطيران المدني، في مداخلة مع مركز الاتحاد للأخبار يستعرض خطة استعادة الحركة الجوية، مؤكداً على النهج الإنساني للدولة في رعاية المسافرين العالقين وتأمين عودتهم. ✈️🇦🇪\n\nH.E. Saif Mohammed Al Suwaidi, Director General of the GCAA, outlines the strategic plan for restoring air traffic in an interview with Aletihad News Center , highlighting the UAE’s humanitarian commitment to supporting and repatriating affected travelers. ✈️🇦🇪\n@aletihadae",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/gcaauae/status/2028918890320019674#m",
@@ -4219,7 +4253,7 @@
       "is_government": true
     },
     {
-      "id": 698116449,
+      "id": 643236263,
       "title": "Key questions, and an expert take, after US strikes Iran",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/key-questions-and-an-expert-take-after-us-strikes-iran/",
@@ -4236,7 +4270,7 @@
       "is_government": false
     },
     {
-      "id": 427401319,
+      "id": 632390859,
       "title": "RT by @gcaauae: سيف محمد السويدي يتحدث عن مستجدات عودة حركة الطيران في #الإمارات \n\n#مركز_الاتحاد_للأخبار",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/oloumaldar/status/2028904432558325810#m",
@@ -4253,7 +4287,7 @@
       "is_government": true
     },
     {
-      "id": 250367113,
+      "id": 372003007,
       "title": "RT by @gcaauae: خلال الإحاطة الإعلامية لحكومة الإمارات ..\n\nمعالي بن طوق: تسيير رحلات لإعادة المسافرين المتأثرين بالظروف الراهنة عبر مطارات الدولة على مراحل متتابعة، شملت المرحلة الأولى نقل 17,498 مسافراً على متن 60 رحلة سيّرتها الناقلات الوطنية، وستتضمن المرحلة المقبلة تسيير أكثر من 80 رحلة مجدولة خلال اليوم الواحد ويتم من خلالها نقل أكثر من 27 ألف مسافر.",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/UAEmediaoffice/status/2028903589977178592#m",
@@ -4270,7 +4304,7 @@
       "is_government": true
     },
     {
-      "id": 708921875,
+      "id": 608410498,
       "title": "R to @gcaauae: 📍 Key highlights from H.E. Abdulla bin Touq Al Marri, Minister of Economy and Tourism and Chairman of the GCAA, during the UAE Government media briefing on the latest developments, operational readiness, and contingency plans for the aviation sector. ✈️🇦🇪",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/gcaauae/status/2028902287306047865#m",
@@ -4287,7 +4321,7 @@
       "is_government": true
     },
     {
-      "id": 633036786,
+      "id": 349406067,
       "title": "Notice urging strict adherence to the safety instructions issued by the competent authorities, and the importance of remaining indoors and not going out except in cases of absolute necessity.\n\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2028893332097609970#m",
@@ -4304,7 +4338,7 @@
       "is_government": true
     },
     {
-      "id": 479014474,
+      "id": 391594300,
       "title": "UAE Air Defense Successfully Confront Iranian Missile and Drone Attacks.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2028879767051878827#m",
@@ -4321,7 +4355,24 @@
       "is_government": true
     },
     {
-      "id": 858717265,
+      "id": 84918125,
+      "title": "LISTEN: \nA Gazan merchant exposes reality and describes how Hamas enters warehouses, seizes goods, and prevents the free sale of food that was brought in. \n\nThere is food. There are supplies. The temporary closing of the crossings for security reasons did not affect the amount of food in Gaza. \n\nThere is no free market in Gaza. \n\nGazans are paying the price for Hamas in power.",
+      "source": "COGAT",
+      "source_url": "https://nitter.net/cogatonline/status/2028879352058757188#m",
+      "published": "2026-03-03T17:05:06+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Gaza",
+        "country": "Palestine",
+        "lat": 31.5017,
+        "lng": 34.4668
+      },
+      "credibility": 95,
+      "is_government": true
+    },
+    {
+      "id": 702262435,
       "title": "RT by @NCEMAUAE: خلال الإحاطة الإعلامية لحكومة الإمارات . . \n\nالدكتور سيف جمعة الظاهري: المنظومة الوطنية تعاملت منذ بداية الأحداث باحترافية عالية واستباقية وفق أعلى معايير الجاهزية والاستعداد . .والحياة اليومية في الدولة تسير بصورة طبيعية والعملية التعليمية مستمرة دوم انقطاع",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/UAEmediaoffice/status/2028879017546580156#m",
@@ -4338,7 +4389,7 @@
       "is_government": true
     },
     {
-      "id": 372488061,
+      "id": 911573952,
       "title": "الدفاعات الجوية الإماراتية تتصدى بنجاح للصواريخ والمسيرات الإيرانية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2028878308172255348#m",
@@ -4355,7 +4406,7 @@
       "is_government": true
     },
     {
-      "id": 819338658,
+      "id": 189484356,
       "title": "Battered and isolated, Hezbollah drags Lebanon into another war",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c4gq3ykg7pvo?at_medium=RSS&at_campaign=rss",
@@ -4372,24 +4423,7 @@
       "is_government": false
     },
     {
-      "id": 889622837,
-      "title": "خلال الإحاطة الإعلامية لحكومة الإمارات ..\nالعميد ركن طيار عبدالناصر الحميدي : الانتشار الدفاعي ورفع درجات الاستعداد القتالي وتعزيز الإنذار المبكر مستمرة على مدار الساعة لحماية الوطن وصون سيادته",
-      "source": "UAE Government Media Office",
-      "source_url": "https://nitter.net/UAEmediaoffice/status/2028858342119264594#m",
-      "published": "2026-03-03T15:41:37+00:00",
-      "type": "air_defense",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "UAE",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 772295939,
+      "id": 887452515,
       "title": "UAE air defences intercept 12 ballistic missiles, 123 drones: Ministry of Defence\n\nThe UAE Ministry of Defence (MoD) announced that UAE air defence systems intercepted 11 ballistic missiles and 123 drones today, while one missile landed within the country’s territory without causing any human casualties.\n\nThe Ministry stated that since the beginning of what it described as the blatant Iranian aggression, a total of 186 ballistic missiles have been detected as launched towards the UAE. Of these, 172 missiles were destroyed, 13 fell into the sea, and one missile landed on the country’s territory.\n\nMoD added that 812 Iranian drones were detected, of which 755 were intercepted, while 57 fell within the country. It also reported that eight cruise missiles were detected and destroyed. These attacks resulted in some collateral damage, three fatalities of Pakistani, Nepalese and Bangladeshi nationals, and 68 minor injuries among Emirati, Egyptian, Ethiopian, Filipino, Pakistani, Iranian, Indian, Bangladeshi, Sri Lankan, Azerbaijani, Yemeni, Ugandan, Eritrean, Lebanese and Afghan nationals.\n\nThe Ministry confirmed that sounds heard in various areas across the country were the result of interceptions carried out by air defence systems against ballistic missiles, as well as fighter jets targeting drones and cruise missiles. These operations led to minor to moderate material damage to a number of civilian facilities.\n\nThe Ministry strongly condemned the military targeting, describing it as blatant aggression and a grave violation of national sovereignty and international law.\n\nIt affirmed that the UAE reserves its full right to respond to this escalation and to take all necessary measures to protect its territory, citizens and residents, in a manner that safeguards its sovereignty, security and stability, and protects its national interests and capabilities.\n\nThe Ministry of Defence reiterated its full readiness to address any threats and that it is taking all necessary measures to firmly counter any attempts to undermine the country’s security and stability. It stressed that the safety of citizens, residents and visitors remains a top priority that will not be compromised.\n\nThe Ministry urged the public to obtain information from official sources in the country and to refrain from circulating rumours or inaccurate information.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2028844714297065933#m",
@@ -4406,7 +4440,7 @@
       "is_government": true
     },
     {
-      "id": 551620261,
+      "id": 972118719,
       "title": "لقطات من اعتراض وتصدي الدفاعات الجوية الإماراتية للصواريخ والمسيرات الإيرانية.\n\nFootage of UAE air defenses successfully confronting Iranian missiles and drones\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2028840675672998114#m",
@@ -4423,7 +4457,7 @@
       "is_government": true
     },
     {
-      "id": 122299806,
+      "id": 485984896,
       "title": "الدفاعات الجوية الإماراتية تتعامل مع 12 صاروخ باليستي و123 طائرة مسيرة\n\nأعلنت وزارة الدفاع أن الدفاعات الجوية الإماراتية اعترضت اليوم 11 صاروخ باليستي و123 طائرة مسيرة فيما وقع صاروخ واحد داخل أراضي الدولة دون تسجيل أي إصابات بشرية.\n\nوأوضحت الوزارة أنه منذ بدء الاعتداء الإيراني السافر تم رصد 186 صاروخاً باليستياً تم إطلاقها تجاه الدولة، حيث تم تدمير 172 صاروخاً، فيما سقط 13 منها في مياه البحر، وصاروخ 1 سقط على أراضي الدولة، كما تم رصد 812 مسيرة إيرانية واعتراض 755 مسيرة، فيما وقعت 57 منها داخل أراضي الدولة، كما تم رصد وتدمير عدد 8 صواريخ جوالة، وتسببت في بعض الأضرار الجانبية، كما أسفرت عن 3 حالات وفاة من الجنسية الباكستانية والنيبالية والبنغلادشية و68 حالة إصابة بسيطة من الجنسية الإماراتية، المصرية، الاثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السيرلانكية، الاذربيجانية، اليمنية، الاوغندية، الارتيرية، اللبنانية والأفغانية.\n\nوتؤكد الوزارة أن الأصوات المسموعة في مناطق متفرقة من الدولة هي نتيجة اعتراض كل من منظومات الدفاع الجوي للصواريخ البالستية، والمقاتلات للطائرات المسيرة والجوالة، والذي أدى إلى حدوث أضرار مادية بسيطة ومتوسطة في عدد من الأعيان المدنية.\n\nوأدانت الوزارة بأشد العبارات هذا الاستهداف العسكري، معتبرةً ذلك عدواناً سافراً وانتهاكاً صارخاً للسيادة الوطنية وللقانون الدولي، وأن الدولة تحتفظ بحقها الكامل في الرد على هذا التصعيد واتخاذ جميع الإجراءات اللازمة لحماية أراضيها وشعبها والمقيمين فيها، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\nوأكدت وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات، وأنها تتخذ كافة الإجراءات اللازمة للتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة واستقرارها، وأضافت أن سلامة المواطنين والمقيمين والزوار تمثل أولوية قصوى لا يمكن التهاون فيها.\n\nوتهيب الوزارة بالجمهور الكريم استقاء المعلومات من المصادر الرسمية في الدولة، وتجنب تداول الشائعات أو المعلومات غير الموثوقة.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2028836264246706360#m",
@@ -4437,57 +4471,6 @@
         "lng": 53.8478
       },
       "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 518902051,
-      "title": "At three scenes in central Israel, MDA paramedics and EMTs are providing medical treatment to 7 injured people, including 1 in moderate condition, and 6 in mild condition with blast and shrapnel injuries",
-      "source": "Magen David Adom",
-      "source_url": "https://nitter.net/Mdais/status/2028828130182304241#m",
-      "published": "2026-03-03T13:41:34+00:00",
-      "type": "explosion",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Israel",
-        "lat": 31.0461,
-        "lng": 34.8516
-      },
-      "credibility": 95,
-      "is_government": true
-    },
-    {
-      "id": 325882259,
-      "title": "RT by @NCEMAUAE: أبرز تصريحات سعادة العميد عبد العزيز الأحمد المتحدث الرسمي باسم وزارة الداخلية خلال الإحاطة الإعلامية لحكومة دولة الإمارات حول آخر المستجدات:\n\nنؤكد على استقرار الوضع الأمني في الدولة وجاهزية قواتها لمواجهة أي طارئ\n\nالاستجابة الوطنية المتكاملة للأحداث والمستجدات تؤكد كفاءة واحترافية عالية\n\nعززت وزارة الداخلية انتشارها الميداني بأكثر من 3200 آلية متخصصة، وأكثر من 4100 دروية مرورية وأمنية ووحدات استجابة مسلحة.\n\n#وزارة_الداخلية_الإمارات #الامارات_أمن_وأمان\n#MOIUAE",
-      "source": "UAE NCEMA",
-      "source_url": "https://nitter.net/moiuae/status/2028825239451501009#m",
-      "published": "2026-03-03T13:30:05+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 100,
-      "is_government": true
-    },
-    {
-      "id": 828126234,
-      "title": "MDA Spokesperson:\nFollowing the recent missile fire toward Israel: \n\nMDA EMTs and paramedics are treating 3 patients in mild condition at sites in central Israel. Updates to follow",
-      "source": "Magen David Adom",
-      "source_url": "https://nitter.net/Mdais/status/2028821472873996758#m",
-      "published": "2026-03-03T13:15:07+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Israel",
-        "lat": 31.0461,
-        "lng": 34.8516
-      },
-      "credibility": 95,
       "is_government": true
     }
   ]

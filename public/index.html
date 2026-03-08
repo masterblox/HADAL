@@ -1003,10 +1003,10 @@
                 const alertType = inc.type.replace('_', ' ').toUpperCase();
                 const location = inc.location.country;
                 return `
-                    <div class="military-item">
+                    <a href="${inc.source_url}" target="_blank" class="military-item" style="text-decoration: none; color: inherit; display: block;">
                         <div class="time">${timeAgo(inc.published)}</div>
                         <div class="alert">${alertType}: ${location}</div>
-                    </div>
+                    </a>
                 `;
             }).join('');
         }

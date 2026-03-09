@@ -1682,47 +1682,64 @@ This report was submitted via GulfWatch Testing and Development v2`);
         
         // Verification Panel Functions
         function openVerificationPanel(incident) {
-            const panel = document.getElementById('verification-panel');
-            const content = document.getElementById('verification-content');
-            const isMobile = window.innerWidth <= 1024;
-            
-            const verification = incident.verification || {};
-            const confidence = verification.confidence || 0;
-            const status = verification.status || 'Unconfirmed';
-            const statusClass = confidence >= 90 ? 'verified' : confidence >= 70 ? 'likely' : confidence >= 50 ? 'partial' : 'unconfirmed';
-            
-            const html = `
-                <div class="confidence-score">
-                    <div class="confidence-circle ${statusClass}">${confidence}%</div>
-                    <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;" class="${statusClass}">${status}</div>
-                    <div style="font-size: 12px; color: #888;">${verification.source_count || 1} sources</div>
-                </div>
+            try {
+                const panel = document.getElementById('verification-panel');
+                const content = document.getElementById('verification-content');
+                const isMobile = window.innerWidth <= 1024;
                 
-                <div class="source-breakdown">
-                    <h4>Source Breakdown</h4>
-                    ${(incident.source_variants || []).map(v => `
-                        <div class="source-item">
-                            <div class="source-icon ${v.source_key?.includes('moi') || v.source_key?.includes('mod') ? 'govt' : v.source_key?.includes('news') ? 'news' : 'social'}">
-                                ${v.source_key?.includes('moi') || v.source_key?.includes('mod') ? '🏛️' : v.source_key?.includes('news') ? '📰' : '💬'}
-                            </div>
-                            <div class="source-info">
-                                <div class="source-name">${v.source}</div>
-                                <div class="source-credibility">${v.source_key?.includes('moi') || v.source_key?.includes('mod') ? 'Government' : 'News Source'}</div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
+                const verification = incident.verification || {};
+                const confidence = verification.confidence || 0;
+                const status = verification.status || 'Unconfirmed';
+                const statusClass = confidence >= 90 ? 'verified' : confidence >= 70 ? 'likely' : confidence >= 50 ? 'partial' : 'unconfirmed';
                 
-                <div class="variants-section">
-                    <h4>Source Variants</h4>
-                    ${(incident.source_variants || []).map(v => `
+                // Build source breakdown HTML safely
+                let sourceBreakdownHtml = '<div style="padding: 20px; text-align: center; color: #666;">No source breakdown available</div>';
+                if (incident.source_variants && incident.source_variants.length > 0) {
+                    sourceBreakdownHtml = incident.source_variants.map(v => {
+                        const isGovt = v.source_key && (v.source_key.includes('moi') || v.source_key.includes('mod'));
+                        const icon = isGovt ? '🏛️' : '📰';
+                        const iconClass = isGovt ? 'govt' : 'news';
+                        const label = isGovt ? 'Government' : 'News Source';
+                        return `
+                            <div class="source-item">
+                                <div class="source-icon ${iconClass}">${icon}</div>
+                                <div class="source-info">
+                                    <div class="source-name">${v.source || 'Unknown'}</div>
+                                    <div class="source-credibility">${label}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+                // Build variants HTML safely
+                let variantsHtml = '<div style="padding: 10px; color: #666; font-size: 12px;">No additional source variants</div>';
+                if (incident.source_variants && incident.source_variants.length > 0) {
+                    variantsHtml = incident.source_variants.map(v => `
                         <div class="variant-card">
-                            <div class="variant-source">${v.source}</div>
-                            <div class="variant-text">${v.title}</div>
+                            <div class="variant-source">${v.source || 'Unknown'}</div>
+                            <div class="variant-text">${v.title || 'No title'}</div>
                         </div>
-                    `).join('')}
-                </div>
-            `;
+                    `).join('');
+                }
+                
+                const html = `
+                    <div class="confidence-score">
+                        <div class="confidence-circle ${statusClass}">${confidence}%</div>
+                        <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;" class="${statusClass}">${status}</div>
+                        <div style="font-size: 12px; color: #888;">${verification.source_count || 1} source(s)</div>
+                    </div>
+                    
+                    <div class="source-breakdown">
+                        <h4>Source Breakdown</h4>
+                        ${sourceBreakdownHtml}
+                    </div>
+                    
+                    <div class="variants-section">
+                        <h4>Source Variants</h4>
+                        ${variantsHtml}
+                    </div>
+                `;
             
             if (isMobile) {
                 document.getElementById('mobile-verification-content').innerHTML = html;

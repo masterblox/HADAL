@@ -1093,6 +1093,23 @@
         // Countries for filtering
         const countries = ['UAE', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman', 'Israel', 'Iran', 'Lebanon'];
         
+        // Default coordinates for countries when lat/lng missing
+        const countryCoords = {
+            'UAE': { lat: 25.2048, lng: 55.2708 },
+            'Saudi Arabia': { lat: 24.7136, lng: 46.6753 },
+            'Qatar': { lat: 25.2854, lng: 51.5310 },
+            'Kuwait': { lat: 29.3759, lng: 47.9774 },
+            'Bahrain': { lat: 26.2285, lng: 50.5860 },
+            'Oman': { lat: 23.5880, lng: 58.3829 },
+            'Israel': { lat: 31.7683, lng: 35.2137 },
+            'Iran': { lat: 35.6892, lng: 51.3890 },
+            'Lebanon': { lat: 33.8938, lng: 35.5018 },
+            'Iraq': { lat: 33.3152, lng: 44.3661 },
+            'Jordan': { lat: 31.9454, lng: 35.9284 },
+            'Egypt': { lat: 30.0444, lng: 31.2357 },
+            'Turkey': { lat: 38.9637, lng: 35.2433 }
+        };
+        
         // Get color by type
         function getTypeColor(type) {
             const colors = {
@@ -1183,10 +1200,19 @@
             clearMarkers();
             
             allIncidents.forEach(incident => {
-                if (country !== 'all' && incident.location.country !== country) return;
+                if (country !== 'all' && incident.location?.country !== country) return;
+                
+                // Get coordinates (use fallback if missing)
+                let lat = incident.location?.lat;
+                let lng = incident.location?.lng;
+                if (!lat || !lng) {
+                    const fallback = countryCoords[incident.location?.country] || { lat: 25.2048, lng: 55.2708 };
+                    lat = fallback.lat;
+                    lng = fallback.lng;
+                }
                 
                 const color = getTypeColor(incident.type);
-                const marker = L.circleMarker([incident.location.lat, incident.location.lng], {
+                const marker = L.circleMarker([lat, lng], {
                     radius: 8,
                     fillColor: color,
                     color: '#fff',
@@ -1408,9 +1434,18 @@
                 clearMarkers();
                 
                 data.incidents.forEach(incident => {
+                    // Get coordinates (use fallback if missing)
+                    let lat = incident.location?.lat;
+                    let lng = incident.location?.lng;
+                    if (!lat || !lng) {
+                        const fallback = countryCoords[incident.location?.country] || { lat: 25.2048, lng: 55.2708 };
+                        lat = fallback.lat;
+                        lng = fallback.lng;
+                    }
+                    
                     // Add marker
                     const color = getTypeColor(incident.type);
-                    const marker = L.circleMarker([incident.location.lat, incident.location.lng], {
+                    const marker = L.circleMarker([lat, lng], {
                         radius: 8,
                         fillColor: color,
                         color: '#fff',
@@ -1502,8 +1537,17 @@ This report was submitted via GulfWatch Testing and Development v2`);
                         document.querySelectorAll('.incident-card').forEach(c => c.classList.remove('active'));
                         card.classList.add('active');
                         
+                        // Get coordinates (use fallback if missing)
+                        let flyLat = incident.location?.lat;
+                        let flyLng = incident.location?.lng;
+                        if (!flyLat || !flyLng) {
+                            const fallback = countryCoords[incident.location?.country] || { lat: 25.2048, lng: 55.2708 };
+                            flyLat = fallback.lat;
+                            flyLng = fallback.lng;
+                        }
+                        
                         // Fly to marker
-                        map.flyTo([incident.location.lat, incident.location.lng], 10, {
+                        map.flyTo([flyLat, flyLng], 10, {
                             duration: 1
                         });
                         

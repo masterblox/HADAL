@@ -1373,7 +1373,7 @@
                 // Track fetch time
                 lastFetchTime = new Date();
                 
-                const response = await fetch(getFetchUrl('incidents.json'), { cache: 'no-store' });
+                const response = await fetch(getFetchUrl('verified_incidents.json'), { cache: 'no-store' });
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }

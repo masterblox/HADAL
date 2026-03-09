@@ -1396,14 +1396,17 @@
         // Load incidents
         async function loadIncidents(showLoading = false) {
             try {
+                console.log('Loading incidents...');
                 // Track fetch time
                 lastFetchTime = new Date();
                 
                 const response = await fetch(getFetchUrl('verified_incidents.json'), { cache: 'no-store' });
+                console.log('Response status:', response.status);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
                 const data = await response.json();
+                console.log('Data loaded:', data.total_verified, 'incidents');
                 
                 // Deduplicate incidents
                 allIncidents = deduplicateIncidents(data.incidents);
@@ -1569,7 +1572,8 @@ This report was submitted via GulfWatch Testing and Development v2`);
                 
             } catch (error) {
                 console.error('Error loading incidents:', error);
-                document.getElementById('incident-count').textContent = 'Error';
+                console.error('Error stack:', error.stack);
+                document.getElementById('incident-count').textContent = 'Error: ' + error.message;
                 document.getElementById('last-update').textContent = 'Error';
                 document.getElementById('incident-list').innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #888;">

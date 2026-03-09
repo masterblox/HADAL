@@ -1205,23 +1205,52 @@
             return `${baseUrl}?_=${Date.now()}`;
         }
         
+        // Deduplicate incidents by title similarity
+        function deduplicateIncidents(incidents) {
+            const unique = [];
+            const seen = new Set();
+            
+            for (const inc of incidents) {
+                // Create a fingerprint from normalized title
+                const fingerprint = inc.title.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim()
+                    .substring(0, 80);
+                
+                // Check if similar to already seen
+                let isDuplicate = false;
+                for (const seenFingerprint of seen) {
+                    // Simple similarity: if one contains the other
+                    if (fingerprint.includes(seenFingerprint) || seenFingerprint.includes(fingerprint)) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                
+                if (!isDuplicate) {
+                    seen.add(fingerprint);
+                    unique.push(inc);
+                }
+            }
+            
+            return unique;
+        }
+        
         // Load incidents
         async function loadIncidents(showLoading = false) {
             try {
                 // Track fetch time
                 lastFetchTime = new Date();
                 
-                // Fetch verified incidents from v2-test (deduplicated with confidence scores)
-                const response = await fetch('https://raw.githubusercontent.com/nKOxxx/gulf-watch-v2-test/main/public/verified_incidents.json', { 
-                    cache: 'no-store',
-                    headers: { 'Accept': 'application/json' }
-                });
+                const response = await fetch(getFetchUrl('incidents.json'), { cache: 'no-store' });
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
                 const data = await response.json();
                 
-                allIncidents = data.incidents;
+                // Deduplicate incidents
+                allIncidents = deduplicateIncidents(data.incidents);
                 lastUpdateTime = new Date(data.generated_at);
                 
                 // Find oldest incident date for display
@@ -1240,7 +1269,7 @@
                                (day === 3 || day === 23) ? 'rd' : 'th';
                 const formattedDate = `${month} ${day}${suffix}`;
                 
-                document.getElementById('incident-count').textContent = `${data.total_verified} verified since ${formattedDate}`;
+                document.getElementById('incident-count').textContent = `${allIncidents.length} incidents since ${formattedDate}`;
                 
                 const listEl = document.getElementById('incident-list');
                 listEl.innerHTML = '';
@@ -1281,21 +1310,6 @@
                     card.className = 'incident-card';
                     card.dataset.id = incident.id;
                     card.dataset.country = incident.location.country;
-                    // Verification badge
-                    const verification = incident.verification || {};
-                    const confidence = verification.confidence || 0;
-                    const status = verification.status || 'Unknown';
-                    let verificationBadge = '';
-                    if (confidence >= 90) {
-                        verificationBadge = `<span class="verification-badge verified">✓ Verified (${confidence}%)</span>`;
-                    } else if (confidence >= 70) {
-                        verificationBadge = `<span class="verification-badge likely">◐ Likely True (${confidence}%)</span>`;
-                    } else if (confidence >= 50) {
-                        verificationBadge = `<span class="verification-badge partial">◐ Partial (${confidence}%)</span>`;
-                    } else {
-                        verificationBadge = `<span class="verification-badge unconfirmed">? Unconfirmed (${confidence}%)</span>`;
-                    }
-                    
                     const govBadge = incident.is_government ? '<span class="government-badge">🏛️ Government</span>' : '';
                     
                     // Detect Arabic text
@@ -1319,7 +1333,6 @@ This report was submitted via Gulf Watch v2`);
                         <div class="incident-header">
                             <span class="incident-type type-${incident.type}">${incident.type.replace('_', ' ')}</span>
                             <span class="incident-status status-${incident.status}">${incident.status}</span>
-                            ${verificationBadge}
                             ${govBadge}
                         </div>
                         <a href="${incident.source_url}" target="_blank" class="incident-title" onclick="event.stopPropagation();">${incident.title}</a>

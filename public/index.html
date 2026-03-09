@@ -1801,8 +1801,11 @@ This report was submitted via GulfWatch Testing and Development v2`);
                 content.innerHTML = html;
                 panel.classList.add('open');
             }
+            } catch (error) {
+                console.error('Error in openVerificationPanel:', error);
+            }
         }
-        
+
         function closeVerificationPanel() {
             document.getElementById('verification-panel').classList.remove('open');
         }

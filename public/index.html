@@ -1309,6 +1309,7 @@
         // Update Live Intelligence from high-priority incidents
         function updateIntelligence(incidents) {
             const intelContainer = document.getElementById('military-alerts');
+            if (!intelContainer) return; // Element doesn't exist, skip
             
             // High-priority keywords for intelligence alerts
             const intelKeywords = ['missile', 'rocket', 'drone', 'air defense', 'interceptor', 'attack', 'strike', 'explosion', 'siren', 'evacuation', 'houthi', 'hamas', 'hezbollah', 'idf', 'strait', 'hormuz', 'naval', 'military'];

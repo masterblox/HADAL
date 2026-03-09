@@ -393,17 +393,19 @@
         .incident-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 8px;
+            flex-wrap: wrap;
         }
         
         .incident-type {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 3px 6px;
+            border-radius: 3px;
             font-weight: 600;
+            white-space: nowrap;
         }
         
         .type-missile { background: #e74c3c; }
@@ -415,11 +417,12 @@
         .type-security { background: #7f8c8d; }
         
         .incident-status {
-            font-size: 10px;
-            padding: 2px 6px;
+            font-size: 9px;
+            padding: 2px 5px;
             border-radius: 3px;
             text-transform: uppercase;
             font-weight: 600;
+            white-space: nowrap;
         }
         
         .status-confirmed { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
@@ -427,23 +430,24 @@
         .status-unconfirmed { background: rgba(149, 165, 166, 0.2); color: #95a5a6; }
         
         .government-badge {
-            font-size: 9px;
-            padding: 2px 6px;
+            font-size: 8px;
+            padding: 2px 5px;
             border-radius: 3px;
             text-transform: uppercase;
             font-weight: 700;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #000;
             border: 1px solid #FFD700;
+            white-space: nowrap;
         }
         
         .verification-badge {
-            font-size: 9px;
-            padding: 2px 6px;
+            font-size: 8px;
+            padding: 2px 5px;
             border-radius: 3px;
             text-transform: uppercase;
             font-weight: 700;
-            margin-left: 4px;
+            white-space: nowrap;
         }
         
         .verification-badge.verified {

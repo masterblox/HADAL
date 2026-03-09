@@ -1432,6 +1432,7 @@
                 
                 const listEl = document.getElementById('incident-list');
                 listEl.innerHTML = '';
+                console.log('List element cleared, adding', data.incidents.length, 'incidents');
                 
                 // Clear existing markers
                 clearMarkers();
@@ -1535,6 +1536,7 @@ This report was submitted via GulfWatch Testing and Development v2`);
                         </div>
                     `;
                     
+                    console.log('Adding incident card:', incident.id);
                     card.addEventListener('click', () => {
                         // Remove active from all
                         document.querySelectorAll('.incident-card').forEach(c => c.classList.remove('active'));
@@ -1563,6 +1565,7 @@ This report was submitted via GulfWatch Testing and Development v2`);
                     
                     listEl.appendChild(card);
                 });
+                console.log('Finished adding', data.incidents.length, 'incident cards');
                 
                 // Apply current filter
                 filterIncidents(currentFilter);

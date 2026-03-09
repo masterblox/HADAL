@@ -1,185 +1,173 @@
-# GulfWatch Testing and Development v2 🎯
+# GulfWatch Testing and Development 🎯
 
-[![Live Site](https://img.shields.io/badge/Live-gulf--watch--v2.vercel.app-blue)](https://gulf-watch-v2.vercel.app)
-[![GitHub Actions](https://github.com/nKOxxx/gulf-watch-v2/workflows/Update%20RSS%20Feeds/badge.svg)](https://github.com/nKOxxx/gulf-watch-v2/actions)
+[![Live Site](https://img.shields.io/badge/Live-Testing%20Environment-orange)](https://gulfwatch-testing.vercel.app)
 
-**Live Site:** https://gulf-watch-v2.vercel.app
+**⚠️ This is a TESTING and DEVELOPMENT environment for GulfWatch features.**
 
-Real-time MENA (Middle East & North Africa) security and intelligence monitoring dashboard. Aggregating news from **44 authoritative sources** across the Gulf region — including **25 official government ministries and agencies**.
-
-![GulfWatch Testing and Development Screenshot](https://gulf-watch-v2.vercel.app/Tactical%20radar%20logo%20with%20Arabian%20Peninsula.png)
-
-> *Built with love and respect for the UAE and all countries in the Gulf Region*
-
-## What's Different from v1?
-- **No backend** - Static site hosted on Vercel
-- **No database** - JSON file updated by GitHub Actions
-- **No Twitter API** - RSS feeds only (free, no rate limits)
-- **Official sources** - 25 government ministries and agencies
-- **Reliable** - No deployment issues
-- **Fast** - Global CDN via Vercel
-
-## Features
-
-### 📰 News Aggregation
-- **44 sources**: 25 official government + 19 news outlets
-- Auto-updates every hour via GitHub Actions
-- Keyword filtering for security/threat-related content
-- **🏛️ Government badge** - Official sources clearly marked
-- Last 72 hours of incidents
-
-### 🗺️ Interactive Map
-- Dark-themed tactical map (Leaflet + CARTO)
-- Country filter buttons (UAE, Saudi, Qatar, etc.)
-- Click markers for incident details
-- Color-coded by incident type
-
-### 📊 Market Impact Panel
-- Live oil & gas prices (Brent, Natural Gas)
-- Gulf stock indices (Tadawul, ADX, QE)
-- Gold prices (safe haven indicator)
-- Real-time updates every minute
-
-### 🎯 Live Intelligence
-- Military activity alerts
-- Strait of Hormuz monitoring
-- Air defense status
-- Naval movement tracking
+**Production:** https://gulfwatch.live  
+**Testing:** https://gulfwatch-testing.vercel.app
 
 ---
 
-## Data Sources (44 Total)
+## What's This?
 
-### 🇦🇪 UAE — Official Government (13)
-| Source | Type | Handle |
-|--------|------|--------|
-| UAE Ministry of Interior | Government | [@moiuae](https://twitter.com/moiuae) |
-| UAE NCEMA (National Emergency) | Government | [@NCEMAUAE](https://twitter.com/NCEMAUAE) |
-| UAE Ministry of Defence | Government | [@modgovae](https://twitter.com/modgovae) |
-| UAE National Guard | Government | [@Uaengc](https://twitter.com/Uaengc) |
-| UAE Government Media Office | Government | [@UAEmediaoffice](https://twitter.com/UAEmediaoffice) |
-| WAM News Agency | State Media | [@wamnews](https://twitter.com/wamnews) |
-| WAM English | State Media | [@WAMNEWS_ENG](https://twitter.com/WAMNEWS_ENG) |
-| Dubai Media Office | Government | [@DXBMediaOffice](https://twitter.com/DXBMediaOffice) |
-| Abu Dhabi Civil Defence | Government | [@CivilDefenceAD](https://twitter.com/CivilDefenceAD) |
-| Dubai Civil Defence | Government | [@DCDDubai](https://twitter.com/DCDDubai) |
-| Sharjah Civil Defence | Government | [@civildefenceshj](https://twitter.com/civildefenceshj) |
-| UAE GCAA (Civil Aviation) | Government | [@gcaauae](https://twitter.com/gcaauae) |
-| UAE Ministry of Foreign Affairs | Government | [@mofauae](https://twitter.com/mofauae) |
+GulfWatch Testing is the **staging environment** for experimenting with new features before they go to production. This is where we:
 
-**UAE News:** The National, Gulf News, Khaleej Times
+- Test new UI components
+- Experiment with data sources
+- Build and verify cross-source verification
+- Debug and iterate quickly
 
-### 🇸🇦 Saudi Arabia — Official Government (2)
-| Source | Type | Handle |
-|--------|------|--------|
-| Saudi Ministry of Interior | Government | [@MOISaudiArabia](https://twitter.com/MOISaudiArabia) |
-| Saudi Civil Defense | Government | [@SaudiDCD](https://twitter.com/SaudiDCD) |
-
-**Saudi News:** Arab News, Saudi Gazette, Al Riyadh, Saudi Press Agency
-
-### 🇶🇦 Qatar — Official Government (2)
-| Source | Type | Handle |
-|--------|------|--------|
-| Qatar Ministry of Interior (EN) | Government | [@MOI_QatarEn](https://twitter.com/MOI_QatarEn) |
-| Qatar Civil Defence | Government | [@civildefenceqa](https://twitter.com/civildefenceqa) |
-
-**Qatar News:** Al Jazeera
-
-### 🇰🇼 Kuwait — Official Government (2)
-| Source | Type | Handle |
-|--------|------|--------|
-| Kuwait Ministry of Interior (EN) | Government | [@moi_kuw_en](https://twitter.com/moi_kuw_en) |
-| Kuwait Fire Force | Government | [@kff_kw](https://twitter.com/kff_kw) |
-
-### 🇧🇭 Bahrain — Official Government (1)
-| Source | Type | Handle |
-|--------|------|--------|
-| Bahrain Ministry of Interior | Government | [@moi_bahrain](https://twitter.com/moi_bahrain) |
-
-**Bahrain News:** Bahrain News Agency, Gulf Daily News
-
-### 🇴🇲 Oman — Official Government (1)
-| Source | Type | Handle |
-|--------|------|--------|
-| Royal Oman Police | Government | [@RoyalOmanPolice](https://twitter.com/RoyalOmanPolice) |
-
-**Oman News:** Oman News Agency, Oman Daily Observer
-
-### 🇮🇱 Israel — Official Government (4)
-| Source | Type | Handle |
-|--------|------|--------|
-| Israel Defense Forces | Military | [@IDF](https://twitter.com/IDF) |
-| Israel Ministry of Defense | Government | [@Israel_MOD](https://twitter.com/Israel_MOD) |
-| Magen David Adom | Emergency Services | [@Mdais](https://twitter.com/Mdais) |
-| COGAT | Military | [@cogatonline](https://twitter.com/cogatonline) |
-
-**Israel News:** Times of Israel, Jerusalem Post, Haaretz
-
-### 🌍 International & Regional News
-- **Reuters** Middle East
-- **BBC** Middle East
-- **The Guardian** Middle East
-- **Defense News**
-- **Breaking Defense**
-- **Egypt Today**
-- **Daily Star Lebanon**
-- **Jordan Times**
-- **Morocco World News**
+**⚠️ Data may be incomplete or experimental. Use https://gulfwatch.live for production monitoring.**
 
 ---
 
-## Data Quality
+## Current Features in Testing
 
-### Credibility Scoring
-| Score | Source Type |
-|-------|-------------|
-| 100% | Official Government Ministries |
-| 95% | State Media, Military/Defense |
-| 90% | International Wire Services |
-| 85% | Major Regional News |
-| 80% | National News Outlets |
-| 75% | Regional/Local News |
-| 70% | Independent/Specialized |
+### 🔍 Cross-Source Verification
+The main feature being tested here is **source verification and confidence scoring**:
 
-### Government Badge 🏛️
-Official government sources are marked with a **gold badge** to distinguish them from news outlets. These represent the official source of truth from ministries and agencies.
+**Verification Badges:**
+- 🟣 **Verified (90%+)** - Multiple government sources confirm
+- 🔵 **Likely True (70-89%)** - Government + news sources
+- 🟡 **Partial (50-69%)** - Limited source confirmation
+- ⚪ **Unconfirmed (<50%)** - Single source or low credibility
+
+**Click any incident to see:**
+- Confidence score (percentage)
+- Source breakdown (Government 🏛️ / News 📰 / Social 💬)
+- Timeline of when each source reported
+- Source variants (different reports of same incident)
+
+### 📱 Mobile-First Design
+- **Desktop:** Side panel with full verification details
+- **Mobile:** Bottom sheet slides up with same info
+- Optimized for quick checking on the go
+
+### 📊 Data Sources
+- 24 government RSS feeds (via RSS.app)
+- NewsData.io API integration
+- Cross-source deduplication
+- Confidence scoring algorithm
 
 ---
 
 ## Architecture
 
 ```
-GitHub Action (hourly)
-    ↓
-Fetch 44 RSS Feeds (19 news + 25 government via Nitter)
-    ↓
-Parse & Filter (security keywords)
-    ↓
-Generate incidents.json
-    ↓
-Commit to GitHub
-    ↓
-Vercel Auto-Deploy (global CDN)
-    ↓
-Live Site Updated
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  RSS.app Feeds  │────▶│  GitHub Actions │────▶│  verified_      │
+│  (24 accounts)  │     │  (every hour)   │     │  incidents.json │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                                                        │
+┌─────────────────┐     ┌─────────────────┐            │
+│  NewsData.io    │────▶│  Cross-Source   │────────────┘
+│  API            │     │  Verification   │
+└─────────────────┘     └─────────────────┘
+                                │
+                                ▼
+                        ┌─────────────────┐
+                        │  Deduplication  │
+                        │  + Confidence   │
+                        │  Scoring        │
+                        └─────────────────┘
+                                │
+                                ▼
+                        ┌─────────────────┐
+                        │  Vercel Deploy  │
+                        │  gulfwatch-     │
+                        │  testing.vercel │
+                        └─────────────────┘
 ```
 
-## Quick Start
+---
 
-### View Live Site
-**https://gulf-watch-v2.vercel.app**
+## Key Files
 
-### Run Locally
+| File | Purpose |
+|------|---------|
+| `verified_incidents.json` | Deduplicated incidents with verification scores |
+| `moi_missile_stats.json` | UAE MoI missile interception data |
+| `prices.json` | Oil/gold market prices |
+| `index.html` | Main UI with verification panel |
+
+---
+
+## Verification Scoring
+
+### Confidence Levels
+
+| Score | Status | Color | Meaning |
+|-------|--------|-------|---------|
+| 90-100% | Verified | 🟣 Purple | 2+ government sources confirm |
+| 70-89% | Likely True | 🔵 Blue | Government + news confirm |
+| 50-69% | Partial | 🟡 Yellow | Limited confirmation |
+| <50% | Unconfirmed | ⚪ Gray | Single source or questionable |
+
+### Source Weights
+
+| Source Type | Weight | Example |
+|-------------|--------|---------|
+| Government Ministry | 1.0 | UAE MoI, Saudi MoD |
+| State News Agency | 0.95 | WAM, KUNA |
+| International News | 0.85 | Reuters, BBC |
+| Regional News | 0.80 | Al Jazeera |
+| Social/Telegram | 0.60 | Citizen reports |
+
+### Bonuses
+- +0.15 per additional government source (max +0.30)
+- +0.10 per additional source of any type (max +0.30)
+
+---
+
+## Data Sources (Testing)
+
+### 🇦🇪 UAE Government (8)
+- Ministry of Interior
+- Ministry of Defence  
+- National Emergency Crisis & Disasters Management Authority
+- National Guard
+- Government Media Office
+- WAM News Agency
+- Dubai Media Office
+- Abu Dhabi Civil Defence
+
+### 🇸🇦 Saudi Arabia (2)
+- Ministry of Interior
+- Civil Defense
+
+### 🇶🇦 Qatar (4)
+- Ministry of Interior
+- Civil Defence
+- Ministry of Defence
+- Qatar News Agency
+
+### 🇰🇼 Kuwait (2)
+- Fire Force
+- News Agency
+
+### 🇧🇭 Bahrain (1)
+- Ministry of Interior
+
+### 🇴🇲 Oman (1)
+- Royal Oman Police
+
+### 🇮🇱 Israel (2)
+- Ministry of Defense
+- Magen David Adom
+
+### 🇮🇷 Iran (2)
+- Mehr News Agency
+- Fars News Agency
+
+---
+
+## Local Development
+
 ```bash
-# Clone repo
-git clone https://github.com/nKOxxx/gulf-watch-v2.git
-cd gulf-watch-v2
-
-# Install dependencies
-pip install feedparser
-
-# Fetch data
-python scripts/fetch_rss.py
+# Clone
+git clone https://github.com/nKOxxx/gulfwatch-testing.git
+cd gulfwatch-testing
 
 # Serve locally
 cd public
@@ -188,84 +176,58 @@ python -m http.server 8000
 # Open http://localhost:8000
 ```
 
-## Configuration
+---
 
-### Add Government Source
-Edit `scripts/fetch_rss.py`:
-```python
-{
-    "name": "Ministry Name", 
-    "url": "https://nitter.net/handle/rss", 
-    "country": "UAE", 
-    "credibility": 100,
-    "is_government": True
-}
+## Environment Variables (for full features)
+
+Set in Vercel dashboard or `.env`:
+
+```
+NEWSDATA_API_KEY=your_newsdata_key
 ```
 
-### Add News Source
-```python
-{
-    "name": "News Source", 
-    "url": "https://.../rss", 
-    "country": "UAE", 
-    "credibility": 85
-}
-```
+Get free key at: https://newsdata.io/
 
-### Modify Keywords
-Edit `KEYWORDS` list in `scripts/fetch_rss.py`:
-```python
-KEYWORDS = [
-    'missile', 'drone', 'attack', 'explosion',
-    # Add your keywords
-]
-```
+---
 
-### Manual Data Refresh
-1. Go to [Actions tab](https://github.com/nKOxxx/gulf-watch-v2/actions)
-2. Click "Update RSS Feeds"
-3. Click "Run workflow"
+## Workflow
+
+1. **Develop new features here** (gulfwatch-testing)
+2. **Test thoroughly** on mobile + desktop
+3. **Migrate working features** to production (gulfwatch.live)
+4. **Archive experiments** that don't work
 
 ---
 
 ## Tech Stack
+
 - **Frontend:** Vanilla HTML/CSS/JS, Leaflet Maps
-- **Data:** Python, feedparser, GitHub Actions
-- **Hosting:** Vercel (static site + CDN)
-- **APIs:** Yahoo Finance (market data)
-- **Twitter Access:** Nitter RSS proxy (free, no API limits)
+- **Data:** Python, GitHub Actions
+- **Hosting:** Vercel (static)
+- **RSS:** RSS.app (Twitter/X to RSS)
+- **News API:** NewsData.io
 
 ---
 
-## Roadmap
-- [ ] Push notifications for critical alerts
-- [ ] Mobile PWA for on-the-go monitoring
-- [ ] AI summaries of complex incidents
-- [ ] Historical archive beyond 72h
-- [ ] User subscriptions by country/topic
-- [ ] Telegram bot for alerts
+## Colors
 
----
-
-## Respect & Attribution
-
-This project is built with **love and respect for the UAE and all countries in the Gulf Region**.
-
-We believe in:
-- **Transparency** - Open data from official sources
-- **Safety** - Timely information for residents and visitors
-- **Neutrality** - Aggregating facts without editorial bias
-- **Accessibility** - Free, open-source, no paywalls
-
-Data sourced from reputable international news organizations and **official government ministries** who serve their citizens with dedication.
+| Type | Color | Hex |
+|------|-------|-----|
+| Missile | 🔴 Red | #e74c3c |
+| Drone | 🟠 Orange | #f39c12 |
+| Air Defense | 🔵 Blue | #3498db |
+| Explosion | 🩷 Pink | #e91e63 |
+| Verified | 🟣 Purple | #9b59b6 |
+| Government Badge | 🟡 Gold | #FFD700 |
 
 ---
 
 ## License
-MIT License - feel free to fork and customize!
-
-## Credits
-Built with ❤️ for the Gulf region. Stay safe.
+MIT - Fork and experiment freely!
 
 ---
-**[View Live Site →](https://gulf-watch-v2.vercel.app)**
+
+**[View Production Site →](https://gulfwatch.live)**  
+**[View Testing Site →](https://gulfwatch-testing.vercel.app)**
+
+*Built with ⚔️ for Gulf security monitoring*

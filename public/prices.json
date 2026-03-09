@@ -1,37 +1,37 @@
 {
-  "generated_at": "2026-03-09T03:35:16.676140+00:00",
+  "generated_at": "2026-03-09T05:15:32.070261+00:00",
   "prices": {
     "brent": {
       "name": "Brent Oil",
-      "price": 114.14,
-      "change": 23.14,
-      "formatted_price": "$114.14",
-      "formatted_change": "+23.14%",
-      "updated_at": "2026-03-09T03:35:16.417499+00:00"
+      "price": 116.06,
+      "change": 25.21,
+      "formatted_price": "$116.06",
+      "formatted_change": "+25.21%",
+      "updated_at": "2026-03-09T05:15:31.870576+00:00"
     },
     "gas": {
       "name": "Natural Gas",
-      "price": 3.403,
-      "change": 6.81,
-      "formatted_price": "$3.403",
-      "formatted_change": "+6.81%",
-      "updated_at": "2026-03-09T03:35:16.494334+00:00"
+      "price": 3.444,
+      "change": 8.1,
+      "formatted_price": "$3.444",
+      "formatted_change": "+8.10%",
+      "updated_at": "2026-03-09T05:15:31.938603+00:00"
     },
     "gold": {
       "name": "Gold",
-      "price": 5101.6,
-      "change": -0.86,
+      "price": 5102.0,
+      "change": -1.1,
       "formatted_price": "$5102",
-      "formatted_change": "-0.86%",
-      "updated_at": "2026-03-09T03:35:16.566628+00:00"
+      "formatted_change": "-1.10%",
+      "updated_at": "2026-03-09T05:15:32.002789+00:00"
     },
     "bitcoin": {
       "name": "Bitcoin",
-      "price": 67302.4,
-      "change": 2.01,
-      "formatted_price": "$67,302",
-      "formatted_change": "+2.01%",
-      "updated_at": "2026-03-09T03:35:16.676124+00:00"
+      "price": 67136.02,
+      "change": 1.76,
+      "formatted_price": "$67,136",
+      "formatted_change": "+1.76%",
+      "updated_at": "2026-03-09T05:15:32.070242+00:00"
     }
   }
 }

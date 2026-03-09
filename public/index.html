@@ -1725,12 +1725,15 @@ This report was submitted via GulfWatch Testing and Development v2`);
                 
             } catch (error) {
                 console.error('Error loading missile stats:', error);
-                document.getElementById('missile-stats-content').innerHTML = `
-                    <div style="text-align: center; padding: 20px; color: #888; font-size: 11px;">
-                        Unable to load missile defense stats.<br>
-                        <span style="color: #666;">${error.message}</span>
-                    </div>
-                `;
+                const missileContent = document.getElementById('missile-stats-content');
+                if (missileContent) {
+                    missileContent.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: #888; font-size: 11px;">
+                            Unable to load missile defense stats.<br>
+                            <span style="color: #666;">${error.message}</span>
+                        </div>
+                    `;
+                }
             }
         }
         

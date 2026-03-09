@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gulf Watch - MENA Security Monitor</title>
+    <title>GulfWatch Testing and Development - MENA Security Monitor</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -470,6 +470,112 @@
             border: 1px solid rgba(149, 165, 166, 0.3);
         }
         
+        /* Verification Panel Styles */
+        .verification-panel {
+            position: fixed;
+            top: 90px;
+            right: -400px;
+            width: 400px;
+            bottom: 0;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 2000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .verification-panel.open {
+            right: 0;
+        }
+        
+        .verification-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .verification-panel-header h3 {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+        
+        .close-panel {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .confidence-score {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .confidence-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .confidence-circle.verified { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        .confidence-circle.likely { background: linear-gradient(135deg, #2980b9, #3498db); }
+        .confidence-circle.partial { background: linear-gradient(135deg, #d68910, #f1c40f); }
+        .confidence-circle.unconfirmed { background: linear-gradient(135deg, #7f8c8d, #95a5a6); }
+        
+        .source-breakdown, .timeline, .variants-section {
+            margin-bottom: 25px;
+        }
+        
+        .source-breakdown h4, .timeline h4, .variants-section h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        
+        .source-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        
+        .source-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+        
+        .source-icon.govt { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
+        .source-icon.news { background: rgba(52, 152, 219, 0.2); color: #3498db; }
+        .source-icon.social { background: rgba(149, 165, 166, 0.2); color: #95a5a6; }
+        
         .footer {
             margin-top: 30px;
             padding: 20px 0;
@@ -803,7 +909,7 @@
 </head>
 <body>
     <div class="header">
-        <h1><img src="Tactical%20radar%20logo%20with%20Arabian%20Peninsula.png" alt="Gulf Watch" class="logo"> Gulf Watch</h1>
+        <h1><img src="Tactical%20radar%20logo%20with%20Arabian%20Peninsula.png" alt="GulfWatch Testing and Development" class="logo"> GulfWatch Testing and Development</h1>
         <div class="header-stats">
             <div><span id="incident-count">Loading...</span></div>
             <div>Sources: <span>44</span></div>
@@ -923,10 +1029,30 @@
                 <span id="gov-count">25 government</span>
             </div>
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #666; text-align: center; line-height: 1.5;">
-                Gulf Watch aggregates publicly available information for informational purposes only. Not affiliated with any government entity.
+                GulfWatch Testing and Development aggregates publicly available information for informational purposes only. Not affiliated with any government entity.
             </div>
         </div>
     </div>
+    
+    <!-- Verification Side Panel (Desktop) -->
+    <div id="verification-panel" class="verification-panel">
+        <div class="verification-panel-header">
+            <h3>Source Verification</h3>
+            <button class="close-panel" onclick="closeVerificationPanel()">&times;</button>
+        </div>
+        <div class="verification-panel-content" id="verification-content">
+            <div style="text-align: center; color: #666; padding: 40px 20px;">
+                Click an incident to see verification details
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Bottom Sheet -->
+    <div id="mobile-verification-sheet" class="mobile-verification-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-content" id="mobile-verification-content"></div>
+    </div>
+    <div id="mobile-overlay" class="mobile-overlay" onclick="closeMobileSheet()"></div>
     
     <script>
         // Detect mobile
@@ -1243,7 +1369,7 @@
                 // Track fetch time
                 lastFetchTime = new Date();
                 
-                const response = await fetch(getFetchUrl('incidents.json'), { cache: 'no-store' });
+                const response = await fetch(getFetchUrl('verified_incidents.json'), { cache: 'no-store' });
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
@@ -1312,11 +1438,26 @@
                     card.dataset.country = incident.location.country;
                     const govBadge = incident.is_government ? '<span class="government-badge">🏛️ Government</span>' : '';
                     
+                    // Verification badge
+                    const verification = incident.verification || {};
+                    const confidence = verification.confidence || 0;
+                    const status = verification.status || 'Unknown';
+                    let verificationBadge = '';
+                    if (confidence >= 90) {
+                        verificationBadge = `<span class="verification-badge verified">✓ Verified (${confidence}%)</span>`;
+                    } else if (confidence >= 70) {
+                        verificationBadge = `<span class="verification-badge likely">◐ Likely True (${confidence}%)</span>`;
+                    } else if (confidence >= 50) {
+                        verificationBadge = `<span class="verification-badge partial">◐ Partial (${confidence}%)</span>`;
+                    } else {
+                        verificationBadge = `<span class="verification-badge unconfirmed">? Unconfirmed (${confidence}%)</span>`;
+                    }
+                    
                     // Detect Arabic text
                     const hasArabic = /[\u0600-\u06FF]/.test(incident.title);
                     const translateBtn = hasArabic ? `<a href="https://translate.google.com/?sl=auto&tl=en&text=${encodeURIComponent(incident.title)}" target="_blank" class="translate-link" onclick="event.stopPropagation();" title="Translate to English">🌐 Translate</a>` : '';
                     
-                    const reportSubject = encodeURIComponent(`[Gulf Watch] False Info Report: ${incident.title.substring(0, 50)}`);
+                    const reportSubject = encodeURIComponent(`[GulfWatch Testing and Development] False Info Report: ${incident.title.substring(0, 50)}`);
                     const reportBody = encodeURIComponent(`I would like to report the following incident as potentially false or inaccurate:
 
 Title: ${incident.title}
@@ -1328,11 +1469,12 @@ Reason for report:
 [Please explain why this information may be false]
 
 ---
-This report was submitted via Gulf Watch v2`);
+This report was submitted via GulfWatch Testing and Development v2`);
                     card.innerHTML = `
                         <div class="incident-header">
                             <span class="incident-type type-${incident.type}">${incident.type.replace('_', ' ')}</span>
                             <span class="incident-status status-${incident.status}">${incident.status}</span>
+                            ${verificationBadge}
                             ${govBadge}
                         </div>
                         <a href="${incident.source_url}" target="_blank" class="incident-title" onclick="event.stopPropagation();">${incident.title}</a>
@@ -1363,6 +1505,9 @@ This report was submitted via Gulf Watch v2`);
                         
                         // Open popup
                         marker.openPopup();
+                        
+                        // Open verification panel
+                        openVerificationPanel(incident);
                     });
                     
                     listEl.appendChild(card);
@@ -1534,6 +1679,77 @@ This report was submitted via Gulf Watch v2`);
         
         // Refresh missile stats every 30 minutes
         setInterval(loadMissileStats, 30 * 60 * 1000);
+        
+        // Verification Panel Functions
+        function openVerificationPanel(incident) {
+            const panel = document.getElementById('verification-panel');
+            const content = document.getElementById('verification-content');
+            const isMobile = window.innerWidth <= 1024;
+            
+            const verification = incident.verification || {};
+            const confidence = verification.confidence || 0;
+            const status = verification.status || 'Unconfirmed';
+            const statusClass = confidence >= 90 ? 'verified' : confidence >= 70 ? 'likely' : confidence >= 50 ? 'partial' : 'unconfirmed';
+            
+            const html = `
+                <div class="confidence-score">
+                    <div class="confidence-circle ${statusClass}">${confidence}%</div>
+                    <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;" class="${statusClass}">${status}</div>
+                    <div style="font-size: 12px; color: #888;">${verification.source_count || 1} sources</div>
+                </div>
+                
+                <div class="source-breakdown">
+                    <h4>Source Breakdown</h4>
+                    ${(incident.source_variants || []).map(v => `
+                        <div class="source-item">
+                            <div class="source-icon ${v.source_key?.includes('moi') || v.source_key?.includes('mod') ? 'govt' : v.source_key?.includes('news') ? 'news' : 'social'}">
+                                ${v.source_key?.includes('moi') || v.source_key?.includes('mod') ? '🏛️' : v.source_key?.includes('news') ? '📰' : '💬'}
+                            </div>
+                            <div class="source-info">
+                                <div class="source-name">${v.source}</div>
+                                <div class="source-credibility">${v.source_key?.includes('moi') || v.source_key?.includes('mod') ? 'Government' : 'News Source'}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="variants-section">
+                    <h4>Source Variants</h4>
+                    ${(incident.source_variants || []).map(v => `
+                        <div class="variant-card">
+                            <div class="variant-source">${v.source}</div>
+                            <div class="variant-text">${v.title}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            if (isMobile) {
+                document.getElementById('mobile-verification-content').innerHTML = html;
+                document.getElementById('mobile-verification-sheet').classList.add('open');
+                document.getElementById('mobile-overlay').classList.add('open');
+            } else {
+                content.innerHTML = html;
+                panel.classList.add('open');
+            }
+        }
+        
+        function closeVerificationPanel() {
+            document.getElementById('verification-panel').classList.remove('open');
+        }
+        
+        function closeMobileSheet() {
+            document.getElementById('mobile-verification-sheet').classList.remove('open');
+            document.getElementById('mobile-overlay').classList.remove('open');
+        }
+        
+        // Close panel on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVerificationPanel();
+                closeMobileSheet();
+            }
+        });
     </script>
 </body>
 </html>

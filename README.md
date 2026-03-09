@@ -1,4 +1,4 @@
-# Gulf Watch v2 🎯
+# GulfWatch Testing and Development v2 🎯
 
 [![Live Site](https://img.shields.io/badge/Live-gulf--watch--v2.vercel.app-blue)](https://gulf-watch-v2.vercel.app)
 [![GitHub Actions](https://github.com/nKOxxx/gulf-watch-v2/workflows/Update%20RSS%20Feeds/badge.svg)](https://github.com/nKOxxx/gulf-watch-v2/actions)
@@ -7,7 +7,7 @@
 
 Real-time MENA (Middle East & North Africa) security and intelligence monitoring dashboard. Aggregating news from **44 authoritative sources** across the Gulf region — including **25 official government ministries and agencies**.
 
-![Gulf Watch Screenshot](https://gulf-watch-v2.vercel.app/Tactical%20radar%20logo%20with%20Arabian%20Peninsula.png)
+![GulfWatch Testing and Development Screenshot](https://gulf-watch-v2.vercel.app/Tactical%20radar%20logo%20with%20Arabian%20Peninsula.png)
 
 > *Built with love and respect for the UAE and all countries in the Gulf Region*
 

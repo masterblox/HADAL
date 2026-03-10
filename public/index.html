@@ -1515,6 +1515,7 @@ Reason for report:
 
 ---
 This report was submitted via GulfWatch Testing and Development v2`);
+                    if (!incident.location) console.log('DEBUG: No location for', incident.id);
                     card.innerHTML = `
                         <div class="incident-header">
                             <span class="incident-type type-${incident.type}">${incident.type.replace('_', ' ')}</span>

@@ -1529,7 +1529,7 @@ This report was submitted via GulfWatch Testing and Development v2`);
                             <span>${incident.source}</span>
                             <span>•</span>
                             <span>${timeAgo(incident.published)}</span>
-                            ${incident.location?.lat && incident.location?.lng ? `<span>•</span><span style="color: #666; font-size: 0.85em;">🌐 ${incident.location.lat.toFixed(4)}°, ${incident.location.lng.toFixed(4)}°</span>` : ''}
+                            ${(incident.location && incident.location.lat && incident.location.lng) ? `<span>•</span><span style="color: #666; font-size: 0.85em;">🌐 ${incident.location.lat.toFixed(4)}°, ${incident.location.lng.toFixed(4)}°</span>` : ''}
                         </div>
                         <div class="incident-actions">
                             ${translateBtn}
@@ -1788,12 +1788,12 @@ This report was submitted via GulfWatch Testing and Development v2`);
                 }
                 
                 // Location details with coordinates
-                const coordLat = incident.location?.lat;
-                const coordLng = incident.location?.lng;
-                const locationHtml = coordLat && coordLng ? `
+                const coordLat = incident.location && incident.location.lat;
+                const coordLng = incident.location && incident.location.lng;
+                const locationHtml = (coordLat && coordLng) ? `
                     <div class="location-details" style="padding: 15px; background: #1a1a1a; border-radius: 8px; margin-bottom: 20px;">
                         <h4 style="margin: 0 0 10px 0; color: #e0e0e0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">📍 Location</h4>
-                        <div style="font-size: 14px; color: #fff; margin-bottom: 8px;">${incident.location?.name || 'Unknown'}, ${incident.location?.country || ''}</div>
+                        <div style="font-size: 14px; color: #fff; margin-bottom: 8px;">${(incident.location && incident.location.name) || 'Unknown'}, ${(incident.location && incident.location.country) || ''}</div>
                         <div style="font-size: 12px; color: #888; font-family: monospace;">
                             🌐 ${coordLat.toFixed(6)}°, ${coordLng.toFixed(6)}°
                         </div>

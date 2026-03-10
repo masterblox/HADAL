@@ -1529,6 +1529,7 @@ This report was submitted via GulfWatch Testing and Development v2`);
                             <span>${incident.source}</span>
                             <span>•</span>
                             <span>${timeAgo(incident.published)}</span>
+                            ${incident.location?.lat && incident.location?.lng ? `<span>•</span><span style="color: #666; font-size: 0.85em;">🌐 ${incident.location.lat.toFixed(4)}°, ${incident.location.lng.toFixed(4)}°</span>` : ''}
                         </div>
                         <div class="incident-actions">
                             ${translateBtn}
@@ -1786,7 +1787,25 @@ This report was submitted via GulfWatch Testing and Development v2`);
                     `).join('');
                 }
                 
+                // Location details with coordinates
+                const coordLat = incident.location?.lat;
+                const coordLng = incident.location?.lng;
+                const locationHtml = coordLat && coordLng ? `
+                    <div class="location-details" style="padding: 15px; background: #1a1a1a; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="margin: 0 0 10px 0; color: #e0e0e0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">📍 Location</h4>
+                        <div style="font-size: 14px; color: #fff; margin-bottom: 8px;">${incident.location?.name || 'Unknown'}, ${incident.location?.country || ''}</div>
+                        <div style="font-size: 12px; color: #888; font-family: monospace;">
+                            🌐 ${coordLat.toFixed(6)}°, ${coordLng.toFixed(6)}°
+                        </div>
+                        <a href="https://www.google.com/maps?q=${coordLat},${coordLng}" target="_blank" style="display: inline-block; margin-top: 8px; font-size: 11px; color: #3498db; text-decoration: none;">
+                            View on Google Maps →
+                        </a>
+                    </div>
+                ` : '';
+                
                 const html = `
+                    ${locationHtml}
+                    
                     <div class="confidence-score">
                         <div class="confidence-circle ${statusClass}">${confidence}%</div>
                         <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;" class="${statusClass}">${status}</div>

@@ -1530,8 +1530,11 @@ This report was submitted via GulfWatch Testing and Development v2`);
                             <span>${incident.source}</span>
                             <span>•</span>
                             <span>${timeAgo(incident.published)}</span>
-                            <span>•</span>
-                            <span style="color: #888; font-size: 0.85em;">🌐 ${incident.location && incident.location.lat ? incident.location.lat.toFixed(2) : 'N/A'}°, ${incident.location && incident.location.lng ? incident.location.lng.toFixed(2) : 'N/A'}°</span>
+                        </div>
+                        <div style="color: #00ff00; font-size: 12px; font-family: monospace; margin-top: 5px; background: #1a3d1a; padding: 4px 8px; border-radius: 4px; display: inline-block;">
+                            🌐 COORDS: ${String(incident.location?.lat || 'N/A').substring(0, 6)}°, ${String(incident.location?.lng || 'N/A').substring(0, 6)}°
+                        </div>
+                        <div class="incident-actions">
                         </div>
                         <div class="incident-actions">
                             ${translateBtn}

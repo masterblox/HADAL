@@ -7,8 +7,14 @@ Outputs static JSON for Vercel hosting
 import feedparser
 import json
 import re
+import sys
 from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Optional
+
+# Add parent directory to path for imports
+sys.path.insert(0, '/Users/ares/workspace/gulfwatch-testing/scripts')
+
+from circuit_breaker import CircuitBreaker
 
 # MENA-focused RSS feeds
 FEEDS = [
@@ -387,10 +393,15 @@ def fetch_newsdata_api():
     return incidents
 
 def fetch_all():
-    """Fetch all feeds and generate output"""
-    print("🔄 Gulf Watch RSS Fetcher")
+    """Fetch all feeds and generate output with Circuit Breaker"""
+    print("🔄 Gulf Watch RSS Fetcher with Circuit Breaker")
     print("=" * 50)
     print(f"⏰ {datetime.now(timezone.utc).isoformat()} UTC")
+    print()
+    
+    # Initialize Circuit Breaker
+    cb = CircuitBreaker()
+    print("🛡️  Circuit Breaker initialized")
     print()
     
     all_incidents = []
@@ -404,22 +415,50 @@ def fetch_all():
     newsdata_incidents = fetch_newsdata_api()
     all_incidents.extend(newsdata_incidents)
     
-    # Sort by published date (newest first)
-    all_incidents.sort(key=lambda x: x['published'], reverse=True)
+    print(f"\n🔄 Processing {len(all_incidents)} incidents through Circuit Breaker...")
     
-    # Deduplicate by title similarity
-    seen_titles = set()
+    # Process through Circuit Breaker
     unique_incidents = []
     for inc in all_incidents:
-        title_key = inc['title'].lower()[:50]
-        if title_key not in seen_titles:
-            seen_titles.add(title_key)
+        # Convert to article format for Circuit Breaker
+        article = {
+            'title': inc['title'],
+            'location': inc['location']['name'] if inc['location'] else 'Unknown',
+            'date': inc['published'],
+            'source': inc['source'],
+            'url': inc['source_url'],
+            'content': inc['title']  # Use title as content
+        }
+        
+        # Process through Circuit Breaker
+        result = cb.process_article(article)
+        
+        if result:
+            # Add Circuit Breaker metadata to incident
+            inc['circuit_breaker'] = {
+                'event_id': result['id'],
+                'incident_type': result['incident_type'],
+                'is_recap': result.get('is_recap', False),
+                'confidence': result.get('confidence', 'OSINT')
+            }
             unique_incidents.append(inc)
+    
+    # Sort by published date (newest first)
+    unique_incidents.sort(key=lambda x: x['published'], reverse=True)
+    
+    # Get Circuit Breaker stats
+    stats = cb.get_stats()
     
     # Generate output
     output = {
         'generated_at': datetime.now(timezone.utc).isoformat(),
         'total_incidents': len(unique_incidents),
+        'circuit_breaker_stats': {
+            'total_processed': len(all_incidents),
+            'duplicates_filtered': len(all_incidents) - len(unique_incidents),
+            'recaps_blocked': stats.get('recaps_filtered', 0),
+            'unique_signatures': stats.get('signatures', 0)
+        },
         'incidents': unique_incidents
     }
     
@@ -430,6 +469,7 @@ def fetch_all():
     print()
     print("=" * 50)
     print(f"✅ Generated {len(unique_incidents)} unique incidents")
+    print(f"🛡️  Circuit Breaker filtered: {len(all_incidents) - len(unique_incidents)} duplicates")
     print(f"📁 Saved to public/incidents.json")
 
 if __name__ == '__main__':

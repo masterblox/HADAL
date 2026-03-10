@@ -1529,7 +1529,7 @@ This report was submitted via GulfWatch Testing and Development v2`);
                             <span>${incident.source}</span>
                             <span>•</span>
                             <span>${timeAgo(incident.published)}</span>
-                            ${(incident.location && incident.location.lat && incident.location.lng) ? `<span>•</span><span style="color: #666; font-size: 0.85em;">🌐 ${incident.location.lat.toFixed(4)}°, ${incident.location.lng.toFixed(4)}°</span>` : ''}
+                            <span>•</span><span style="color: #666; font-size: 0.85em;">🌐 ${incident.location.lat.toFixed(4)}°, ${incident.location.lng.toFixed(4)}°</span>
                         </div>
                         <div class="incident-actions">
                             ${translateBtn}

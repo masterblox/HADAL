@@ -1401,13 +1401,13 @@
                 // Track fetch time
                 lastFetchTime = new Date();
                 
-                const response = await fetch(getFetchUrl('verified_incidents.json'), { cache: 'no-store' });
+                const response = await fetch(getFetchUrl('incidents.json'), { cache: 'no-store' });
                 console.log('Response status:', response.status);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
                 const data = await response.json();
-                console.log('Data loaded:', data.total_verified, 'incidents');
+                console.log('Data loaded:', data.total_incidents || data.total_verified, 'incidents');
                 
                 // Use incidents directly (skip deduplication for now)
                 allIncidents = data.incidents || [];
@@ -1572,18 +1572,6 @@ This report was submitted via GulfWatch Testing and Development v2`);
                     listEl.appendChild(card);
                 });
                 console.log('Finished adding', data.incidents.length, 'incident cards');
-                
-                // FORCE ADD A TEST CARD WITH COORDINATES
-                const testCard = document.createElement('div');
-                testCard.className = 'incident-card';
-                testCard.style.border = '3px solid #00ff00';
-                testCard.innerHTML = `
-                    <div style="color: #00ff00; font-size: 16px; font-weight: bold; padding: 20px; background: #000;">
-                        🧪 TEST CARD - COORDINATES SHOULD SHOW HERE<br>
-                        🌐 COORDS: 25.2048°, 55.2708°
-                    </div>
-                `;
-                listEl.insertBefore(testCard, listEl.firstChild);
                 
                 // Apply current filter
                 filterIncidents(currentFilter);

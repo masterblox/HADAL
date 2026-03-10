@@ -1,233 +1,205 @@
-# GulfWatch Testing and Development 🎯
+# Gulf Watch Testing Environment
 
-[![Live Site](https://img.shields.io/badge/Live-Testing%20Environment-orange)](https://gulfwatch-testing.vercel.app)
+**Testing and staging environment for Gulf Watch intelligence platform.**
 
-**⚠️ This is a TESTING and DEVELOPMENT environment for GulfWatch features.**
-
-**Production:** https://gulfwatch.live  
-**Testing:** https://gulfwatch-testing.vercel.app
+🌐 **Live Demo**: https://gulfwatch-testing.vercel.app
 
 ---
 
-## What's This?
+## 🎯 Purpose
 
-GulfWatch Testing is the **staging environment** for experimenting with new features before they go to production. This is where we:
+This repository contains experimental features and enhancements before they are deployed to the production Gulf Watch instance. It serves as a staging ground for:
 
-- Test new UI components
-- Experiment with data sources
-- Build and verify cross-source verification
-- Debug and iterate quickly
-
-**⚠️ Data may be incomplete or experimental. Use https://gulfwatch.live for production monitoring.**
+- Cross-source verification UI
+- New data sources (RSS.app, Telegram, Instagram)
+- Circuit Breaker deduplication algorithm
+- Verification badges and confidence scoring
 
 ---
 
-## Current Features in Testing
+## 🚀 Key Features
 
-### 🔍 Cross-Source Verification
-The main feature being tested here is **source verification and confidence scoring**:
+### Circuit Breaker Algorithm
 
-**Verification Badges:**
-- 🟣 **Verified (90%+)** - Multiple government sources confirm
-- 🔵 **Likely True (70-89%)** - Government + news sources
-- 🟡 **Partial (50-69%)** - Limited source confirmation
-- ⚪ **Unconfirmed (<50%)** - Single source or low credibility
+Our intelligent data filtering system prevents information overload and ensures you see **unique events only**:
 
-**Click any incident to see:**
-- Confidence score (percentage)
-- Source breakdown (Government 🏛️ / News 📰 / Social 💬)
-- Timeline of when each source reported
-- Source variants (different reports of same incident)
+**What It Filters:**
+- ✅ **Duplicate Events** - Same incident reported by Reuters, BBC, Al Jazeera = 1 entry
+- ✅ **Historical Recaps** - "Weekly Roundup", "Death toll rises to..." articles are blocked
+- ✅ **Near-Duplicates** - 92% similarity threshold catches reworded coverage
 
-### 📱 Mobile-First Design
-- **Desktop:** Side panel with full verification details
-- **Mobile:** Bottom sheet slides up with same info
-- Optimized for quick checking on the go
+**Why It Matters:**
+Without Circuit Breaker, you would see the same missile strike 5-10 times from different news sources. With it, you see it once, with all sources linked.
 
-### 📊 Data Sources
-- 24 government RSS feeds (via RSS.app)
-- NewsData.io API integration
-- Cross-source deduplication
-- Confidence scoring algorithm
+**Detection Methods:**
+```python
+# Duplicate Detection
+- Signature matching (incident_type + location + date hash)
+- Title/location similarity scoring
+- 92% threshold for near-duplicate filtering
 
----
-
-## Architecture
-
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  RSS.app Feeds  │────▶│  GitHub Actions │────▶│  verified_      │
-│  (24 accounts)  │     │  (every hour)   │     │  incidents.json │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                                                        │
-┌─────────────────┐     ┌─────────────────┐            │
-│  NewsData.io    │────▶│  Cross-Source   │────────────┘
-│  API            │     │  Verification   │
-└─────────────────┘     └─────────────────┘
-                                │
-                                ▼
-                        ┌─────────────────┐
-                        │  Deduplication  │
-                        │  + Confidence   │
-                        │  Scoring        │
-                        └─────────────────┘
-                                │
-                                ▼
-                        ┌─────────────────┐
-                        │  Vercel Deploy  │
-                        │  gulfwatch-     │
-                        │  testing.vercel │
-                        └─────────────────┘
+# Historical Recap Detection  
+- Weighted keyword scoring (weekly roundup, death toll, casualties mount)
+- Time range indicators ("over the past week", "since January")
+- Multi-location indicators (recaps mention many places)
 ```
 
----
-
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| `verified_incidents.json` | Deduplicated incidents with verification scores |
-| `moi_missile_stats.json` | UAE MoI missile interception data |
-| `prices.json` | Oil/gold market prices |
-| `index.html` | Main UI with verification panel |
+**Stats Tracked:**
+- Total events stored
+- Duplicates filtered
+- Recaps blocked
+- Unique incident types
 
 ---
 
-## Verification Scoring
+### Cross-Source Verification
 
-### Confidence Levels
+Color-coded verification badges for every incident:
 
-| Score | Status | Color | Meaning |
-|-------|--------|-------|---------|
-| 90-100% | Verified | 🟣 Purple | 2+ government sources confirm |
-| 70-89% | Likely True | 🔵 Blue | Government + news confirm |
-| 50-69% | Partial | 🟡 Yellow | Limited confirmation |
-| <50% | Unconfirmed | ⚪ Gray | Single source or questionable |
+| Badge | Confidence | Criteria |
+|-------|------------|----------|
+| 🟣 **Verified** | 90%+ | 3+ independent sources confirm |
+| 🔵 **Likely True** | 70-89% | 2 sources or 1 official + 1 news |
+| 🟡 **Partial** | 50-69% | Single source or conflicting reports |
+| ⚪ **Unconfirmed** | <50% | Single unverified source |
 
-### Source Weights
-
-| Source Type | Weight | Example |
-|-------------|--------|---------|
-| Government Ministry | 1.0 | UAE MoI, Saudi MoD |
-| State News Agency | 0.95 | WAM, KUNA |
-| International News | 0.85 | Reuters, BBC |
-| Regional News | 0.80 | Al Jazeera |
-| Social/Telegram | 0.60 | Citizen reports |
-
-### Bonuses
-- +0.15 per additional government source (max +0.30)
-- +0.10 per additional source of any type (max +0.30)
+**Side Panel (Desktop) / Bottom Sheet (Mobile):**
+- Confidence score breakdown
+- Source list with reliability ratings
+- Timeline of coverage
+- Source variant comparison
 
 ---
 
-## Data Sources (Testing)
+### Data Sources
 
-### 🇦🇪 UAE Government (8)
-- Ministry of Interior
-- Ministry of Defence  
-- National Emergency Crisis & Disasters Management Authority
-- National Guard
-- Government Media Office
-- WAM News Agency
-- Dubai Media Office
-- Abu Dhabi Civil Defence
+**RSS Feeds (48 sources):**
+- BBC, Al Jazeera, Reuters (when working)
+- Government ministries (WAM, SPA, IDF)
+- Defense outlets (Defense News, Jane's)
+- Regional news (Times of Israel, Al-Monitor)
 
-### 🇸🇦 Saudi Arabia (2)
-- Ministry of Interior
-- Civil Defense
+**Telegram Channels:**
+- @SaudiDCD (Saudi Civil Defense)
+- @QatarNewsAgency (QNA)
 
-### 🇶🇦 Qatar (4)
-- Ministry of Interior
-- Civil Defence
-- Ministry of Defence
-- Qatar News Agency
-
-### 🇰🇼 Kuwait (2)
-- Fire Force
-- News Agency
-
-### 🇧🇭 Bahrain (1)
-- Ministry of Interior
-
-### 🇴🇲 Oman (1)
-- Royal Oman Police
-
-### 🇮🇱 Israel (2)
-- Ministry of Defense
-- Magen David Adom
-
-### 🇮🇷 Iran (2)
-- Mehr News Agency
-- Fars News Agency
+**RSS.app Integration:**
+- 8 UAE government Twitter feeds
+- Real-time social media monitoring
 
 ---
 
-## Local Development
+## 🛠️ Architecture
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│   Data Sources  │────▶│ Circuit Breaker  │────▶│  Cross-Source   │
+│  (RSS/Telegram) │     │  (Deduplication) │     │  Verification   │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+                                                            │
+                                                            ▼
+                                                   ┌─────────────────┐
+                                                   │  Testing UI     │
+                                                   │  (Vercel)       │
+                                                   └─────────────────┘
+```
+
+---
+
+## 📊 Data Quality Metrics
+
+Circuit Breaker continuously improves data quality:
+
+- **Before**: 1 real incident = 5-10 duplicate entries
+- **After**: 1 real incident = 1 unique entry with source aggregation
+
+Example:
+```
+Missile strike on Tel Aviv
+├── Reuters: "Israel says missile intercepted"
+├── BBC: "Rockets fired at Tel Aviv"  
+├── Al Jazeera: "Palestinian factions claim missile launch"
+└── IDF: "Iron Dome intercepts incoming projectile"
+
+Result: 1 Gulf Watch entry, 4 sources linked
+```
+
+---
+
+## 🧪 Testing
+
+### Run Circuit Breaker Tests
 
 ```bash
-# Clone
-git clone https://github.com/nKOxxx/gulfwatch-testing.git
-cd gulfwatch-testing
-
-# Serve locally
-cd public
-python -m http.server 8000
-
-# Open http://localhost:8000
+python3 scripts/circuit_breaker.py
 ```
 
----
-
-## Environment Variables (for full features)
-
-Set in Vercel dashboard or `.env`:
-
+Expected output:
 ```
-NEWSDATA_API_KEY=your_newsdata_key
+Test 1: NEW EVENT
+[CIRCUIT BREAKER] ACCEPTED: US missile strike targets...
+
+Test 2: DUPLICATE EVENT  
+[CIRCUIT BREAKER] Filtered NEAR-DUPLICATE: Similarity: 95.58%
+
+Test 3: HISTORICAL RECAP
+[CIRCUIT BREAKER] Filtered RECAP: Weekly Roundup...
+
+Test 4: DIFFERENT EVENT
+[CIRCUIT BREAKER] ACCEPTED: Israeli airstrike targets...
+
+✅ ALL TESTS PASSED
 ```
 
-Get free key at: https://newsdata.io/
+### Run Comprehensive Audit
+
+```bash
+python3 scripts/test_circuit_breaker_audit.py
+```
+
+Tests:
+- Duplicate detection accuracy
+- Historical recap filtering
+- Incident type classification
+- Location extraction
+- Edge cases (empty strings, long titles, special chars)
+- Security (SQL injection, XSS attempts)
+- Performance (100 events in <5 seconds)
+- ID uniqueness
 
 ---
 
-## Workflow
+## 🚦 Deployment Pipeline
 
-1. **Develop new features here** (gulfwatch-testing)
-2. **Test thoroughly** on mobile + desktop
-3. **Migrate working features** to production (gulfwatch.live)
-4. **Archive experiments** that don't work
-
----
-
-## Tech Stack
-
-- **Frontend:** Vanilla HTML/CSS/JS, Leaflet Maps
-- **Data:** Python, GitHub Actions
-- **Hosting:** Vercel (static)
-- **RSS:** RSS.app (Twitter/X to RSS)
-- **News API:** NewsData.io
+**Testing Environment** (this repo)
+↓
+**Validation** (7-day stability check)
+↓
+**Production** (gulf-watch-v2)
 
 ---
 
-## Colors
+## 🔗 Links
 
-| Type | Color | Hex |
-|------|-------|-----|
-| Missile | 🔴 Red | #e74c3c |
-| Drone | 🟠 Orange | #f39c12 |
-| Air Defense | 🔵 Blue | #3498db |
-| Explosion | 🩷 Pink | #e91e63 |
-| Verified | 🟣 Purple | #9b59b6 |
-| Government Badge | 🟡 Gold | #FFD700 |
+- **Production**: https://gulf-watch-v2.vercel.app
+- **Testing**: https://gulfwatch-testing.vercel.app
+- **RSS V3**: https://github.com/nKOxxx/gulf-watch-v3
 
 ---
 
-## License
-MIT - Fork and experiment freely!
+## 📄 License
+
+MIT - See LICENSE file
 
 ---
 
-**[View Production Site →](https://gulfwatch.live)**  
-**[View Testing Site →](https://gulfwatch-testing.vercel.app)**
+## 🤝 Contributing
 
-*Built with ⚔️ for Gulf security monitoring*
+1. Test features in this repo
+2. Run Circuit Breaker audit
+3. Submit PR to gulf-watch-v3 for integration
+4. After 7-day stability, promote to production
+
+---
+
+Built with ⚔️ by Ares

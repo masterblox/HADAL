@@ -17,11 +17,11 @@ This repository contains experimental features and enhancements before they are 
 
 ---
 
-## 🚀 Key Features
+## 🚀 Complete Feature List
 
-### Circuit Breaker Algorithm
+### 1. Circuit Breaker Algorithm 🛡️
 
-Our intelligent data filtering system prevents information overload and ensures you see **unique events only**:
+**Intelligent data filtering that ensures you see unique events only.**
 
 **What It Filters:**
 - ✅ **Duplicate Events** - Same incident reported by Reuters, BBC, Al Jazeera = 1 entry
@@ -48,81 +48,362 @@ Without Circuit Breaker, you would see the same missile strike 5-10 times from d
 - Total events stored
 - Duplicates filtered
 - Recaps blocked
-- Unique incident types
+
+[Full documentation in CIRCUIT_BREAKER.md](CIRCUIT_BREAKER.md)
 
 ---
 
-### Cross-Source Verification
+### 2. Cross-Source Verification System ✅
 
-Color-coded verification badges for every incident:
+**Verification engine that analyzes every incident across multiple sources:**
 
-| Badge | Confidence | Criteria |
-|-------|------------|----------|
-| 🟣 **Verified** | 90%+ | 3+ independent sources confirm |
-| 🔵 **Likely True** | 70-89% | 2 sources or 1 official + 1 news |
-| 🟡 **Partial** | 50-69% | Single source or conflicting reports |
-| ⚪ **Unconfirmed** | <50% | Single unverified source |
+**How It Works:**
+1. Collect same incident from multiple sources (Reuters, BBC, Al Jazeera, IDF, etc.)
+2. Compare details (location, time, type, casualties)
+3. Calculate confidence score based on source agreement
+4. Assign verification badge
 
-**Side Panel (Desktop) / Bottom Sheet (Mobile):**
-- Confidence score breakdown
-- Source list with reliability ratings
-- Timeline of coverage
-- Source variant comparison
+**Confidence Calculation:**
+```
+Score = Source Quality (40%) + Cross-Verification (35%) + Timeliness (15%) + Detail Consistency (10%)
+
+Source Quality:
+- Official government (50 pts)
+- Major news wire (40 pts)
+- Regional news (30 pts)
+- Social media (10 pts)
+
+Cross-Verification:
+- 3+ sources confirming = 35 pts
+- 2 sources = 25 pts
+- 1 source = 10 pts
+- Conflicting reports = 0 pts
+```
+
+**Verification Badges:**
+
+| Badge | Confidence | What It Means |
+|-------|------------|---------------|
+| 🟣 **Verified** | 90-100% | Multiple independent sources confirm all details |
+| 🔵 **Likely True** | 70-89% | Two sources agree OR one official + one news source |
+| 🟡 **Partial** | 50-69% | Single source OR minor detail discrepancies |
+| ⚪ **Unconfirmed** | <50% | Single unverified source OR major conflicts |
+
+**UI Components:**
+- **Desktop**: Side panel with full verification breakdown
+- **Mobile**: Bottom sheet with source timeline
+- **Map Markers**: Color-coded by verification level
 
 ---
 
-### Data Sources
+### 3. Multi-Source Data Aggregation 📡
 
-**RSS Feeds (48 sources):**
-- BBC, Al Jazeera, Reuters (when working)
-- Government ministries (WAM, SPA, IDF)
-- Defense outlets (Defense News, Jane's)
-- Regional news (Times of Israel, Al-Monitor)
+**Three tiers of sources for comprehensive coverage:**
 
-**Telegram Channels:**
+**Tier 1 - Official Sources (Highest Confidence):**
+- @WAMNews (UAE Official)
 - @SaudiDCD (Saudi Civil Defense)
+- @IDF (Israel Defense Forces)
 - @QatarNewsAgency (QNA)
+- Government ministries via RSS.app
 
-**RSS.app Integration:**
-- 8 UAE government Twitter feeds
-- Real-time social media monitoring
+**Tier 2 - International News:**
+- Reuters, BBC, Associated Press
+- Al Jazeera, France24, DW
+- Times of Israel, Jerusalem Post
+- The National (UAE)
+
+**Tier 3 - Regional/Specialized:**
+- Defense News, Jane's Defence
+- Al-Monitor, Anadolu Agency
+- Telegram channels
+- RSS social feeds
+
+**Coverage Areas:**
+- UAE, Saudi Arabia, Qatar, Bahrain, Kuwait, Oman
+- Israel, Palestine, Gaza, West Bank
+- Lebanon, Iran, Iraq, Syria
+- Yemen (Houthi activities)
+- Red Sea, Strait of Hormuz, Persian Gulf
+
+---
+
+### 4. Mobile-First Tactical Interface 📱
+
+**Designed for field use and rapid situational awareness:**
+
+**Design Principles:**
+- **Thumb-zone navigation** - All controls reachable with one hand
+- **Bottom tab bar** - No hamburger menus
+- **Swipeable cards** - Quick browsing on mobile
+- **Dark theme** - CARTO Dark Matter tiles, reduced eye strain
+- **High contrast** - Visible in bright sunlight
+
+**Mobile Features:**
+- Pull-to-refresh for latest data
+- Bottom sheet for incident details
+- Tap to zoom to location
+- Long-press for quick actions
+- Push notifications (coming soon)
+
+**Responsive Breakpoints:**
+- Mobile: < 768px (stacked layout, bottom nav)
+- Tablet: 768-1024px (split view, side nav)
+- Desktop: > 1024px (full dashboard, sidebar)
+
+---
+
+### 5. Severity Scoring System ⚡
+
+**Automatic priority ranking for incidents:**
+
+**Severity Formula:**
+```
+Total Score (max 130) = 
+  Source Weight (50) +
+  Credibility Score (30) +
+  Keyword Impact (40) +
+  Recency Bonus (10)
+```
+
+**Critical (90-130):**
+- Mass casualty events (>10 deaths)
+- Government source + keyword "missile", "airstrike", "explosion"
+- Official statements of war/retaliation
+
+**High (60-89):**
+- Casualties reported
+- Multiple news sources covering
+- Official government involvement
+
+**Medium (30-59):**
+- Property damage
+- Injuries only
+- Single source, unverified
+
+**Low (0-29):**
+- Minor incidents
+- Historical recaps
+- No casualties
+
+**Visual Indicators:**
+- 🔴 Critical - Red pulse animation on map
+- 🟠 High - Orange marker
+- 🟡 Medium - Yellow marker
+- ⚪ Low - Gray marker
+
+---
+
+### 6. Real-Time Intelligence Feed 📰
+
+**Live updating incident stream:**
+
+**Features:**
+- Auto-refresh every 60 seconds
+- New incident notifications
+- Scroll position preservation
+- Infinite scroll for history
+- Filter by country, type, severity
+
+**Feed Components:**
+```
+┌─────────────────────────────────────┐
+│ 🔴 Missile Strike - CRITICAL        │
+│ 📍 Tehran, Iran                     │
+│ 🕐 2 minutes ago                    │
+│ 🟣 Verified (92% confidence)        │
+│ 📰 Reuters + 3 sources              │
+└─────────────────────────────────────┘
+```
+
+**Click Actions:**
+- Expand for full details
+- View on map
+- See source variants
+- Share incident
+- Report false info
+
+---
+
+### 7. Finance & Commodities Panel 💰
+
+**Track economic impact of regional events:**
+
+**Displayed Metrics:**
+- Brent Crude Oil price
+- Gold price (safe haven indicator)
+- Regional stock indices
+- Currency exchange rates (USD/ILS, USD/SAR)
+
+**Impact Correlation:**
+- Price spikes during major incidents
+- Historical chart overlay
+- Automatic refresh every 5 minutes
+
+**Data Sources:**
+- Yahoo Finance API
+- GitHub Actions scheduled fetch
+- Stored in static JSON for performance
+
+---
+
+### 8. Source Reliability Indicators 🏛️
+
+**Know who to trust:**
+
+**Source Badges:**
+- 🏛️ **Official** - Government/military source (100% credibility)
+- 📰 **News** - Established news outlet (70-95% credibility)
+- 💬 **Social** - Social media/Telegram (40-60% credibility)
+- ⚠️ **Unverified** - Single unknown source (<40% credibility)
+
+**Source History:**
+- Track record accuracy
+- Time to report
+- Correction rate
+- Bias indicators
+
+---
+
+### 9. Data Export & API 📊
+
+**For researchers and developers:**
+
+**JSON Feed** (`/feed.json`):
+```json
+{
+  "version": "2.0",
+  "last_updated": "2026-03-10T18:30:00Z",
+  "total_events": 152,
+  "items": [
+    {
+      "event_id": "GW-1773153242233-0001",
+      "type": "missile",
+      "location": "Tel Aviv, Israel",
+      "coordinates": {"lat": 32.0853, "lng": 34.7818},
+      "timestamp": "2026-03-10T18:25:00Z",
+      "confidence": "verified",
+      "confidence_score": 94,
+      "casualties": {"deaths": 0, "injuries": 3},
+      "sources": ["IDF", "Reuters", "BBC"],
+      "severity": "high"
+    }
+  ]
+}
+```
+
+**Export Formats:**
+- JSON (machine-readable)
+- CSV (spreadsheet analysis)
+- GeoJSON (mapping tools)
+
+**Rate Limits:**
+- Free tier: 100 requests/hour
+- Research tier: 1000 requests/hour (contact us)
+
+---
+
+### 10. Map Visualization 🗺️
+
+**Interactive Leaflet map with military-grade tiles:**
+
+**Map Features:**
+- CARTO Dark Matter tiles (professional, low-light optimized)
+- Clickable markers with incident details
+- Clustering for dense areas
+- Country boundary overlays
+- Severity-based marker colors
+- Heat map layer (toggle)
+
+**Controls:**
+- Zoom to country
+- Filter by severity
+- Filter by verification level
+- Filter by incident type
+- Time range slider
+
+---
+
+### 11. User-Generated Reports 📝
+
+**Community-driven fact-checking:**
+
+**Report System:**
+- Users can report false/misleading information
+- 5 reports = auto-hide for non-government sources
+- Prevents gaming via device ID tracking
+- Admin review queue for appeals
+
+**Report Reasons:**
+- False information
+- Outdated (already resolved)
+- Wrong location
+- Duplicate
+- Misleading headline
+
+---
+
+### 12. llms.txt for AI Crawlers 🤖
+
+**Machine-readable instructions for LLMs:**
+
+Located at `/llms.txt`, provides:
+- Data structure documentation
+- API endpoint descriptions
+- Confidence scoring methodology
+- Source reliability tiers
+
+Enables AI assistants like ChatGPT, Claude to accurately answer questions about Gulf Watch data.
 
 ---
 
 ## 🛠️ Architecture
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   Data Sources  │────▶│ Circuit Breaker  │────▶│  Cross-Source   │
-│  (RSS/Telegram) │     │  (Deduplication) │     │  Verification   │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
-                                                            │
-                                                            ▼
-                                                   ┌─────────────────┐
-                                                   │  Testing UI     │
-                                                   │  (Vercel)       │
-                                                   └─────────────────┘
+Data Collection Layer:
+├── RSS Feeds (48 sources)
+├── Telegram Channels (@SaudiDCD, @QatarNewsAgency)
+├── RSS.app (8 UAE Twitter feeds)
+└── Government APIs
+         │
+         ▼
+Circuit Breaker (Deduplication):
+├── Signature matching
+├── Similarity scoring (92% threshold)
+└── Historical recap filtering
+         │
+         ▼
+Verification Engine:
+├── Cross-source comparison
+├── Confidence calculation
+└── Badge assignment
+         │
+         ▼
+Testing UI (Vercel):
+├── Map visualization
+├── Verification panel
+├── Severity scoring
+└── Finance panel
 ```
 
 ---
 
 ## 📊 Data Quality Metrics
 
-Circuit Breaker continuously improves data quality:
+**Before Circuit Breaker:**
+- 1 real incident = 5-10 duplicate entries
+- User sees: "Missile strike x 7" from different sources
+- Confusion, information overload
 
-- **Before**: 1 real incident = 5-10 duplicate entries
-- **After**: 1 real incident = 1 unique entry with source aggregation
+**After Circuit Breaker:**
+- 1 real incident = 1 unique entry
+- User sees: "Missile strike (7 sources)"
+- Clear, actionable intelligence
 
-Example:
-```
-Missile strike on Tel Aviv
-├── Reuters: "Israel says missile intercepted"
-├── BBC: "Rockets fired at Tel Aviv"  
-├── Al Jazeera: "Palestinian factions claim missile launch"
-└── IDF: "Iron Dome intercepts incoming projectile"
-
-Result: 1 Gulf Watch entry, 4 sources linked
-```
+**Current Stats:**
+- X duplicates filtered today
+- Y recaps blocked
+- Z unique events served
 
 ---
 
@@ -172,10 +453,8 @@ Tests:
 ## 🚦 Deployment Pipeline
 
 **Testing Environment** (this repo)
-↓
-**Validation** (7-day stability check)
-↓
-**Production** (gulf-watch-v2)
+↓ Validation (7-day stability check)
+↓ **Production** (gulf-watch-v2)
 
 ---
 

@@ -1575,6 +1575,18 @@ This report was submitted via GulfWatch Testing and Development v2`);
                 });
                 console.log('Finished adding', data.incidents.length, 'incident cards');
                 
+                // FORCE ADD A TEST CARD WITH COORDINATES
+                const testCard = document.createElement('div');
+                testCard.className = 'incident-card';
+                testCard.style.border = '3px solid #00ff00';
+                testCard.innerHTML = `
+                    <div style="color: #00ff00; font-size: 16px; font-weight: bold; padding: 20px; background: #000;">
+                        🧪 TEST CARD - COORDINATES SHOULD SHOW HERE<br>
+                        🌐 COORDS: 25.2048°, 55.2708°
+                    </div>
+                `;
+                listEl.insertBefore(testCard, listEl.firstChild);
+                
                 // Apply current filter
                 filterIncidents(currentFilter);
                 

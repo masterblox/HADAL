@@ -23,6 +23,7 @@ class CircuitBreaker:
         # Store event signatures for deduplication
         self.event_signatures = {}
         self.existing_events = existing_events or []
+        self._id_counter = 0  # Counter to prevent ID collisions
         
         # Build index of existing events
         for event in self.existing_events:
@@ -90,36 +91,51 @@ class CircuitBreaker:
         content = article.get('content', '')
         text = f"{title} {content}".lower()
         
-        # Historical recap indicators
+        # Historical recap indicators - strengthened
         recap_phrases = [
-            'update', 'recap', 'roundup', 'wrap', 'summary',
-            'since', 'over the past', 'in the last', 'week of',
-            'death toll rises', 'casualties mount', 'toll reaches',
-            'latest count', 'total now', 'cumulative'
+            # Strong indicators (score +2)
+            ('weekly roundup', 2), ('weekly wrap', 2), ('weekly summary', 2),
+            ('death toll rises', 2), ('casualties mount', 2), ('toll reaches', 2),
+            ('total now stands', 2), ('cumulative total', 2),
+            
+            # Medium indicators (score +1.5)
+            ('recap', 1.5), ('roundup', 1.5), ('wrap-up', 1.5), ('wrap up', 1.5),
+            ('summary of', 1.5), ('this week', 1.5), ('last week', 1.5),
+            
+            # Standard indicators (score +1)
+            ('update', 1), ('summary', 1), ('wrap', 1),
+            ('over the past', 1), ('in the last', 1), ('week of', 1),
+            ('since january', 1), ('since february', 1), ('since march', 1),
+            ('latest count', 1), ('total now', 1), ('cumulative', 1),
+            ('have died', 1), ('killed in', 1),  # often in casualty roundups
         ]
         
-        # Count recap indicators
-        recap_score = sum(1 for phrase in recap_phrases if phrase in text)
+        # Calculate weighted recap score
+        recap_score = 0
+        for phrase, weight in recap_phrases:
+            if phrase in text:
+                recap_score += weight
         
         # Check for multiple locations mentioned (indicator of recap)
-        locations_mentioned = len(self._extract_location_keywords(text).split(','))
+        locations_mentioned = len([loc for loc in self._extract_location_keywords(text).split(',') if loc])
         if locations_mentioned > 3:
-            recap_score += 2
+            recap_score += 1.5
         
         # Check for time range indicators
         time_patterns = [
             r'\d+\s+(days?|weeks?|months?)',
             r'since\s+(january|february|march|april|may|june|july|august|september|october|november|december)',
-            r'over\s+the\s+past'
+            r'over\s+the\s+past',
+            r'in\s+the\s+last\s+\d+'
         ]
         
         for pattern in time_patterns:
             if re.search(pattern, text):
                 recap_score += 1
         
-        # Determine if recap based on score
-        is_recap = recap_score >= 2
-        confidence = min(recap_score / 4, 1.0)  # Normalize to 0-1
+        # Determine if recap based on score - lowered threshold for better detection
+        is_recap = recap_score >= 2.5
+        confidence = min(recap_score / 5, 1.0)  # Normalize to 0-1
         
         return is_recap, confidence
     
@@ -180,9 +196,10 @@ class CircuitBreaker:
                 return None
         
         # Step 4: Check for near-duplicates (high similarity)
+        # Raised threshold from 0.85 to 0.92 to avoid filtering similar structured events
         for existing in self.existing_events:
             similarity = self._similarity_score(event, existing)
-            if similarity > 0.85:
+            if similarity > 0.92:
                 print(f"[CIRCUIT BREAKER] Filtered NEAR-DUPLICATE: {event['title'][:60]}...")
                 print(f"                    Similarity: {similarity:.2%}")
                 return None
@@ -197,9 +214,10 @@ class CircuitBreaker:
         return event
     
     def _generate_id(self) -> str:
-        """Generate unique event ID"""
+        """Generate unique event ID with counter to prevent collisions"""
         timestamp = int(datetime.now().timestamp() * 1000)
-        return f"GW-{timestamp}"
+        self._id_counter += 1
+        return f"GW-{timestamp}-{self._id_counter:04d}"
     
     def get_stats(self) -> Dict:
         """Get circuit breaker statistics"""

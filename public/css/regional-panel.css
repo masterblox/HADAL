@@ -17,12 +17,22 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.overview-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .filter-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 1px;
-  color: #888;
-  margin-bottom: 12px;
+  color: #666;
+  margin-bottom: 10px;
 }
 
 .filter-pills {

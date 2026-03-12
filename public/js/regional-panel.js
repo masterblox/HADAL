@@ -65,8 +65,12 @@ class RegionalPanel {
       {code: 'jordan', name: 'Jordan'}
     ];
     
+    const title = this.selectedCountry === 'all' ? 'REGIONAL OVERVIEW' : 
+                  this.data.countries[this.selectedCountry]?.name.toUpperCase() + ' OVERVIEW';
+    
     return `
       <div class="country-filter">
+        <div class="overview-title">${title}</div>
         <div class="filter-label">FILTER BY COUNTRY</div>
         <div class="filter-pills">
           ${countries.map(c => `
@@ -190,6 +194,16 @@ class RegionalPanel {
   setCountry(code) {
     this.selectedCountry = code;
     this.render();
+    
+    // Sync with main filter system
+    if (typeof filterIncidents === 'function') {
+      filterIncidents(code);
+    }
+    
+    // Dispatch custom event for other components
+    window.dispatchEvent(new CustomEvent('countryFilterChange', { 
+      detail: { country: code } 
+    }));
   }
   
   formatTime(timestamp) {

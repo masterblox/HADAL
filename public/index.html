@@ -296,8 +296,7 @@
             top: 90px;
             right: 0;
             width: 420px;
-            height: 50%;
-            max-height: 400px;
+            height: 330px;
             background: rgba(15, 15, 15, 0.98);
             backdrop-filter: blur(10px);
             border-left: 1px solid rgba(255, 255, 255, 0.1);
@@ -309,17 +308,17 @@
 
         /* Adjust sidebar to make room for regional panel */
         .sidebar {
-            top: 490px; /* 90px header + 400px regional panel */
+            top: 420px; /* 90px header + regional panel height */
         }
 
         @media (max-width: 1024px) {
             .regional-panel-container {
                 width: 360px;
-                height: 40%;
-                max-height: 300px;
+                height: 45%;
+                max-height: 330px;
             }
             .sidebar {
-                top: 390px;
+                top: 420px;
             }
         }
 
@@ -1054,20 +1053,6 @@
     <div id="map"></div>
     
     <div class="sidebar">
-        <h2>Filter by Country</h2>
-        <div class="country-filters" id="country-filters">
-            <button class="filter-btn active" data-country="all">All</button>
-            <button class="filter-btn" data-country="UAE">UAE</button>
-            <button class="filter-btn" data-country="Saudi Arabia">Saudi</button>
-            <button class="filter-btn" data-country="Qatar">Qatar</button>
-            <button class="filter-btn" data-country="Kuwait">Kuwait</button>
-            <button class="filter-btn" data-country="Bahrain">Bahrain</button>
-            <button class="filter-btn" data-country="Oman">Oman</button>
-            <button class="filter-btn" data-country="Israel">Israel</button>
-            <button class="filter-btn" data-country="Iran">Iran</button>
-            <button class="filter-btn" data-country="Lebanon">Lebanon</button>
-        </div>
-        
         <h2>Severity Filter</h2>
         <div class="severity-filter">
             <button class="severity-btn active" data-severity="all">Show All</button>
@@ -1933,6 +1918,13 @@ This report was submitted via GulfWatch Testing and Development v2`);
                     apiUrl: 'data/regional_stats.json'
                 });
                 console.log('[GulfWatch] Regional panel initialized');
+                
+                // Listen for country filter changes from regional panel
+                window.addEventListener('countryFilterChange', function(e) {
+                    const country = e.detail.country;
+                    // Update any other UI elements that need to sync
+                    console.log('[GulfWatch] Country filter changed to:', country);
+                });
             }
         });
     </script>

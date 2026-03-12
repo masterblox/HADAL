@@ -206,6 +206,66 @@ def classify_incident(text: str) -> str:
     
     return 'security'
 
+def extract_casualties(text: str) -> dict:
+    """Extract casualty numbers from text"""
+    import re
+    text = text.lower()
+    
+    # Patterns for casualty extraction
+    patterns = [
+        # Direct counts: "5 killed", "12 dead", "3 wounded"
+        r'(\d+)\s+(?:killed|dead|martyred|died)',
+        r'(\d+)\s+(?:wounded|injured|hurt)',
+        r'(\d+)\s+(?:casualties|casualty)',
+        # Reverse order: "killed 5", "dead: 12"
+        r'(?:killed|dead|martyred|died)[:\s]+(\d+)',
+        r'(?:wounded|injured|hurt)[:\s]+(\d+)',
+        # Death toll: "death toll rises to 15", "toll: 20"
+        r'(?:death toll|toll)(?:\s+rises?\s+to|\s*:\s*|\s+of)\s*(\d+)',
+        # Casualty phrases: "15 people killed", "20 were injured"
+        r'(\d+)\s+(?:people|persons|palestinians|israelis|iranians|civilians|soldiers|troops)?\s*(?:were\s+)?(?:killed|dead|injured|wounded)',
+    ]
+    
+    total = 0
+    military = 0
+    civilian = 0
+    
+    for pattern in patterns:
+        matches = re.findall(pattern, text)
+        for match in matches:
+            try:
+                num = int(match)
+                if num > total:  # Take highest number found
+                    total = num
+                
+                # Try to classify as military or civilian
+                context_start = max(0, text.find(match) - 150)
+                context_end = min(len(text), text.find(match) + 150)
+                context = text[context_start:context_end]
+                
+                if any(kw in context for kw in ['soldier', 'military', 'army', 'forces', 'troops', 'idf', 'irgc', 'combatant']):
+                    military = num
+                    civilian = 0
+                elif any(kw in context for kw in ['civilian', 'women', 'children', 'family', 'residents', 'people', 'palestinians', 'israelis']):
+                    civilian = num
+                    military = 0
+                else:
+                    # Default to civilian if unclear
+                    civilian = num
+                    military = 0
+            except:
+                pass
+    
+    # If no specific classification, put all in civilian
+    if total > 0 and military == 0 and civilian == 0:
+        civilian = total
+    
+    return {
+        'total': total,
+        'military': military,
+        'civilian': civilian
+    }
+
 def determine_status(text: str) -> str:
     """Determine incident status"""
     text_lower = text.lower()
@@ -298,6 +358,9 @@ def fetch_feed(feed_info: Dict) -> List[Dict]:
                     'lng': 45.0
                 }
             
+            # Extract casualties
+            casualties = extract_casualties(title)
+            
             # Create incident
             incident = {
                 'id': hash(title + feed_info['name']) % 1000000000,
@@ -310,6 +373,7 @@ def fetch_feed(feed_info: Dict) -> List[Dict]:
                 'location': location,
                 'credibility': feed_info['credibility'],
                 'is_government': feed_info.get('is_government', False),
+                'casualties': casualties,
             }
             
             incidents.append(incident)
@@ -372,6 +436,9 @@ def fetch_newsdata_api():
                                 'lng': 45.0
                             }
                         
+                        # Extract casualties
+                        casualties = extract_casualties(title)
+                        
                         incident = {
                             'id': hash(title + 'newsdata') % 1000000000,
                             'title': title[:200],
@@ -383,6 +450,7 @@ def fetch_newsdata_api():
                             'location': location,
                             'credibility': 85,
                             'is_government': False,
+                            'casualties': casualties,
                         }
                         incidents.append(incident)
                         

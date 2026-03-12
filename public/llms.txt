@@ -1,0 +1,131 @@
+# GulfWatch API for AI Agents
+
+> Machine-readable security incident data for the Middle East & Gulf region
+
+## Base URL
+https://gulfwatch-testing.vercel.app
+
+## API Endpoints
+
+### GET /feed.json
+Returns all security incidents in JSON format.
+
+**Response Format:**
+```json
+{
+  "generated_at": "2026-03-12T13:01:42Z",
+  "total_incidents": 236,
+  "circuit_breaker_stats": {
+    "total_processed": 274,
+    "duplicates_filtered": 38,
+    "unique_signatures": 210
+  },
+  "incidents": [
+    {
+      "id": 397966951,
+      "title": "Incident description...",
+      "source": "Source Name",
+      "source_url": "https://...",
+      "published": "2026-03-12T12:48:37Z",
+      "type": "drone|missile|airstrike|security|attack",
+      "status": "unconfirmed|reported|confirmed",
+      "location": {
+        "name": "City Name",
+        "country": "Country",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 85,
+      "is_government": true|false,
+      "casualties": {
+        "total": 5,
+        "military": 2,
+        "civilian": 3
+      }
+    }
+  ]
+}
+```
+
+### GET /data/regional_stats.json
+Returns aggregated regional statistics.
+
+**Response Format:**
+```json
+{
+  "regional": {
+    "casualties": {"total": 245, "military": 156, "civilian": 89},
+    "missiles": {"launched": 127, "intercepted": 98, "landed": 29},
+    "airstrikes": {"total": 156},
+    "drones": {"total": 234, "downed": 189}
+  },
+  "countries": {
+    "iran": {
+      "name": "Iran",
+      "flag": "🇮🇷",
+      "casualties": {...},
+      "missiles": {...},
+      "incidents": [...]
+    }
+  }
+}
+```
+
+## Field Descriptions
+
+### Incident Fields
+- `id` - Unique incident identifier
+- `title` - Incident description
+- `source` - News source name
+- `source_url` - Link to original article
+- `published` - ISO 8601 timestamp
+- `type` - Incident category: drone, missile, airstrike, security, attack
+- `status` - Verification status: unconfirmed, reported, confirmed
+- `location` - Geographic data with coordinates
+- `credibility` - Source credibility score (0-100)
+- `is_government` - True if official government source
+- `casualties` - Casualty breakdown (total, military, civilian)
+
+### Circuit Breaker Metadata
+- `circuit_breaker.event_id` - Deduplication signature
+- `circuit_breaker.confidence` - OSINT, VERIFIED, etc.
+
+## Data Updates
+- **Frequency:** Hourly via GitHub Actions
+- **Coverage:** Last 72 hours of incidents
+- **Geographic Scope:** Middle East, Gulf region, North Africa
+- **Sources:** 44 RSS feeds including government accounts
+
+## Example Usage
+
+### Python
+```python
+import requests
+
+# Get all incidents
+response = requests.get('https://gulfwatch-testing.vercel.app/feed.json')
+data = response.json()
+
+# Filter by country
+uae_incidents = [i for i in data['incidents'] if i['location']['country'] == 'UAE']
+
+# Get high-credibility incidents only
+verified = [i for i in data['incidents'] if i['credibility'] >= 90]
+```
+
+### cURL
+```bash
+# Get all incidents
+curl https://gulfwatch-testing.vercel.app/feed.json | jq '.incidents[:5]'
+
+# Get regional stats
+curl https://gulfwatch-testing.vercel.app/data/regional_stats.json | jq '.regional.casualties'
+```
+
+## Data License
+- Aggregated from public sources
+- For informational purposes only
+- Not affiliated with any government entity
+
+## Support
+GitHub: https://github.com/nKOxxx/gulfwatch-testing

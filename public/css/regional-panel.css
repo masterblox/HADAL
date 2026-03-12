@@ -1,268 +1,192 @@
 /**
- * Gulf Watch Regional Panel Styles
+ * Gulf Watch Regional Panel - Clean Compact Styles
+ * No emojis, clean text, country filter pills
  */
 
-/* Regional Panel Container */
-.regional-panel,
-.country-detail-panel {
-  background: rgba(20, 20, 20, 0.95);
-  border-radius: 12px;
-  padding: 20px;
+.regional-panel-clean {
+  background: rgba(15, 15, 15, 0.98);
   color: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  height: 100%;
+  overflow-y: auto;
 }
 
-/* Header */
-.regional-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.regional-header h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.last-updated {
-  font-size: 11px;
-  color: #888;
-}
-
-/* Metrics Grid */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.metric-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+/* Country Filter */
+.country-filter {
   padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 6px 14px;
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.filter-pill.active {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: #fff;
+}
+
+/* Stats Overview */
+.stats-overview {
+  padding: 16px;
+}
+
+.stats-grid.compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 12px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.metric-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--metric-color, rgba(255, 255, 255, 0.2));
+.stat-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.5;
 }
 
-.metric-card.selected {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--metric-color, #fff);
-  box-shadow: 0 0 0 2px var(--metric-color, rgba(255, 255, 255, 0.3));
+.stat-box.casualties {
+  color: #e74c3c;
 }
 
-.metric-icon {
-  font-size: 24px;
-  margin-bottom: 8px;
+.stat-box.missiles {
+  color: #e67e22;
 }
 
-.metric-value {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 4px;
+.stat-box.airstrikes {
+  color: #f39c12;
 }
 
-.metric-label {
-  font-size: 11px;
-  text-transform: uppercase;
+.stat-box.drones {
+  color: #27ae60;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 600;
   letter-spacing: 0.5px;
   color: #888;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
   margin-bottom: 4px;
 }
 
-.metric-subtitle {
+.stat-detail {
   font-size: 10px;
   color: #666;
 }
 
-/* Metric Filter */
-.metric-filter {
+/* Stat Bar (for casualties breakdown) */
+.stat-bar {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin: 6px 0;
+  overflow: hidden;
 }
 
-.metric-filter label {
-  font-size: 12px;
-  color: #888;
+.stat-bar-fill {
+  height: 100%;
 }
 
-.metric-filter select {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 8px 12px;
-  color: #fff;
-  font-size: 13px;
-  cursor: pointer;
-  flex: 1;
+.stat-bar-fill.military {
+  background: #3498db;
 }
 
-.metric-filter select:focus {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.3);
+.stat-bar-fill.civilian {
+  background: #e74c3c;
 }
 
-/* Country Breakdown */
-.country-breakdown h3 {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #888;
-  margin: 0 0 12px 0;
-}
-
-.country-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.country-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.country-item:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-.country-flag {
-  font-size: 20px;
-}
-
-.country-name {
-  flex: 1;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.country-value {
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.country-trend {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.country-arrow {
-  font-size: 18px;
-  color: #666;
-}
-
-.no-data {
+.last-updated {
   text-align: center;
-  padding: 20px;
+  font-size: 10px;
   color: #666;
-  font-size: 13px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Expand All Button */
-.expand-all-btn {
-  width: 100%;
-  padding: 12px;
-  margin-top: 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #fff;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* Country Stats View */
+.country-stats {
+  padding: 16px;
 }
 
-.expand-all-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* Country Detail Panel */
-.country-detail-panel {
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.country-detail-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.back-btn {
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 8px 12px;
-  color: #fff;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.country-title {
-  flex: 1;
+.country-header {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .country-flag-large {
-  font-size: 32px;
+  font-size: 24px;
 }
 
-.country-title h2 {
-  margin: 0;
-  font-size: 20px;
+.country-name-large {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
 }
 
 .trend-badge {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 12px;
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 .trend-badge.increasing {
@@ -280,195 +204,136 @@
   color: #95a5a6;
 }
 
-/* Stats Sections */
-.stats-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
+/* Recent Events Compact */
+.recent-events-compact {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.stats-section {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
-  padding: 16px;
-}
-
-.stats-section-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.stats-icon {
-  font-size: 20px;
-}
-
-.stats-section-header h4 {
-  flex: 1;
-  margin: 0;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #888;
-}
-
-.stats-total {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.stats-breakdown {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.stat-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.stat-label {
-  width: 80px;
-  font-size: 12px;
-  color: #888;
-  text-transform: capitalize;
-}
-
-.stat-bar {
-  flex: 1;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.stat-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.stat-value {
-  width: 50px;
-  text-align: right;
-  font-size: 13px;
+.events-header {
+  font-size: 10px;
   font-weight: 600;
-}
-
-/* Recent Events */
-.recent-events h3 {
-  font-size: 12px;
-  text-transform: uppercase;
   letter-spacing: 1px;
   color: #888;
-  margin: 0 0 12px 0;
+  margin-bottom: 10px;
 }
 
-.events-list {
+.event-row {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 12px;
 }
 
-.event-item {
-  display: flex;
-  gap: 12px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  border-left: 3px solid #666;
+.event-row:last-child {
+  border-bottom: none;
 }
 
-.event-item.missile {
-  border-left-color: #e67e22;
+.event-type {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #888;
+  min-width: 32px;
+  text-align: center;
 }
 
-.event-item.airstrike {
-  border-left-color: #f39c12;
+.event-row.missile .event-type {
+  background: rgba(230, 126, 34, 0.2);
+  color: #e67e22;
 }
 
-.event-item.drone {
-  border-left-color: #27ae60;
+.event-row.airstrike .event-type {
+  background: rgba(243, 156, 18, 0.2);
+  color: #f39c12;
 }
 
-.event-type-badge {
-  font-size: 18px;
-}
-
-.event-content {
-  flex: 1;
+.event-row.drone .event-type {
+  background: rgba(39, 174, 96, 0.2);
+  color: #27ae60;
 }
 
 .event-title {
-  font-size: 13px;
-  line-height: 1.4;
-  margin-bottom: 6px;
-}
-
-.event-meta {
-  display: flex;
-  gap: 12px;
-  font-size: 11px;
-  color: #666;
+  flex: 1;
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .event-casualties {
+  font-size: 10px;
   color: #e74c3c;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* Country Actions */
-.country-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.action-btn {
-  flex: 1;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #fff;
+/* No Data */
+.no-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
   font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.action-btn:hover {
+/* Error State */
+.error {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.error button {
+  margin-top: 12px;
+  padding: 8px 16px;
   background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Scrollbar */
+.regional-panel-clean::-webkit-scrollbar {
+  width: 6px;
+}
+
+.regional-panel-clean::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.regional-panel-clean::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.regional-panel-clean::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .metrics-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .filter-pills {
+    gap: 6px;
+  }
+  
+  .filter-pill {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  
+  .stats-grid.compact {
     gap: 8px;
   }
   
-  .metric-card {
-    padding: 12px;
-  }
-  
-  .metric-value {
-    font-size: 22px;
-  }
-  
-  .country-item {
+  .stat-box {
     padding: 10px;
   }
   
-  .stat-label {
-    width: 60px;
-    font-size: 11px;
+  .stat-value {
+    font-size: 20px;
   }
 }

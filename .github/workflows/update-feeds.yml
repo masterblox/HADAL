@@ -32,9 +32,12 @@ jobs:
     - name: Fetch price data
       run: python scripts/fetch_prices.py
       
+    - name: Generate regional stats
+      run: python scripts/generate_regional_stats.py public/incidents.json public/data/regional_stats.json
+      
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add public/incidents.json public/prices.json
-        git diff --staged --quiet || (git commit -m "Update incidents and prices from RSS feeds" && git push)
+        git add public/incidents.json public/prices.json public/data/regional_stats.json
+        git diff --staged --quiet || (git commit -m "Update incidents, prices, and regional stats from RSS feeds" && git push)

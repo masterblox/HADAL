@@ -82,6 +82,67 @@ class CircuitBreaker:
         
         return 'incident'
     
+    def _calculate_confidence(self, article: Dict) -> str:
+        """
+        Calculate confidence level for an incident
+        Returns: 'VERIFIED' | 'LIKELY' | 'PARTIAL' | 'OSINT'
+        
+        Scoring:
+        - Government source: +40 pts
+        - Major news outlet: +30 pts  
+        - Cross-verification (multiple sources): +20 pts
+        - Recent (< 6h): +10 pts
+        """
+        score = 0
+        source = article.get('source', '').lower()
+        
+        # Government sources (highest credibility)
+        gov_keywords = ['ministry', 'defence', 'defense', 'military', 'army', 'idf', 'forces', 'government']
+        if any(kw in source for kw in gov_keywords):
+            score += 40
+        
+        # Major news outlets
+        major_news = ['reuters', 'bbc', 'associated press', 'al jazeera', 'france24', 'dw']
+        if any(news in source for news in major_news):
+            score += 30
+        
+        # Regional news
+        regional_news = ['national', 'times of israel', 'jerusalem post', 'gulf news', 'arab news']
+        if any(news in source for news in regional_news):
+            score += 20
+        
+        # Check for cross-verification indicators in title
+        title = article.get('title', '').lower()
+        verification_indicators = [
+            'confirmed', 'verify', 'officials say', 'authorities say',
+            'according to', 'reported that', 'sources say'
+        ]
+        if any(ind in title for ind in verification_indicators):
+            score += 15
+        
+        # Recency bonus
+        try:
+            date_str = article.get('date', '')
+            if date_str:
+                article_date = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+                hours_ago = (datetime.now() - article_date).total_seconds() / 3600
+                if hours_ago < 6:
+                    score += 10
+                elif hours_ago < 24:
+                    score += 5
+        except:
+            pass
+        
+        # Map score to confidence level
+        if score >= 70:
+            return 'VERIFIED'
+        elif score >= 50:
+            return 'LIKELY'
+        elif score >= 30:
+            return 'PARTIAL'
+        else:
+            return 'OSINT'
+    
     def _is_historical_recap(self, article: Dict) -> Tuple[bool, float]:
         """
         Detect if article is a historical recap vs new event
@@ -177,7 +238,7 @@ class CircuitBreaker:
             'incident_type': self._extract_incident_type(article.get('title', '')),
             'coordinates': article.get('coordinates', {}),
             'casualties': article.get('casualties', {}),
-            'confidence': 'OSINT',
+            'confidence': self._calculate_confidence(article),
             'is_recap': is_recap,
             'recap_confidence': recap_confidence,
             'added_at': datetime.now().isoformat()

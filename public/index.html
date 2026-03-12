@@ -9,6 +9,7 @@
     <title>GulfWatch Testing - WITH COORDINATES v2</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="css/regional-panel.css" />
     <style>
         * {
             margin: 0;
@@ -287,6 +288,60 @@
             z-index: 1000;
             overflow-y: auto;
             padding: 20px;
+        }
+
+        /* Regional Panel Container */
+        .regional-panel-container {
+            position: fixed;
+            top: 90px;
+            right: 0;
+            width: 420px;
+            height: 50%;
+            max-height: 400px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1001;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        /* Adjust sidebar to make room for regional panel */
+        .sidebar {
+            top: 490px; /* 90px header + 400px regional panel */
+        }
+
+        @media (max-width: 1024px) {
+            .regional-panel-container {
+                width: 360px;
+                height: 40%;
+                max-height: 300px;
+            }
+            .sidebar {
+                top: 390px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .regional-panel-container {
+                position: relative;
+                top: auto;
+                right: auto;
+                width: 100%;
+                height: auto;
+                max-height: none;
+                border-left: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                z-index: 100;
+            }
+            .sidebar {
+                position: relative;
+                top: auto;
+                right: auto;
+                width: 100%;
+                border-left: none;
+            }
         }
         
         .sidebar h2 {
@@ -1042,6 +1097,13 @@
         </div>
     </div>
     
+    <!-- Regional Stats Panel -->
+    <div id="regional-panel" class="regional-panel-container">
+        <div style="padding: 20px; text-align: center; color: #666;">
+            Loading regional statistics...
+        </div>
+    </div>
+
     <!-- Verification Side Panel (Desktop) -->
     <div id="verification-panel" class="verification-panel">
         <div class="verification-panel-header">
@@ -1857,6 +1919,20 @@ This report was submitted via GulfWatch Testing and Development v2`);
             if (e.key === 'Escape') {
                 closeVerificationPanel();
                 closeMobileSheet();
+            }
+        });
+    </script>
+    
+    <!-- Regional Panel JavaScript -->
+    <script src="js/regional-panel.js"></script>
+    <script>
+        // Initialize Regional Panel when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('regional-panel')) {
+                window.regionalPanel = new RegionalPanel('regional-panel', {
+                    apiUrl: 'data/regional_stats.json'
+                });
+                console.log('[GulfWatch] Regional panel initialized');
             }
         });
     </script>

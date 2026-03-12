@@ -15,16 +15,34 @@ class RegionalPanel {
   
   async init() {
     await this.loadData();
-    this.render();
     this.startAutoRefresh();
   }
   
   async loadData() {
     try {
       const response = await fetch(this.apiUrl + '?t=' + Date.now());
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       this.data = await response.json();
+      this.render();
     } catch (e) {
       console.error('Failed to load regional stats:', e);
+      // Retry once after 2 seconds
+      setTimeout(() => this.retryLoad(), 2000);
+    }
+  }
+  
+  async retryLoad() {
+    try {
+      const response = await fetch(this.apiUrl + '?t=' + Date.now());
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      this.data = await response.json();
+      this.render();
+    } catch (e) {
+      console.error('Retry failed:', e);
       this.renderError();
     }
   }

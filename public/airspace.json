@@ -1,0 +1,174 @@
+{
+  "generated_at": "2026-03-12T14:54:46.631168+00:00",
+  "total_notams": 10,
+  "severity_counts": {
+    "WARNING": 3,
+    "CRITICAL": 1,
+    "ELEVATED": 2,
+    "INFORMATION": 4
+  },
+  "airports_tracked": 12,
+  "notams": [
+    {
+      "id": "TEST001/26",
+      "icao": "OMDB",
+      "airport": "Dubai International",
+      "country": "UAE",
+      "content": "UAS (DRONE) ACTIVITY REPORTED WITHIN 5NM OF AIRPORT. PILOTS ADVISED TO EXERCISE CAUTION.",
+      "category": "HAZARD",
+      "severity": "WARNING",
+      "coordinates": {
+        "lat": 25.2532,
+        "lng": 55.3657
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST002/26",
+      "icao": "OIIE",
+      "airport": "Imam Khomeini International",
+      "country": "Iran",
+      "content": "AIRSPACE RESTRICTED DUE TO MILITARY EXERCISES. ALL FLIGHTS SUSPENDED 1200-1600Z.",
+      "category": "AIRSPACE",
+      "severity": "CRITICAL",
+      "coordinates": {
+        "lat": 35.4161,
+        "lng": 51.1522
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST003/26",
+      "icao": "LLBG",
+      "airport": "Ben Gurion Airport",
+      "country": "Israel",
+      "content": "MISSILE DEFENSE SYSTEM ACTIVE. AIR DEFENSE EXERCISES IN PROGRESS.",
+      "category": "HAZARD",
+      "severity": "WARNING",
+      "coordinates": {
+        "lat": 32.0117,
+        "lng": 34.8867
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST004/26",
+      "icao": "ORBI",
+      "airport": "Baghdad International",
+      "country": "Iraq",
+      "content": "MILITARY AIR TRAFFIC INCREASED. CIVILIAN AIRCRAFT ADVISED TO MAINTAIN RADIO CONTACT.",
+      "category": "CONFLICT",
+      "severity": "ELEVATED",
+      "coordinates": {
+        "lat": 33.2625,
+        "lng": 44.2346
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST005/26",
+      "icao": "OEJN",
+      "airport": "King Abdulaziz International",
+      "country": "Saudi Arabia",
+      "content": "TEMPORARY RESTRICTED AREA ESTABLISHED FOR VIP MOVEMENT.",
+      "category": "AIRSPACE",
+      "severity": "INFORMATION",
+      "coordinates": {
+        "lat": 21.6796,
+        "lng": 39.1565
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST006/26",
+      "icao": "OTHH",
+      "airport": "Hamad International",
+      "country": "Qatar",
+      "content": "RUNWAY 16R/34L CLOSED FOR MAINTENANCE. USE RUNWAY 16L/34R.",
+      "category": "AIRPORT",
+      "severity": "INFORMATION",
+      "coordinates": {
+        "lat": 25.2731,
+        "lng": 51.608
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST007/26",
+      "icao": "OLBA",
+      "airport": "Beirut-Rafic Hariri",
+      "country": "Lebanon",
+      "content": "AIRSPACE RESTRICTIONS DUE TO CROSS-BORDER ACTIVITY. FLIGHTS DIVERTED.",
+      "category": "HAZARD",
+      "severity": "WARNING",
+      "coordinates": {
+        "lat": 33.8209,
+        "lng": 35.4884
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST008/26",
+      "icao": "OMAA",
+      "airport": "Abu Dhabi International",
+      "country": "UAE",
+      "content": "VOR/DME U/S. ALTERNATE NAVIGATION REQUIRED. GPS APPROACHES AVAILABLE.",
+      "category": "NAVIGATION",
+      "severity": "INFORMATION",
+      "coordinates": {
+        "lat": 24.433,
+        "lng": 54.6511
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST009/26",
+      "icao": "OERK",
+      "airport": "King Khalid International",
+      "country": "Saudi Arabia",
+      "content": "TEMPORARY FLIGHT RESTRICTION FOR MILITARY AIRCRAFT MOVEMENT.",
+      "category": "AIRSPACE",
+      "severity": "ELEVATED",
+      "coordinates": {
+        "lat": 24.9576,
+        "lng": 46.6988
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    },
+    {
+      "id": "TEST010/26",
+      "icao": "OKBK",
+      "airport": "Kuwait International",
+      "country": "Kuwait",
+      "content": "CONSTRUCTION WORK ON APRON. REDUCED PARKING CAPACITY.",
+      "category": "AIRPORT",
+      "severity": "INFORMATION",
+      "coordinates": {
+        "lat": 29.2266,
+        "lng": 47.9689
+      },
+      "valid_from": "2026-03-12T14:54:46.631168+00:00",
+      "valid_until": "2026-03-12T22:54:46.631168+00:00",
+      "issued_at": "2026-03-12T14:54:46.631168+00:00"
+    }
+  ],
+  "note": "TEST DATA - For production, use ICAO API or FAA NOTAM feed"
+}

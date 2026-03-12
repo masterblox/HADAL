@@ -1910,6 +1910,7 @@ This report was submitted via GulfWatch Testing and Development v2`);
     
     <!-- Regional Panel JavaScript -->
     <script src="js/regional-panel.js"></script>
+    <script src="js/airspace-layer.js"></script>
     <script>
         // Initialize Regional Panel when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
@@ -1925,6 +1926,12 @@ This report was submitted via GulfWatch Testing and Development v2`);
                     // Update any other UI elements that need to sync
                     console.log('[GulfWatch] Country filter changed to:', country);
                 });
+            }
+            
+            // Initialize Airspace Layer
+            if (typeof map !== 'undefined') {
+                window.airspaceLayer = new AirspaceLayer(map);
+                console.log('[GulfWatch] Airspace layer initialized');
             }
         });
     </script>

@@ -35,9 +35,12 @@ jobs:
     - name: Generate regional stats
       run: python scripts/generate_regional_stats.py public/incidents.json public/data/regional_stats.json
       
+    - name: Fetch airspace data (NOTAMs)
+      run: python scripts/fetch_airspace.py || echo "Airspace fetch completed with warnings"
+      
     - name: Commit and push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add public/incidents.json public/prices.json public/data/regional_stats.json
-        git diff --staged --quiet || (git commit -m "Update incidents, prices, and regional stats from RSS feeds" && git push)
+        git add public/incidents.json public/prices.json public/data/regional_stats.json public/airspace.json
+        git diff --staged --quiet || (git commit -m "Update incidents, prices, regional stats, and airspace data" && git push)

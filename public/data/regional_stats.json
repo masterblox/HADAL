@@ -1,0 +1,449 @@
+{
+  "regional": {
+    "casualties": {
+      "military": 0,
+      "civilian": 3,
+      "total": 3,
+      "byCountry": {
+        "iran": 3
+      }
+    },
+    "missiles": {
+      "launched": 2,
+      "intercepted": 1,
+      "landed": 1,
+      "byCountry": {
+        "iran": {
+          "launched": 1,
+          "intercepted": 0,
+          "landed": 1
+        },
+        "saudi": {
+          "launched": 1,
+          "intercepted": 1,
+          "landed": 0
+        }
+      }
+    },
+    "airstrikes": {
+      "total": 2,
+      "byCountry": {
+        "israel": 1,
+        "iran": 1
+      }
+    },
+    "drones": {
+      "total": 1,
+      "downed": 1,
+      "byCountry": {
+        "israel": {
+          "total": 1,
+          "downed": 1
+        }
+      }
+    },
+    "incidents": {
+      "total": 5,
+      "byType": {
+        "missile": 2,
+        "airstrike": 2,
+        "drone": 1
+      },
+      "byCountry": {
+        "iran": 2,
+        "israel": 2,
+        "saudi": 1
+      }
+    }
+  },
+  "countries": {
+    "iran": {
+      "name": "Iran",
+      "flag": "\ud83c\uddee\ud83c\uddf7",
+      "casualties": {
+        "military": 0,
+        "civilian": 3,
+        "total": 3
+      },
+      "missiles": {
+        "launched": 1,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 1
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [
+        {
+          "id": "1",
+          "title": "Missile strike from Iran targets Israel, 3 killed",
+          "type": "missile",
+          "time": "2026-03-11T19:44:32.077159",
+          "casualties": 3
+        },
+        {
+          "id": "4",
+          "title": "Iranian military facility hit in Syria",
+          "type": "airstrike",
+          "time": "2026-03-11T19:44:32.077170",
+          "casualties": 0
+        }
+      ],
+      "trend": "stable"
+    },
+    "israel": {
+      "name": "Israel",
+      "flag": "\ud83c\uddee\ud83c\uddf1",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 1
+      },
+      "drones": {
+        "total": 1,
+        "downed": 0
+      },
+      "incidents": [
+        {
+          "id": "2",
+          "title": "Israeli airstrike on Gaza kills 12 civilians",
+          "type": "airstrike",
+          "time": "2026-03-11T19:44:32.077167",
+          "casualties": 0
+        },
+        {
+          "id": "3",
+          "title": "Hezbollah drone downed over Lebanon",
+          "type": "drone",
+          "time": "2026-03-11T19:44:32.077168",
+          "casualties": 0
+        }
+      ],
+      "trend": "stable"
+    },
+    "palestine": {
+      "name": "Palestine",
+      "flag": "\ud83c\uddf5\ud83c\uddf8",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "gaza": {
+      "name": "Gaza",
+      "flag": "\ud83c\uddf5\ud83c\uddf8",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "lebanon": {
+      "name": "Lebanon",
+      "flag": "\ud83c\uddf1\ud83c\udde7",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "syria": {
+      "name": "Syria",
+      "flag": "\ud83c\uddf8\ud83c\uddfe",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "yemen": {
+      "name": "Yemen",
+      "flag": "\ud83c\uddfe\ud83c\uddea",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "saudi": {
+      "name": "Saudi Arabia",
+      "flag": "\ud83c\uddf8\ud83c\udde6",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 1,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [
+        {
+          "id": "5",
+          "title": "Houthi missile intercepted over Saudi Arabia",
+          "type": "missile",
+          "time": "2026-03-11T19:44:32.077171",
+          "casualties": 0
+        }
+      ],
+      "trend": "stable"
+    },
+    "uae": {
+      "name": "UAE",
+      "flag": "\ud83c\udde6\ud83c\uddea",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "jordan": {
+      "name": "Jordan",
+      "flag": "\ud83c\uddef\ud83c\uddf4",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "iraq": {
+      "name": "Iraq",
+      "flag": "\ud83c\uddee\ud83c\uddf6",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "kuwait": {
+      "name": "Kuwait",
+      "flag": "\ud83c\uddf0\ud83c\uddfc",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "bahrain": {
+      "name": "Bahrain",
+      "flag": "\ud83c\udde7\ud83c\udded",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "qatar": {
+      "name": "Qatar",
+      "flag": "\ud83c\uddf6\ud83c\udde6",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    },
+    "oman": {
+      "name": "Oman",
+      "flag": "\ud83c\uddf4\ud83c\uddf2",
+      "casualties": {
+        "military": 0,
+        "civilian": 0,
+        "total": 0
+      },
+      "missiles": {
+        "launched": 0,
+        "intercepted": 0,
+        "landed": 0
+      },
+      "airstrikes": {
+        "total": 0
+      },
+      "drones": {
+        "total": 0,
+        "downed": 0
+      },
+      "incidents": [],
+      "trend": "stable"
+    }
+  },
+  "lastUpdated": "2026-03-11T19:44:32.077177",
+  "timeRange": {
+    "from": "2026-03-04T19:44:32.077178",
+    "to": "2026-03-11T19:44:32.077184"
+  }
+}

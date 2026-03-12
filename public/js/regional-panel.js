@@ -47,26 +47,28 @@ class RegionalPanel {
   }
   
   renderCountryFilter() {
+    // Countries must match incident.location.country values
     const countries = [
-      {code: 'all', name: 'All'},
-      {code: 'uae', name: 'UAE'},
-      {code: 'saudi', name: 'Saudi'},
-      {code: 'qatar', name: 'Qatar'},
-      {code: 'kuwait', name: 'Kuwait'},
-      {code: 'bahrain', name: 'Bahrain'},
-      {code: 'oman', name: 'Oman'},
-      {code: 'israel', name: 'Israel'},
-      {code: 'iran', name: 'Iran'},
-      {code: 'lebanon', name: 'Lebanon'},
-      {code: 'gaza', name: 'Gaza'},
-      {code: 'syria', name: 'Syria'},
-      {code: 'yemen', name: 'Yemen'},
-      {code: 'iraq', name: 'Iraq'},
-      {code: 'jordan', name: 'Jordan'}
+      {code: 'all', name: 'All', display: 'All'},
+      {code: 'UAE', name: 'UAE', display: 'UAE'},
+      {code: 'Saudi Arabia', name: 'saudi', display: 'Saudi'},
+      {code: 'Qatar', name: 'qatar', display: 'Qatar'},
+      {code: 'Kuwait', name: 'kuwait', display: 'Kuwait'},
+      {code: 'Bahrain', name: 'bahrain', display: 'Bahrain'},
+      {code: 'Oman', name: 'oman', display: 'Oman'},
+      {code: 'Israel', name: 'israel', display: 'Israel'},
+      {code: 'Iran', name: 'iran', display: 'Iran'},
+      {code: 'Lebanon', name: 'lebanon', display: 'Lebanon'},
+      {code: 'Palestine', name: 'gaza', display: 'Gaza'},
+      {code: 'Syria', name: 'syria', display: 'Syria'},
+      {code: 'Yemen', name: 'yemen', display: 'Yemen'},
+      {code: 'Iraq', name: 'iraq', display: 'Iraq'},
+      {code: 'Jordan', name: 'jordan', display: 'Jordan'}
     ];
     
+    const selectedCountryData = countries.find(c => c.code === this.selectedCountry);
     const title = this.selectedCountry === 'all' ? 'REGIONAL OVERVIEW' : 
-                  this.data.countries[this.selectedCountry]?.name.toUpperCase() + ' OVERVIEW';
+                  (this.selectedCountry || 'REGIONAL').toUpperCase() + ' OVERVIEW';
     
     return `
       <div class="country-filter">
@@ -76,7 +78,7 @@ class RegionalPanel {
           ${countries.map(c => `
             <button class="filter-pill ${this.selectedCountry === c.code ? 'active' : ''}" 
                     onclick="regionalPanel.setCountry('${c.code}')">
-              ${c.name}
+              ${c.display}
             </button>
           `).join('')}
         </div>
@@ -120,8 +122,9 @@ class RegionalPanel {
   }
   
   renderCountryView(countryCode) {
-    const country = this.data.countries[countryCode];
-    if (!country) return '<div class="no-data">No data available</div>';
+    const dataKey = this.getDataKey(countryCode);
+    const country = dataKey === 'all' ? null : this.data.countries[dataKey];
+    if (!country) return '<div class="no-data">No data available for ' + countryCode + '</div>';
     
     return `
       <div class="country-stats">
@@ -195,7 +198,7 @@ class RegionalPanel {
     this.selectedCountry = code;
     this.render();
     
-    // Sync with main filter system
+    // Sync with main filter system - use full country name for filterIncidents
     if (typeof filterIncidents === 'function') {
       filterIncidents(code);
     }
@@ -204,6 +207,28 @@ class RegionalPanel {
     window.dispatchEvent(new CustomEvent('countryFilterChange', { 
       detail: { country: code } 
     }));
+  }
+  
+  // Map full country names to data keys
+  getDataKey(countryCode) {
+    const mapping = {
+      'all': 'all',
+      'UAE': 'uae',
+      'Saudi Arabia': 'saudi',
+      'Qatar': 'qatar',
+      'Kuwait': 'kuwait',
+      'Bahrain': 'bahrain',
+      'Oman': 'oman',
+      'Israel': 'israel',
+      'Iran': 'iran',
+      'Lebanon': 'lebanon',
+      'Palestine': 'palestine',
+      'Syria': 'syria',
+      'Yemen': 'yemen',
+      'Iraq': 'iraq',
+      'Jordan': 'jordan'
+    };
+    return mapping[countryCode] || countryCode.toLowerCase();
   }
   
   formatTime(timestamp) {

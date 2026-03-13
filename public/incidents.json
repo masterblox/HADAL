@@ -1,15 +1,155 @@
 {
-  "generated_at": "2026-03-13T04:31:01.557948+00:00",
-  "total_incidents": 242,
+  "generated_at": "2026-03-13T06:44:06.556830+00:00",
+  "total_incidents": 243,
   "circuit_breaker_stats": {
     "total_processed": 278,
-    "duplicates_filtered": 36,
+    "duplicates_filtered": 35,
     "recaps_blocked": 1,
-    "unique_signatures": 221
+    "unique_signatures": 222
   },
   "incidents": [
     {
-      "id": 533880006,
+      "id": 548474977,
+      "title": "Iran war: What is happening on day 14 of US-Israel attacks?",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/13/iran-war-what-is-happening-on-day-14-of-us-israel-attacks?traffic_source=rss",
+      "published": "2026-03-13T06:13:25+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230710-0037",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "PARTIAL"
+      }
+    },
+    {
+      "id": 214813542,
+      "title": "How Israel-US war on Iran puts $50bn in Indian remittances at risk",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/13/how-israel-us-war-on-iran-puts-50bn-in-indian-remittances-at-risk?traffic_source=rss",
+      "published": "2026-03-13T06:06:24+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230716-0038",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "PARTIAL"
+      }
+    },
+    {
+      "id": 792194930,
+      "title": "Afghanistan accuses Pakistan of air attacks on homes in Kabul, Kandahar",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/13/afghanistan-accuses-pakistan-of-air-attacks-on-homes-in-kabul-kandahar?traffic_source=rss",
+      "published": "2026-03-13T05:52:01+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "Qatar",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 90,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230722-0039",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "PARTIAL"
+      }
+    },
+    {
+      "id": 667410778,
+      "title": "French soldier killed, others wounded in attack in Iraq, Macron says",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/2026/3/13/french-soldier-killed-others-wounded-in-attack-in-iraq-macron-says?traffic_source=rss",
+      "published": "2026-03-13T05:14:55+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iraq",
+        "lat": 33.2232,
+        "lng": 43.6793
+      },
+      "credibility": 90,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230730-0040",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "PARTIAL"
+      }
+    },
+    {
+      "id": 200705793,
+      "title": "The Palestinians forced to demolish their own homes by Israel",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/features/2026/3/13/the-palestinians-forced-to-demolish-their-own-homes-by-israel?traffic_source=rss",
+      "published": "2026-03-13T04:49:07+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Israel",
+        "lat": 31.0461,
+        "lng": 34.8516
+      },
+      "credibility": 90,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230737-0041",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "PARTIAL"
+      }
+    },
+    {
+      "id": 422453246,
       "title": "الآن تتعامل الدفاعات الجوية مع تهديـد صاروخي، يرجى البقاء في مكان آمن ومتابعة التحذيرات والمستجدات على المواقــع الرسميـة. \n\nAir defense systems are currently dealing with a missile threat. Please remain in a safe place and follow warnings and updates on the official channels",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/moiuae/status/2032310641059651690#m",
@@ -30,14 +170,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247614-0086",
+        "event_id": "GW-1773384231271-0088",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 548263916,
+      "id": 133369914,
       "title": "Air defense systems are currently responding to a missile threat. Please remain in a safe location and follow official channels for warnings and updates.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2032310289086259255#m",
@@ -58,14 +198,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248462-0105",
+        "event_id": "GW-1773384232215-0107",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 939841820,
+      "id": 753162548,
       "title": "الآن تتعامل الدفاعات الجوية مع تهديـد صاروخي، يرجى البقاء في مكان آمن ومتابعة التحذيرات والمستجدات على المواقــع الرسميـة.",
       "source": "UAE NCEMA",
       "source_url": "https://nitter.net/NCEMAUAE/status/2032310268764819744#m",
@@ -86,14 +226,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248496-0106",
+        "event_id": "GW-1773384232250-0108",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 603542783,
+      "id": 694502288,
       "title": "Oil stays above $100 a barrel amid Iran’s stranglehold on Strait of Hormuz",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/economy/2026/3/13/oil-stays-above-100-a-barrel-amid-irans-stranglehold-on-strait-of-hormuz?traffic_source=rss",
@@ -114,14 +254,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247118-0037",
+        "event_id": "GW-1773384230743-0042",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 875704368,
+      "id": 726836135,
       "title": "Israel drops abuse charges against soldiers",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/13/israel-drops-abuse-charges-against-soldiers?traffic_source=rss",
@@ -142,14 +282,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247125-0038",
+        "event_id": "GW-1773384230751-0043",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 356411586,
+      "id": 860950250,
       "title": "RT by @moiuae: Authorities confirm that debris from a successful interception caused a minor incident on the façade of a building in central Dubai. No injuries have been reported.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032299207894450550#m",
@@ -170,14 +310,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247653-0087",
+        "event_id": "GW-1773384231313-0089",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 55058296,
+      "id": 933459920,
       "title": "RT by @moiuae: أكدت الجهات المختصة أنه يتم التعامل مع حادث بسيط ناجم عن سقوط شظايا نتيجة اعتراض جوي، على واجهة أحد المباني وسط دبي، دون تسجيل إصابات.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032299194015469633#m",
@@ -198,14 +338,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247686-0088",
+        "event_id": "GW-1773384231348-0090",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 18636389,
+      "id": 805309375,
       "title": "The Civil Defense responds to a limited fire in one of the warehouses in the Al Baraka Al Awamer area. The incident was brought under control, and no injuries were reported.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032296360989311308#m",
@@ -226,14 +366,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255634-0219",
+        "event_id": "GW-1773384240049-0219",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 960782271,
+      "id": 901471080,
       "title": "Teen girl fatally run over, reportedly while rushing to shelter amid Iran missile attack",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/teen-girl-fatally-run-over-reportedly-while-rushing-to-shelter-amid-iran-missile-attack/",
@@ -254,14 +394,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247291-0060",
+        "event_id": "GW-1773384230940-0064",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 663987311,
+      "id": 226901131,
       "title": "Notice Regarding the Stability of the Situation and the Continuity of Services Across Various Sectors. \n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032291361467052340#m",
@@ -282,14 +422,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255706-0220",
+        "event_id": "GW-1773384240126-0220",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 943571438,
+      "id": 436833240,
       "title": "Summary of the scene in northern Israel:\n\nMDA EMTs and paramedics provided medical treatment and evacuated 58 patients to hospitals in northern Israel, including: 1 in moderate condition and 57 in very mild condition from glass shards, with minor injuries.",
       "source": "Magen David Adom",
       "source_url": "https://nitter.net/Mdais/status/2032286193996501394#m",
@@ -310,15 +450,15 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260416-0270",
+        "event_id": "GW-1773384245350-0270",
         "incident_type": "incident",
         "is_recap": true,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 192599151,
-      "title": "Woman moderately wounded by shrapnel, dozens more lightly hurt amid Iran missile attacks",
+      "id": 142559966,
+      "title": "Woman moderately wounded by shrapnel, dozens more lightly hurt as Iran missile hits northern town",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/liveblog-march-13-2026/",
       "published": "2026-03-13T02:29:26+00:00",
@@ -338,14 +478,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247302-0061",
+        "event_id": "GW-1773384230953-0065",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 125997075,
+      "id": 210729706,
       "title": "#الدفاع_المدني بنجران يخمد حريقًا في محلين تجاريين، بسبب تماس كهربائي، ولا إصابات.",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032279484603216167#m",
@@ -366,14 +506,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254646-0202",
+        "event_id": "GW-1773384238980-0202",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 177830323,
+      "id": 420027114,
       "title": "Netanyahu says he doesn’t know if Iranians will oust regime, threatens new supreme leader",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/netanyahu-says-he-doesnt-know-if-iranians-will-oust-regime-threatens-new-supreme-leader/",
@@ -394,14 +534,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247313-0062",
+        "event_id": "GW-1773384230966-0066",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 403718821,
+      "id": 157104310,
       "title": "Iranian missile strikes residential area in northern Israel",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/13/iranian-missile-strikes-residential-area-in-northern-israel?traffic_source=rss",
@@ -422,14 +562,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247129-0039",
+        "event_id": "GW-1773384230756-0044",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 917661861,
+      "id": 295588716,
       "title": "Thousands rally in Athens protesting US-Israeli attacks on Iran",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/13/thousands-rally-in-athens-protesting-us-israeli-attacks-on-iran?traffic_source=rss",
@@ -450,14 +590,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247135-0040",
+        "event_id": "GW-1773384230763-0045",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 862616806,
+      "id": 838110378,
       "title": "Specialist Magen David Adom \"Unimog\" vehicle on scene in  northern Israel. \n\nThe vehicle has advance capabilities, including maneuverability in difficult terrain, and 4 critical care beds.",
       "source": "Magen David Adom",
       "source_url": "https://nitter.net/Mdais/status/2032269363751874953#m",
@@ -478,14 +618,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260528-0271",
+        "event_id": "GW-1773384245470-0271",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 874432889,
+      "id": 160686504,
       "title": "MDA Spokesperson: Following the missile fire toward northern Israel:\n\nMDA EMTs and paramedics are providing medical treatment to a 34-year-old woman in moderate condition with shrapnel injuries to her back. Updates as required.",
       "source": "Magen David Adom",
       "source_url": "https://nitter.net/Mdais/status/2032260156461896083#m",
@@ -506,14 +646,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260615-0272",
+        "event_id": "GW-1773384245559-0272",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 712187809,
+      "id": 353938622,
       "title": "Netanyahu says Israeli strikes killed Iranian nuclear scientists",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/13/netanyahu-says-israeli-strikes-killed-iranian-nuclear-scientists?traffic_source=rss",
@@ -534,14 +674,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247141-0041",
+        "event_id": "GW-1773384230769-0046",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 884476481,
+      "id": 899255235,
       "title": "US refueling plane crashes in Iraq due to apparent accident, rescue efforts ongoing",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/us-refueling-plane-crashes-in-iraq-due-to-apparent-accident-rescue-efforts-ongoing/",
@@ -562,14 +702,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247325-0063",
+        "event_id": "GW-1773384230980-0067",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 492620627,
+      "id": 497519761,
       "title": "The siren has been sounded. Citizens and residents are urged to remain calm and head to the nearest safe place",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032247939930738718#m",
@@ -590,14 +730,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257275-0238",
+        "event_id": "GW-1773384242147-0239",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 65494155,
+      "id": 289136696,
       "title": "تم إطلاق صافرة الإنذار ، نرجو من المواطنين والمقيمين الهدوء والتوجه لأقرب مكان آمن ومتابعة الأخبار عبر القنوات الرسمية",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032247874407293096#m",
@@ -618,14 +758,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257325-0239",
+        "event_id": "GW-1773384242200-0240",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 606186073,
+      "id": 805847977,
       "title": "IDF soldiers protecting our civilians but make it aesthetic:",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032246014858375656#m",
@@ -646,25 +786,25 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258313-0253",
+        "event_id": "GW-1773384243272-0254",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 596189944,
-      "title": "Iran war live: Trump says war going ‘well’ as Gulf under wave of attacks",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/news/liveblog/2026/3/13/iran-war-live-trump-says-war-going-well-as-gulf-under-wave-of-attacks?traffic_source=rss",
+      "id": 851845846,
+      "title": "Shock, awe, death, joy and looting: how the Guardian covered the outbreak of the Iraq war – podcast",
+      "source": "The Guardian",
+      "source_url": "https://www.theguardian.com/news/audio/2026/mar/13/shock-awe-death-joy-and-looting-how-the-guardian-covered-the-outbreak-of-the-iraq-war-podcast",
       "published": "2026-03-13T00:00:00+00:00",
-      "type": "attack",
+      "type": "security",
       "status": "unconfirmed",
       "location": {
         "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
+        "country": "Iraq",
+        "lat": 33.2232,
+        "lng": 43.6793
       },
       "credibility": 90,
       "is_government": false,
@@ -674,14 +814,154 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247147-0042",
+        "event_id": "GW-1773384230620-0022",
         "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "OSINT"
+      }
+    },
+    {
+      "id": 301494922,
+      "title": "Iran war live: US-Israeli strikes across Tehran; drones near Riyadh",
+      "source": "Al Jazeera",
+      "source_url": "https://www.aljazeera.com/news/liveblog/2026/3/13/iran-war-live-trump-says-war-going-well-as-gulf-under-wave-of-attacks?traffic_source=rss",
+      "published": "2026-03-13T00:00:00+00:00",
+      "type": "drone",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Riyadh",
+        "country": "Saudi Arabia",
+        "lat": 24.7136,
+        "lng": 46.6753
+      },
+      "credibility": 90,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230777-0047",
+        "incident_type": "drone",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 950702875,
+      "id": 654830949,
+      "title": "President Sheikh Mohamed discusses Iran crisis in call with Syria's Al Shara",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/13/president-sheikh-mohamed-discusses-iran-crisis-in-call-with-syrias-al-shara/",
+      "published": "2026-03-13T00:00:00+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Syria",
+        "lat": 34.8021,
+        "lng": 38.9968
+      },
+      "credibility": 85,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230824-0053",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "OSINT"
+      }
+    },
+    {
+      "id": 472186348,
+      "title": "Trump tells oil tankers to 'show guts' and pass through Strait of Hormuz despite Iranian attacks",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/13/trump-tells-oil-tankers-to-show-guts-and-pass-through-strait-of-hormuz-despite-iranian-attacks/",
+      "published": "2026-03-13T00:00:00+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230834-0054",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "OSINT"
+      }
+    },
+    {
+      "id": 622501316,
+      "title": "Syria reopens key eastern road as tension with SDF eases and displaced return to homes",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/mena/2026/03/13/kurds-sdf-syria-al-shara/",
+      "published": "2026-03-13T00:00:00+00:00",
+      "type": "security",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Syria",
+        "lat": 34.8021,
+        "lng": 38.9968
+      },
+      "credibility": 85,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230846-0055",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "OSINT"
+      }
+    },
+    {
+      "id": 206212902,
+      "title": "Debris hits Dubai building after Iranian attack intercepted",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/13/debris-hits-dubai-building-after-air-strike-intercepted-as-more-alerts-issued/",
+      "published": "2026-03-13T00:00:00+00:00",
+      "type": "attack",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Dubai",
+        "country": "UAE",
+        "lat": 25.2048,
+        "lng": 55.2708
+      },
+      "credibility": 85,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230858-0056",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "OSINT"
+      }
+    },
+    {
+      "id": 580373573,
       "title": "UAE filmmaker Mohammed Mamdouh’s Halal Dreams heads to Oscar-qualifying festival",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/arts-culture/2026/03/13/uae-filmmaker-mohammed-mamdouhs-halal-dreams-heads-to-oscar-qualifying-festival/",
@@ -702,14 +982,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247219-0052",
+        "event_id": "GW-1773384230877-0058",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 739441698,
+      "id": 389555491,
       "title": "Who will endure the highest cost of the Iran war?",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/podcasts/beyond-the-headlines/2026/03/13/who-will-endure-the-highest-cost-of-the-iran-war/",
@@ -730,14 +1010,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247228-0053",
+        "event_id": "GW-1773384230888-0059",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 318068503,
+      "id": 604070083,
       "title": "Budget cuts, school chaos: Anger in Israel at how Netanyahu's wartime politics are hitting home",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/mena/2026/03/13/budget-cuts-school-chaos-anger-in-israel-at-how-netanyahus-wartime-politics-are-hitting-home/",
@@ -758,14 +1038,42 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247234-0054",
+        "event_id": "GW-1773384230896-0060",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 361751566,
+      "id": 716412791,
+      "title": "US Democrats demand answers to Iran primary school bombing",
+      "source": "The National UAE",
+      "source_url": "https://www.thenationalnews.com/news/us/2026/03/13/us-democrats-demand-answers-to-iran-primary-school-bombing/",
+      "published": "2026-03-13T00:00:00+00:00",
+      "type": "explosion",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "Iran",
+        "lat": 32.4279,
+        "lng": 53.688
+      },
+      "credibility": 85,
+      "is_government": false,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384230931-0063",
+        "incident_type": "airstrike",
+        "is_recap": false,
+        "confidence": "OSINT"
+      }
+    },
+    {
+      "id": 962694828,
       "title": "Abdullah bin Zayed holds phone calls with several officials, foreign ministers to discuss repercussions of unprovoked, terrorist Iranian missile attacks targeting UAE, brotherly nations\n\n#WamNews \n\nhttps://www.wam.ae/a/1749dyo",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032244309307900347#m",
@@ -786,14 +1094,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251372-0144",
+        "event_id": "GW-1773384235464-0146",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 380048341,
+      "id": 463888679,
       "title": "RT by @CivilDefenceAD: #فيديو | قائد عام #شرطة_أبوظبي يزور مركز الدفاع المدني بمدينة شخبوط ويطلع على مستوى الجاهزية\n\nزار معالي اللواء أحمد سيف بن زيتون المهيري، قائد عام شرطة أبوظبي، مركز الدفاع المدني في مدينة شخبوط التابع لهيئة أبوظبي للدفاع المدني، في إطار حرصه على متابعة جاهزية منظومة العمل الميداني والاطلاع على مستوى الاستعداد للتعامل مع مختلف البلاغات والحالات الطارئة، بما يعزز سرعة الاستجابة ويحافظ على سلامة الأرواح والممتلكات، بحضور العميد سالم عبدالله بن براك الظاهري مدير عام هيئة أبوظبي للدفاع المدني وعدد من الضباط.\n\nواطّلع معاليه خلال الزيارة على سير العمل في المركز والخطط التشغيلية المعتمدة للتعامل مع الحوادث والبلاغات، واستمع إلى شرح عن الإمكانات الفنية والتجهيزات الحديثة المستخدمة في عمليات الإطفاء والإنقاذ، والآليات المتبعة في رفع كفاءة الاستجابة للحوادث وفق أفضل الممارسات والمعايير العالمية.\n\nوتابع معاليه عرضاً عن آليات التنسيق والتكامل بين فرق الدفاع المدني والجهات المعنية، ودور التقنيات الحديثة في دعم العمليات الميدانية وتعزيز سرعة الاستجابة للحوادث، بما يسهم في ترسيخ منظومة متكاملة للأمن والسلامة.\n\nالتفاصيل :\n\nhttps://www.facebook.com/share/v/1WmKVZXq8h/?mibextid=wwXIfr\n\n@CivilDefenceAD",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/ADPoliceHQ/status/2032238990733295866#m",
@@ -814,14 +1122,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252108-0161",
+        "event_id": "GW-1773384236273-0163",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 488158921,
+      "id": 153026474,
       "title": "Iran envoy says Tehran will keep Strait of Hormuz open",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/12/iran-envoy-says-tehran-will-keep-strait-of-hormuz-open?traffic_source=rss",
@@ -842,14 +1150,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247154-0043",
+        "event_id": "GW-1773384230784-0048",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 209176770,
+      "id": 574761052,
       "title": "Qatar rejects attempts to ‘drive wedge’ with US over gas pause",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/news/2026/3/12/qatar-rejects-attempts-to-drive-wedge-with-us-over-gas-pause?traffic_source=rss",
@@ -870,14 +1178,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247160-0044",
+        "event_id": "GW-1773384230791-0049",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 420351948,
+      "id": 101437353,
       "title": "RT by @CivilDefenceAD: قائد عام شرطة أبوظبي يزور مركز الدفاع المدني في مدينة شخبوط ويطلع على مستوى الجاهزية والاستعداد للتعامل مع مختلف البلاغات والحالات الطارئة، بما يعزز سرعة الاستجابة ويحافظ على سلامة الأرواح والممتلكات، ويشيد بجهود كوادر الدفاع المدني في أداء واجبهم الإنساني والوطني.\n\nلقراءة المزيد: https://www.mediaoffice.abudhabi/ar/security/abu-dhabi-police-commander-in-chief-reviews-level-of-readiness-during-visit-to-civil-defence-centre-in-shakbout-city/",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/ADMediaOffice/status/2032231828145488128#m",
@@ -898,14 +1206,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252012-0160",
+        "event_id": "GW-1773384236166-0162",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 661314695,
+      "id": 132220359,
       "title": "عبدالله بن زايد يبحث هاتفياً مع عدد من المسؤولين ووزراء الخارجية تداعيات الاعتداءات الصاروخية الإيرانية الغاشمة والإرهابية على الإمارات ودول شقيقة\n\n#وام \n\nhttps://www.wam.ae/a/1749d6v",
       "source": "WAM News Agency",
       "source_url": "https://nitter.net/wamnews/status/2032231757094011009#m",
@@ -926,14 +1234,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251271-0141",
+        "event_id": "GW-1773384235350-0143",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 786391522,
+      "id": 990983240,
       "title": "RT by @SaudiDCD: الأمير عبدالعزيز بن سعود يستقبل وزيرة الخارجية وشؤون الكومنولث والتنمية في المملكة المتحدة.",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2032228905319366861#m",
@@ -954,14 +1262,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254679-0203",
+        "event_id": "GW-1773384239016-0203",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 45142709,
+      "id": 219593518,
       "title": "US military announces rescue effort after fuelling aircraft crashes in Iraq",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/news/2026/3/12/us-military-announces-loss-of-refueling-aircraft-over-western-iraq?traffic_source=rss",
@@ -982,14 +1290,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247166-0045",
+        "event_id": "GW-1773384230799-0050",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 52692591,
+      "id": 533610318,
       "title": "RT by @MOISaudiArabia: التقيت اليوم معالي وزيرة الخارجية وشؤون الكومنولث والتنمية في المملكة المتحدة السيدة إيفيت كوبر @YvetteCooperMP وبحثنا التنسيق والتعاون بين بلدينا بالمجال الأمني في إطار شراكتنا الإستراتيجية، كما أكدنا موقفنا المشترك في إدانة الاعتداءات الإيرانية الغاشمة التي تستهدف المملكة ودول الخليج العربي والمنطقة، وحرص حكومة المملكة على سلامة مواطنيها والمقيمين فيها من مختلف الجنسيات في ظل ما تنعم به من أمن واستقرار،،،",
       "source": "Saudi Ministry of Interior",
       "source_url": "https://nitter.net/AbdulazizSNA/status/2032216893050798345#m",
@@ -1010,14 +1318,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254347-0195",
+        "event_id": "GW-1773384238704-0196",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 287207366,
+      "id": 22028204,
       "title": "Israel targets Iran’s Basij members and drones, as Tehran’s missile attacks continue",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/israel-targets-irans-basij-members-and-drones-as-tehrans-missile-attacks-continue/",
@@ -1038,14 +1346,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247337-0064",
+        "event_id": "GW-1773384230993-0068",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 778589547,
+      "id": 103290742,
       "title": "KC-135 tanker involved in Epic Fury goes down in Iraq: CENTCOM",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/kc-135-tanker-involved-in-epic-fury-goes-down-in-iraq-centcom/",
@@ -1066,14 +1374,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247522-0079",
+        "event_id": "GW-1773384231171-0081",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 931909044,
+      "id": 625347023,
       "title": "Air attacks target bases of Iran-backed forces in Iraq",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/video/newsfeed/2026/3/12/air-attacks-target-bases-of-iran-backed-forces-in-iraq?traffic_source=rss",
@@ -1094,14 +1402,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247174-0046",
+        "event_id": "GW-1773384230808-0051",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 402309140,
+      "id": 216354398,
       "title": "Iran’s Larijani says war won’t end before enemies made sorry for ‘grave miscalculation’",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/irans-larijani-says-war-wont-end-before-enemies-made-sorry-for-grave-miscalculation/",
@@ -1122,14 +1430,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247349-0065",
+        "event_id": "GW-1773384231007-0069",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 909314592,
+      "id": 87506254,
       "title": "As Mideast war rages, fear rises in Europe of Iran-orchestrated terror attacks",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/as-mideast-war-rages-fear-rises-in-europe-of-iran-orchestrated-terror-attacks/",
@@ -1150,14 +1458,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247362-0066",
+        "event_id": "GW-1773384231021-0070",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 718059247,
+      "id": 440270755,
       "title": "RT by @mofauae: Ο Αμπντουλάχ μπιν Ζαγέντ δέχθηκε τον @ckombos, όπου συζήτησαν τις απρόκλητες και τρομοκρατικές πυραυλικές επιθέσεις στα ΗΑΕ και σε ορισμένες χώρες της περιοχής. Οι δύο πλευρές συζήτησαν επίσης τη στρατηγική εταιρική σχέση 🇦🇪-🇨🇾.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2032210518879191179#m",
@@ -1178,14 +1486,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253042-0177",
+        "event_id": "GW-1773384237288-0178",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 545273775,
+      "id": 105183904,
       "title": "RT by @mofauae: Abdullah bin Zayed received @ckombos, where they discussed the unprovoked and terrorist missile attacks on the UAE and a number of countries in the region. The two sides also discussed the 🇦🇪-🇨🇾 strategic partnership.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2032210503070797848#m",
@@ -1206,14 +1514,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253103-0178",
+        "event_id": "GW-1773384237357-0179",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 452459866,
+      "id": 671955963,
       "title": "RT by @mofauae: عبدالله بن زايد يستقبل معالي الدكتور كونستانتينوس كومبوس، وزير خارجية جمهورية قبرص، حيث تناول اللقاء الاعتداءات الصاروخية الإيرانية الغاشمة والإرهابية التي استهدفت دولة الإمارات وعدداً من الدول الشقيقة والصديقة. إضافةً إلى بحث الشراكة الاستراتيجية بين 🇦🇪 و🇨🇾.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/OFMUAE/status/2032210489917509887#m",
@@ -1234,14 +1542,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253179-0179",
+        "event_id": "GW-1773384237438-0180",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 491110244,
+      "id": 58373466,
       "title": "قدم الفريق سمو الشيخ سيف بن زايد آل نهيان، نائب رئيس مجلس الوزراء وزير الداخلية، واجب العزاء إلى أسرة شهيد الوطن والواجب النقيب طيار سعيد راشد البلوشي، الذي ارتقى شهيداً إثر حادث سقوط طائرة عمودية بسبب عطل فني خلال أدائه مهامه الوطنية داخل الدولة.\n\nوأعرب سموه، خلال زيارته مجلس العزاء الذي أقيم في مجلس المقام بمنطقة العين، عن خالص تعازيه وصادق مواساته إلى أسرة وذوي الشهيد، سائلاً الله العلي القدير أن يتغمده بواسع رحمته وأن يسكنه فسيح جناته، وأن ينزله منازل الصديقين والأبرار، وأن يلهم أهله وذويه الصبر والسلوان.\n\nوأكد سموه أن تضحيات شهداء الإمارات ستظل خالدة في ذاكرة الوطن، وأن أبناء الإمارات الذين قدموا أرواحهم دفاعاً عن أمن الدولة واستقرارها، جسدوا أسمى معاني الولاء والانتماء والتفاني في خدمة الوطن، مشيراً إلى أن دولة الإمارات، بقيادتها الرشيدة، ستواصل مسيرتها بعزيمة أبنائها المخلصين الذين يحمون مكتسباتها وإنجازاتها، لتبقى الإمارات نموذجاً للوطنية والتلاحم بين القيادة والشعب في سبيل رفعة الوطن وعزته.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2032210474604036407#m",
@@ -1262,14 +1570,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248980-0121",
+        "event_id": "GW-1773384232781-0123",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 64787683,
+      "id": 506253520,
       "title": "🎯STRUCK: Hezbollah command centers in Beirut and southern Lebanon that were used to advance terrorist attacks against Israeli civilians. Prior to the strikes, measures were taken to mitigate civilian harm.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032209755196846199#m",
@@ -1290,14 +1598,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258345-0254",
+        "event_id": "GW-1773384243307-0255",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 598496987,
+      "id": 779676681,
       "title": "Gulf States Thank King Mohammed VI for Solidarity Against Iranian Aggression",
       "source": "Morocco World News",
       "source_url": "https://www.moroccoworldnews.com/2026/03/282455/gulf-states-thank-king-mohammed-vi-for-solidarity-against-iranian-aggression/",
@@ -1318,14 +1626,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247585-0084",
+        "event_id": "GW-1773384231240-0086",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 529505374,
+      "id": 525479455,
       "title": "Israel pounds Beirut suburbs and south Lebanon after Hezbollah rocket barrage",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cx2gjq8qd09o?at_medium=RSS&at_campaign=rss",
@@ -1346,14 +1654,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247004-0005",
+        "event_id": "GW-1773384230583-0005",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 79629174,
+      "id": 929142552,
       "title": "Netanyahu says Israel ‘stronger than ever’ in first speech since Iran war",
       "source": "Al Jazeera",
       "source_url": "https://www.aljazeera.com/news/2026/3/12/netanyahu-says-israel-stronger-than-ever-in-first-speech-since-iran-war?traffic_source=rss",
@@ -1374,14 +1682,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247180-0047",
+        "event_id": "GW-1773384230815-0052",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 507886652,
+      "id": 906434390,
       "title": "IDF top lawyer cancels charges against troops accused of abusing Palestinian detainee",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/idf-top-lawyer-nixes-charges-against-troops-accused-of-abusing-palestinian-detainee/",
@@ -1402,14 +1710,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247374-0067",
+        "event_id": "GW-1773384231035-0071",
         "incident_type": "ground",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 786793186,
+      "id": 504190044,
       "title": "قدّم سمو الشيخ حامد بن زايد آل نهيان، العضو المنتدب لجهاز أبوظبي للاستثمار، واجب العزاء إلى أسرة شهيد الإمارات النقيب سعيد راشد البلوشي، الذي استشهد إثر تعرضه لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أدائه واجبه الوطني في الدولة. \n\nكما قدّم واجب العزاء كلٌّ من سمو الشيخ عمر بن زايد آل نهيان، نائب رئيس مؤسسة زايد الخير، وسمو الشيخ خالد بن زايد آل نهيان، رئيس مجلس أمناء هيئة زايد لأصحاب الهمم، وأعربوا عن خالص تعازيهم وصادق مواساتهم لأسرة الشهيد، داعين الله تعالى أن يتغمده بواسع رحمته، وأن يسكنه فسيح جناته مع الشهداء والصديقين، وأن يلهم أهله وذويه الصبر والسلوان.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2032201859860217865#m",
@@ -1430,42 +1738,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376249153-0122",
+        "event_id": "GW-1773384232978-0124",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 391178503,
-      "title": "Advocates push for major probe as US boat strikes in Latin America kill 157",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/news/2026/3/12/advocates-push-for-major-probe-as-us-boat-strikes-in-latin-america-kill-157?traffic_source=rss",
-      "published": "2026-03-12T21:02:34+00:00",
-      "type": "attack",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "Qatar",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 90,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247188-0048",
-        "incident_type": "raid",
-        "is_recap": false,
-        "confidence": "PARTIAL"
-      }
-    },
-    {
-      "id": 708421762,
+      "id": 717273138,
       "title": "The Ministry of Interior emphasizes the importance of adhering to the instructions contained in the National Warning System alerts and remaining in safe locations until a notification is issued confirming that the security threat has passed. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032200044925931778#m",
@@ -1486,14 +1766,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255754-0221",
+        "event_id": "GW-1773384240177-0221",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 310535832,
+      "id": 797724645,
       "title": "قدّم سمو الشيخ حامد بن زايد آل نهيان، العضو المنتدب لجهاز أبوظبي للاستثمار، واجب العزاء إلى أسرة شهيد الإمارات الملازم أول علي صالح الطنيجي، الذي استشهد إثر تعرضه لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أدائه واجبه الوطني في الدولة. \n\nكما قدّم واجب العزاء معالي الشيخ نهيان بن مبارك آل نهيان، وزير التسامح والتعايش، وأعربوا عن خالص تعازيهم وصادق مواساتهم لأسرة الشهيد، داعين الله تعالى أن يتغمده بواسع رحمته، وأن يسكنه فسيح جناته مع الشهداء والصديقين، وأن يلهم أهله وذويه الصبر والسلوان.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2032197786762883281#m",
@@ -1514,14 +1794,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376249270-0123",
+        "event_id": "GW-1773384233111-0125",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 235401248,
+      "id": 720933413,
       "title": "Gunman rams vehicle into Michigan synagogue and preschool before being shot dead",
       "source": "Times of Israel",
       "source_url": "https://www.timesofisrael.com/gunman-rams-vehicle-into-michigan-synagogue-before-being-killed/",
@@ -1542,14 +1822,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247387-0068",
+        "event_id": "GW-1773384231049-0072",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 257758815,
+      "id": 855903912,
       "title": "Israeli military drops charges against soldiers accused of abusing Palestinian detainee",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cm2xrz71zm3o?at_medium=RSS&at_campaign=rss",
@@ -1570,14 +1850,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247005-0007",
+        "event_id": "GW-1773384230585-0007",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 634428120,
+      "id": 451242279,
       "title": "Iran's new supreme leader vows to block Strait of Hormuz in first statement",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cdxg599655vo?at_medium=RSS&at_campaign=rss",
@@ -1598,14 +1878,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247002-0001",
+        "event_id": "GW-1773384230582-0001",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 465952742,
+      "id": 138043705,
       "title": "Emirati minister tells BBC Iran must end strikes on Gulf",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cy8lzn2ejpjo?at_medium=RSS&at_campaign=rss",
@@ -1626,14 +1906,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247004-0006",
+        "event_id": "GW-1773384230584-0006",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 819109116,
+      "id": 291130335,
       "title": "UAE President and Prime Minister of Hungary discuss regional developments in phone call\n\n#WamNews \n\nhttps://www.wam.ae/a/1749dxt",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032186941085794354#m",
@@ -1654,14 +1934,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251424-0145",
+        "event_id": "GW-1773384235520-0147",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 162880313,
+      "id": 311599945,
       "title": "The relevant authorities confirm that no signs of air or marine pollution have been detected, as part of the ongoing monitoring of environmental conditions in the State of Qatar in accordance with approved environmental monitoring plans.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032185481354457088#m",
@@ -1682,14 +1962,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255847-0222",
+        "event_id": "GW-1773384240276-0222",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 561521887,
+      "id": 634024538,
       "title": "Recent statements from inside Gaza, contradict claims of food shortages:\n\nHossam Al-Huweiki, Acting Head of the Gaza Chamber of Commerce, stated that Gaza currently has food and clothing stocks sufficient for approximately six months! \n\nSince the start of the ceasefire, close to 90,000 trucks carrying food and humanitarian aid have entered Gaza. The crossings are  open and food continues to enter Gaza.\n\nThe facts are clear: food is entering Gaza and supplies exist for months ahead. Narratives claiming otherwise simply do not reflect reality.\n\nWe are comitted to continuing to facilitate the ongoing entry of humanitarian aid and goods into Gaza for the civilian population.",
       "source": "COGAT",
       "source_url": "https://nitter.net/cogatonline/status/2032182855317467343#m",
@@ -1710,70 +1990,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376261117-0277",
+        "event_id": "GW-1773384246089-0277",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 343700207,
-      "title": "How will the war on Iran impact the US economy?",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/economy/2026/3/12/how-will-the-war-on-iran-impact-the-us-economy?traffic_source=rss",
-      "published": "2026-03-12T19:50:51+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 90,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247197-0049",
-        "incident_type": "incident",
-        "is_recap": false,
-        "confidence": "PARTIAL"
-      }
-    },
-    {
-      "id": 929874063,
-      "title": "Does President Trump have an exit strategy for the war with Iran?",
-      "source": "Al Jazeera",
-      "source_url": "https://www.aljazeera.com/video/inside-story/2026/3/12/does-president-trump-have-an-exit-strategy-for-the-war-with-iran?traffic_source=rss",
-      "published": "2026-03-12T19:50:37+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 90,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247202-0050",
-        "incident_type": "incident",
-        "is_recap": false,
-        "confidence": "PARTIAL"
-      }
-    },
-    {
-      "id": 154128987,
+      "id": 560843148,
       "title": "Iran supplemental to fund mix of ‘new things’ and legacy systems: Pentagon comptroller",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/iran-supplemental-to-fund-mix-of-new-things-and-legacy-systems-pentagon-comptroller/",
@@ -1794,42 +2018,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247534-0080",
+        "event_id": "GW-1773384231184-0082",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 623996854,
-      "title": "Rocket barrages underscore remaining potency of Hezbollah’s gutted arsenal",
-      "source": "Times of Israel",
-      "source_url": "https://www.timesofisrael.com/rocket-barrages-underscore-remaining-potency-of-hezbollahs-gutted-arsenal/",
-      "published": "2026-03-12T19:01:11+00:00",
-      "type": "missile",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "Israel",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 85,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247400-0069",
-        "incident_type": "missile",
-        "is_recap": false,
-        "confidence": "OSINT"
-      }
-    },
-    {
-      "id": 744830337,
+      "id": 367755203,
       "title": "R to @mofauae: Undersecretary of the Ministry of Foreign Affairs participates in extraordinary meeting of GCC Consular Sectors\n\nhttps://www.mofa.gov.ae/en/mediahub/news/2026/3/12/uae-gcc",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2032167934936956978#m",
@@ -1850,14 +2046,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253250-0180",
+        "event_id": "GW-1773384237517-0181",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 225187989,
+      "id": 134031637,
       "title": "وكيل وزارة الخارجية يشارك في الاجتماع الاستثنائي للقطاعات القنصلية بدول مجلس التعاون\n\nhttps://www.mofa.gov.ae/ar-ae/mediahub/news/2026/3/12/uae-gcc",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2032167922454708381#m",
@@ -1878,14 +2074,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253308-0181",
+        "event_id": "GW-1773384237578-0182",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 450395951,
+      "id": 883231058,
       "title": "R to @UAEmediaoffice: Chaired by H.H. Sheikha Mariam bint Mohamed bin Zayed Al Nahyan .. The Social Sector Committee of the Education, Human Development and Community Development Council discusses the efforts of social entities to strengthen community wellbeing and reviews initiatives under the Year of Family",
       "source": "UAE Government Media Office",
       "source_url": "https://nitter.net/UAEmediaoffice/status/2032167522863366185#m",
@@ -1906,14 +2102,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251155-0139",
+        "event_id": "GW-1773384235225-0141",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 551542274,
+      "id": 357754013,
       "title": "Alert: The danger has passed.\nKeep following #CivilDefense instructions. Avoid gathering or filming, stay away from dangerous areas, and report any danger by calling (911).",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032163339841765545#m",
@@ -1934,14 +2130,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254715-0204",
+        "event_id": "GW-1773384239056-0204",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 477791811,
+      "id": 114936086,
       "title": "تنبيه زال الخطر، لسلامتك الاستمرار في اتباع تعليمات #الدفاع_المدني وتجنب التجمهر والتصوير نهائيًا، والابتعاد عن مواقع الخطر، وعند ملاحظة خطر اتصل برقم الطوارئ (911).",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032163282706968925#m",
@@ -1962,14 +2158,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254771-0205",
+        "event_id": "GW-1773384239115-0205",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 693002018,
+      "id": 121383550,
       "title": "Moroccan Adouls Declare New 19-Day Nationwide Strike Over Disputed Reform",
       "source": "Morocco World News",
       "source_url": "https://www.moroccoworldnews.com/2026/03/282443/moroccan-adouls-declare-new-19-day-nationwide-strike-over-disputed-reform/",
@@ -1990,14 +2186,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247599-0085",
+        "event_id": "GW-1773384231256-0087",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 860170251,
+      "id": 537835758,
       "title": "UAE air defences intercept 10 ballistic missiles, 26 UAVs\n\n#WamNews \n\nhttps://www.wam.ae/a/bz60hih",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032160990310408500#m",
@@ -2018,14 +2214,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251457-0146",
+        "event_id": "GW-1773384235556-0148",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 902521929,
+      "id": 361069590,
       "title": "Tracking the wave of ship attacks that has choked off Strait of Hormuz",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c80j4rln8zmo?at_medium=RSS&at_campaign=rss",
@@ -2046,14 +2242,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247002-0002",
+        "event_id": "GW-1773384230582-0002",
         "incident_type": "naval",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 75491546,
+      "id": 987403854,
       "title": "⭕️ IDF troops continue to maintain a forward defensive posture to protect the residents of northern Israel.\n\nOver the past week, our troops conducted targeted night operations in southern Lebanon, dismantling Hezbollah terrorist infrastructure.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032158815194345910#m",
@@ -2074,14 +2270,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258438-0255",
+        "event_id": "GW-1773384243405-0256",
         "incident_type": "ground",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 811347854,
+      "id": 674530231,
       "title": "UAE and Syrian Presidents stress importance of dialogue and diplomacy during phone call\n\n#WamNews \n\nhttps://www.wam.ae/a/bz60hfo",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032156447988178988#m",
@@ -2102,14 +2298,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251481-0147",
+        "event_id": "GW-1773384235582-0149",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 625810869,
+      "id": 917045977,
       "title": "الدفاعات الجوية الإماراتية تتعامل مع 10 صواريخ باليستية و26 طائرة مسيرة\n\n#وام \n\nhttps://www.wam.ae/a/bz609qj",
       "source": "WAM News Agency",
       "source_url": "https://nitter.net/wamnews/status/2032155588076228801#m",
@@ -2130,14 +2326,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251319-0142",
+        "event_id": "GW-1773384235405-0144",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 610351898,
+      "id": 528337965,
       "title": "RT by @moiuae: الدفاعات الجوية الإماراتية تتعامل مع الصواريخ الباليستية والجوالة والمسيرات الإيرانية.\n\nUAE Air Defences engaged Iranian\nBallistic and Cruise Missiles and UAVs Attacks\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/modgovae/status/2032153286430900465#m",
@@ -2158,42 +2354,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247709-0089",
+        "event_id": "GW-1773384231374-0091",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 724955593,
-      "title": "Man seriously wounded in Ramat Gan stabbing; police suspect terror motive",
-      "source": "Times of Israel",
-      "source_url": "https://www.timesofisrael.com/man-seriously-wounded-in-ramat-gan-stabbing-police-suspect-terror-motive/",
-      "published": "2026-03-12T17:51:03+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown",
-        "country": "Israel",
-        "lat": 25.0,
-        "lng": 45.0
-      },
-      "credibility": 85,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247412-0070",
-        "incident_type": "incident",
-        "is_recap": false,
-        "confidence": "OSINT"
-      }
-    },
-    {
-      "id": 338854212,
+      "id": 789192941,
       "title": "#الدفاع_المدني بمكة المكرمة يخمد حريقًا في مخلفات (مواد بناء وأخشاب) بأرض فضاء نتج عنه تضرر مطعم وواجهة فندق، ولا إصابات.",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032151760505081992#m",
@@ -2214,14 +2382,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254847-0206",
+        "event_id": "GW-1773384239199-0206",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 472560716,
+      "id": 666658044,
       "title": "RT by @moiuae: UAE air defences intercept 10 ballistic missiles and 26 UAVs.\n\nThe UAE air defence systems today (12 March 2026) engaged 10 ballistic missiles and 26 UAVs launched from Iran.\n\nSince the onset of the blatant Iranian aggression, UAE air defences have engaged 278 ballistic missiles, 15 cruise missiles and 1540 UAVs.\n\nThese attacks have resulted in 6 fatalities of Emirati, Pakistani, Nepali and Bangladeshi nationals, and 131 minor to moderate injuries among nationals of the UAE, Egypt, Sudan, Ethiopia, the Philippines, Pakistan, Iran, India, Bangladesh, Sri Lanka, Azerbaijan, Yemen, Uganda, Eritrea, Lebanon, Afghanistan, Bahrain, Comoros, Türkiye, Iraq, Nepal, Nigeria, Oman, Jordan, Palestine, Ghana and Indonesia.\n\nThe Ministry of Defence affirmed that it remains fully prepared and ready to deal with any threats, and will firmly confront any attempts to undermine State security in a manner that ensures the protection of its sovereignty, security and stability, and safeguards its national interests and capabilities.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/modgovae/status/2032151500949258650#m",
@@ -2242,14 +2410,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247743-0090",
+        "event_id": "GW-1773384231416-0092",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 424125110,
+      "id": 80801508,
       "title": "RT by @moiuae: الدفاعات الجوية الإماراتية تتعامل مع 10 صواريخ باليستية و26 طائرة مسيرة.\n\nتعاملت الدفاعات الجوية الإماراتية  (12 مارس 2026) مع 10 صواريخ باليستية، و26 طائرة مسيرة قادمة من إيران. \n\nومنذ بدء الاعتداء الإيراني السافر تعاملت الدفاعات الجوية الإماراتية مع 278 صاروخاً باليستياً، و15 صاروخ جوال، و1540 طائرة مسيرة.\n\nوخلفت هذه الاعتداءات 6 حالات وفاة من الجنسية الإماراتية والباكستانية والنيبالية والبنغلادشية، و131 حالة إصابة بسيطة ومتوسطة من الجنسية الإماراتية، المصرية، السودانية، الإثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السريلانكية، الأذربيجانية، اليمنية، الأوغندية، الإرتيرية، اللبنانية، الأفغانية، البحرينية، جزر القمر، التركية، العراقية، النيبالية، النيجيرية، العمانية، الأردنية، والفلسطينية، والغانية والأندونيسية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/modgovae/status/2032150317715063119#m",
@@ -2270,14 +2438,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247912-0091",
+        "event_id": "GW-1773384231597-0093",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 558119614,
+      "id": 155750769,
       "title": "قدم الفريق سمو الشيخ سيف بن زايد آل نهيان نائب رئيس مجلس الوزراء وزير الداخلية، واجب العزاء إلى أسرة شهيد الوطن والواجب الملازم أول طيار علي صالح الطنيجي، الذي ارتقى شهيداً إثر حادث سقوط طائرة عمودية بسبب عطل فني خلال أدائه واجبه الوطني داخل الدولة، مؤكداً تقدير الوطن لتضحيات أبنائه المخلصين الذين بذلوا أرواحهم دفاعاً عن أمنه واستقراره.\n\nوأعرب سموه، خلال زيارته مجلس العزاء في رأس الخيمة، عن خالص تعازيه وصادق مواساته إلى أسرة وذوي الشهيد، سائلاً الله العلي القدير أن يتغمده بواسع رحمته وأن يسكنه فسيح جناته، وأن ينزله منازل الصديقين والأبرار، وأن يلهم أهله وذويه الصبر والسلوان.\n\nوأكد سموه أن دولة الإمارات، قيادةً وشعباً، تعتز بشهدائها الذين سطروا ببطولاتهم صفحات مشرقة في سجل الوطن، مقدمين أسمى معاني الولاء والانتماء والشجاعة في أداء الواجب، مشيراً إلى أن تضحياتهم ستظل وسام فخر للإمارات وأبنائها، ومصدر إلهام للأجيال القادمة في معاني التضحية والفداء في سبيل حماية مكتسبات الوطن وصون أمن المجتمع واستقراره.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2032147613391470876#m",
@@ -2298,14 +2466,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376249373-0127",
+        "event_id": "GW-1773384233230-0129",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 967597434,
+      "id": 266421915,
       "title": "British man charged in Dubai for alleged filming of Iranian missiles",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c743g4yn4k8o?at_medium=RSS&at_campaign=rss",
@@ -2326,14 +2494,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247007-0008",
+        "event_id": "GW-1773384230586-0008",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 124334429,
+      "id": 550526485,
       "title": "R to @SaudiDCD: Alert: The danger has passed.\nKeep following #CivilDefense instructions. Avoid gathering or filming, stay away from dangerous areas, and report any danger by calling (911).",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032146446003097613#m",
@@ -2354,14 +2522,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254902-0207",
+        "event_id": "GW-1773384239258-0207",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 867065204,
+      "id": 49282965,
       "title": "R to @SaudiDCD: تنبيه زال الخطر، لسلامتك الاستمرار في اتباع تعليمات #الدفاع_المدني وتجنب التجمهر والتصوير نهائيًا، والابتعاد عن مواقع الخطر، وعند ملاحظة خطر اتصل برقم الطوارئ (911).",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032146271805272374#m",
@@ -2382,14 +2550,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254967-0208",
+        "event_id": "GW-1773384239327-0208",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 983987641,
+      "id": 19280421,
       "title": "A warning has been issued by the National Early Warning Platform in Governorate Al-Kharj to warn of a danger, follow the instructions below:",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032144575494496720#m",
@@ -2410,14 +2578,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255028-0209",
+        "event_id": "GW-1773384239395-0209",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 253456490,
+      "id": 370352615,
       "title": "تم إطلاق إنذار من المنصة الوطنية للإنذار المبكر في حالات الطوارئ في محافظة الخرج للتحذير من خطر، اتبع الآتي:",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032144397320544326#m",
@@ -2438,14 +2606,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255082-0210",
+        "event_id": "GW-1773384239452-0210",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 728282046,
+      "id": 664083804,
       "title": "قدّم سموّ الشيخ حمدان بن محمد بن راشد آل مكتوم، ولي عهد دبي، نائب رئيس مجلس الوزراء وزير الدفاع، اليوم (الخميس)، واجب العزاء إلى أسرة شهيد الوطن والواجب النقيب طيار سعيد راشد البلوشي، الذي انتقل إلى جوار ربّه إثر تعرّضه لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أداء واجبه الوطني داخل الدولة.\n\nوأعرب سموّه، خلال زيارته إلى مجلس العزاء الذي أُقيم في مجلس المقام في منطقة العين، عن صادق تعازيه وخالص مواساته لأسرة الشهيد، داعياً المولى عزَّ وجلَّ أن يتغمَّده بواسع رحمته، وأن يُنزله منازل الصِّديقين والشهداء والأبرار، وأن يُسكنه فسيح جناته مع إخوانه الذين سبقوه في نَيل هذا الشرف العظيم، وأن يُلهم أهله وذويه الصبر والسلوان.\n\nوأكَّد سموّ الشيخ حمدان بن محمد بن راشد آل مكتوم، أن دولة الإمارات قيادةً وشعباً تفخر بجنودها البواسل، الذين قدَّموا أرواحهم الغالية فداءً للوطن، مجسِّدين أسمى معاني التضحية والوفاء في سبيل وطنهم وحماية مكتسباته.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2032143314674405855#m",
@@ -2466,14 +2634,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376249551-0128",
+        "event_id": "GW-1773384233433-0130",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 332457870,
+      "id": 494192023,
       "title": "UAE and Argentine Presidents discuss regional developments in phone call\n\n#WamNews \n\nhttps://www.wam.ae/a/bz60hfk",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032142795201556990#m",
@@ -2494,14 +2662,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251514-0148",
+        "event_id": "GW-1773384235619-0150",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 768835379,
+      "id": 286807503,
       "title": "➡️ Swipe to see how the Iranian regime commits war crimes against Israeli civilians:",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032140396810096913#m",
@@ -2522,14 +2690,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258544-0256",
+        "event_id": "GW-1773384243516-0257",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 178666431,
+      "id": 485476471,
       "title": "'Not appropriate' for Iran to be at World Cup - Trump",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/sport/football/articles/c9q5rvp58yxo?at_medium=RSS&at_campaign=rss",
@@ -2550,14 +2718,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247011-0011",
+        "event_id": "GW-1773384230591-0011",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 760985356,
+      "id": 482876752,
       "title": "Maintaining psychological balance strengthens our ability to deal with developments calmly and wisely. Inner calm is a foundation for public safety.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032124760788729856#m",
@@ -2578,14 +2746,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255942-0223",
+        "event_id": "GW-1773384240377-0223",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 636856858,
+      "id": 641369664,
       "title": "🔴ELIMINATED: Ali Muslim Tabaja, a senior commander of the Iranian Imam Hossein Division.\n\nTabaja was a key figure who held a series of military roles both within Hezbollah and within the division.\n\nThe Imam Hussein Division is a military force used by the Iranian Quds Force to strengthen the Iranian axis and to operate against the IDF and Israeli civilians.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032122678488776725#m",
@@ -2606,14 +2774,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258587-0257",
+        "event_id": "GW-1773384243562-0258",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 645323926,
+      "id": 430426076,
       "title": "R to @mofauae: UAE Condemns Terrorist Attack Targeting Truck Drivers in Mali\n\nhttps://www.mofa.gov.ae/en/mediahub/news/2026/3/12/uae-mali",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2032122349559169420#m",
@@ -2634,14 +2802,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253351-0183",
+        "event_id": "GW-1773384237624-0184",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 335817703,
+      "id": 505125132,
       "title": "UAE condemns terrorist attack targeting truck drivers in Mali\n\n#WamNews \n\nhttps://www.wam.ae/a/bz60h9r",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032120898816467104#m",
@@ -2662,14 +2830,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251575-0150",
+        "event_id": "GW-1773384235686-0152",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 107234658,
+      "id": 966546143,
       "title": "Leonardo to launch Michelangelo air defense dome test in Ukraine",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/leonardo-to-launch-michelangelo-air-defense-dome-test-in-ukraine/",
@@ -2690,14 +2858,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247548-0081",
+        "event_id": "GW-1773384231200-0083",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 55724561,
+      "id": 781947759,
       "title": "'Identity, Citizenship' allows residents whose residency expired while abroad to enter UAE without new visa\n\n#WamNews \n\nhttps://www.wam.ae/a/bz60h9q",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032120069678088612#m",
@@ -2718,14 +2886,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251602-0151",
+        "event_id": "GW-1773384235715-0153",
         "incident_type": "naval",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 467093931,
+      "id": 456823733,
       "title": "R to @UAEmediaoffice: ICP Allows Residents with Expired Residency Permits Abroad to Return to the UAE Without a New Entry Permit From 28 February to 31 March 2026",
       "source": "UAE Government Media Office",
       "source_url": "https://nitter.net/UAEmediaoffice/status/2032119277688602938#m",
@@ -2746,14 +2914,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251228-0140",
+        "event_id": "GW-1773384235304-0142",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 198618161,
+      "id": 685238904,
       "title": "#الدفاع_المدني يدعو إلى توخي الحيطة واتباع الإرشادات إثر الحالة المناخية التي تشهدها أجزاء من #المنطقة_الشرقية .\nولمتابعة الحالة عبر الرابط:\n\nhttps://ncm.gov.sa/Ar/alert/Pages/default.aspx",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2032117602483322940#m",
@@ -2774,14 +2942,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255139-0211",
+        "event_id": "GW-1773384239514-0211",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 661858344,
+      "id": 864615463,
       "title": "RT by @DXBMediaOffice: نتقدم بخالص العزاء وصادق المواساة إلى سلطنة عمان قيادةً وشعباً في رحيل المغفور له بإذن الله صاحب السمو السيد فهد بن محمود آل سعيد ... قدّم الراحل، على مدى عقود طويلة، نموذجاً في العطاء والإخلاص لوطنه، وأسهم بدور فاعل في دعم مسيرة العمل الخليجي والعربي المشترك.",
       "source": "Dubai Media Office",
       "source_url": "https://nitter.net/HamdanMohammed/status/2032112429283651939#m",
@@ -2802,14 +2970,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251828-0158",
+        "event_id": "GW-1773384235964-0160",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 725313142,
+      "id": 393589384,
       "title": "The Ministry of Interior emphasizes the role of families in promoting awareness and reassurance among their members, while guiding children to respond calmly and responsibly when receiving alert messages.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032110893664772573#m",
@@ -2830,14 +2998,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256002-0224",
+        "event_id": "GW-1773384240441-0224",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 810481923,
+      "id": 646360201,
       "title": "اطمئن… هذه الإمارات\n\n#وزارة_الداخلية_الإمارات #الامارات_أمن_وأمان\n#MOIUAE",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/moiuae/status/2032105584661839991#m",
@@ -2858,14 +3026,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248031-0092",
+        "event_id": "GW-1773384231738-0094",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 925736060,
+      "id": 278159941,
       "title": "Iran steps up attacks on energy targets as tankers hit",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c743gpd9z72o?at_medium=RSS&at_campaign=rss",
@@ -2886,14 +3054,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247008-0009",
+        "event_id": "GW-1773384230588-0009",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 638348128,
+      "id": 857383146,
       "title": "How Iran war laid bare the world's reliance on Gulf oil and gas",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c15x1y8d37vo?at_medium=RSS&at_campaign=rss",
@@ -2914,14 +3082,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247003-0003",
+        "event_id": "GW-1773384230582-0003",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 73560526,
+      "id": 768888418,
       "title": "RT by @moiuae: .@AbuDhabiDMT has confirmed the continuity of all services in the emirate, reaffirming that its teams across all sectors and entities are maintaining continuous service delivery, reflecting operational readiness in the transport sector, and ensuring stable traffic movement across the emirate.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/ADMediaOffice/status/2032087285119000589#m",
@@ -2942,14 +3110,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248041-0093",
+        "event_id": "GW-1773384231749-0095",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "LIKELY"
       }
     },
     {
-      "id": 680153374,
+      "id": 42712984,
       "title": "RT by @moiuae: دائرة البلديات والنقل تؤكد استمرارية جميع خدماتها، وتوضّح بأن فرق العمل في مختلف القطاعات والجهات التابعة لها تواصل تقديم الخدمات، ما يعكس جاهزية الأنظمة والفرق التشغيلية في قطاع النقل، ويضمن استقرار العمليات وانسيابية حركة المرور في مختلف مناطق الإمارة.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/ADMediaOffice/status/2032086727041716293#m",
@@ -2970,14 +3138,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248096-0094",
+        "event_id": "GW-1773384231808-0096",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 548496018,
+      "id": 532420215,
       "title": "حمدان بن محمد يقدم واجب العزاء إلى أسرة شهيد الوطن والواجب النقيب طيار سعيد راشد البلوشي، الذي انتقل إلى جوار ربّه إثر تعرّضه لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أداء واجبه الوطني داخل الدولة. وذلك خلال زيارة سموه إلى مجلس العزاء الذي أُقيم في مجلس المقام في منطقة العين.",
       "source": "Dubai Media Office",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032082929879515512#m",
@@ -2998,14 +3166,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251896-0159",
+        "event_id": "GW-1773384236036-0161",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 94156814,
+      "id": 29900347,
       "title": "Prime Minister of Ethiopia arrives in the UAE on a working visit\n\n#WamNews \n\nhttps://www.wam.ae/a/bz60h40",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032082521463382492#m",
@@ -3026,14 +3194,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251638-0152",
+        "event_id": "GW-1773384235755-0154",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 252741342,
+      "id": 306505087,
       "title": "طمئنوا أبناءكم .. بأنهم يعيشون في وطن أولويته القصوى هي حماية أفراد المجتمع وسلامتهم ..\n\n#رسائل_مجتمعية\n\n#وزارة_الداخلية_الإمارات #الامارات_أمن_وأمان\n#MOIUAE",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/moiuae/status/2032081728861516037#m",
@@ -3054,14 +3222,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248136-0095",
+        "event_id": "GW-1773384231855-0097",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 327149543,
+      "id": 970534994,
       "title": "'What if we're left with ruins?': Doubts creep in for Iranians who supported war",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c3094g50rnvo?at_medium=RSS&at_campaign=rss",
@@ -3082,14 +3250,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247003-0004",
+        "event_id": "GW-1773384230583-0004",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 613130857,
+      "id": 553494413,
       "title": "قدم اللواء الركن الشيخ أحمد بن طحنون آل نهيان، نائب رئيس أركان القوات المسلحة، واجب العزاء لأسرة شَهيد الإمارات، الملازم أول علي صالح الطنيجي، الذي استشهد إثر تَعَرُّضِهِ لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أَداء واجِبه الوطني بالدولة.\n\nوتوجه نائب رئيس أركان القوات المسلحة بالدعاء إلى الله تعالى أن يتغمد الشهيد بواسع رحمته، راجياً من المولى أن يسكنه فسيح جناته مع الشهداء والصديقين، وأن يُلهم ذويه الصبرَ والسلوان.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2032076296038334933#m",
@@ -3110,14 +3278,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376249719-0129",
+        "event_id": "GW-1773384233623-0131",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 719045734,
+      "id": 160419810,
       "title": "RT by @CivilDefenceAD: To our Frontline Heroes, your dedication brings reassurance to our communities. Thank you for standing steadfast and protecting the nation with unwavering commitment.\n\n#FrontlineHeroesUAE",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/FrontlineUAE/status/2032074375579701361#m",
@@ -3138,14 +3306,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252366-0163",
+        "event_id": "GW-1773384236564-0165",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 615326091,
+      "id": 215935476,
       "title": "RT by @CivilDefenceAD: إلى أبطالنا في خط الدفاع الأول، إن تفانيكم يمنح مجتمعاتنا الطمأنينة. شكرًا لكم على ثباتكم وحمايتكم للوطن بإخلاص لا يتزعزع.\n\n#فخر_الوطن_الإمارات",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/FrontlineUAE/status/2032074355606503862#m",
@@ -3166,14 +3334,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252327-0162",
+        "event_id": "GW-1773384236520-0164",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 554562958,
+      "id": 401551367,
       "title": "The Pentagon wants to buy 30,000 new drones. Here are the key questions.",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/the-pentagon-wants-to-buy-30000-new-drones-heres-the-key-questions/",
@@ -3194,14 +3362,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247561-0082",
+        "event_id": "GW-1773384231214-0084",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 219194121,
+      "id": 36215007,
       "title": "UAE leaders condole with Sultan of Oman over passing of Sayyid Fahd bin Mahmoud\n\n#WamNews \n\nhttps://www.wam.ae/a/bz60h15",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2032072853211005284#m",
@@ -3222,14 +3390,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251667-0153",
+        "event_id": "GW-1773384235787-0155",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 444199546,
+      "id": 399649735,
       "title": "HE Interior Minister offers condolences to the family of the victim of Iranian aggression\nhttps://www.policemc.gov.bh/en/news/77111/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032072703813796286#m",
@@ -3250,14 +3418,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257629-0244",
+        "event_id": "GW-1773384242530-0245",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 359813615,
+      "id": 182171466,
       "title": "Questions mount for Hegseth over possible US involvement in strike on Iranian school",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cn87ndd4rgyo?at_medium=RSS&at_campaign=rss",
@@ -3278,14 +3446,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247012-0012",
+        "event_id": "GW-1773384230592-0012",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 844639025,
+      "id": 682348091,
       "title": "Under the current circumstances, the relevant authorities are consistently engaged in environmental monitoring and follow-up activities, confirming that the environmental conditions in the country remain stable and reassuring. There have been no recorded indicators of air or marine environmental pollution. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032066317772103783#m",
@@ -3306,14 +3474,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256082-0225",
+        "event_id": "GW-1773384240526-0225",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 676602179,
+      "id": 360915183,
       "title": "🔴ELIMINATED: Abu Ali Riyan, Hezbollah's 'Radwan Force' southern Lebanon unit commander.\n\nRiyan was the central figure responsible for coordinating operations, recruiting operatives, and managing its weapon supply chain.\n\nIn addition, 100+ terrorists were eliminated, and 60+ 'Radwan Force' command and control centers were dismantled.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032064979101188422#m",
@@ -3334,14 +3502,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258731-0258",
+        "event_id": "GW-1773384243714-0259",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 857380942,
+      "id": 854310153,
       "title": "معالي وزير الداخلية يقدم واجب العزاء لأسرة فقيدة الوطن التي وافتها المنية نتيجة العدوان الإيراني الآثم\n\nhttps://www.policemc.gov.bh/news/77111/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032062096314175736#m",
@@ -3362,14 +3530,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257684-0245",
+        "event_id": "GW-1773384242588-0246",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 150890709,
+      "id": 898261455,
       "title": "الإمارات تدين هجوماً إرهابياً استهدف سائقي شاحنات في مالي \n\n#وام \n\nhttps://www.wam.ae/a/bz6098r",
       "source": "WAM News Agency",
       "source_url": "https://nitter.net/wamnews/status/2032052257995522410#m",
@@ -3390,14 +3558,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251347-0143",
+        "event_id": "GW-1773384235435-0145",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 15725417,
+      "id": 859801928,
       "title": "الإمارات تُدين هجوماً إرهابياً استهدف سائقي شاحنات في مالي\n\nhttps://www.mofa.gov.ae/ar-ae/MediaHub/News/2026/3/12/UAE-Mali",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2032051242487464137#m",
@@ -3418,14 +3586,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253394-0184",
+        "event_id": "GW-1773384237676-0185",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 198066354,
+      "id": 702737071,
       "title": "🔴ELIMINATED: Abu Dharr Mohammadi, the operations commander in the IRGC’s missile unit within Hezbollah in Beirut.\n\nMohammadi was a central figure coordinating between Hezbollah and the Iranian terror regime and played a key role in rehabilitating Hezbollah’s missile program following Operation Northern Arrows.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032050681410887991#m",
@@ -3446,14 +3614,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258868-0259",
+        "event_id": "GW-1773384243858-0260",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 158887618,
+      "id": 588649361,
       "title": "🎯STRUCK: The ‘Taleghan’ compound, a site used by the Iranian regime to advance nuclear weapons capabilities.\n\nThe compound was used to develop advanced explosives and conduct sensitive experiments as part of the covert ‘AMAD’ project in the 2000s.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2032042908610638212#m",
@@ -3474,14 +3642,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259003-0260",
+        "event_id": "GW-1773384244000-0261",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 871813075,
+      "id": 81838475,
       "title": "الجنسية والجوازات والإقامة : إجراءات استثنائية لتأشيرات الزيارة في ضوء الظروف الراهنة والعدوان الايراني الآثم\nhttps://www.policemc.gov.bh/news/77109/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032041023673942420#m",
@@ -3502,14 +3670,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257746-0246",
+        "event_id": "GW-1773384242657-0247",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 343629316,
+      "id": 4862339,
       "title": "What role has cyber warfare played in Iran?",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c5yr0576ygvo?at_medium=RSS&at_campaign=rss",
@@ -3530,14 +3698,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247023-0017",
+        "event_id": "GW-1773384230604-0017",
         "incident_type": "cyber",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 628539239,
+      "id": 582818562,
       "title": "HE Sheikh Khalifa bin Hamad bin Khalifa Al Thani, Minister of Interior and Commander of Internal Security Force (Lekhwiya), has received several messages and telegrams from their Excellencies, Ministers of Interior and security officials of brotherly and friendly countries, following the Iranian attack on the State of Qatar and the related regional developments. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032037368660688932#m",
@@ -3558,14 +3726,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256199-0226",
+        "event_id": "GW-1773384240651-0226",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 378623710,
+      "id": 112008564,
       "title": "'Fingers on the trigger': Deadly warnings for Iranians being urged to take action",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c5y5rldz897o?at_medium=RSS&at_campaign=rss",
@@ -3586,14 +3754,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247009-0010",
+        "event_id": "GW-1773384230589-0010",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 257226705,
+      "id": 612046670,
       "title": "HE Sheikh Khalifa bin Hamad bin Khalifa Al Thani, Minister of Interior and Commander of the Internal Security Force (Lekhwiya) received a number of telephone calls from Their Highnesses and Excellencies, the Ministers of Interior of the Gulf Cooperation Council (GCC) countries. This comes in the context of the Iranian attack on the State of Qatar and countries in the region, and the related regional developments. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032034330843754521#m",
@@ -3614,14 +3782,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256337-0227",
+        "event_id": "GW-1773384240799-0227",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 803060557,
+      "id": 414193133,
       "title": "RT by @moiuae: Information spreads quickly in times of tension, and not all of it may be accurate.\n\nWe urge everyone: Verify the source of any news before sharing it, and rely on official sources for updates.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2032027621408850092#m",
@@ -3642,14 +3810,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248168-0096",
+        "event_id": "GW-1773384231890-0098",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "LIKELY"
       }
     },
     {
-      "id": 167336908,
+      "id": 405138317,
       "title": "RT by @moiuae: تنتشر المعلومات بسرعة في أوقات التوتر، وقد لا تكون كلها دقيقة.\n\nنهيب بالجميع: تحققوا من مصدر أي خبر قبل تداوله، واعتمدوا على المصادر الرسمية للتحديثات.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2032026971614703961#m",
@@ -3670,14 +3838,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248207-0097",
+        "event_id": "GW-1773384231933-0099",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 827397641,
+      "id": 154684173,
       "title": "Notice regarding obtaining information from official sources. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2032019194703724786#m",
@@ -3698,14 +3866,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256495-0228",
+        "event_id": "GW-1773384240968-0228",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 859397562,
+      "id": 702396114,
       "title": "RT by @moiuae: Dubai authorities are responding to a minor incident caused by debris from a successful interception that fell onto the façade of a building on Sheikh Zayed Road. No injuries were reported.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032017224182215052#m",
@@ -3726,14 +3894,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248262-0099",
+        "event_id": "GW-1773384231995-0101",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 249339814,
+      "id": 169701156,
       "title": "RT by @moiuae: أكدت الجهات المختصة في دبي أنه يتم التعامل مع حادث بسيط ناجم عن سقوط شظايا على واجهة أحد المباني على طريق الشيخ زايد نتيجة عملية اعتراض جوي ناجحة، دون تسجيل أي إصابات.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032017210512982063#m",
@@ -3754,14 +3922,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248303-0100",
+        "event_id": "GW-1773384232039-0102",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 66625642,
+      "id": 544948051,
       "title": "MOI expresses its gratitude for their cooperation & adherence to the instructions issued by the relevant authorities,Civil Defence has successfully contained the fire resulting from the Iranian aggression, and cooling operations are currently underway.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032010120993939806#m",
@@ -3782,14 +3950,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257810-0247",
+        "event_id": "GW-1773384242727-0248",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 353721109,
+      "id": 293764534,
       "title": "MOI assures citizens & residents living in the areas surrounding the site of the fuel tank attack in Muharraq that they can resume their normal lives and open their windows etc.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032010068930007180#m",
@@ -3810,14 +3978,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257916-0248",
+        "event_id": "GW-1773384242840-0249",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 497700781,
+      "id": 533356402,
       "title": "معربين عن الشكر والتقدير لهم على تعاونهم والتزامهم بالتعليمات الصادرة من الجهات المختصة، حيث تمكنت فرق  الدفاع المدني من السيطرة على الحريق الناجم عن استهداف العدوان الإيراني الآثم فيما تتم حالياً أعمال التبريد اللازمة.",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2032009327163138087#m",
@@ -3838,14 +4006,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258004-0249",
+        "event_id": "GW-1773384242933-0250",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 226871956,
+      "id": 22984523,
       "title": "Israel MOD Director General Tours Rafael’s Aerial Defense Production Lines Amid Wartime Accelerated Manufacturing Effort\n\nRead More: https://www.linkedin.com/posts/israelimod_israel-mod-director-general-tours-rafael-activity-7437774587507064832-hSyR?utm_source=share&utm_medium=member_ios&rcm=ACoAACoGTWsBhTxoJG7xP0ZwnL8No_iAzlkHrWo",
       "source": "Israel Ministry of Defense",
       "source_url": "https://nitter.net/Israel_MOD/status/2032009293403238787#m",
@@ -3866,14 +4034,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260295-0269",
+        "event_id": "GW-1773384245223-0269",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 622320379,
+      "id": 903061564,
       "title": "RT by @moiuae: Dubai authorities are responding to a minor drone incident in the Al Bada’a area. No injuries have been reported.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032009273866383512#m",
@@ -3894,14 +4062,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248335-0101",
+        "event_id": "GW-1773384232075-0103",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 755658625,
+      "id": 34429728,
       "title": "RT by @moiuae: الجهات المختصة في دبي تتعامل مع حادث بسيط نتيجة سقوط طائرة مسيرة في منطقة البدع بدون تسجيل أي إصابات.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032008511803310456#m",
@@ -3922,14 +4090,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248364-0102",
+        "event_id": "GW-1773384232107-0104",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 575359746,
+      "id": 370603799,
       "title": "RT by @DCDDubai: الجهات المختصة في دبي تتعامل مع حادث بسيط نتيجة سقوط طائرة مسيرة في منطقة البدع بدون تسجيل أي إصابات.",
       "source": "Dubai Civil Defence",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2032008511803310456#m",
@@ -3950,14 +4118,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252736-0169",
+        "event_id": "GW-1773384236972-0171",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 903426565,
+      "id": 462144292,
       "title": "RT by @moiuae: العميد دكتور سالم عبداله علوان الحبسي\nمدير إدارة الأزمات والكوارث في وزارة\nالداخلية ولقاء مهم عن الأوضاع الراهنة\n@moiuae \n#استوديو_واحد #أبوظبي #الإمارات #إذاعة_أبوظبي\n#uae",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/AbuDhabiRadio/status/2031995966648471885#m",
@@ -3978,14 +4146,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248233-0098",
+        "event_id": "GW-1773384231963-0100",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 312426587,
+      "id": 588888003,
       "title": "R to @gcaauae: The GCAA reaffirms the temporary suspension of all drone operations across the UAE. Strict compliance with official instructions protects you from legal action and ensures the safety of our airspace. Updates will be shared via our official channels in due course 🚫",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/gcaauae/status/2031976165037002960#m",
@@ -4006,14 +4174,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252799-0171",
+        "event_id": "GW-1773384237086-0174",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 261310810,
+      "id": 183791100,
       "title": "When you hear the National Warning System alert, remember that remaining calm and consciously following the necessary instructions is the basis of your safety.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031975491884740697#m",
@@ -4034,14 +4202,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256527-0229",
+        "event_id": "GW-1773384241003-0229",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 172500139,
+      "id": 917853256,
       "title": "Explosions reported on two foreign vessels in the Gulf, authorities say",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cr5l988qr47o?at_medium=RSS&at_campaign=rss",
@@ -4062,14 +4230,42 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247014-0013",
+        "event_id": "GW-1773384230594-0013",
         "incident_type": "naval",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 241576831,
+      "id": 843035381,
+      "title": "أعلن المتحدث الرسمي باسم قوة الإطفاء العام العميد محمد بدر إبراهيم  اليوم الخميس عن تمكن فرق الإطفاء من إخماد حريق في مبنى سكني جنوب البلاد جراء استهداف طائرة \"مسيرة\" للمبنى ما أسفر عن إصابتين .\n   وقال العميد محمد بدر إن الفرق قامت فور وصولها بإخلاء المبنى بالكامل من قاطنيه مبينا أن المصابين تم التعامل معهما من قبل الجهات المختصة.\n   وشدد على أهمية استقاء المعلومات من مصادرها الرسمية وعدم الانسياق وراء الشائعات أو الأخبار المغلوطة مشيرا إلى التزام (الإطفاء) بالإعلان عن أي مستجدات أولا بأول عبر القنوات الرسمية المعتمدة.",
+      "source": "Kuwait Fire Force",
+      "source_url": "https://nitter.net/kff_kw/status/2031961109255561594#m",
+      "published": "2026-03-12T05:10:55+00:00",
+      "type": "drone",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown",
+        "country": "Kuwait",
+        "lat": 25.0,
+        "lng": 45.0
+      },
+      "credibility": 100,
+      "is_government": true,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384241799-0238",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "OSINT"
+      }
+    },
+    {
+      "id": 44418022,
       "title": "RT by @moiuae: Air defense systems are currently responding to a missile threat. Please remain in a safe location and follow official channels for warnings and updates.",
       "source": "UAE Ministry of Interior",
       "source_url": "https://nitter.net/NCEMAUAE/status/2031930239971201165#m",
@@ -4090,14 +4286,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376248425-0104",
+        "event_id": "GW-1773384232175-0106",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 959704442,
+      "id": 490614874,
       "title": "Notice on the Importance of educating family members on how to respond to alerts issued by national warning system. \n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031929102475653125#m",
@@ -4118,14 +4314,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256596-0230",
+        "event_id": "GW-1773384241076-0230",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 916407762,
+      "id": 197129600,
       "title": "Four Bahrainis arrested for espionage activities with Iranian Revolutionary Guard\nhttps://www.policemc.gov.bh/en/news/77075/",
       "source": "Bahrain Ministry of Interior",
       "source_url": "https://nitter.net/moi_bahrain/status/2031909813500751976#m",
@@ -4146,14 +4342,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376258260-0252",
+        "event_id": "GW-1773384243217-0253",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 468226477,
+      "id": 928993966,
       "title": "UAE condemns unprovoked Iranian drone attack on Salalah Port in Oman\n\n#WamNews \n\nhttps://www.wam.ae/a/17478t9",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2031901709019332867#m",
@@ -4174,14 +4370,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251699-0154",
+        "event_id": "GW-1773384235823-0156",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 68565089,
+      "id": 525205021,
       "title": "R to @mofauae: UAE Condemns Unprovoked Iranian Drone Attack on Salalah Port in Oman\n\nhttps://www.mofa.gov.ae/en/mediahub/news/2026/3/12/uae-oman",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2031895408700731803#m",
@@ -4202,14 +4398,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253432-0185",
+        "event_id": "GW-1773384237714-0186",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 328076466,
+      "id": 468322787,
       "title": "⭕️Within 30 minutes, the IDF struck 10 Hezbollah terror headquarters in the Dahieh area, including intelligence HQs, a Radwan unit HQ and additional command centers.\n\nDuring the strikes, the IDF eliminated dozens of Hezbollah terrorists while they were preparing launches toward Israel and dismantled dozens of launchers ready to fire.\n\nThe IDF will not tolerate any harm to the residents of the State of Israel.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2031887876003414430#m",
@@ -4230,14 +4426,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259111-0261",
+        "event_id": "GW-1773384244113-0262",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 201039093,
+      "id": 676420867,
       "title": "📹| #الدفاع_المدني في مركز العمليات الأمنية الموحدة (911) بمكة المكرمة .. سرعة استجابة، لسلامة ضيوف الرحمن.\n\n#حياكم_الله",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2031887439032103084#m",
@@ -4258,14 +4454,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255527-0217",
+        "event_id": "GW-1773384239933-0217",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 176872589,
+      "id": 760472024,
       "title": "Tehran diary: dark and bitter, the terror of life under US-Israeli bombardment",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/tehran-diary-dark-and-bitter-the-terror-of-life-under-us-bombardment",
@@ -4286,14 +4482,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247035-0021",
+        "event_id": "GW-1773384230616-0021",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 944168485,
+      "id": 998835641,
       "title": "Top Iranian nuclear scientists killed, Israel says – as it happened",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/live/2026/mar/12/iran-war-live-updates-oil-trump-middle-east-crisis-israel-lebanon-iraq-latest-news",
@@ -4314,14 +4510,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247038-0022",
+        "event_id": "GW-1773384230625-0023",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 49700869,
+      "id": 28297458,
       "title": "Pentagon tells lawmakers Iran war costs top $11.3bn – but true price unknown",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/us-news/2026/mar/12/israel-us-iran-war-cost",
@@ -4342,14 +4538,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247041-0023",
+        "event_id": "GW-1773384230629-0024",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 997754897,
+      "id": 289787377,
       "title": "Israeli military drops charges against soldiers accused of Gaza detainee abuse",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/israeli-military-top-lawyer-drops-charges-soldiers-palestinian-detainee-abuse-gaza",
@@ -4370,14 +4566,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247045-0024",
+        "event_id": "GW-1773384230634-0025",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 158558783,
+      "id": 121842282,
       "title": "The Guardian view on the cost of Trump’s war on Iran: the world’s poor will pay most dearly | Editorial",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/commentisfree/2026/mar/12/the-guardian-view-on-the-cost-of-trumps-war-the-worlds-poor-will-pay-most-dearly",
@@ -4398,14 +4594,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247049-0025",
+        "event_id": "GW-1773384230638-0026",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 805603693,
+      "id": 115261010,
       "title": "Putin’s ‘hidden hand’ lies behind Iran’s drone tactics, UK defence secretary says",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/iran-using-russian-drone-tactics-uk-defence-secretary-john-healey",
@@ -4426,14 +4622,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247055-0026",
+        "event_id": "GW-1773384230645-0027",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 203030193,
+      "id": 846533673,
       "title": "Israel strikes Beirut and orders south Lebanon evacuation as conflict mounts",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/israel-bombards-beirut-southern-lebanon-hezbollah",
@@ -4454,14 +4650,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247060-0027",
+        "event_id": "GW-1773384230650-0028",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 732652145,
+      "id": 138478071,
       "title": "British tourist among 20 charged in Dubai over videos of Iranian missile strikes",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/british-tourist-among-20-charged-in-dubai-over-videos-of-iranian-missile-strikes",
@@ -4482,14 +4678,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247065-0028",
+        "event_id": "GW-1773384230655-0029",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 369627186,
+      "id": 184543713,
       "title": "Iran steps up attack on oil infrastructure in Middle East - video report",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/video/2026/mar/12/iran-steps-up-attack-on-oil-infrastructure-in-middle-east-video-report",
@@ -4510,14 +4706,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247069-0029",
+        "event_id": "GW-1773384230660-0030",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 482561916,
+      "id": 731823063,
       "title": "Iran vows to fight on in first message issued in name of Mojtaba Khamenei",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/iran-vows-to-fight-on-in-first-message-issued-in-name-of-mojtaba-khamenei",
@@ -4538,14 +4734,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247075-0030",
+        "event_id": "GW-1773384230666-0031",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 267885837,
+      "id": 236900271,
       "title": "Dismay as ancient heritage sites across Iran damaged in US-Israel bombing",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/dismay-as-ancient-heritage-sites-across-iran-damaged-in-us-israel-bombing",
@@ -4566,14 +4762,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247080-0031",
+        "event_id": "GW-1773384230672-0032",
         "incident_type": "airstrike",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 89120575,
+      "id": 655907283,
       "title": "Iraqi official urges Australia to take back alleged IS fighters during meeting with ambassador",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/australia-news/2026/mar/12/iraqi-official-urges-australia-to-take-back-alleged-is-fighters-during-meeting-with-ambassador-ntwnfb",
@@ -4594,14 +4790,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247085-0032",
+        "event_id": "GW-1773384230678-0033",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 937640949,
+      "id": 123448152,
       "title": "Iran war punctures Trump’s ‘drill, baby, drill’ promise on US gas prices, experts say",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/iran-war-trump-gas-price-promise",
@@ -4622,14 +4818,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247092-0033",
+        "event_id": "GW-1773384230685-0034",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 388887211,
+      "id": 581276110,
       "title": "The war in Iran is an American failure. What do we do now? | Robert Reich",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/commentisfree/2026/mar/12/us-israel-iran-war-trump-american-values",
@@ -4650,14 +4846,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247099-0034",
+        "event_id": "GW-1773384230693-0035",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 223425616,
+      "id": 219353020,
       "title": "Iran-linked group says it hacked US company in retaliation for Minab school bombing",
       "source": "The Guardian",
       "source_url": "https://www.theguardian.com/world/2026/mar/12/iran-group-hack-medical-company-minab-school",
@@ -4678,42 +4874,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247105-0035",
+        "event_id": "GW-1773384230699-0036",
         "incident_type": "airstrike",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 161761623,
-      "title": "Fire breaks out after Israel strikes Gaza displacement camp – video report",
-      "source": "The Guardian",
-      "source_url": "https://www.theguardian.com/world/video/2026/mar/12/fire-breaks-out-after-israel-strikes-gaza-displacement-camp-video-report",
-      "published": "2026-03-12T00:00:00+00:00",
-      "type": "attack",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Gaza",
-        "country": "Palestine",
-        "lat": 31.5017,
-        "lng": 34.4668
-      },
-      "credibility": 90,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247112-0036",
-        "incident_type": "raid",
-        "is_recap": false,
-        "confidence": "OSINT"
-      }
-    },
-    {
-      "id": 924004326,
+      "id": 85032587,
       "title": "Ukraine-tested Shahed interceptors offered to Gulf states as Iran threat grows",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/mena/2026/03/12/ukraine-tested-shahed-interceptors-offered-gulf-states-as-iran-threat-grows/",
@@ -4734,14 +4902,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247210-0051",
+        "event_id": "GW-1773384230867-0057",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 95565867,
+      "id": 571738792,
       "title": "US air refuelling tanker crashes in Iraq after incident involving another plane",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/us/2026/03/12/us-air-refuelling-tanker-crashes-in-iraq-after-incident-involving-another-plane/",
@@ -4762,14 +4930,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247245-0055",
+        "event_id": "GW-1773384230909-0061",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 896923043,
+      "id": 578999548,
       "title": "Social media backlash against reports of Iran operations in California",
       "source": "The National UAE",
       "source_url": "https://www.thenationalnews.com/news/us/2026/03/12/false-flag-iran-california-drones/",
@@ -4790,98 +4958,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247255-0056",
+        "event_id": "GW-1773384230920-0062",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 913033298,
-      "title": "US Democrats demand answers to Iran primary school bombing",
-      "source": "The National UAE",
-      "source_url": "https://www.thenationalnews.com/future/technology/2026/03/12/us-democrats-demand-answers-to-iran-primary-school-bombing/",
-      "published": "2026-03-12T00:00:00+00:00",
-      "type": "explosion",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 85,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247264-0057",
-        "incident_type": "airstrike",
-        "is_recap": false,
-        "confidence": "OSINT"
-      }
-    },
-    {
-      "id": 665162529,
-      "title": "President Sheikh Mohamed receives call of support from Argentina's Milei over Iran attacks",
-      "source": "The National UAE",
-      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/12/president-sheikh-mohamed-receives-call-of-support-from-argentinas-milei-over-iran-attacks/",
-      "published": "2026-03-12T00:00:00+00:00",
-      "type": "attack",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Iran",
-        "lat": 32.4279,
-        "lng": 53.688
-      },
-      "credibility": 85,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247272-0058",
-        "incident_type": "incident",
-        "is_recap": false,
-        "confidence": "OSINT"
-      }
-    },
-    {
-      "id": 237718471,
-      "title": "Residents with expired visas allowed to return to UAE",
-      "source": "The National UAE",
-      "source_url": "https://www.thenationalnews.com/news/uae/2026/03/12/residents-with-expired-visas-allowed-to-return-to-uae/",
-      "published": "2026-03-12T00:00:00+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 85,
-      "is_government": false,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376247283-0059",
-        "incident_type": "incident",
-        "is_recap": false,
-        "confidence": "OSINT"
-      }
-    },
-    {
-      "id": 236131618,
+      "id": 65712523,
       "title": "US Air Force KC-135 goes down in Iraq, CENTCOM says",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/flashpoints/2026/03/12/us-air-force-kc-135-goes-down-in-iraq-centcom-says/",
@@ -4902,14 +4986,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247423-0071",
+        "event_id": "GW-1773384231064-0073",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 785594963,
+      "id": 493137568,
       "title": "Nations withdraw some equipment from NATO Arctic exercise amid Iran fallout",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/europe/2026/03/12/nations-withdraw-some-equipment-from-nato-arctic-exercise-amid-iran-fallout/",
@@ -4930,14 +5014,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247432-0072",
+        "event_id": "GW-1773384231074-0074",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 866167920,
+      "id": 510401137,
       "title": "NATO sends Patriot system to protect key air-defense radar in Turkey",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/europe/2026/03/12/nato-sends-patriot-system-to-protect-key-air-defense-radar-in-turkey/",
@@ -4958,14 +5042,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247444-0073",
+        "event_id": "GW-1773384231087-0075",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 771270140,
+      "id": 78109762,
       "title": "#الدفاع_المدني بمركز العمليات الأمنية الموحدة (911) بمنطقة مكة المكرمة يعزز المهام الميدانية في شهر رمضان المبارك. \n\n#حياكم_الله",
       "source": "Saudi Civil Defense",
       "source_url": "https://nitter.net/SaudiDCD/status/2031882261147140329#m",
@@ -4986,14 +5070,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376255580-0218",
+        "event_id": "GW-1773384239990-0218",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 948224566,
+      "id": 902522192,
       "title": "R to @mofauae: دولة الإمارات ترحب باعتماد مجلس الأمن قراراً يدين بأشد العبارات الهجمات الإيرانية\n\nhttps://www.mofa.gov.ae/ar-ae/mediahub/news/2026/3/12/uae-un",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2031881761916068199#m",
@@ -5014,14 +5098,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253476-0186",
+        "event_id": "GW-1773384237761-0187",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 754773683,
+      "id": 284932136,
       "title": "الإمارات تُدين الاستهداف الإيراني الغادر لميناء صلالة في سلطنة عُمان بطائرات مسيّرة\n\nhttps://www.mofa.gov.ae/ar-ae/mediahub/news/2026/3/12/uae-oman",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2031881337100238903#m",
@@ -5042,14 +5126,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253521-0187",
+        "event_id": "GW-1773384237809-0188",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 516280739,
+      "id": 137563923,
       "title": "UAE Welcomes UN Security Council Adoption of Resolution Condemning Iran’s Attacks in the Strongest Terms\n\nhttps://www.mofa.gov.ae/en/mediahub/news/2026/3/12/uae-un",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/mofauae/status/2031874022838075637#m",
@@ -5070,14 +5154,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253563-0188",
+        "event_id": "GW-1773384237856-0189",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 622349291,
+      "id": 901022378,
       "title": "RT by @DCDDubai: فرق الدفاع المدني تسيطر على حريق محدود في المبنى ولم يتم تسجيل إصابات حتى الآن.",
       "source": "Dubai Civil Defence",
       "source_url": "https://nitter.net/DXBMediaOffice/status/2031871412521374063#m",
@@ -5098,14 +5182,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252770-0170",
+        "event_id": "GW-1773384237009-0172",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 754453039,
+      "id": 293123864,
       "title": "UAE welcomes UN Security Council adoption of resolution condemning Iran’s attacks in strongest terms\n\n#WamNews \n\nhttps://www.wam.ae/a/17478sl",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2031860958826807410#m",
@@ -5126,14 +5210,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251728-0155",
+        "event_id": "GW-1773384235855-0157",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 115093363,
+      "id": 223260081,
       "title": "Adhering to safety and security procedures in workplaces, and remaining in safe areas when National Warning System alerts are issued, helps maintain a safe work environment and supports public safety efforts.\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031853394525032950#m",
@@ -5154,14 +5238,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256648-0231",
+        "event_id": "GW-1773384241132-0231",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 741712026,
+      "id": 357788582,
       "title": "RT by @mofauae: أدان مجلس الأمن اليوم بأشد العبارات الهجمات غير المبررة التي شنتها إيران على دولة الإمارات والبحرين والكويت وعُمان وقطر والمملكة العربية السعوديةوالأردن.\n\nوترحب دولة الإمارات باعتماد القرار رقم 2817، إذ يعكس الدعم الواسع الذي حظي به، والمتمثل في أعلى عدد من الدول المشاركة في رعايته في تاريخ مجلس الأمن، رسالة واضحة وقوية من المجتمع الدولي إلى إيران.\n\nكما نتوجه بالشكر إلى مملكة البحرين على قيادتها الفاعلة في الدفع بهذا القرار قدماً.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/UAEMissionToUN/status/2031846853918994626#m",
@@ -5182,14 +5266,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253615-0189",
+        "event_id": "GW-1773384237910-0190",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 117597440,
+      "id": 452207515,
       "title": "RT by @mofauae: Today, the UN Security Council condemned in the strongest terms Iran’s unprovoked attacks on the United Arab Emirates, Bahrain, Kuwait, Oman, Qatar, and Saudi Arabia, and Jordan.\n\nThe UAE strongly welcomes the adoption of Resolution 2817. The overwhelming support – reflected in the highest number of co-sponsorships in the Security Council’s history – sends a clear message from the international community to Iran.\n\nThe Security Council is clear: Iran must immediately cease its attacks against our countries.\n\nWe thank Bahrain for its able stewardship in advancing this resolution.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/UAEMissionToUN/status/2031846783307980932#m",
@@ -5210,14 +5294,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253746-0190",
+        "event_id": "GW-1773384238053-0191",
         "incident_type": "naval",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 879533926,
+      "id": 393586025,
       "title": "UAE air defences intercept six ballistic missiles, seven cruise missiles, 39 UAVs\n\n#WamNews \n\nhttps://www.wam.ae/a/17478sb",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2031842467612602446#m",
@@ -5238,14 +5322,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251766-0156",
+        "event_id": "GW-1773384235896-0158",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 990383370,
+      "id": 353554259,
       "title": "الدفاعات الجوية الإماراتية تتصدى بنجاح\nللصواريخ الباليستية والجوالة والمسيرات الإيرانية.\n\nUAE Air Defences Successfully Engaged Iranian Ballistic and Cruise Missiles and UAVs Attacks\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031838830857167323#m",
@@ -5266,14 +5350,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376249811-0130",
+        "event_id": "GW-1773384233727-0132",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 518358632,
+      "id": 581786925,
       "title": "UAE air defences engage 6 ballistic missiles, 7 cruise missiles, 39 UAVs.\n\nThe UAE air defence systems  (11 March 2026) engaged 6 ballistic missiles, 7 cruise missiles and 39 UAVs launched from Iran.\n\nSince the onset of the blatant Iranian aggression, UAE air defences have engaged 268 ballistic missiles, 15 cruise missiles and 1514 UAVs.\n\nThese attacks have resulted in 6 fatalities of Emirati, Pakistani, Nepali and Bangladeshi nationals, and 131 minor to moderate injuries among nationals of the UAE, Egypt, Sudan, Ethiopia, the Philippines, Pakistan, Iran, India, Bangladesh, Sri Lanka, Azerbaijan, Yemen, Uganda, Eritrea, Lebanon, Afghanistan, Bahrain, Comoros, Türkiye, Iraq, Nepal, Nigeria, Oman, Jordan, Palestine, Ghana and Indonesia.\n\nThe Ministry of Defence affirmed that it remains fully prepared and ready to deal with any threats, and will firmly confront any attempts to undermine State security in a manner that ensures the protection of its sovereignty, security and stability, and safeguards its national interests and capabilities.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031837588127138255#m",
@@ -5294,14 +5378,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376249853-0131",
+        "event_id": "GW-1773384233773-0133",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 776742952,
+      "id": 157833793,
       "title": "Hamdan bin Zayed reviews ERC Ramadan programmes in UAE, abroad\n\n#WamNews \n\nhttps://www.wam.ae/a/17478s2",
       "source": "WAM English",
       "source_url": "https://nitter.net/WAMNEWS_ENG/status/2031837073779671466#m",
@@ -5322,14 +5406,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251799-0157",
+        "event_id": "GW-1773384235932-0159",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 336520569,
+      "id": 260137978,
       "title": "الدفاعات الجوية الإماراتية تتعامل مع 6 صواريخ باليستية و7 صواريخ جوالة و 39 طائرة مسيرة.\n\nتعاملت الدفاعات الجوية الإماراتية  (11 مارس 2026) مع 6 صواريخ باليستية، و7 صواريخ جوالة، و 39 طائرة مسيرة قادمة من إيران. \n\nومنذ بدء الاعتداء الإيراني السافر تعاملت الدفاعات الجوية الإماراتية مع 268 صاروخاً باليستياً، و15 صاروخ جوال، و1514 طائرة مسيرة.\n\nوخلفت هذه الاعتداءات 6 حالات وفاة من الجنسية الإماراتية والباكستانية والنيبالية والبنغلادشية، و131 حالة إصابة بسيطة ومتوسطة من الجنسية الإماراتية، المصرية، السودانية، الإثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السريلانكية، الأذربيجانية، اليمنية، الأوغندية، الإرتيرية، اللبنانية، الأفغانية، البحرينية، جزر القمر، التركية، العراقية، النيبالية، النيجيرية، العمانية، الأردنية، والفلسطينية، والغانية والأندونيسية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031835999920381964#m",
@@ -5350,14 +5434,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376250069-0132",
+        "event_id": "GW-1773384234007-0134",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 581709393,
+      "id": 851712972,
       "title": "RT by @mofauae: اعتماد مجلس الأمن قرارًا يدين الاعتداءات الإيرانية على دول الخليج العربي وعددٍ من دول المنطقة، ويؤكد أنها انتهاكٌ لسيادة الدول ومخالفة لميثاق الأمم المتحدة، يعكس موقفًا دوليًا واضحًا يرفض هذه الهجمات ويزيد من عزلة إيران.\n\nويبقى احترام سيادة الدول والالتزام بالقانون الدولي أساسًا للأمن والاستقرار في المنطقة.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/AnwarGargash/status/2031823021644923289#m",
@@ -5378,14 +5462,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376253940-0192",
+        "event_id": "GW-1773384238262-0193",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 499123731,
+      "id": 616764486,
       "title": "⭕️ The IDF has begun a large-scale wave of strikes on Hezbollah infrastructure in the Dahieh area, Beirut. \n\nInterception efforts against Hezbollah projectiles are ongoing. \n\nThe IDF is operating with determination against the Hezbollah terrorist organization following its deliberate decision to attack Israel on behalf of the Iranian regime.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2031812813283270896#m",
@@ -5406,14 +5490,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259280-0262",
+        "event_id": "GW-1773384244292-0263",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 507086068,
+      "id": 21186289,
       "title": "RT by @mofauae: انضم سعادة السفير أبوشهاب إلى المندوبين الدائمين لدول مجلس التعاون لدول الخليج العربية والأردن في منطقة التقاء الصحافة للإحاطة بشأن الهجمات الإيرانية غير المبررة التي استهدفت دولنا.\n\nوقد سعت إيران من خلال هجماتها العشوائية إلى نشر الرعب، إلا أن شعوبنا واجهت ذلك بعزيمة، وأظهرت قدراً لافتاً من الصمود والوحدة.\n\nواليوم، نتطلع إلى أن يتخذ مجلس الأمن إجراءً حاسماً عند نظره في القرار المطروح أمامه، وأن يتعامل مع هذا التهديد الخطير للسلم والأمن الدوليين.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/UAEMissionToUN/status/2031804528136167660#m",
@@ -5434,14 +5518,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254209-0194",
+        "event_id": "GW-1773384238552-0195",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 415331317,
+      "id": 513263275,
       "title": "RT by @mofauae: Ambassador Abushahab joined Permanent Representatives from the GCC and Jordan for a media stakeout addressing the unprovoked Iranian attacks against our countries.\n\nThrough its indiscriminate strikes, Iran has sought to spread terror. Yet our people have defied it, facing these attacks with remarkable resilience and unity.\n\nToday, we expect the Security Council to act decisively as it considers the resolution before it, and to address this critical threat to international peace and security.",
       "source": "UAE Ministry of Foreign Affairs",
       "source_url": "https://nitter.net/UAEMissionToUN/status/2031804317267595456#m",
@@ -5462,14 +5546,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254042-0193",
+        "event_id": "GW-1773384238375-0194",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 516738191,
+      "id": 879906945,
       "title": "❗️In the past few minutes, Hezbollah launched rockets toward several areas in Israel.\n\nAlong with the intercepting effort, the Israeli Air Force is currently striking ready-to-launch projectile launchers and additional infrastructure sites belonging to Hezbollah across Lebanon. \n\nThe IDF will not tolerate any harm to Israeli civilians and will forcibly respond against any threat posed against the State of Israel.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2031799662416466154#m",
@@ -5490,14 +5574,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259423-0263",
+        "event_id": "GW-1773384244442-0264",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 946305179,
+      "id": 824281399,
       "title": "Huge missile barrage fired at northern Israel.",
       "source": "Magen David Adom",
       "source_url": "https://nitter.net/Mdais/status/2031798977989873798#m",
@@ -5518,14 +5602,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260721-0273",
+        "event_id": "GW-1773384245671-0273",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 431930830,
+      "id": 341323075,
       "title": "R to @IDF: Song credit: Back in Black - AC/DC",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2031785367523803567#m",
@@ -5546,14 +5630,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259599-0264",
+        "event_id": "GW-1773384244627-0265",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 627206903,
+      "id": 726077350,
       "title": "In light of the current circumstances, the relevant authorities affirm the stability of markets across the State and the availability of all essential goods at retail outlets. The supply of goods continues normally and regularly to meet consumer demand.\nThe authorities urge the public to act responsibly, avoid being misled by rumours or engaging in unnecessary stockpiling, and purchase only what is necessary to meet actual needs. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031777691394064457#m",
@@ -5574,14 +5658,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256830-0233",
+        "event_id": "GW-1773384241323-0233",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 701732863,
+      "id": 46613815,
       "title": "Bowen: Trump has called for an Iran uprising but the lessons from Iraq in 1991 loom large",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cn0znx4xrl9o?at_medium=RSS&at_campaign=rss",
@@ -5602,14 +5686,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247025-0018",
+        "event_id": "GW-1773384230606-0018",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 124721154,
+      "id": 252022,
       "title": "Anduril to buy space/missile tracking firm ExoAnalytic",
       "source": "Breaking Defense",
       "source_url": "https://breakingdefense.com/2026/03/anduril-to-buy-space-missile-tracking-firm-exoanalytic/",
@@ -5630,14 +5714,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247574-0083",
+        "event_id": "GW-1773384231228-0085",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 502869990,
+      "id": 224695146,
       "title": "'Even under missiles we carry on living' - how young Iranians are coping with war",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c1mj1pyrzryo?at_medium=RSS&at_campaign=rss",
@@ -5658,14 +5742,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247028-0019",
+        "event_id": "GW-1773384230609-0019",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 501735754,
+      "id": 482923594,
       "title": "RT by @CivilDefenceAD: تمكنت الجهات المختصة في إمارة أبوظبي من السيطرة على حريق اندلع في مطار أبوظبي القديم نتيجة سقوط شظايا عقب الاعتراض الناجح للدفاعات الجوية، ولم يسفر الحادث عن تسجيل أي إصابات.\n\nوتهيب الجهات المختصة بالجمهور استقاء المعلومات من المصادر الرسمية فقط، وتجنّب تداول الشائعات أو المعلومات غير الموثوقة.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/ADMediaOffice/status/2031756633181978663#m",
@@ -5686,14 +5770,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252423-0164",
+        "event_id": "GW-1773384236626-0166",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 336552030,
+      "id": 746559383,
       "title": "Notice emphasizing the importance of adhering to traffic rules and public safety measures to protect lives and property, and to reinforce the principle of collective responsibility and compliance with safety guidelines.\n\n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031747181573443931#m",
@@ -5714,14 +5798,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376256991-0234",
+        "event_id": "GW-1773384241495-0234",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 307007142,
+      "id": 719595474,
       "title": "EU and UK demand Israel stop surge in West Bank settler violence since Iran war",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c620vwl97vyo?at_medium=RSS&at_campaign=rss",
@@ -5742,14 +5826,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247016-0014",
+        "event_id": "GW-1773384230596-0014",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 154087447,
+      "id": 273239503,
       "title": "السحور الذكي لصيام أسهل\nSmart Suhoor for Easier Fasting\n\n#رمضان_آمن \n\n#عاصمة_أكثر_أماناً_وسلامة \n#الدفاع_المدني_أبوظبي",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/CivilDefenceAD/status/2031731022673613028#m",
@@ -5770,14 +5854,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252494-0165",
+        "event_id": "GW-1773384236706-0167",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 628504716,
+      "id": 198194751,
       "title": "قدم اللواء الركن الشيخ أحمد بن طحنون آل نهيان، نائب رئيس أركان القوات المسلحة، يرافقه اللواء الركن سعيد سالمين العلوي، قائد كلية الدفاع الوطني، واللواء الركن سعيد حسن اليماحي، رئيس هيئة العمليات والتخطيط الاستراتيجي العسكري، واجب العزاء لأسرة شَهيد الإمارات، النقيب سعيد راشد البلوشي، الذي استشهد إثر تَعَرُّضِهِ لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أَداء الواجِبَ الوطني بالدولة.\n\nوتوجه نائب رئيسُ أركان القوات المسلحة بالدعاء إلى الله تعالى أن يتغمد الشهيد بواسع رحمته، راجياً من المولى أن يسكنه فسيح جناته مع الشهداء والصديقين، وأن يُلهم ذويه الصبرَ والسلوان.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031691423787975088#m",
@@ -5798,14 +5882,42 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376250253-0133",
+        "event_id": "GW-1773384234215-0135",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 954309862,
+      "id": 404034268,
+      "title": "في حالة الطوارئ اتصل على الرقم 997.\n\n#الدفاع_المدني #هيئة_الشارقة_للدفاع_المدني #الشارقة #الامارات #sharjah_civil_defence_fire_civil_defence_sharjah_uae_997",
+      "source": "Sharjah Civil Defence",
+      "source_url": "https://nitter.net/civildefenceshj/status/2031673119254220861#m",
+      "published": "2026-03-11T10:06:32+00:00",
+      "type": "air_defense",
+      "status": "unconfirmed",
+      "location": {
+        "name": "Unknown City",
+        "country": "UAE",
+        "lat": 23.4241,
+        "lng": 53.8478
+      },
+      "credibility": 100,
+      "is_government": true,
+      "casualties": {
+        "total": 0,
+        "military": 0,
+        "civilian": 0
+      },
+      "circuit_breaker": {
+        "event_id": "GW-1773384237042-0173",
+        "incident_type": "incident",
+        "is_recap": false,
+        "confidence": "PARTIAL"
+      }
+    },
+    {
+      "id": 394382828,
       "title": "Notice concerning the cooperation of family members and their adherence to the instructions issued by the relevant authorities. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031657212045582674#m",
@@ -5826,14 +5938,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257085-0235",
+        "event_id": "GW-1773384241595-0235",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 46115420,
+      "id": 2891601,
       "title": "#هيئة_أبوظبي_للدفاع_المدني تعرض لعبة السلامة الإلكترونية  على الجمهور تعزيزاً للوعي الوقائي\n\nالتفاصيل: https://www.instagram.com/reel/DVvJYeJDOkn/?igsh=OWNxbGxsdWtkaWM1\n\n#رمضان_آمن \n#CivilDefenceAD\n#عاصمة_أكثر_أماناً_وسلامة",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/CivilDefenceAD/status/2031644838056304880#m",
@@ -5854,14 +5966,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252523-0166",
+        "event_id": "GW-1773384236738-0168",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 437253026,
+      "id": 324938990,
       "title": "During emergencies, the older family members and those with medical conditions require greater care and attention at home. Make sure to check on them regularly. #MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031644741754814758#m",
@@ -5882,14 +5994,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257141-0236",
+        "event_id": "GW-1773384241655-0236",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 4233270,
+      "id": 486948544,
       "title": "Inside the Australian hotel where Iranian footballers escaped to claim asylum",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/c15x1928n48o?at_medium=RSS&at_campaign=rss",
@@ -5910,14 +6022,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247031-0020",
+        "event_id": "GW-1773384230613-0020",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 482716414,
+      "id": 36012940,
       "title": "Notice regarding the importance of adhering to the safety guidelines in the workplace and taking national alert or warning messages seriously. \n#MOIQatar",
       "source": "Qatar Ministry of Interior EN",
       "source_url": "https://nitter.net/MOI_QatarEn/status/2031566224841122179#m",
@@ -5938,14 +6050,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376257211-0237",
+        "event_id": "GW-1773384241730-0237",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 148298623,
+      "id": 363323910,
       "title": "Ukraine’s top drone units to bring frontline lessons to Washington this month",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/industry/techwatch/2026/03/11/ukraines-top-drone-units-to-bring-frontline-lessons-to-washington-this-month/",
@@ -5966,14 +6078,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247457-0074",
+        "event_id": "GW-1773384231101-0076",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 10112942,
+      "id": 530315400,
       "title": "Iran war may force US to shift missile defenses from South Korea, Seoul says",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/your-military/2026/03/11/iran-war-may-force-us-to-shift-missile-defenses-from-south-korea-seoul-says/",
@@ -5994,14 +6106,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247470-0075",
+        "event_id": "GW-1773384231115-0077",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 260541742,
+      "id": 756597359,
       "title": "These are Ukraine’s $1,000 interceptor drones the Pentagon wants to buy",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/pentagon-congress/2026/03/11/these-are-ukraines-1000-interceptor-drones-the-pentagon-wants-to-buy/",
@@ -6022,14 +6134,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247483-0076",
+        "event_id": "GW-1773384231129-0078",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 698673401,
+      "id": 296094141,
       "title": "Amid US military actions, White House struggles to explain how Iran war will end",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/news/your-military/2026/03/11/amid-us-military-actions-white-house-struggles-to-explain-how-iran-war-will-end/",
@@ -6050,14 +6162,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247495-0077",
+        "event_id": "GW-1773384231142-0079",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 553710593,
+      "id": 565993127,
       "title": "Australia deploys early-warning aircraft to the Middle East amid Iran attacks",
       "source": "Defense News",
       "source_url": "https://www.defensenews.com/global/asia-pacific/2026/03/11/australia-deploys-early-warning-aircraft-to-the-middle-east-amid-iran-attacks/",
@@ -6078,14 +6190,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247509-0078",
+        "event_id": "GW-1773384231156-0080",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 424195104,
+      "id": 509109944,
       "title": "R to @MOISaudiArabia: راية العزّ مرفوعة.\n\n #يوم_العلم",
       "source": "Saudi Ministry of Interior",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2031504198752231661#m",
@@ -6106,14 +6218,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254466-0196",
+        "event_id": "GW-1773384238835-0197",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 923178780,
+      "id": 117561072,
       "title": "R to @MOISaudiArabia: واجبات ومحظورات استخدام العلم.\n\n#يوم_العلم",
       "source": "Saudi Ministry of Interior",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2031502896571814171#m",
@@ -6134,14 +6246,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254487-0197",
+        "event_id": "GW-1773384238858-0198",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 553472925,
+      "id": 835826954,
       "title": "R to @MOISaudiArabia: المواصفات القياسية للعلم الوطني.\n\n#يوم_العلم",
       "source": "Saudi Ministry of Interior",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2031501697588109639#m",
@@ -6162,14 +6274,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254511-0198",
+        "event_id": "GW-1773384238885-0199",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 384043531,
+      "id": 863842542,
       "title": "R to @MOISaudiArabia: مكان الشرف للعلم ..\n\n #يوم_العلم",
       "source": "Saudi Ministry of Interior",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2031500392920489997#m",
@@ -6190,14 +6302,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254535-0199",
+        "event_id": "GW-1773384238911-0200",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 348892447,
+      "id": 591744494,
       "title": "R to @MOISaudiArabia: مواصفات ودلالات العلم السعودي .. التوحيد والقوة والعدل والحكمة والرخاء والعطاء والتسامح. \n\n#يوم_العلم",
       "source": "Saudi Ministry of Interior",
       "source_url": "https://nitter.net/MOISaudiArabia/status/2031499123921441269#m",
@@ -6218,14 +6330,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376254557-0200",
+        "event_id": "GW-1773384238936-0201",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 438916699,
+      "id": 403420062,
       "title": "Why air strikes on Tehran oil facilities are causing black rain",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cqxd1nv3re2o?at_medium=RSS&at_campaign=rss",
@@ -6246,14 +6358,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247018-0015",
+        "event_id": "GW-1773384230599-0015",
         "incident_type": "airstrike",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 368164603,
+      "id": 860829313,
       "title": "🛩️📍TEHRAN & TABRIZ: A combined strike on central command centres of the Iranian terror regime \n\nTargets struck included:\n• A special units command center in Tabriz\n• An “Imam Hassan” security unit military compound in Tehran\n• A command center for the security unit responsible for ballistic missile launches & artillery fire\n• A command center for the Intelligence and General Security Police in Maragheh Province\n• A large Basij forces compound in Tabriz",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2031454513337344030#m",
@@ -6274,14 +6386,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259627-0265",
+        "event_id": "GW-1773384244657-0266",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 718637503,
+      "id": 603437141,
       "title": "🔴ELIMINATED: Hassan Salameh, the Commander of Hezbollah's 'Nassar' Unit\n\nSalameh was eliminated on Sunday night in a precise IAF strike in the Jwaya area. The senior terrorist held multiple key positions in the terror organization.",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2031435098873024870#m",
@@ -6302,14 +6414,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259831-0266",
+        "event_id": "GW-1773384244874-0267",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 372178740,
+      "id": 423307828,
       "title": "🎯 DISMANTLED: Most key assets of the Iranian terror regime’s Internal Security Forces and Basij units in Ilam Province, as part of the IDF’s operations to target the regime’s systems and capabilities.\n\nTargets included:\n• The main Internal Security Forces headquarters\n•⁠ The central intelligence headquarters of the Ministry of Intelligence\n• An IRGC command center responsible for the battalions that suppress protests \n• A special forces headquarters\n• Several Basij unit headquarters & IRGC infrastructure",
       "source": "Israel Defense Forces",
       "source_url": "https://nitter.net/IDF/status/2031417660974497819#m",
@@ -6330,14 +6442,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376259940-0267",
+        "event_id": "GW-1773384244989-0268",
         "incident_type": "raid",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 751373683,
+      "id": 479419478,
       "title": "قدم معالي الفريق الركن عيسى سيف بن عبلان المزروعي، رئيسُ أركان القوات المسلحة، واجب العزاء لأسر شَهيدَيِ الإمارات، النقيب سعيد راشد البلوشي، والملازم أول علي صالح الطنيجي، اللَّذَيْنِ استشهدا إثر تَعَرُّضِهِما لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أَدائِهِما واجِبَهُما الوطني بالدولة.\n\nوتوجه رئيسُ أركان القوات المسلحة بالدعاء إلى الله تعالى أن يتغمد الشهيدين بواسع رحمته وأن يسكنهما فسيح جناته مع الشهداء والصديقين وأن يلهم أهلهما الصبر والسلوان.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031414020490903671#m",
@@ -6358,14 +6470,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376250376-0134",
+        "event_id": "GW-1773384234355-0136",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 720110136,
+      "id": 606867530,
       "title": "Ltc. Evyatar Ashkenazi, head of the Civil Branch at the Gaza CLA: \n\n\"...Deliveries are coordinated daily with the international community and the private sector to ensure that essential goods reach the civilian population.\"\n\n\"Hamas takes advantage of the situation, patrols markets, confiscate food and intimidates merchants. Gaza will be a better place for Gazans without Hamas.\"",
       "source": "COGAT",
       "source_url": "https://nitter.net/cogatonline/status/2031382924507992232#m",
@@ -6386,14 +6498,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376261403-0278",
+        "event_id": "GW-1773384246393-0278",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 907167495,
+      "id": 818602579,
       "title": "'I just want to be able to sleep': Attacks in Iran rock cities and cut power",
       "source": "BBC Middle East",
       "source_url": "https://www.bbc.com/news/articles/cev7llekwllo?at_medium=RSS&at_campaign=rss",
@@ -6414,14 +6526,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376247020-0016",
+        "event_id": "GW-1773384230601-0016",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 575620931,
+      "id": 95654809,
       "title": "UAE air defences intercept 8 ballistic missiles, 26 UAVs\n\nUAE air defences on Tuesday detected 9 ballistic missiles, of which 8 were destroyed, while 1 missile fell into the sea. A total of 35 UAVs were also detected, with 26 intercepted, while 9 fell within the country’s territory.\n\nSince the onset of the blatant Iranian attacks, 262 ballistic missiles have been detected. Of these, 241 were destroyed, 19 fell into the sea, and 2 struck within the State territory. \n\nA total of 1,475 Iranian UAVs have also been detected, of which 1,385 were intercepted, while 90 fell within the country’s territory. 8 cruise missiles were also detected and destroyed.\n\nThese attacks resulted in 6 deaths among Emirati, Pakistani, Nepalese and Bangladeshi nationals, and 122 people sustained moderate to minor injuries. The injured include nationals of the UAE, Egypt, Sudan, Ethiopia, the Philippines, Pakistan, Iran, India, Bangladesh, Sri Lanka, Azerbaijan, Yemen, Uganda, Eritrea, Lebanon, Afghanistan, Bahrain, the Comoros, Türkiye, Iraq, Nepal, Nigeria, Oman, Jordan and Palestine.\n\nThe Ministry of Defence affirmed that it remains fully prepared to deal with any threats and will respond firmly to any attempts to undermine the country’s security, ensuring the protection of its sovereignty, security and stability, and safeguarding its national interests and capabilities.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031357302004133965#m",
@@ -6442,14 +6554,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376250519-0136",
+        "event_id": "GW-1773384234515-0138",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 128683519,
+      "id": 338693418,
       "title": "MDA Spokesperson: Following the missile fire toward the State of Israel:\n\nAt this stage, no casualties are known.\n\nMDA teams are treating individuals who were injured on their way to a sheltered space, as well as people suffering from anxiety symptoms. Updates as required.",
       "source": "Magen David Adom",
       "source_url": "https://nitter.net/Mdais/status/2031354204510396850#m",
@@ -6470,14 +6582,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260750-0274",
+        "event_id": "GW-1773384245702-0274",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 889416297,
+      "id": 34128810,
       "title": "الدفاعات الجوية الإماراتية تتعامل مع 8 صواريخ باليستية و 26 طائرة مسيرة.\n\nرصدت الدفاعات الجوية الإماراتية اليوم (10 مارس 2026) 9 صواريخ باليستية حيث تم تدمير 8 صواريخ باليستية، فيما سقط 1 صاروخ باليستي في البحر، كما تم رصد 35 طائرة مسيرة، حيث تم اعتراض 26 طائرة مسيرة، بينما سقطت 9 طائرات مسيرة داخل أراضي الدولة. \n\nومنذ بدء الاعتداء الإيراني السافر تم رصد 262 صاروخاً باليستياً، حيث تم تدمير 241 صاروخاً باليستياَ، فيما سقط 19 منها في مياه البحر، وسقط 2 صاروخ على أراضي الدولة. كما تم رصد 1475 طائرة مسيرة إيرانية وتم اعتراض 1385 منها، فيما وقعت 90 طائرة مسيرة داخل أراضي الدولة، كما تم ايضاً رصد وتدمير 8 صواريخ جوالة.\n\nوخلفت هذه الاعتداءات 6 حالات وفاة من الجنسية الإماراتية والباكستانية والنيبالية والبنغلادشية، و122 حالة إصابة بسيطة ومتوسطة من الجنسية الإماراتية، المصرية، السودانية، الإثيوبية، الفلبينية، الباكستانية، الإيرانية، الهندية، البنغلادشية، السريلانكية، الأذربيجانية، اليمنية، الأوغندية، الإرتيرية، اللبنانية، الأفغانية، البحرينية، جزر القمر، التركية، العراقية، النيبالية، النيجيرية، العمانية، الأردنية، والفلسطينية.\n\nوتؤكد وزارة الدفاع أنها على أهبة الاستعداد والجاهزية للتعامل مع أية تهديدات والتصدي بحزم لكل ما يستهدف زعزعة أمن الدولة، وبما يضمن صون سيادتها وأمنها واستقرارها ويحمي مصالحها ومقدراتها الوطنية.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031350981221622002#m",
@@ -6498,14 +6610,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376250801-0137",
+        "event_id": "GW-1773384234821-0139",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 487951504,
+      "id": 30743593,
       "title": "MDA Spokesperson: Following the missile fire toward the State of Israel:\n\nAt this stage, no casualties are known.\n\nMDA teams are treating several individuals who were injured on their way to a protected space. Updates as required.",
       "source": "Magen David Adom",
       "source_url": "https://nitter.net/Mdais/status/2031334952499859907#m",
@@ -6526,14 +6638,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260881-0275",
+        "event_id": "GW-1773384245839-0275",
         "incident_type": "missile",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 980372539,
+      "id": 496500819,
       "title": "وزارة الدفاع تقيم مراسم جنازة عسكرية لشهيدَي الوطن\n\nجرت في مستشفى زايد العسكري بأبوظبي مراسم الجنازة العسكرية لشَهيدَيِ الإمارات، النقيب سعيد البلوشي، والملازم أول علي الطنيجي، اللَّذَيْنِ انْتَقَلا إلى جوار رَبِّهِما إثر تَعَرُّضِهِما لحادث سقوط طائرة عمودية بسبب عطل فني أثناء أَدائِهِما واجِبَهُما الوطني بالدولة.\n\nحضر المراسم عدد من كبار قادة وضباط وزارة الدفاع وعدد من أُسَرِ الشَّهيدَيْنِ وذويهما. وتقدمت وزارة الدفاع بخالص العزاء لذوي الشَّهيدَيْنِ سائلةً المولى عز وجل أن يتغمدهما بواسع رحمته.\n\n#وزارة_الدفاع \n#وزارة_الدفاع_الإماراتية\n#MOD\n#UAEMinistryOfDefence",
       "source": "UAE Ministry of Defence",
       "source_url": "https://nitter.net/modgovae/status/2031334746530394464#m",
@@ -6554,14 +6666,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376251047-0138",
+        "event_id": "GW-1773384235102-0140",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 823760662,
+      "id": 716937698,
       "title": "RT by @CivilDefenceAD: Abu Dhabi authorities are responding to a fire that broke out at a facility in the Ruwais Industrial Complex, caused by a drone attack. No injuries have been reported at this time.\n\nThe public is reminded to obtain information from official sources only and to avoid spreading rumours or unverified information.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/ADMediaOffice/status/2031332643586163042#m",
@@ -6582,18 +6694,18 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252640-0168",
+        "event_id": "GW-1773384236868-0170",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 369851552,
-      "title": "R to @gcaauae:",
+      "id": 286975239,
+      "title": "R to @gcaauae: Image",
       "source": "UAE GCAA",
-      "source_url": "https://nitter.net/gcaauae/status/2031331954378027034#m",
-      "published": "2026-03-10T11:30:52+00:00",
+      "source_url": "https://nitter.net/gcaauae/status/2031331937579839912#m",
+      "published": "2026-03-10T11:30:48+00:00",
       "type": "security",
       "status": "unconfirmed",
       "location": {
@@ -6610,14 +6722,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252884-0172",
+        "event_id": "GW-1773384237178-0175",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 249615877,
+      "id": 299708330,
       "title": "RT by @CivilDefenceAD: تتعامل الجهات المختصة في إمارة أبوظبي مع نشوب حريق في إحدى المنشآت ضمن مجمع الرويس الصناعي، ناجم عن استهداف بالطائرات المسيرة، دون تسجيل إصابات حتى الآن. \n\nوأهابت الجهات المختصة بالجمهور استقاء المعلومات من المصادر الرسمية فقط، وتجنُّب تداول الشائعات أو المعلومات غير الموثوقة.",
       "source": "Abu Dhabi Civil Defence",
       "source_url": "https://nitter.net/ADMediaOffice/status/2031329186158358790#m",
@@ -6638,14 +6750,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252573-0167",
+        "event_id": "GW-1773384236793-0169",
         "incident_type": "incident",
         "is_recap": false,
         "confidence": "PARTIAL"
       }
     },
     {
-      "id": 242277743,
+      "id": 371041281,
       "title": "R to @gcaauae: 🚫 Due to the current exceptional circumstances, we reaffirm the total ban on all types of drones and light sports aircraft. Compliance with this decision is mandatory to avoid legal consequences. Your cooperation ensures the safety of all.\n\n@moiuae",
       "source": "UAE GCAA",
       "source_url": "https://nitter.net/gcaauae/status/2031304169471316144#m",
@@ -6666,14 +6778,14 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376252912-0175",
+        "event_id": "GW-1773384237203-0177",
         "incident_type": "drone",
         "is_recap": false,
         "confidence": "OSINT"
       }
     },
     {
-      "id": 994134260,
+      "id": 371720377,
       "title": "Following the missile fire toward the State of Israel:\n\nAt this stage, no casualties are known.\n\nMDA teams are treating several cases of people who were injured on their way to a sheltered area, as well as people suffering from anxiety symptoms. Updates as required.",
       "source": "Magen David Adom",
       "source_url": "https://nitter.net/Mdais/status/2031281599803744642#m",
@@ -6694,92 +6806,8 @@
         "civilian": 0
       },
       "circuit_breaker": {
-        "event_id": "GW-1773376260990-0276",
+        "event_id": "GW-1773384245956-0276",
         "incident_type": "missile",
-        "is_recap": false,
-        "confidence": "OSINT"
-      }
-    },
-    {
-      "id": 599458995,
-      "title": "RT by @MOISaudiArabia: #الدفاع_المدني : سقوط مسيّرة على أحد المواقع السكنية بمحافظة الزلفي، نتج عنه أضرار مادية محدودة، ولا إصابات - ولله الحمد.",
-      "source": "Saudi Ministry of Interior",
-      "source_url": "https://nitter.net/SaudiDCD/status/2031257316738089273#m",
-      "published": "2026-03-10T06:34:17+00:00",
-      "type": "air_defense",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Saudi Arabia",
-        "lat": 23.8859,
-        "lng": 45.0792
-      },
-      "credibility": 100,
-      "is_government": true,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376254600-0201",
-        "incident_type": "incident",
-        "is_recap": false,
-        "confidence": "PARTIAL"
-      }
-    },
-    {
-      "id": 808961714,
-      "title": "🎯 STRUCK: The IDF conducted an additional wave of airstrikes targeting assets and storage facilities of the Hezbollah affiliated Al-Quard Al-Hassan Association in Lebanon, used to finance the purchasing of weapons and terrorist salaries, as part of ongoing efforts to further degrade Hezbollah’s military capabilities.",
-      "source": "Israel Defense Forces",
-      "source_url": "https://nitter.net/IDF/status/2031253768466022819#m",
-      "published": "2026-03-10T06:20:11+00:00",
-      "type": "attack",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "Lebanon",
-        "lat": 33.8547,
-        "lng": 35.8623
-      },
-      "credibility": 95,
-      "is_government": true,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376260159-0268",
-        "incident_type": "airstrike",
-        "is_recap": false,
-        "confidence": "PARTIAL"
-      }
-    },
-    {
-      "id": 795038722,
-      "title": "R to @gcaauae: 🇦🇪 We deeply appreciate the dedicated entities working tirelessly around the clock to ensure our nation’s security, stability, and safety.",
-      "source": "UAE GCAA",
-      "source_url": "https://nitter.net/gcaauae/status/2031239163836608675#m",
-      "published": "2026-03-10T05:22:09+00:00",
-      "type": "security",
-      "status": "unconfirmed",
-      "location": {
-        "name": "Unknown City",
-        "country": "UAE",
-        "lat": 23.4241,
-        "lng": 53.8478
-      },
-      "credibility": 95,
-      "is_government": true,
-      "casualties": {
-        "total": 0,
-        "military": 0,
-        "civilian": 0
-      },
-      "circuit_breaker": {
-        "event_id": "GW-1773376252991-0176",
-        "incident_type": "incident",
         "is_recap": false,
         "confidence": "OSINT"
       }

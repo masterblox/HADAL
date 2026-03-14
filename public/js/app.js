@@ -659,9 +659,9 @@ function renderIncidents() {
                     <button class="action-btn" onclick="event.stopPropagation(); window.open('${escapeHtml(sourceUrl)}', '_blank')" title="View Source">
                         🔗 Source
                     </button>
-                    <button class="action-btn" onclick="translateIncident('${incident.id}')" title="Translate">
+                    <a class="action-btn" href="https://translate.google.com/?sl=auto&tl=en&text=${encodeURIComponent(incident.title)}&op=translate" target="_blank" rel="noopener" title="Translate">
                         🌐 Translate
-                    </button>
+                    </a>
                     <button class="action-btn report-btn" onclick="event.stopPropagation(); openReportModal(${incident.id})" title="Report False Claim">
                         🚩 Report
                     </button>

@@ -255,7 +255,10 @@
 .incident-feed {
   height: 100%;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: var(--space-3);
+  touch-action: pan-y;
 }
 
 .incident-feed::-webkit-scrollbar {
@@ -275,7 +278,10 @@
   background: var(--text-muted);
 }
 
-.incident-card {
+a.incident-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -284,15 +290,18 @@
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.incident-card:hover {
+a.incident-card:hover,
+a.incident-card:active {
   background: var(--bg-hover);
   border-color: var(--border-active);
   transform: translateX(4px);
+  color: inherit;
 }
 
-.incident-card.active {
+a.incident-card.active {
   border-color: var(--accent-cyan);
   background: var(--bg-active);
 }
@@ -813,13 +822,15 @@
 @media (max-width: 768px) {
   .app-container {
     flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
   }
-  
+
   .left-panel,
   .right-rail {
     display: none;
   }
-  
+
   .mobile-nav {
     display: flex;
     position: fixed;
@@ -831,7 +842,7 @@
     border-top: 1px solid var(--border-subtle);
     z-index: 1000;
   }
-  
+
   .mobile-nav-btn {
     flex: 1;
     display: flex;
@@ -845,13 +856,36 @@
     font-size: 11px;
     cursor: pointer;
   }
-  
+
   .mobile-nav-btn.active {
     color: var(--accent-cyan);
   }
-  
+
   .section-content {
+    flex: 1;
+    overflow: hidden;
     padding-bottom: 60px;
+    height: calc(100% - 60px);
+  }
+
+  .section {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #monitor-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .incident-feed {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    padding-bottom: var(--space-6);
   }
 }
 

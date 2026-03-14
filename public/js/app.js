@@ -334,8 +334,10 @@ function renderIncidents() {
         const badgeClass = verification.badge?.toLowerCase() || 'unconfirmed';
         const isGov = incident.is_government ? '✓' : '';
         
+        const sourceUrl = incident.source_url || incident.url || '#';
+        
         return `
-            <div class="incident-card" data-id="${incident.id}" onclick="selectIncident(${incident.id})">
+            <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener" class="incident-card" data-id="${incident.id}">
                 <div class="incident-header">
                     <span class="incident-flag">${flag}</span>
                     <span class="incident-severity ${severity}"></span>
@@ -349,16 +351,7 @@ function renderIncidents() {
                     ${incident.source || 'Unknown'} 
                     ${incident.num_sources ? `+ ${incident.num_sources - 1} sources` : ''}
                 </div>
-                <div class="incident-detail">
-                    <div class="incident-summary">
-                        ${incident.summary || 'No summary available'}
-                    </div>
-                    <div class="incident-meta">
-                        <span>📍 ${incident.location?.lat?.toFixed(4) || '--'}, ${incident.location?.lng?.toFixed(4) || '--'}</span>
-                        <span>📰 ${Array.isArray(incident.sources) ? incident.sources.join(', ') : incident.source}</span>
-                    </div>
-                </div>
-            </div>
+            </a>
         `;
     }).join('');
 }

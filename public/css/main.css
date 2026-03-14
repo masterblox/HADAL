@@ -291,6 +291,8 @@ a.incident-card {
   transition: all var(--transition-fast);
   position: relative;
   -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
+  -ms-touch-action: pan-y;
 }
 
 a.incident-card:hover,

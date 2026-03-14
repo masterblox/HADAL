@@ -583,6 +583,9 @@ function updateFinancePanel() {
     updatePrice('brent', state.financeData.brent?.formatted_price, state.financeData.brent?.formatted_change);
     updatePrice('gold', state.financeData.gold?.formatted_price, state.financeData.gold?.formatted_change);
     updatePrice('bitcoin', state.financeData.bitcoin?.formatted_price, state.financeData.bitcoin?.formatted_change);
+    updatePrice('gas', state.financeData.gas?.formatted_price, state.financeData.gas?.formatted_change);
+    updatePrice('copper', state.financeData.copper?.formatted_price, state.financeData.copper?.formatted_change);
+    updatePrice('iron', state.financeData.iron?.formatted_price, state.financeData.iron?.formatted_change);
 }
 
 function updateCasualtyCounts() {

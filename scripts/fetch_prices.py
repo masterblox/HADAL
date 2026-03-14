@@ -47,7 +47,9 @@ def main():
         'brent': {'symbol': 'BZ=F', 'name': 'Brent Oil', 'format': '${:.2f}'},
         'gas': {'symbol': 'NG=F', 'name': 'Natural Gas', 'format': '${:.3f}'},
         'gold': {'symbol': 'GC=F', 'name': 'Gold', 'format': '${:.0f}'},
-        'bitcoin': {'symbol': 'BTC-USD', 'name': 'Bitcoin', 'format': '${:,.0f}'}
+        'bitcoin': {'symbol': 'BTC-USD', 'name': 'Bitcoin', 'format': '${:,.0f}'},
+        'iron': {'symbol': 'IRON', 'name': 'Iron Ore', 'format': '${:.2f}'},  # Placeholder - needs proper data source
+        'copper': {'symbol': 'HG=F', 'name': 'Copper', 'format': '${:.2f}'}
     }
     
     prices = {}

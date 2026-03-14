@@ -253,13 +253,12 @@
    ============================================================================ */
 
 .incident-feed {
-  min-height: 100%;
-  overflow-y: auto;
+  min-height: 100vh;
+  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
   padding: var(--space-3);
-  touch-action: pan-y;
-  padding-bottom: 100px;
+  padding-bottom: 150px;
 }
 
 .incident-feed::-webkit-scrollbar {

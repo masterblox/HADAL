@@ -6,9 +6,14 @@ Tracks user reports and auto-hides content after threshold
 
 import json
 import hashlib
+import os
 from datetime import datetime, timezone
 from typing import Dict, List, Optional
 from collections import defaultdict
+
+# SECURITY: Admin key must be set via environment variable
+# NEVER hardcode secrets in source code
+ADMIN_KEY = os.environ.get('GULFWATCH_ADMIN_KEY', '')
 
 class UserReportSystem:
     """
@@ -49,8 +54,12 @@ class UserReportSystem:
     
     def _generate_fingerprint(self, incident_id: str, user_agent: str = '', ip: str = '') -> str:
         """Generate device fingerprint to prevent duplicate reports"""
-        # Simple fingerprint - in production, use more sophisticated method
-        data = f"{incident_id}:{user_agent}:{ip}"
+        # SECURITY: Hash the IP, never store raw IP addresses
+        # This protects user privacy while still preventing duplicate reports
+        ip_hash = hashlib.sha256(ip.encode()).hexdigest()[:16] if ip else 'no-ip'
+        
+        # Combine with user agent and incident
+        data = f"{incident_id}:{user_agent}:{ip_hash}"
         return hashlib.sha256(data.encode()).hexdigest()[:16]
     
     def add_report(self, incident_id: str, reason: str, details: str = '', 
@@ -141,8 +150,13 @@ class UserReportSystem:
     
     def unhide_incident(self, incident_id: str, admin_key: str) -> bool:
         """Admin function to unhide an incident (requires admin key)"""
-        # Simple admin check - in production, use proper auth
-        if admin_key != 'gulfwatch_admin_2024':
+        # SECURITY: Use constant-time comparison to prevent timing attacks
+        import hmac
+        
+        if not ADMIN_KEY or not admin_key:
+            return False
+        
+        if not hmac.compare_digest(admin_key, ADMIN_KEY):
             return False
         
         if incident_id in self.reports['hidden_incidents']:

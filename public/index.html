@@ -1202,6 +1202,25 @@
             return colors[type] || '#7f8c8d';
         }
         
+        // Security: Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Security: Sanitize URLs
+        function sanitizeUrl(url) {
+            if (!url) return '#';
+            url = url.trim().toLowerCase();
+            const dangerous = ['javascript:', 'data:', 'vbscript:', 'file:'];
+            for (const d of dangerous) {
+                if (url.startsWith(d)) return '#';
+            }
+            return url;
+        }
+        
         // Format time ago
         function timeAgo(dateString) {
             // Handle various timestamp formats
@@ -1589,18 +1608,26 @@
                         'wrong_title': 'Misleading headline'
                     };
                     if (!incident.location) console.log('DEBUG: No location for', incident.id);
+                    // Security: Escape all user-controlled content
+                    const safeTitle = escapeHtml(incident.title);
+                    const safeSource = escapeHtml(incident.source);
+                    const safeSourceUrl = sanitizeUrl(incident.source_url);
+                    const safeLocationName = escapeHtml(incident.location?.name || 'Unknown');
+                    const safeLocationCountry = escapeHtml(incident.location?.country || '');
+                    const safeId = escapeHtml(incident.id);
+                    
                     card.innerHTML = `
                         <div class="incident-header">
-                            <span class="incident-type type-${incident.type}">${incident.type.replace('_', ' ')}</span>
-                            <span class="incident-status status-${incident.status}">${incident.status}</span>
+                            <span class="incident-type type-${escapeHtml(incident.type)}">${escapeHtml(incident.type?.replace('_', ' '))}</span>
+                            <span class="incident-status status-${escapeHtml(incident.status)}">${escapeHtml(incident.status)}</span>
                             ${verificationBadge}
                             ${govBadge}
                         </div>
-                        <a href="${incident.source_url}" target="_blank" class="incident-title" onclick="event.stopPropagation();">${incident.title}</a>
+                        <a href="${safeSourceUrl}" target="_blank" class="incident-title" onclick="event.stopPropagation();">${safeTitle}</a>
                         <div class="incident-meta">
-                            <span>📍 ${incident.location && incident.location.name ? incident.location.name : 'Unknown'}, ${incident.location && incident.location.country ? incident.location.country : ''}</span>
+                            <span>📍 ${safeLocationName}, ${safeLocationCountry}</span>
                             <span>•</span>
-                            <span>${incident.source}</span>
+                            <span>${safeSource}</span>
                             <span>•</span>
                             <span>${timeAgo(incident.published)}</span>
                         </div>
@@ -1609,10 +1636,10 @@
                         </div>
                         <div class="incident-actions">
                             ${translateBtn}
-                            ${!incident.is_government ? `<button class="report-btn" onclick="event.stopPropagation(); showReportModal('${incident.id}', '${incident.title.replace(/'/g, "\\'")}');" title="Report false or inaccurate information">
+                            ${!incident.is_government ? `<button class="report-btn" onclick="event.stopPropagation(); showReportModal('${safeId}', '${safeTitle.replace(/'/g, "\\'")}');" title="Report false or inaccurate information">
                                 ⚠️ Report
                             </button>
-                            <span class="report-count" id="report-count-${incident.id}" style="display:none; font-size: 10px; color: #e74c3c;"></span>` : '<span style="font-size: 11px; color: #27ae60;">✓ Official Source</span>'}
+                            <span class="report-count" id="report-count-${safeId}" style="display:none; font-size: 10px; color: #e74c3c;"></span>` : '<span style="font-size: 11px; color: #27ae60;">✓ Official Source</span>'}
                         </div>
                     `;
                     

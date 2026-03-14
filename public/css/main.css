@@ -1729,3 +1729,349 @@
   position: relative;
   z-index: 3;
 }
+
+/* ============================================================================
+   ANALYSIS CHARTS
+   ============================================================================ */
+
+.chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+/* Timeline Chart */
+.chart-timeline {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 160px;
+  gap: 4px;
+  padding: var(--space-2) 0;
+}
+
+.timeline-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.timeline-bar {
+  width: 100%;
+  min-width: 8px;
+  background: linear-gradient(to top, var(--accent-blue), var(--accent-cyan));
+  border-radius: 2px 2px 0 0;
+  transition: opacity 0.2s;
+}
+
+.timeline-bar:hover {
+  opacity: 0.8;
+}
+
+.timeline-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Heatmap Chart */
+.chart-heatmap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+}
+
+.heatmap-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.heatmap-country {
+  width: 80px;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.heatmap-bar-wrapper {
+  flex: 1;
+  height: 20px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.heatmap-bar {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.5s ease;
+}
+
+.heatmap-count {
+  width: 30px;
+  text-align: right;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Finance Chart */
+.chart-finance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.finance-metric {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.finance-metric-icon {
+  font-size: var(--text-xl);
+}
+
+.finance-metric-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.finance-metric-name {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.finance-metric-price {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.finance-metric-change {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.finance-metric-change.positive {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.finance-metric-change.negative {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* Casualty Chart */
+.casualty-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.casualty-chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.casualty-chart-value {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.casualty-chart-value.critical {
+  color: var(--severity-critical);
+}
+
+.casualty-chart-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-1);
+}
+
+/* Reliability Chart */
+.chart-reliability {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.reliability-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.reliability-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reliability-source {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.reliability-count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.reliability-score-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.reliability-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.reliability-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.reliability-bar.high {
+  background: var(--severity-low);
+}
+
+.reliability-bar.medium {
+  background: var(--severity-medium);
+}
+
+.reliability-bar.low {
+  background: var(--severity-critical);
+}
+
+.reliability-score {
+  width: 35px;
+  text-align: right;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Intensity Chart */
+.chart-intensity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-2) 0;
+}
+
+.intensity-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.intensity-value {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.intensity-value.critical {
+  color: var(--severity-critical);
+}
+
+.intensity-value.high {
+  color: var(--severity-high);
+}
+
+.intensity-value.medium {
+  color: var(--severity-medium);
+}
+
+.intensity-label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.intensity-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.intensity-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.intensity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.intensity-dot.critical {
+  background: var(--severity-critical);
+}
+
+.intensity-dot.high {
+  background: var(--severity-high);
+}
+
+.intensity-dot.medium {
+  background: var(--severity-medium);
+}
+
+.intensity-dot.low {
+  background: var(--severity-low);
+}
+
+.intensity-severity {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.intensity-percentage {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-primary);
+}

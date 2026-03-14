@@ -126,6 +126,9 @@ function initializeNavigation() {
             } else if (section === 'missile-defense') {
                 // Initialize missile defense dashboard
                 initializeMissileDefense();
+            } else if (section === 'analysis') {
+                // Initialize analysis charts
+                initializeAnalysis();
             }
         });
     });
@@ -1188,6 +1191,290 @@ function containsArabic(text) {
     if (!text) return false;
     const arabicPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
     return arabicPattern.test(text);
+}
+
+// ============================================================================
+// ANALYSIS CHARTS
+// ============================================================================
+
+let analysisInitialized = false;
+
+function initializeAnalysis() {
+    if (!analysisInitialized) {
+        analysisInitialized = true;
+    }
+    renderAnalysisCharts();
+}
+
+function renderAnalysisCharts() {
+    renderTimelineChart();
+    renderHeatmapChart();
+    renderFinanceChart();
+    renderCasualtyChart();
+    renderReliabilityChart();
+    renderIntensityChart();
+}
+
+function renderTimelineChart() {
+    const container = document.getElementById('timeline-chart');
+    if (!container) return;
+
+    // Group incidents by date
+    const incidentsByDate = {};
+    const last30Days = new Date();
+    last30Days.setDate(last30Days.getDate() - 30);
+
+    state.incidents.forEach(incident => {
+        const date = new Date(incident.timestamp);
+        if (date >= last30Days) {
+            const dateKey = date.toISOString().split('T')[0];
+            incidentsByDate[dateKey] = (incidentsByDate[dateKey] || 0) + 1;
+        }
+    });
+
+    // Sort dates and get last 14 days with data
+    const sortedDates = Object.keys(incidentsByDate).sort().slice(-14);
+    const maxCount = Math.max(...Object.values(incidentsByDate), 1);
+
+    if (sortedDates.length === 0) {
+        container.innerHTML = '<div class="chart-empty">No data available</div>';
+        return;
+    }
+
+    // Build simple bar chart with CSS
+    let html = '<div class="chart-timeline">';
+    sortedDates.forEach(date => {
+        const count = incidentsByDate[date];
+        const height = (count / maxCount) * 100;
+        const label = new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        html += `
+            <div class="timeline-bar-wrapper">
+                <div class="timeline-bar" style="height: ${height}%" title="${count} incidents on ${label}"></div>
+                <div class="timeline-label">${label}</div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function renderHeatmapChart() {
+    const container = document.getElementById('heatmap-chart');
+    if (!container) return;
+
+    // Count incidents by country
+    const countryCounts = {};
+    state.incidents.forEach(incident => {
+        const country = incident.country || 'unknown';
+        countryCounts[country] = (countryCounts[country] || 0) + 1;
+    });
+
+    const sortedCountries = Object.entries(countryCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8);
+
+    if (sortedCountries.length === 0) {
+        container.innerHTML = '<div class="chart-empty">No data available</div>';
+        return;
+    }
+
+    const maxCount = Math.max(...sortedCountries.map(([_, count]) => count));
+
+    let html = '<div class="chart-heatmap">';
+    sortedCountries.forEach(([country, count]) => {
+        const intensity = count / maxCount;
+        const color = intensity > 0.7 ? 'var(--severity-critical)' :
+                      intensity > 0.4 ? 'var(--severity-high)' :
+                      intensity > 0.2 ? 'var(--severity-medium)' : 'var(--severity-low)';
+        html += `
+            <div class="heatmap-row">
+                <span class="heatmap-country">${getCountryDisplayName(country)}</span>
+                <div class="heatmap-bar-wrapper">
+                    <div class="heatmap-bar" style="width: ${intensity * 100}%; background: ${color}"></div>
+                </div>
+                <span class="heatmap-count">${count}</span>
+            </div>
+        `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function renderFinanceChart() {
+    const container = document.getElementById('finance-chart');
+    if (!container) return;
+
+    const prices = state.financeData || {};
+
+    const commodities = [
+        { key: 'brent', name: 'Brent Crude', icon: '🛢️' },
+        { key: 'gold', name: 'Gold', icon: '🥇' },
+        { key: 'bitcoin', name: 'Bitcoin', icon: '₿' },
+        { key: 'gas', name: 'Natural Gas', icon: '🔥' }
+    ];
+
+    let html = '<div class="chart-finance">';
+    commodities.forEach(({ key, name, icon }) => {
+        const data = prices[key];
+        if (data) {
+            const changeClass = data.change >= 0 ? 'positive' : 'negative';
+            const changeSymbol = data.change >= 0 ? '+' : '';
+            html += `
+                <div class="finance-metric">
+                    <span class="finance-metric-icon">${icon}</span>
+                    <div class="finance-metric-info">
+                        <span class="finance-metric-name">${name}</span>
+                        <span class="finance-metric-price">$${data.price?.toLocaleString() || '--'}</span>
+                    </div>
+                    <span class="finance-metric-change ${changeClass}">${changeSymbol}${data.change?.toFixed(2) || '--'}%</span>
+                </div>
+            `;
+        }
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function renderCasualtyChart() {
+    const container = document.getElementById('casualty-chart');
+    if (!container) return;
+
+    let total = 0, military = 0, civilian = 0, injured = 0;
+
+    state.incidents.forEach(incident => {
+        const casualties = incident.casualties || {};
+        if (casualties.deaths) {
+            total += casualties.deaths;
+            if (casualties.type === 'military') military += casualties.deaths;
+            else if (casualties.type === 'civilian') civilian += casualties.deaths;
+        }
+        if (casualties.injured) injured += casualties.injured;
+    });
+
+    if (total === 0 && injured === 0) {
+        container.innerHTML = '<div class="chart-empty">No casualty data available</div>';
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="casualty-chart-grid">
+            <div class="casualty-chart-item">
+                <div class="casualty-chart-value critical">${total}</div>
+                <div class="casualty-chart-label">Total Deaths</div>
+            </div>
+            <div class="casualty-chart-item">
+                <div class="casualty-chart-value">${military}</div>
+                <div class="casualty-chart-label">Military</div>
+            </div>
+            <div class="casualty-chart-item">
+                <div class="casualty-chart-value">${civilian}</div>
+                <div class="casualty-chart-label">Civilian</div>
+            </div>
+            <div class="casualty-chart-item">
+                <div class="casualty-chart-value">${injured}</div>
+                <div class="casualty-chart-label">Injured</div>
+            </div>
+        </div>
+    `;
+}
+
+function renderReliabilityChart() {
+    const container = document.getElementById('reliability-chart');
+    if (!container) return;
+
+    const sourceStats = {
+        'Government': { count: 0, score: 95 },
+        'News Agency': { count: 0, score: 75 },
+        'Social Media': { count: 0, score: 45 },
+        'Other': { count: 0, score: 60 }
+    };
+
+    state.incidents.forEach(incident => {
+        const source = incident.source || 'Other';
+        if (source.includes('gov') || source.includes('official')) {
+            sourceStats['Government'].count++;
+        } else if (source.includes('news') || source.includes('reuters') || source.includes('ap')) {
+            sourceStats['News Agency'].count++;
+        } else if (source.includes('social') || source.includes('twitter') || source.includes('x')) {
+            sourceStats['Social Media'].count++;
+        } else {
+            sourceStats['Other'].count++;
+        }
+    });
+
+    let html = '<div class="chart-reliability">';
+    Object.entries(sourceStats).forEach(([source, data]) => {
+        if (data.count > 0) {
+            const reliabilityClass = data.score >= 80 ? 'high' : data.score >= 60 ? 'medium' : 'low';
+            html += `
+                <div class="reliability-row">
+                    <div class="reliability-info">
+                        <span class="reliability-source">${source}</span>
+                        <span class="reliability-count">${data.count} incidents</span>
+                    </div>
+                    <div class="reliability-score-wrapper">
+                        <div class="reliability-bar-bg">
+                            <div class="reliability-bar ${reliabilityClass}" style="width: ${data.score}%"></div>
+                        </div>
+                        <span class="reliability-score">${data.score}%</span>
+                    </div>
+                </div>
+            `;
+        }
+    });
+    html += '</div>';
+    container.innerHTML = html || '<div class="chart-empty">No source data available</div>';
+}
+
+function renderIntensityChart() {
+    const container = document.getElementById('intensity-chart');
+    if (!container) return;
+
+    const severityCounts = { critical: 0, high: 0, medium: 0, low: 0 };
+    state.incidents.forEach(incident => {
+        const severity = incident.severity || 'low';
+        if (severityCounts[severity] !== undefined) {
+            severityCounts[severity]++;
+        }
+    });
+
+    const total = Object.values(severityCounts).reduce((a, b) => a + b, 0);
+
+    if (total === 0) {
+        container.innerHTML = '<div class="chart-empty">No intensity data available</div>';
+        return;
+    }
+
+    // Calculate intensity score (weighted average)
+    const weights = { critical: 4, high: 3, medium: 2, low: 1 };
+    const weightedSum = Object.entries(severityCounts).reduce((sum, [sev, count]) => sum + (weights[sev] * count), 0);
+    const intensityScore = Math.round((weightedSum / (total * 4)) * 100);
+
+    let html = '<div class="chart-intensity">';
+
+    // Intensity meter
+    html += `
+        <div class="intensity-main">
+            <div class="intensity-value ${intensityScore > 70 ? 'critical' : intensityScore > 40 ? 'high' : 'medium'}">${intensityScore}%</div>
+            <div class="intensity-label">Conflict Intensity Index</div>
+        </div>
+    `;
+
+    // Breakdown by severity
+    html += '<div class="intensity-breakdown">';
+    Object.entries(severityCounts).forEach(([severity, count]) => {
+        const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+        html += `
+            <div class="intensity-item">
+                <span class="intensity-dot ${severity}"></span>
+                <span class="intensity-severity">${severity.charAt(0).toUpperCase() + severity.slice(1)}</span>
+                <span class="intensity-percentage">${percentage}%</span>
+            </div>
+        `;
+    });
+    html += '</div></div>';
+
+    container.innerHTML = html;
 }
 
 // Make modal functions globally available

@@ -863,28 +863,27 @@ a.incident-card.active {
 
   .section-content {
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding-bottom: 60px;
     height: calc(100% - 60px);
   }
 
   .section {
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
   }
 
   #monitor-section {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+    display: block;
+    height: auto;
+    min-height: 100%;
   }
 
   .incident-feed {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-    touch-action: pan-y;
+    display: block;
+    height: auto;
+    overflow: visible;
     padding-bottom: var(--space-6);
   }
 }

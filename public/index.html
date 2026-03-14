@@ -1603,10 +1603,10 @@
                         </div>
                         <div class="incident-actions">
                             ${translateBtn}
-                            <button class="report-btn" onclick="event.stopPropagation(); showReportModal('${incident.id}', '${incident.title.replace(/'/g, "\\'")}');" title="Report false or inaccurate information">
+                            ${!incident.is_government ? `<button class="report-btn" onclick="event.stopPropagation(); showReportModal('${incident.id}', '${incident.title.replace(/'/g, "\\'")}');" title="Report false or inaccurate information">
                                 ⚠️ Report
                             </button>
-                            <span class="report-count" id="report-count-${incident.id}" style="display:none; font-size: 10px; color: #e74c3c;"></span>
+                            <span class="report-count" id="report-count-${incident.id}" style="display:none; font-size: 10px; color: #e74c3c;"></span>` : '<span style="font-size: 11px; color: #27ae60;">✓ Official Source</span>'}
                         </div>
                     `;
                     

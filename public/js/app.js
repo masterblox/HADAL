@@ -101,31 +101,331 @@ async function refreshData() {
 function initializeNavigation() {
     const tabs = document.querySelectorAll('.tab-btn');
     const sections = document.querySelectorAll('.section');
-    
+
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const section = tab.dataset.section;
-            
+
             // Update active tab
             tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            
+
             // Show selected section
             sections.forEach(s => {
                 s.style.display = s.dataset.section === section ? 'block' : 'none';
             });
-            
+
             state.currentSection = section;
-            
+
             // Section-specific initialization
             if (section === 'map') {
                 setTimeout(() => {
                     if (state.map) state.map.invalidateSize();
                     updateMapMarkers();
                 }, 100);
+            } else if (section === 'missile-defense') {
+                // Initialize missile defense dashboard
+                initializeMissileDefense();
             }
         });
     });
+}
+
+// ============================================================================
+// MISSILE DEFENSE DASHBOARD
+// ============================================================================
+
+let missileDefenseInitialized = false;
+
+function initializeMissileDefense() {
+    if (!missileDefenseInitialized) {
+        // Set up country selector
+        const countrySelect = document.getElementById('missile-defense-country');
+        if (countrySelect) {
+            countrySelect.addEventListener('change', (e) => {
+                updateMissileDefenseDashboard(e.target.value);
+            });
+        }
+        missileDefenseInitialized = true;
+    }
+
+    // Initial update with current selection
+    const countrySelect = document.getElementById('missile-defense-country');
+    if (countrySelect) {
+        updateMissileDefenseDashboard(countrySelect.value);
+    }
+}
+
+function updateMissileDefenseDashboard(selectedCountry) {
+    const stats = calculateMissileDefenseStats(selectedCountry);
+
+    // Update title
+    const titleEl = document.getElementById('missile-defense-title');
+    if (titleEl) {
+        const countryName = selectedCountry === 'all' ? 'REGIONAL' : getCountryDisplayName(selectedCountry).toUpperCase();
+        titleEl.textContent = `${countryName} MISSILE DEFENSE`;
+    }
+
+    // Update main metrics
+    updateMetric('metric-detected', stats.total.detected);
+    updateMetric('metric-intercepted', stats.total.intercepted);
+    updateMetric('metric-impacted', stats.total.impacted);
+
+    // Update ballistic missiles
+    updateMetric('ballistic-detected', stats.ballistic.detected);
+    updateMetric('ballistic-intercepted', stats.ballistic.intercepted);
+
+    // Update drones
+    updateMetric('drone-detected', stats.drone.detected);
+    updateMetric('drone-intercepted', stats.drone.intercepted);
+
+    // Update 24h stats
+    updateMetric('24h-detected', stats.last24h.detected);
+    updateMetric('24h-intercepted', stats.last24h.intercepted);
+
+    // Update success rate
+    const successRate = calculateSuccessRate(stats.total.intercepted, stats.total.impacted);
+    updateSuccessRate(successRate);
+
+    // Update country table
+    updateCountryTable(stats.countryBreakdown, selectedCountry);
+
+    // Update source attribution
+    updateMissileDefenseSource(selectedCountry);
+
+    // Update last updated time
+    const lastUpdatedEl = document.getElementById('missile-last-updated');
+    if (lastUpdatedEl) {
+        lastUpdatedEl.textContent = `Updated: ${new Date().toLocaleString()}`;
+    }
+}
+
+function calculateMissileDefenseStats(selectedCountry) {
+    const relevantTypes = ['missile', 'air_defense', 'drone', 'attack'];
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    const stats = {
+        total: { detected: 0, intercepted: 0, impacted: 0 },
+        ballistic: { detected: 0, intercepted: 0 },
+        drone: { detected: 0, intercepted: 0 },
+        last24h: { detected: 0, intercepted: 0 },
+        countryBreakdown: {}
+    };
+
+    // Initialize country breakdown
+    const countries = ['uae', 'saudi', 'qatar', 'bahrain', 'kuwait', 'israel', 'iran'];
+    countries.forEach(country => {
+        stats.countryBreakdown[country] = {
+            detected: 0,
+            intercepted: 0,
+            impacted: 0
+        };
+    });
+
+    state.incidents.forEach(incident => {
+        // Check if incident is relevant type
+        const incidentType = (incident.type || '').toLowerCase();
+        const isRelevantType = relevantTypes.includes(incidentType);
+
+        // Check if it's a missile/drone related incident by title keywords
+        const title = (incident.title || '').toLowerCase();
+        const isMissileRelated = title.includes('missile') || title.includes('rocket') ||
+                                 title.includes('ballistic') || title.includes('intercept') ||
+                                 title.includes('air defense') || title.includes('shot down') ||
+                                 title.includes('drone') || title.includes('uav');
+
+        if (!isRelevantType && !isMissileRelated) return;
+
+        // Determine country
+        const countryCode = getCountryCode(incident.location?.country);
+        if (countryCode === 'unknown') return;
+
+        // Filter by selected country if not 'all'
+        if (selectedCountry !== 'all' && countryCode !== selectedCountry) return;
+
+        // Check if intercepted
+        const isIntercepted = isIncidentIntercepted(incident);
+        const isImpacted = !isIntercepted && (incidentType === 'missile' || incidentType === 'attack' ||
+                          title.includes('impact') || title.includes('hit') || title.includes('strike'));
+
+        // Update stats
+        stats.total.detected++;
+        if (isIntercepted) stats.total.intercepted++;
+        if (isImpacted) stats.total.impacted++;
+
+        // Update country breakdown
+        if (stats.countryBreakdown[countryCode]) {
+            stats.countryBreakdown[countryCode].detected++;
+            if (isIntercepted) stats.countryBreakdown[countryCode].intercepted++;
+            if (isImpacted) stats.countryBreakdown[countryCode].impacted++;
+        }
+
+        // Categorize by type
+        if (incidentType === 'missile' || title.includes('missile') || title.includes('ballistic') || title.includes('rocket')) {
+            stats.ballistic.detected++;
+            if (isIntercepted) stats.ballistic.intercepted++;
+        } else if (incidentType === 'drone' || title.includes('drone') || title.includes('uav')) {
+            stats.drone.detected++;
+            if (isIntercepted) stats.drone.intercepted++;
+        }
+
+        // Check if within last 24 hours
+        const incidentDate = new Date(incident.published);
+        if (incidentDate >= twentyFourHoursAgo) {
+            stats.last24h.detected++;
+            if (isIntercepted) stats.last24h.intercepted++;
+        }
+    });
+
+    return stats;
+}
+
+function isIncidentIntercepted(incident) {
+    const title = (incident.title || '').toLowerCase();
+    const status = (incident.status || '').toLowerCase();
+    const type = (incident.type || '').toLowerCase();
+
+    // Check for interception keywords
+    const interceptionKeywords = [
+        'intercepted', 'shot down', 'downed', 'destroyed', 'neutralized',
+        'air defense', 'patriot', 'thaad', 'iron dome', 'arrow',
+        'successfully intercepted', 'defense system', 'intercept'
+    ];
+
+    // Check verification badge
+    const verification = incident.verification || {};
+    if (verification.badge === 'VERIFIED' && interceptionKeywords.some(kw => title.includes(kw))) {
+        return true;
+    }
+
+    // Check title for interception keywords
+    if (interceptionKeywords.some(kw => title.includes(kw))) {
+        return true;
+    }
+
+    // Check if it's an air_defense type incident
+    if (type === 'air_defense') {
+        return true;
+    }
+
+    return false;
+}
+
+function calculateSuccessRate(intercepted, impacted) {
+    const total = intercepted + impacted;
+    if (total === 0) return 0;
+    return Math.round((intercepted / total) * 100);
+}
+
+function updateMetric(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = value;
+    }
+}
+
+function updateSuccessRate(percentage) {
+    const circle = document.getElementById('success-rate-circle');
+    const valueEl = document.getElementById('success-rate-value');
+
+    if (circle) {
+        const circumference = 100;
+        const offset = circumference - (percentage / 100) * circumference;
+        circle.style.strokeDasharray = `${percentage}, 100`;
+    }
+
+    if (valueEl) {
+        valueEl.textContent = `${percentage}%`;
+        // Color code based on success rate
+        if (percentage >= 80) {
+            valueEl.style.color = 'var(--severity-low)';
+        } else if (percentage >= 50) {
+            valueEl.style.color = 'var(--severity-medium)';
+        } else {
+            valueEl.style.color = 'var(--severity-critical)';
+        }
+    }
+}
+
+function updateCountryTable(breakdown, selectedCountry) {
+    const tbody = document.getElementById('missile-country-tbody');
+    if (!tbody) return;
+
+    // If a specific country is selected, show detailed breakdown
+    if (selectedCountry !== 'all') {
+        const countryData = breakdown[selectedCountry];
+        if (countryData) {
+            const successRate = calculateSuccessRate(countryData.intercepted, countryData.impacted);
+            tbody.innerHTML = `
+                <tr>
+                    <td>${getCountryDisplayName(selectedCountry)}</td>
+                    <td class="value-detected">${countryData.detected}</td>
+                    <td class="value-intercepted">${countryData.intercepted}</td>
+                    <td class="value-impacted">${countryData.impacted}</td>
+                    <td class="success-rate-${successRate >= 80 ? 'high' : successRate >= 50 ? 'medium' : 'low'}">${successRate}%</td>
+                </tr>
+            `;
+        }
+        return;
+    }
+
+    // Show all countries with data
+    let html = '';
+    const sortedCountries = Object.entries(breakdown)
+        .filter(([_, data]) => data.detected > 0)
+        .sort((a, b) => b[1].detected - a[1].detected);
+
+    if (sortedCountries.length === 0) {
+        html = '<tr><td colspan="5" class="no-data">No missile defense data available</td></tr>';
+    } else {
+        sortedCountries.forEach(([country, data]) => {
+            const successRate = calculateSuccessRate(data.intercepted, data.impacted);
+            html += `
+                <tr>
+                    <td>${getCountryDisplayName(country)}</td>
+                    <td class="value-detected">${data.detected}</td>
+                    <td class="value-intercepted">${data.intercepted}</td>
+                    <td class="value-impacted">${data.impacted}</td>
+                    <td class="success-rate-${successRate >= 80 ? 'high' : successRate >= 50 ? 'medium' : 'low'}">${successRate}%</td>
+                </tr>
+            `;
+        });
+    }
+
+    tbody.innerHTML = html;
+}
+
+function getCountryDisplayName(countryCode) {
+    const names = {
+        'uae': '🇦🇪 United Arab Emirates',
+        'saudi': '🇸🇦 Saudi Arabia',
+        'qatar': '🇶🇦 Qatar',
+        'bahrain': '🇧🇭 Bahrain',
+        'kuwait': '🇰🇼 Kuwait',
+        'oman': '🇴🇲 Oman',
+        'israel': '🇮🇱 Israel',
+        'iran': '🇮🇷 Iran'
+    };
+    return names[countryCode] || countryCode.toUpperCase();
+}
+
+function updateMissileDefenseSource(selectedCountry) {
+    const sourceEl = document.getElementById('missile-defense-source');
+    if (!sourceEl) return;
+
+    const sources = {
+        'uae': 'UAE Ministry of Interior & General Command of the Armed Forces',
+        'saudi': 'Royal Saudi Air Defense Forces & Ministry of Defense',
+        'qatar': 'Qatar Armed Forces & Ministry of Defense',
+        'bahrain': 'Bahrain Defence Force & Ministry of Interior',
+        'kuwait': 'Kuwait Armed Forces & Ministry of Defense',
+        'israel': 'Israel Defense Forces (IDF) & Home Front Command',
+        'iran': 'Islamic Republic News Agency (IRNA) & Military Sources',
+        'all': 'Aggregated from Multiple Government & Defense Sources'
+    };
+
+    sourceEl.textContent = sources[selectedCountry] || sources['all'];
 }
 
 // ============================================================================

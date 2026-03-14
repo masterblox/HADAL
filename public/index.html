@@ -150,6 +150,12 @@
                     </svg>
                     Data
                 </button>
+                <button class="tab-btn" data-section="missile-defense">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    Missile Defense
+                </button>
                 <button class="tab-btn" data-section="reports">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -251,6 +257,158 @@ https://gulfwatch-testing.vercel.app/feed.json
                                     Download GeoJSON
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Missile Defense Section -->
+                <div class="section" id="missile-defense-section" data-section="missile-defense" style="display: none;">
+                    <div class="missile-defense-container">
+                        <!-- Country Selector -->
+                        <div class="missile-defense-header">
+                            <div class="country-selector">
+                                <label for="missile-defense-country">Select Country:</label>
+                                <select id="missile-defense-country">
+                                    <option value="all">All Countries (Regional Overview)</option>
+                                    <option value="uae">🇦🇪 United Arab Emirates</option>
+                                    <option value="saudi">🇸🇦 Saudi Arabia</option>
+                                    <option value="qatar">🇶🇦 Qatar</option>
+                                    <option value="bahrain">🇧🇭 Bahrain</option>
+                                    <option value="kuwait">🇰🇼 Kuwait</option>
+                                    <option value="israel">🇮🇱 Israel</option>
+                                    <option value="iran">🇮🇷 Iran</option>
+                                </select>
+                            </div>
+                            <div class="missile-defense-title" id="missile-defense-title">REGIONAL MISSILE DEFENSE</div>
+                        </div>
+
+                        <!-- Main Metrics Cards -->
+                        <div class="missile-metrics-grid">
+                            <div class="missile-metric-card detected">
+                                <div class="metric-icon">🎯</div>
+                                <div class="metric-value" id="metric-detected">--</div>
+                                <div class="metric-label">Detected</div>
+                                <div class="metric-subtitle">Threats identified</div>
+                            </div>
+                            <div class="missile-metric-card intercepted">
+                                <div class="metric-icon">🛡️</div>
+                                <div class="metric-value" id="metric-intercepted">--</div>
+                                <div class="metric-label">Intercepted</div>
+                                <div class="metric-subtitle">Successfully neutralized</div>
+                            </div>
+                            <div class="missile-metric-card impacted">
+                                <div class="metric-icon">💥</div>
+                                <div class="metric-value" id="metric-impacted">--</div>
+                                <div class="metric-label">Impacted Territory</div>
+                                <div class="metric-subtitle">Not intercepted</div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Breakdown -->
+                        <div class="missile-stats-grid">
+                            <!-- Ballistic Missiles -->
+                            <div class="missile-stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-icon">🚀</span>
+                                    <span class="stat-title">Ballistic Missiles</span>
+                                </div>
+                                <div class="stat-breakdown">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Detected</span>
+                                        <span class="stat-value detected" id="ballistic-detected">--</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Intercepted</span>
+                                        <span class="stat-value intercepted" id="ballistic-intercepted">--</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Drones -->
+                            <div class="missile-stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-icon">🚁</span>
+                                    <span class="stat-title">Drones</span>
+                                </div>
+                                <div class="stat-breakdown">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Detected</span>
+                                        <span class="stat-value detected" id="drone-detected">--</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Intercepted</span>
+                                        <span class="stat-value intercepted" id="drone-intercepted">--</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Success Rate -->
+                            <div class="missile-stat-card success-rate-card">
+                                <div class="stat-header">
+                                    <span class="stat-icon">📊</span>
+                                    <span class="stat-title">Success Rate</span>
+                                </div>
+                                <div class="success-rate-display">
+                                    <div class="success-rate-circle">
+                                        <svg viewBox="0 0 36 36">
+                                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                            <path class="circle-progress" id="success-rate-circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        </svg>
+                                        <div class="success-rate-value" id="success-rate-value">--%</div>
+                                    </div>
+                                    <div class="success-rate-label">Interception Success</div>
+                                </div>
+                            </div>
+
+                            <!-- Last 24 Hours -->
+                            <div class="missile-stat-card">
+                                <div class="stat-header">
+                                    <span class="stat-icon">⏰</span>
+                                    <span class="stat-title">Last 24 Hours</span>
+                                </div>
+                                <div class="stat-breakdown">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Detected</span>
+                                        <span class="stat-value" id="24h-detected">--</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Intercepted</span>
+                                        <span class="stat-value intercepted" id="24h-intercepted">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Country Breakdown Table -->
+                        <div class="missile-country-table-container">
+                            <div class="table-header">
+                                <span class="table-icon">🌍</span>
+                                <span class="table-title">Per-Country Breakdown</span>
+                            </div>
+                            <table class="missile-country-table">
+                                <thead>
+                                    <tr>
+                                        <th>Country</th>
+                                        <th>Detected</th>
+                                        <th>Intercepted</th>
+                                        <th>Impacted</th>
+                                        <th>Success Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="missile-country-tbody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Source Attribution -->
+                        <div class="missile-source-attribution">
+                            <div class="source-icon">📡</div>
+                            <div class="source-text">
+                                <span class="source-label">Data Source:</span>
+                                <span class="source-value" id="missile-defense-source">Aggregated from Multiple Government & Defense Sources</span>
+                            </div>
+                            <div class="last-updated" id="missile-last-updated">Updated: --</div>
                         </div>
                     </div>
                 </div>

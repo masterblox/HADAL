@@ -141,7 +141,14 @@ If you discover a security vulnerability, please:
 - Handling personally identifiable information (PII)
 - Storing confidential government data
 - Production use with real users expecting privacy
-- Compliance-regulated industries (HIPAA, GDPR, etc.)
+
+**Note on GDPR:** This application does not collect or store personal data (as defined by GDPR). The "fingerprints" used for report deduplication are:
+- Derived from browser characteristics (not names, emails, or IDs)
+- Hashed and anonymized
+- Stored only to prevent duplicate reports
+- Not linked to any identifiable individual
+
+While GDPR compliance is not strictly required for this use case, the application follows privacy-by-design principles.
 
 ### Security Audit Log
 

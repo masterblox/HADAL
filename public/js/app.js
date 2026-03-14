@@ -77,7 +77,8 @@ async function loadIncidents() {
 async function loadFinanceData() {
     try {
         const response = await fetch('prices.json?t=' + Date.now());
-        state.financeData = await response.json();
+        const data = await response.json();
+        state.financeData = data.prices || {}; // Extract prices object
         updateFinancePanel();
     } catch (error) {
         console.error('❌ Failed to load finance data:', error);
@@ -586,9 +587,9 @@ function updateFinancePanel() {
         }
     };
     
-    updatePrice('brent', state.financeData.brent?.price, state.financeData.brent?.change);
-    updatePrice('gold', state.financeData.gold?.price, state.financeData.gold?.change);
-    updatePrice('vix', state.financeData.vix?.price, state.financeData.vix?.change);
+    updatePrice('brent', state.financeData.brent?.formatted_price, state.financeData.brent?.formatted_change);
+    updatePrice('gold', state.financeData.gold?.formatted_price, state.financeData.gold?.formatted_change);
+    updatePrice('vix', state.financeData.gas?.formatted_price, state.financeData.gas?.formatted_change);
 }
 
 function updateCasualtyCounts() {

@@ -142,6 +142,12 @@
                     </svg>
                     Analysis
                 </button>
+                <button class="tab-btn" data-section="missile-defense">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    Missile Defense
+                </button>
                 <button class="tab-btn" data-section="data">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
@@ -149,12 +155,6 @@
                         <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
                     </svg>
                     Data
-                </button>
-                <button class="tab-btn" data-section="missile-defense">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                    </svg>
-                    Missile Defense
                 </button>
                 <button class="tab-btn" data-section="reports">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -220,43 +220,6 @@
                         <div class="analysis-card">
                             <div class="analysis-card-title">Conflict Intensity</div>
                             <div id="intensity-chart">Loading...</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Data Section -->
-                <div class="section" id="data-section" data-section="data" style="display: none;">
-                    <div class="data-tabs">
-                        <button class="data-tab active" data-tab="api">API Access</button>
-                        <button class="data-tab" data-tab="exports">Exports</button>
-                        <button class="data-tab" data-tab="rss">RSS Feeds</button>
-                        <button class="data-tab" data-tab="docs">Documentation</button>
-                    </div>
-                    <div class="data-content" id="data-content">
-                        <div class="data-panel active" data-panel="api">
-                            <h3>API Endpoint</h3>
-                            <div class="code-block" id="api-endpoint">
-https://gulfwatch-testing.vercel.app/feed.json
-                            </div>
-                            <h3 style="margin-top: 20px;">Example Response</h3>
-                            <div class="code-block" id="api-example">
-{
-  "total_incidents": 236,
-  "generated_at": "2026-03-14T12:00:00Z",
-  "incidents": [...]
-}
-                            </div>
-                            <div style="margin-top: 20px;">
-                                <button class="icon-btn" onclick="downloadJSON()" style="width: auto; padding: 8px 16px;">
-                                    Download JSON
-                                </button>
-                                <button class="icon-btn" onclick="downloadCSV()" style="width: auto; padding: 8px 16px;">
-                                    Download CSV
-                                </button>
-                                <button class="icon-btn" onclick="downloadGeoJSON()" style="width: auto; padding: 8px 16px;">
-                                    Download GeoJSON
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -411,6 +374,43 @@ https://gulfwatch-testing.vercel.app/feed.json
                             <div class="last-updated" id="missile-last-updated">Updated: --</div>
                         </div>
                     </div>
+
+                <!-- Data Section -->
+                <div class="section" id="data-section" data-section="data" style="display: none;">
+                    <div class="data-tabs">
+                        <button class="data-tab active" data-tab="api">API Access</button>
+                        <button class="data-tab" data-tab="exports">Exports</button>
+                        <button class="data-tab" data-tab="rss">RSS Feeds</button>
+                        <button class="data-tab" data-tab="docs">Documentation</button>
+                    </div>
+                    <div class="data-content" id="data-content">
+                        <div class="data-panel active" data-panel="api">
+                            <h3>API Endpoint</h3>
+                            <div class="code-block" id="api-endpoint">
+https://gulfwatch-testing.vercel.app/feed.json
+                            </div>
+                            <h3 style="margin-top: 20px;">Example Response</h3>
+                            <div class="code-block" id="api-example">
+{
+  "total_incidents": 236,
+  "generated_at": "2026-03-14T12:00:00Z",
+  "incidents": [...]
+}
+                            </div>
+                            <div style="margin-top: 20px;">
+                                <button class="icon-btn" onclick="downloadJSON()" style="width: auto; padding: 8px 16px;">
+                                    Download JSON
+                                </button>
+                                <button class="icon-btn" onclick="downloadCSV()" style="width: auto; padding: 8px 16px;">
+                                    Download CSV
+                                </button>
+                                <button class="icon-btn" onclick="downloadGeoJSON()" style="width: auto; padding: 8px 16px;">
+                                    Download GeoJSON
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
 
                 <!-- Reports Section -->

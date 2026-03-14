@@ -820,10 +820,18 @@ a.incident-card.active {
 }
 
 @media (max-width: 768px) {
+  body {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .app-container {
     flex-direction: column;
-    height: 100vh;
-    height: 100dvh;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: var(--header-height);
+    padding-bottom: 60px;
   }
 
   .left-panel,
@@ -861,30 +869,33 @@ a.incident-card.active {
     color: var(--accent-cyan);
   }
 
+  .main-content {
+    overflow: visible;
+  }
+
   .section-content {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 60px;
-    height: calc(100% - 60px);
+    overflow: visible;
+    padding: 0;
+    height: auto;
   }
 
   .section {
-    height: 100%;
+    height: auto;
     overflow: visible;
+    display: block;
   }
 
   #monitor-section {
     display: block;
     height: auto;
-    min-height: 100%;
   }
 
   .incident-feed {
     display: block;
     height: auto;
     overflow: visible;
-    padding-bottom: var(--space-6);
+    padding: var(--space-3);
+    padding-bottom: var(--space-10);
   }
 }
 

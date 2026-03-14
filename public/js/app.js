@@ -659,7 +659,7 @@ function renderIncidents() {
                     <button class="action-btn" onclick="event.stopPropagation(); window.open('${escapeHtml(sourceUrl)}', '_blank')" title="View Source">
                         🔗 Source
                     </button>
-                    <button class="action-btn translate-btn" data-title="${encodeURIComponent(incident.title)}" onclick="event.stopPropagation(); window.open('https://translate.google.com/?sl=auto&tl=en&text=' + this.dataset.title + '&op=translate', '_blank')" title="Translate">
+                    <button class="action-btn" onclick="translateIncident('${incident.id}')" title="Translate">
                         🌐 Translate
                     </button>
                     <button class="action-btn report-btn" onclick="event.stopPropagation(); openReportModal(${incident.id})" title="Report False Claim">
@@ -1057,6 +1057,17 @@ window.selectIncident = selectIncident;
 window.downloadJSON = downloadJSON;
 window.downloadCSV = downloadCSV;
 window.downloadGeoJSON = downloadGeoJSON;
+
+// Translate incident - opens Google Translate
+function translateIncident(incidentId) {
+    const incident = state.incidents.find(i => i.id === incidentId);
+    if (!incident || !incident.title) return;
+    
+    const encodedText = encodeURIComponent(incident.title);
+    window.open(`https://translate.google.com/?sl=auto&tl=en&text=${encodedText}&op=translate`, '_blank');
+}
+
+window.translateIncident = translateIncident;
 
 // ============================================================================
 // REPORT FALSE CLAIM MODAL

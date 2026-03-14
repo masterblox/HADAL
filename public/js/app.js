@@ -356,13 +356,13 @@ function renderIncidents() {
                     ${incident.num_sources ? `+ ${incident.num_sources - 1} sources` : ''}
                 </div>
                 <div class="incident-actions">
-                    <button class="action-btn" onclick="window.open('${escapeHtml(sourceUrl)}', '_blank')" title="View Source">
+                    <button class="action-btn" onclick="event.stopPropagation(); window.open('${escapeHtml(sourceUrl)}', '_blank')" title="View Source">
                         🔗 Source
                     </button>
-                    <button class="action-btn" onclick="openTranslateModal(${incident.id})" title="Translate">
+                    <button class="action-btn" onclick="event.stopPropagation(); openTranslateModal('${escapeHtml(incident.title)}')" title="Translate">
                         🌐 Translate
                     </button>
-                    <button class="action-btn report-btn" onclick="openReportModal(${incident.id})" title="Report False Claim">
+                    <button class="action-btn report-btn" onclick="event.stopPropagation(); openReportModal(${incident.id})" title="Report False Claim">
                         🚩 Report
                     </button>
                 </div>
@@ -811,42 +811,72 @@ document.addEventListener('DOMContentLoaded', () => {
 // TRANSLATION MODAL
 // ============================================================================
 
-function openTranslateModal(incidentId) {
+function openTranslateModal(title) {
     const modal = document.getElementById('translate-modal');
     const originalText = document.getElementById('translate-original');
     const resultDiv = document.getElementById('translate-result');
     const translateLink = document.getElementById('translate-link');
-    
-    const incident = state.incidents.find(i => i.id === incidentId);
-    if (!incident) return;
-    
+
     if (modal && originalText) {
-        originalText.textContent = incident.title;
-        
+        originalText.textContent = title;
+
         // Create Google Translate link
-        const encodedText = encodeURIComponent(incident.title);
+        const encodedText = encodeURIComponent(title);
         translateLink.href = `https://translate.google.com/?sl=auto&tl=en&text=${encodedText}&op=translate`;
-        
+
         // Show modal
-        modal.style.display = 'flex';
-        
-        // Try to fetch translation using a free API (LibreTranslate)
+        modal.classList.add('active');
+
+        // Try LibreTranslate API for instant translation
         resultDiv.innerHTML = '<div class="translate-loading">Translating...</div>';
-        
-        // For now, just show the Google Translate option
-        resultDiv.innerHTML = `
-            <p style="color: var(--text-secondary); margin-bottom: 12px;">
-                Click "Open in Google Translate" below to translate this incident.
-            </p>
-        `;
+
+        // Use LibreTranslate public instance
+        fetch('https://libretranslate.de/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                q: title,
+                source: 'auto',
+                target: 'en',
+                format: 'text'
+            })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Translation failed');
+            return response.json();
+        })
+        .then(data => {
+            if (data.translatedText) {
+                resultDiv.innerHTML = `<p>${escapeHtml(data.translatedText)}</p>`;
+            } else {
+                throw new Error('No translation returned');
+            }
+        })
+        .catch(error => {
+            // Fallback to Google Translate link
+            resultDiv.innerHTML = `
+                <p style="color: var(--text-secondary); margin-bottom: 12px;">
+                    Automatic translation unavailable. Click "Open in Google Translate" to translate.
+                </p>
+            `;
+        });
     }
 }
 
 function closeTranslateModal() {
     const modal = document.getElementById('translate-modal');
     if (modal) {
-        modal.style.display = 'none';
+        modal.classList.remove('active');
     }
+}
+
+// Helper function to detect Arabic text
+function containsArabic(text) {
+    if (!text) return false;
+    const arabicPattern = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/;
+    return arabicPattern.test(text);
 }
 
 // Make modal functions globally available
@@ -854,3 +884,20 @@ window.openReportModal = openReportModal;
 window.closeReportModal = closeReportModal;
 window.openTranslateModal = openTranslateModal;
 window.closeTranslateModal = closeTranslateModal;
+window.containsArabic = containsArabic;
+
+// Close modals when clicking outside
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('active');
+    }
+});
+
+// Close modals with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    }
+});

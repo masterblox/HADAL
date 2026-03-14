@@ -24,19 +24,58 @@
 - **Fix**: Use `hmac.compare_digest()` for constant-time comparison
 - **Files Modified**: `scripts/user_report_system.py`
 
-### Security Checklist
+### Comprehensive Security Checklist
+
+#### Injection Attacks (ALL FIXED)
 
 | Threat | Status | Mitigation |
 |--------|--------|------------|
-| XSS | ✅ FIXED | HTML escaping on all user content |
-| Hardcoded Secrets | ✅ FIXED | Environment variables |
-| Privacy Leak | ✅ FIXED | IP hashing |
-| Timing Attacks | ✅ FIXED | Constant-time comparison |
-| SSRF | ✅ SAFE | Hardcoded URLs only |
-| Command Injection | ✅ SAFE | No shell commands |
-| SQL Injection | ✅ SAFE | JSON files, no SQL |
-| CSRF | ⚠️ ACCEPTABLE | Static site, no session state |
+| XSS (all variants) | ✅ FIXED | `escapeHtml()` on all user content |
+| HTML Injection | ✅ FIXED | Content sanitized before DOM insertion |
+| Stored XSS | ✅ FIXED | All stored data escaped on display |
+| Reflected XSS | ✅ FIXED | URL parameters sanitized |
+| DOM-based XSS | ✅ FIXED | Dynamic content uses safe escaping |
+| CSS Injection | ✅ FIXED | `sanitizeCss()` blocks dangerous values |
+| JavaScript Injection | ✅ FIXED | `escapeJsString()` for JS contexts |
+| Link/URL Injection | ✅ FIXED | `sanitizeUrl()` blocks javascript: protocol |
+| HTML Attribute Injection | ✅ FIXED | `escapeHtmlAttribute()` for attributes |
+| Template Injection (SSTI) | ✅ N/A | No server-side templates |
+| Markdown Injection | ✅ N/A | No markdown rendering |
+
+#### Clickjacking & UI Attacks (FIXED)
+
+| Threat | Status | Mitigation |
+|--------|--------|------------|
+| Clickjacking | ✅ FIXED | `X-Frame-Options: DENY` |
+| Iframe Injection | ✅ FIXED | CSP `frame-ancestors 'none'` |
+| Content Spoofing | ✅ FIXED | `X-Content-Type-Options: nosniff` |
+
+#### Authentication & Secrets (FIXED)
+
+| Threat | Status | Mitigation |
+|--------|--------|------------|
+| Hardcoded Secrets | ✅ FIXED | Environment variables only |
+| Timing Attacks | ✅ FIXED | `hmac.compare_digest()` |
+| Privacy Leak | ✅ FIXED | IP addresses hashed |
+
+#### Infrastructure (SAFE BY DESIGN)
+
+| Threat | Status | Mitigation |
+|--------|--------|------------|
+| SSRF | ✅ SAFE | Hardcoded URLs only, no user input |
+| Command Injection | ✅ SAFE | No shell commands executed |
+| SQL/NoSQL Injection | ✅ SAFE | JSON files only, no database |
+| Path Traversal | ✅ SAFE | No user-controlled file paths |
+| Dependency Confusion | ✅ SAFE | Only standard library + feedparser |
+
+#### Residual Risks (Documented)
+
+| Threat | Status | Notes |
+|--------|--------|-------|
+| CSRF | ⚠️ ACCEPTABLE | Static site, no session cookies |
 | Rate Limiting | ⚠️ PARTIAL | GitHub Actions schedule only |
+| DDoS Protection | ⚠️ NONE | Relies on Vercel CDN |
+| Authentication | ⚠️ NONE | Public dashboard by design |
 
 ### Required Environment Variables
 
@@ -67,10 +106,48 @@ If you discover a security vulnerability, please:
 2. Email security@gulf-watch.app
 3. Allow 48 hours for response before public disclosure
 
+### Residual Risks & Limitations
+
+**Honest Assessment: This is a demonstration/testing project, not a production-grade secure application.**
+
+#### By-Design Limitations (Acceptable for Demo)
+
+| Risk | Severity | Explanation |
+|------|----------|-------------|
+| **No Authentication** | Medium | Anyone can access the site and view all data. This is intentional for a public dashboard. |
+| **Client-Side Report System** | Medium | Reports use localStorage + fingerprinting. Can be bypassed by clearing storage or changing browsers. |
+| **No Server-Side Validation** | Medium | All "validation" is client-side. A determined attacker could bypass checks. |
+| **Static JSON Data** | Low | Data is in public JSON files. No sensitive data should be stored here. |
+| **Third-Party Dependencies** | Low | Uses Leaflet from unpkg.com CDN. Trust required in CDN provider. |
+| **GitHub Actions Public Logs** | Low | Workflow logs are visible (no secrets in logs, but timing info is public). |
+
+#### What's NOT Protected (Out of Scope)
+
+- **DDoS Protection**: No rate limiting on static file serving
+- **Data Integrity**: JSON files could be modified if GitHub account compromised
+- **Audit Logging**: No persistent audit trail of who reported what
+- **Backup/Recovery**: No automated backup system for report data
+- **Penetration Testing**: Not tested by professional security researchers
+
+#### When This is "Safe Enough"
+
+✅ **Safe for:**
+- Public demonstration
+- Testing and development
+- Non-sensitive public data aggregation
+- Educational purposes
+
+⚠️ **NOT safe for:**
+- Handling personally identifiable information (PII)
+- Storing confidential government data
+- Production use with real users expecting privacy
+- Compliance-regulated industries (HIPAA, GDPR, etc.)
+
 ### Security Audit Log
 
-- **2026-03-14**: Initial security audit and hardening
-  - Fixed XSS vulnerabilities
-  - Removed hardcoded admin key
-  - Added IP hashing for privacy
-  - Added security utilities module
+- **2026-03-14**: Comprehensive security hardening
+  - Fixed all XSS/HTML injection vulnerabilities
+  - Added comprehensive escaping (HTML, CSS, JS, URL)
+  - Removed hardcoded secrets
+  - Added security headers (CSP, X-Frame-Options, etc.)
+  - Documented residual risks

@@ -254,6 +254,48 @@ class CrossSourceVerification:
         print(f"  UNCONFIRMED: {output['verification_summary']['UNCONFIRMED']}")
         
         return output
+    
+    def update_incidents_with_verification(self, incidents_file: str = 'public/incidents.json'):
+        """Add verification data to each incident in incidents.json"""
+        if not self.groups:
+            self.group_incidents()
+        
+        # Load current incidents
+        with open(incidents_file, 'r') as f:
+            data = json.load(f)
+        
+        incidents = data.get('incidents', [])
+        
+        # Create lookup from incident ID to verification data
+        verification_map = {}
+        for group in self.groups:
+            verification_data = {
+                'badge': group['verification_badge'],
+                'score': group['verification_score'],
+                'num_sources': group['num_sources'],
+                'status': group['verification_badge']
+            }
+            # Map all incidents in this group to the same verification
+            for variant in group['source_variants']:
+                incident_id = variant.get('id')
+                if incident_id:
+                    verification_map[incident_id] = verification_data
+        
+        # Add verification to each incident
+        updated_count = 0
+        for incident in incidents:
+            incident_id = incident.get('id')
+            if incident_id in verification_map:
+                incident['verification'] = verification_map[incident_id]
+                updated_count += 1
+        
+        # Save updated incidents
+        data['generated_at'] = datetime.now(timezone.utc).isoformat()
+        with open(incidents_file, 'w') as f:
+            json.dump(data, f, indent=2)
+        
+        print(f"\nUpdated {updated_count}/{len(incidents)} incidents with verification data")
+        return data
 
 
 def main():
@@ -273,6 +315,9 @@ def main():
     
     # Export
     verifier.export_verified_incidents()
+    
+    # Update incidents.json with verification data
+    verifier.update_incidents_with_verification()
     
     # Show sample
     if groups:

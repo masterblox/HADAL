@@ -39,11 +39,10 @@ yarn-error.log*
 *~
 .DS_Store
 
-# Data files (generated)
-public/incidents.json
-public/prices.json
-public/feed.json
-public/data/*.json
+# Data files (generated) - now tracked for Vercel deployment
+# Note: These are committed so the site has data on deploy
+# public/incidents.json
+# public/prices.json
 
 # Logs
 *.log

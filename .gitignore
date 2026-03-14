@@ -50,3 +50,4 @@ yarn-error.log*
 # Local config
 .env
 .env.local
+.vercel

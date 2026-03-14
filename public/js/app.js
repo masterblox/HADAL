@@ -129,6 +129,9 @@ function initializeNavigation() {
             } else if (section === 'analysis') {
                 // Initialize analysis charts
                 initializeAnalysis();
+            } else if (section === 'prediction') {
+                // Initialize prediction engine
+                initializePrediction();
             }
         });
     });
@@ -1475,6 +1478,171 @@ function renderIntensityChart() {
     html += '</div></div>';
 
     container.innerHTML = html;
+}
+
+// ============================================================================
+// PREDICTION ENGINE
+// ============================================================================
+
+let predictor = null;
+let predictionInitialized = false;
+
+function initializePrediction() {
+    if (!predictionInitialized) {
+        // Initialize predictor with current incidents
+        predictor = new GulfPredictor(state.incidents);
+        
+        // Populate dropdowns
+        populatePredictionDropdowns();
+        
+        // Set up event listeners
+        setupPredictionListeners();
+        
+        predictionInitialized = true;
+    }
+}
+
+function populatePredictionDropdowns() {
+    if (!predictor) return;
+    
+    // Populate actors
+    const actorSelect = document.getElementById('predict-actor');
+    if (actorSelect) {
+        const actors = predictor.getActors();
+        actors.forEach(actor => {
+            const option = document.createElement('option');
+            option.value = actor.id;
+            option.textContent = actor.name;
+            actorSelect.appendChild(option);
+        });
+    }
+    
+    // Populate actions
+    const actionSelect = document.getElementById('predict-action');
+    if (actionSelect) {
+        const actions = predictor.getActions();
+        actions.forEach(action => {
+            const option = document.createElement('option');
+            option.value = action.id;
+            option.textContent = action.name;
+            actionSelect.appendChild(option);
+        });
+    }
+    
+    // Populate targets
+    const targetSelect = document.getElementById('predict-target');
+    if (targetSelect) {
+        const targets = predictor.getTargets();
+        targets.forEach(target => {
+            const option = document.createElement('option');
+            option.value = target.id;
+            option.textContent = target.name;
+            targetSelect.appendChild(option);
+        });
+    }
+    
+    // Populate countries
+    const countrySelect = document.getElementById('predict-country');
+    if (countrySelect) {
+        const countries = predictor.getCountries();
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country.id;
+            option.textContent = country.name;
+            countrySelect.appendChild(option);
+        });
+    }
+}
+
+function setupPredictionListeners() {
+    const runBtn = document.getElementById('run-prediction');
+    if (runBtn) {
+        runBtn.addEventListener('click', runPrediction);
+    }
+}
+
+function runPrediction() {
+    const actor = document.getElementById('predict-actor')?.value;
+    const action = document.getElementById('predict-action')?.value;
+    const target = document.getElementById('predict-target')?.value;
+    const country = document.getElementById('predict-country')?.value;
+    
+    if (!actor || !action) {
+        showError('Please select at least an actor and action');
+        return;
+    }
+    
+    // Run prediction
+    const scenario = { actor, action, target, country };
+    const predictions = predictor.predict(scenario);
+    
+    // Display results
+    displayPredictions(predictions, scenario);
+}
+
+function displayPredictions(predictions, scenario) {
+    const resultsContainer = document.getElementById('prediction-results');
+    const emptyState = document.getElementById('prediction-empty');
+    const grid = document.getElementById('predictions-grid');
+    const context = document.getElementById('prediction-context');
+    
+    if (!resultsContainer || !grid) return;
+    
+    // Hide empty state, show results
+    if (emptyState) emptyState.style.display = 'none';
+    resultsContainer.style.display = 'block';
+    
+    // Update context
+    if (context) {
+        const actorName = predictor.getActors().find(a => a.id === scenario.actor)?.name || scenario.actor;
+        const actionName = predictor.getActions().find(a => a.id === scenario.action)?.name || scenario.action;
+        context.textContent = `${actorName} → ${actionName}${scenario.target ? ' → ' + predictor.getTargets().find(t => t.id === scenario.target)?.name : ''}`;
+    }
+    
+    // Build predictions grid
+    let html = '';
+    predictions.forEach((pred, index) => {
+        const probabilityClass = pred.probability >= 70 ? 'high' : pred.probability >= 40 ? 'medium' : 'low';
+        const icon = getPredictionIcon(pred.category);
+        
+        html += `
+            <div class="prediction-card ${probabilityClass}" style="animation-delay: ${index * 0.1}s">
+                <div class="prediction-card-header">
+                    <span class="prediction-icon">${icon}</span>
+                    <span class="prediction-category">${pred.category}</span>
+                </div>
+                <div class="prediction-outcome">${pred.outcome}</div>
+                <div class="prediction-meta">
+                    <div class="prediction-probability">
+                        <div class="probability-bar">
+                            <div class="probability-fill ${probabilityClass}" style="width: ${pred.probability}%"></div>
+                        </div>
+                        <span class="probability-value">${pred.probability}%</span>
+                    </div>
+                    <div class="prediction-timeframe">${pred.timeframe}</div>
+                </div>
+                <div class="prediction-confidence">${pred.confidence}</div>
+            </div>
+        `;
+    });
+    
+    grid.innerHTML = html;
+}
+
+function getPredictionIcon(category) {
+    const icons = {
+        'Military Response': '⚔️',
+        'Regional Response': '🌍',
+        'Market Impact': '📈',
+        'Diplomatic Response': '🤝',
+        'Follow-up Event': '➡️',
+        'Maritime Security': '⚓',
+        'Shipping Impact': '🚢',
+        'Escalation Risk': '⚠️',
+        'Defense Posture': '🛡️',
+        'Monitoring': '👁️'
+    };
+    return icons[category] || '🔮';
 }
 
 // Make modal functions globally available

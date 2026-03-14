@@ -337,7 +337,7 @@ function renderIncidents() {
         const sourceUrl = incident.source_url || incident.url || '#';
         
         return `
-            <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener" class="incident-card" data-id="${incident.id}">
+            <div class="incident-card" data-id="${incident.id}" data-url="${escapeHtml(sourceUrl)}" onclick="window.open(this.dataset.url, '_blank')">
                 <div class="incident-header">
                     <span class="incident-flag">${flag}</span>
                     <span class="incident-severity ${severity}"></span>
@@ -351,7 +351,7 @@ function renderIncidents() {
                     ${incident.source || 'Unknown'} 
                     ${incident.num_sources ? `+ ${incident.num_sources - 1} sources` : ''}
                 </div>
-            </a>
+            </div>
         `;
     }).join('');
 }

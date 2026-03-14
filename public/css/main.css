@@ -278,7 +278,7 @@
   background: var(--text-muted);
 }
 
-a.incident-card {
+.incident-card {
   display: block;
   text-decoration: none;
   color: inherit;
@@ -295,15 +295,15 @@ a.incident-card {
   -ms-touch-action: pan-y;
 }
 
-a.incident-card:hover,
-a.incident-card:active {
+.incident-card:hover,
+.incident-card:active {
   background: var(--bg-hover);
   border-color: var(--border-active);
   transform: translateX(4px);
   color: inherit;
 }
 
-a.incident-card.active {
+.incident-card.active {
   border-color: var(--accent-cyan);
   background: var(--bg-active);
 }

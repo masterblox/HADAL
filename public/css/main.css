@@ -1585,8 +1585,7 @@
   margin-bottom: var(--space-4);
 }
 
-.translate-source label,
-.translate-target label {
+.translate-label {
   display: block;
   font-size: var(--text-xs);
   font-weight: 600;

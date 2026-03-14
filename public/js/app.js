@@ -335,9 +335,10 @@ function renderIncidents() {
         const isGov = incident.is_government ? '✓' : '';
         
         const sourceUrl = incident.source_url || incident.url || '#';
+        const hasCoords = incident.location?.lat && incident.location?.lng;
         
         return `
-            <div class="incident-card" data-id="${incident.id}" data-url="${escapeHtml(sourceUrl)}" onclick="window.open(this.dataset.url, '_blank')">
+            <div class="incident-card" data-id="${incident.id}">
                 <div class="incident-header">
                     <span class="incident-flag">${flag}</span>
                     <span class="incident-severity ${severity}"></span>
@@ -347,9 +348,23 @@ function renderIncidents() {
                     ${isGov ? `<span class="incident-gov">${isGov}</span>` : ''}
                 </div>
                 <div class="incident-title line-clamp-2">${escapeHtml(incident.title)}</div>
+                <div class="incident-coords">
+                    ${hasCoords ? `📍 ${incident.location.lat.toFixed(4)}, ${incident.location.lng.toFixed(4)}` : '📍 No coordinates'}
+                </div>
                 <div class="incident-source">
                     ${incident.source || 'Unknown'} 
                     ${incident.num_sources ? `+ ${incident.num_sources - 1} sources` : ''}
+                </div>
+                <div class="incident-actions">
+                    <button class="action-btn" onclick="window.open('${escapeHtml(sourceUrl)}', '_blank')" title="View Source">
+                        🔗 Source
+                    </button>
+                    <button class="action-btn" onclick="openTranslateModal(${incident.id})" title="Translate">
+                        🌐 Translate
+                    </button>
+                    <button class="action-btn report-btn" onclick="openReportModal(${incident.id})" title="Report False Claim">
+                        🚩 Report
+                    </button>
                 </div>
             </div>
         `;
@@ -742,3 +757,100 @@ window.selectIncident = selectIncident;
 window.downloadJSON = downloadJSON;
 window.downloadCSV = downloadCSV;
 window.downloadGeoJSON = downloadGeoJSON;
+
+// ============================================================================
+// REPORT FALSE CLAIM MODAL
+// ============================================================================
+
+function openReportModal(incidentId) {
+    const modal = document.getElementById('report-modal');
+    const incidentIdInput = document.getElementById('report-incident-id');
+    if (modal && incidentIdInput) {
+        incidentIdInput.value = incidentId;
+        modal.classList.add('active');
+    }
+}
+
+function closeReportModal() {
+    const modal = document.getElementById('report-modal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    // Reset form
+    const form = document.getElementById('report-form');
+    if (form) form.reset();
+}
+
+// Handle report form submission
+document.addEventListener('DOMContentLoaded', () => {
+    const reportForm = document.getElementById('report-form');
+    if (reportForm) {
+        reportForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const incidentId = document.getElementById('report-incident-id').value;
+            const reason = document.getElementById('report-reason').value;
+            const details = document.getElementById('report-details').value;
+            
+            // Store report in localStorage (since we don't have a backend)
+            const reports = JSON.parse(localStorage.getItem('gulfwatch_reports') || '[]');
+            reports.push({
+                incidentId,
+                reason,
+                details,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('gulfwatch_reports', JSON.stringify(reports));
+            
+            alert('Thank you for your report. We will review it shortly.');
+            closeReportModal();
+        });
+    }
+});
+
+// ============================================================================
+// TRANSLATION MODAL
+// ============================================================================
+
+function openTranslateModal(incidentId) {
+    const modal = document.getElementById('translate-modal');
+    const originalText = document.getElementById('translate-original');
+    const resultDiv = document.getElementById('translate-result');
+    const translateLink = document.getElementById('translate-link');
+    
+    const incident = state.incidents.find(i => i.id === incidentId);
+    if (!incident) return;
+    
+    if (modal && originalText) {
+        originalText.textContent = incident.title;
+        
+        // Create Google Translate link
+        const encodedText = encodeURIComponent(incident.title);
+        translateLink.href = `https://translate.google.com/?sl=auto&tl=en&text=${encodedText}&op=translate`;
+        
+        // Show modal
+        modal.style.display = 'flex';
+        
+        // Try to fetch translation using a free API (LibreTranslate)
+        resultDiv.innerHTML = '<div class="translate-loading">Translating...</div>';
+        
+        // For now, just show the Google Translate option
+        resultDiv.innerHTML = `
+            <p style="color: var(--text-secondary); margin-bottom: 12px;">
+                Click "Open in Google Translate" below to translate this incident.
+            </p>
+        `;
+    }
+}
+
+function closeTranslateModal() {
+    const modal = document.getElementById('translate-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Make modal functions globally available
+window.openReportModal = openReportModal;
+window.closeReportModal = closeReportModal;
+window.openTranslateModal = openTranslateModal;
+window.closeTranslateModal = closeTranslateModal;

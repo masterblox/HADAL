@@ -93,10 +93,12 @@
                 <div class="filter-chips" id="type-filters">
                     <button class="filter-chip active" data-type="all">All</button>
                     <button class="filter-chip" data-type="missile">🚀 Missile</button>
-                    <button class="filter-chip" data-type="airstrike">✈️ Airstrike</button>
+                    <button class="filter-chip" data-type="air_defense">🛡️ Air Defense</button>
+                    <button class="filter-chip" data-type="attack">✈️ Attack</button>
                     <button class="filter-chip" data-type="drone">🚁 Drone</button>
                     <button class="filter-chip" data-type="explosion">💥 Explosion</button>
-                    <button class="filter-chip" data-type="naval">⚓ Naval</button>
+                    <button class="filter-chip" data-type="alert">🚨 Alert</button>
+                    <button class="filter-chip" data-type="security">🔒 Security</button>
                 </div>
             </div>
             
@@ -462,6 +464,68 @@ https://gulfwatch-testing.vercel.app/feed.json
                 </div>
             </div>
         </aside>
+    </div>
+
+    <!-- Report False Claim Modal -->
+    <div id="report-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Report False Claim</h3>
+                <button class="modal-close" onclick="closeReportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Help us maintain accuracy by reporting incidents that appear to be false or misleading.</p>
+                <form id="report-form">
+                    <input type="hidden" id="report-incident-id">
+                    <div class="form-group">
+                        <label for="report-reason">Reason for reporting</label>
+                        <select id="report-reason" required>
+                            <option value="">Select a reason...</option>
+                            <option value="false">False information</option>
+                            <option value="misleading">Misleading content</option>
+                            <option value="outdated">Outdated/incorrect date</option>
+                            <option value="duplicate">Duplicate incident</option>
+                            <option value="location">Wrong location</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="report-details">Additional details (optional)</label>
+                        <textarea id="report-details" rows="3" placeholder="Please provide any additional context..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Translation Modal -->
+    <div id="translate-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Translate Incident</h3>
+                <button class="modal-close" onclick="closeTranslateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="translate-source">
+                    <label>Original Text</label>
+                    <p id="translate-original" class="translate-text"></p>
+                </div>
+                <div class="translate-target">
+                    <label>Translation</label>
+                    <div id="translate-result" class="translate-text">
+                        <div class="translate-loading">Translating...</div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeTranslateModal()">Close</button>
+                    <a id="translate-link" href="#" target="_blank" class="btn btn-primary">Open in Google Translate</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Leaflet JS -->

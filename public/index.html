@@ -1202,7 +1202,11 @@
             return colors[type] || '#7f8c8d';
         }
         
-        // Security: Escape HTML to prevent XSS
+        // ============================================================================
+        // SECURITY: COMPREHENSIVE ESCAPING AND SANITIZATION
+        // ============================================================================
+        
+        // Escape HTML special characters to prevent XSS
         function escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
@@ -1210,15 +1214,96 @@
             return div.innerHTML;
         }
         
-        // Security: Sanitize URLs
+        // Escape text for use in HTML attributes (stricter)
+        function escapeHtmlAttribute(text) {
+            if (!text) return '';
+            return escapeHtml(text).replace(/'/g, '&#x27;').replace(/"/g, '&quot;');
+        }
+        
+        // Escape text for use in JavaScript strings
+        function escapeJsString(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '\\"')
+                .replace(/\n/g, '\\n')
+                .replace(/\r/g, '\\r');
+        }
+        
+        // Sanitize URLs to prevent javascript: injection
         function sanitizeUrl(url) {
             if (!url) return '#';
-            url = url.trim().toLowerCase();
-            const dangerous = ['javascript:', 'data:', 'vbscript:', 'file:'];
+            const urlLower = String(url).trim().toLowerCase();
+            
+            // List of dangerous protocols
+            const dangerous = [
+                'javascript:', 'data:', 'vbscript:', 'file:', 'about:', 'chrome:',
+                'livescript:', 'mocha:', 'data:text/html', 'data:application/javascript'
+            ];
+            
+            // Check for dangerous protocols
             for (const d of dangerous) {
-                if (url.startsWith(d)) return '#';
+                if (urlLower.startsWith(d)) return '#';
             }
+            
+            // Check for HTML entity encoded protocols
+            const decoded = urlLower.replace(/&/#x27;/g, "'").replace(/&quot;/g, '"');
+            for (const d of dangerous) {
+                if (decoded.startsWith(d)) return '#';
+            }
+            
+            // If no protocol, assume HTTPS
+            if (!urlLower.includes('://')) {
+                return 'https://' + url;
+            }
+            
+            // Only allow safe protocols
+            const allowed = ['http://', 'https://', 'ftp://', 'ftps://', 'mailto:'];
+            if (!allowed.some(p => urlLower.startsWith(p))) {
+                return '#';
+            }
+            
             return url;
+        }
+        
+        // Sanitize CSS values to prevent CSS injection
+        function sanitizeCss(value) {
+            if (!value) return '';
+            const valueLower = String(value).toLowerCase();
+            const dangerous = [
+                'expression(', 'javascript:', 'vbscript:', '@import', 
+                '@charset', 'binding(', 'moz-binding'
+            ];
+            
+            for (const d of dangerous) {
+                if (valueLower.includes(d)) return '';
+            }
+            
+            // Block HTML tags in CSS
+            if (valueLower.includes('<') && valueLower.includes('>')) {
+                return '';
+            }
+            
+            return String(value).substring(0, 100); // Limit length
+        }
+        
+        // Sanitize IDs for safe use in selectors
+        function sanitizeId(id) {
+            if (!id) return '';
+            return String(id).replace(/[^a-zA-Z0-9\-_]/g, '').substring(0, 100);
+        }
+        
+        // Sanitize error messages before displaying
+        function sanitizeError(error) {
+            if (!error) return 'Unknown error';
+            if (typeof error === 'string') {
+                return escapeHtml(error).substring(0, 500); // Limit length
+            }
+            if (error.message) {
+                return escapeHtml(error.message).substring(0, 500);
+            }
+            return 'Error occurred';
         }
         
         // Format time ago
@@ -1428,10 +1513,11 @@
             }
             
             intelContainer.innerHTML = intelIncidents.map(inc => {
-                const alertType = inc.type.replace('_', ' ').toUpperCase();
-                const location = inc.location.country;
+                const alertType = escapeHtml(inc.type.replace('_', ' ').toUpperCase());
+                const location = escapeHtml(inc.location.country || 'Unknown');
+                const safeSourceUrl = sanitizeUrl(inc.source_url);
                 return `
-                    <a href="${inc.source_url}" target="_blank" class="military-item" style="text-decoration: none; color: inherit; display: block;">
+                    <a href="${safeSourceUrl}" target="_blank" class="military-item" style="text-decoration: none; color: inherit; display: block;">
                         <div class="time">${timeAgo(inc.published)}</div>
                         <div class="alert">${alertType}: ${location}</div>
                     </a>
@@ -1832,10 +1918,11 @@
                 console.error('Error loading missile stats:', error);
                 const missileContent = document.getElementById('missile-stats-content');
                 if (missileContent) {
+                    const safeError = sanitizeError(error);
                     missileContent.innerHTML = `
                         <div style="text-align: center; padding: 20px; color: #888; font-size: 11px;">
                             Unable to load missile defense stats.<br>
-                            <span style="color: #666;">${error.message}</span>
+                            <span style="color: #666;">${safeError}</span>
                         </div>
                     `;
                 }
@@ -1860,7 +1947,7 @@
                 const status = verification.status || 'Unconfirmed';
                 const statusClass = confidence >= 90 ? 'verified' : confidence >= 70 ? 'likely' : confidence >= 50 ? 'partial' : 'unconfirmed';
                 
-                // Build source breakdown HTML safely
+                // Build source breakdown HTML safely (escape all user content)
                 let sourceBreakdownHtml = '<div style="padding: 20px; text-align: center; color: #666;">No source breakdown available</div>';
                 if (incident.source_variants && incident.source_variants.length > 0) {
                     sourceBreakdownHtml = incident.source_variants.map(v => {
@@ -1868,11 +1955,12 @@
                         const icon = isGovt ? '🏛️' : '📰';
                         const iconClass = isGovt ? 'govt' : 'news';
                         const label = isGovt ? 'Government' : 'News Source';
+                        const safeSource = escapeHtml(v.source || 'Unknown');
                         return `
                             <div class="source-item">
                                 <div class="source-icon ${iconClass}">${icon}</div>
                                 <div class="source-info">
-                                    <div class="source-name">${v.source || 'Unknown'}</div>
+                                    <div class="source-name">${safeSource}</div>
                                     <div class="source-credibility">${label}</div>
                                 </div>
                             </div>
@@ -1883,21 +1971,27 @@
                 // Build variants HTML safely
                 let variantsHtml = '<div style="padding: 10px; color: #666; font-size: 12px;">No additional source variants</div>';
                 if (incident.source_variants && incident.source_variants.length > 0) {
-                    variantsHtml = incident.source_variants.map(v => `
-                        <div class="variant-card">
-                            <div class="variant-source">${v.source || 'Unknown'}</div>
-                            <div class="variant-text">${v.title || 'No title'}</div>
-                        </div>
-                    `).join('');
+                    variantsHtml = incident.source_variants.map(v => {
+                        const safeSource = escapeHtml(v.source || 'Unknown');
+                        const safeTitle = escapeHtml(v.title || 'No title');
+                        return `
+                            <div class="variant-card">
+                                <div class="variant-source">${safeSource}</div>
+                                <div class="variant-text">${safeTitle}</div>
+                            </div>
+                        `;
+                    }).join('');
                 }
                 
-                // Location details with coordinates
+                // Location details with coordinates (escape all user content)
                 const coordLat = incident.location && incident.location.lat;
                 const coordLng = incident.location && incident.location.lng;
+                const safeLocationName = escapeHtml((incident.location && incident.location.name) || 'Unknown');
+                const safeLocationCountry = escapeHtml((incident.location && incident.location.country) || '');
                 const locationHtml = (coordLat && coordLng) ? `
                     <div class="location-details" style="padding: 15px; background: #1a1a1a; border-radius: 8px; margin-bottom: 20px;">
                         <h4 style="margin: 0 0 10px 0; color: #e0e0e0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">📍 Location</h4>
-                        <div style="font-size: 14px; color: #fff; margin-bottom: 8px;">${(incident.location && incident.location.name) || 'Unknown'}, ${(incident.location && incident.location.country) || ''}</div>
+                        <div style="font-size: 14px; color: #fff; margin-bottom: 8px;">${safeLocationName}, ${safeLocationCountry}</div>
                         <div style="font-size: 12px; color: #888; font-family: monospace;">
                             🌐 ${coordLat.toFixed(6)}°, ${coordLng.toFixed(6)}°
                         </div>
@@ -1907,13 +2001,18 @@
                     </div>
                 ` : '';
                 
-                const html = `
+                // Escape all dynamic content for final HTML
+            const safeStatus = escapeHtml(status);
+            const safeStatusClass = sanitizeCss(statusClass);
+            const safeSourceCount = escapeHtml(String(verification.source_count || 1));
+            
+            const html = `
                     ${locationHtml}
                     
                     <div class="confidence-score">
-                        <div class="confidence-circle ${statusClass}">${confidence}%</div>
-                        <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;" class="${statusClass}">${status}</div>
-                        <div style="font-size: 12px; color: #888;">${verification.source_count || 1} source(s)</div>
+                        <div class="confidence-circle ${safeStatusClass}">${confidence}%</div>
+                        <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;" class="${safeStatusClass}">${safeStatus}</div>
+                        <div style="font-size: 12px; color: #888;">${safeSourceCount} source(s)</div>
                     </div>
                     
                     <div class="source-breakdown">

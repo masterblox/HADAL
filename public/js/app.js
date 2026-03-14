@@ -659,7 +659,7 @@ function renderIncidents() {
                     <button class="action-btn" onclick="event.stopPropagation(); window.open('${escapeHtml(sourceUrl)}', '_blank')" title="View Source">
                         🔗 Source
                     </button>
-                    <button class="action-btn" onclick="event.stopPropagation(); openTranslateModal('${escapeHtml(incident.title)}')" title="Translate">
+                    <button class="action-btn" onclick="event.stopPropagation(); const text = encodeURIComponent('${escapeHtml(incident.title)}'); window.open('https://translate.google.com/?sl=auto&tl=en&text=' + text + '&op=translate', '_blank')" title="Translate">
                         🌐 Translate
                     </button>
                     <button class="action-btn report-btn" onclick="event.stopPropagation(); openReportModal(${incident.id})" title="Report False Claim">

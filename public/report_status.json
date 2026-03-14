@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-03-14T06:03:56.320598+00:00",
+  "hidden_incidents": [],
+  "report_counts": {},
+  "report_reasons": {
+    "false_info": "False or misleading information",
+    "wrong_location": "Wrong location",
+    "outdated": "Outdated (already resolved)",
+    "duplicate": "Duplicate of another incident",
+    "wrong_title": "Misleading headline"
+  }
+}

@@ -38,6 +38,9 @@ jobs:
     - name: Generate cross-source verification
       run: python scripts/cross_source_verification.py
       
+    - name: Initialize user report system
+      run: python scripts/user_report_system.py
+      
     - name: Fetch airspace data (NOTAMs)
       run: python scripts/fetch_airspace.py || echo "Airspace fetch completed with warnings"
       

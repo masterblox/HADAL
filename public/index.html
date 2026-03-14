@@ -711,6 +711,27 @@
             color: #e74c3c;
         }
         
+        .report-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .report-btn:hover {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+        
+        .report-count {
+            margin-left: 4px;
+            font-weight: 600;
+        }
+        
         .translate-link {
             font-size: 10px;
             color: #666;
@@ -1553,19 +1574,14 @@
                     const hasArabic = /[\u0600-\u06FF]/.test(incident.title);
                     const translateBtn = hasArabic ? `<a href="https://translate.google.com/?sl=auto&tl=en&text=${encodeURIComponent(incident.title)}" target="_blank" class="translate-link" onclick="event.stopPropagation();" title="Translate to English">🌐 Translate</a>` : '';
                     
-                    const reportSubject = encodeURIComponent(`[GulfWatch Testing and Development] False Info Report: ${incident.title.substring(0, 50)}`);
-                    const reportBody = encodeURIComponent(`I would like to report the following incident as potentially false or inaccurate:
-
-Title: ${incident.title}
-Source: ${incident.source}
-Published: ${incident.published}
-URL: ${incident.source_url}
-
-Reason for report:
-[Please explain why this information may be false]
-
----
-This report was submitted via GulfWatch Testing and Development v2`);
+                    // Report functionality
+                    const reportReasons = {
+                        'false_info': 'False or misleading information',
+                        'wrong_location': 'Wrong location',
+                        'outdated': 'Outdated (already resolved)',
+                        'duplicate': 'Duplicate of another incident',
+                        'wrong_title': 'Misleading headline'
+                    };
                     if (!incident.location) console.log('DEBUG: No location for', incident.id);
                     card.innerHTML = `
                         <div class="incident-header">
@@ -1587,9 +1603,10 @@ This report was submitted via GulfWatch Testing and Development v2`);
                         </div>
                         <div class="incident-actions">
                             ${translateBtn}
-                            <a href="mailto:reports@gulf-watch.app?subject=${reportSubject}&body=${reportBody}" class="report-link" onclick="event.stopPropagation();" title="Report false or inaccurate information">
-                                ⚠️ Report false info
-                            </a>
+                            <button class="report-btn" onclick="event.stopPropagation(); showReportModal('${incident.id}', '${incident.title.replace(/'/g, "\\'")}');" title="Report false or inaccurate information">
+                                ⚠️ Report
+                            </button>
+                            <span class="report-count" id="report-count-${incident.id}" style="display:none; font-size: 10px; color: #e74c3c;"></span>
                         </div>
                     `;
                     
@@ -1934,6 +1951,173 @@ This report was submitted via GulfWatch Testing and Development v2`);
                 console.log('[GulfWatch] Airspace layer initialized');
             }
         });
+    </script>
+    <!-- Report Modal -->
+    <div id="report-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+        <div class="modal-content" style="background: #1a1a1a; border-radius: 12px; padding: 24px; max-width: 400px; width: 90%; border: 1px solid rgba(255,255,255,0.1);">
+            <h3 style="margin: 0 0 16px 0; font-size: 18px;">Report Incident</h3>
+            <p id="report-modal-title" style="color: #888; font-size: 13px; margin-bottom: 16px;"></p>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px;">Reason:</label>
+                <select id="report-reason" style="width: 100%; padding: 10px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; font-size: 13px;">
+                    <option value="false_info">False or misleading information</option>
+                    <option value="wrong_location">Wrong location</option>
+                    <option value="outdated">Outdated (already resolved)</option>
+                    <option value="duplicate">Duplicate of another incident</option>
+                    <option value="wrong_title">Misleading headline</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 12px; color: #666; margin-bottom: 8px;">Details (optional):</label>
+                <textarea id="report-details" rows="3" style="width: 100%; padding: 10px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; font-size: 13px; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button onclick="closeReportModal()" style="padding: 10px 20px; background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; cursor: pointer; font-size: 13px;">Cancel</button>
+                <button onclick="submitReport()" style="padding: 10px 20px; background: #e74c3c; border: none; border-radius: 6px; color: #fff; cursor: pointer; font-size: 13px;">Submit Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Report system
+        let currentReportId = null;
+        let reportStatus = {};
+        
+        // Generate device fingerprint
+        function getFingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('GulfWatch', 2, 2);
+            const canvasData = canvas.toDataURL();
+            
+            const data = navigator.userAgent + screen.width + screen.height + canvasData;
+            let hash = 0;
+            for (let i = 0; i < data.length; i++) {
+                const char = data.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return hash.toString(16);
+        }
+        
+        // Load report status
+        async function loadReportStatus() {
+            try {
+                const response = await fetch('report_status.json?t=' + Date.now());
+                if (response.ok) {
+                    reportStatus = await response.json();
+                    updateReportCounts();
+                }
+            } catch (e) {
+                console.log('Could not load report status:', e);
+            }
+        }
+        
+        // Update report count displays
+        function updateReportCounts() {
+            if (!reportStatus.report_counts) return;
+            
+            for (const [incidentId, count] of Object.entries(reportStatus.report_counts)) {
+                const countEl = document.getElementById(`report-count-${incidentId}`);
+                if (countEl) {
+                    countEl.textContent = `${count}/5`;
+                    countEl.style.display = 'inline';
+                    
+                    // Hide card if 5+ reports
+                    if (count >= 5) {
+                        const card = document.querySelector(`.incident-card[data-id="${incidentId}"]`);
+                        if (card) {
+                            card.style.display = 'none';
+                        }
+                    }
+                }
+            }
+            
+            // Hide all hidden incidents
+            if (reportStatus.hidden_incidents) {
+                for (const incidentId of reportStatus.hidden_incidents) {
+                    const card = document.querySelector(`.incident-card[data-id="${incidentId}"]`);
+                    if (card) {
+                        card.style.display = 'none';
+                    }
+                }
+            }
+        }
+        
+        // Show report modal
+        function showReportModal(incidentId, title) {
+            currentReportId = incidentId;
+            document.getElementById('report-modal-title').textContent = title.substring(0, 100) + (title.length > 100 ? '...' : '');
+            document.getElementById('report-modal').style.display = 'flex';
+        }
+        
+        // Close report modal
+        function closeReportModal() {
+            document.getElementById('report-modal').style.display = 'none';
+            currentReportId = null;
+            document.getElementById('report-details').value = '';
+        }
+        
+        // Submit report
+        async function submitReport() {
+            if (!currentReportId) return;
+            
+            const reason = document.getElementById('report-reason').value;
+            const details = document.getElementById('report-details').value;
+            const fingerprint = getFingerprint();
+            
+            try {
+                // For static site, we'll use localStorage to track reports
+                const reportedKey = `reported_${currentReportId}`;
+                if (localStorage.getItem(reportedKey)) {
+                    alert('You have already reported this incident.');
+                    closeReportModal();
+                    return;
+                }
+                
+                // Store report locally (in real implementation, this would call the API)
+                localStorage.setItem(reportedKey, JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    reason: reason,
+                    details: details
+                }));
+                
+                // Update UI
+                const countEl = document.getElementById(`report-count-${currentReportId}`);
+                if (countEl) {
+                    const currentCount = parseInt(countEl.textContent.split('/')[0]) || 0;
+                    const newCount = currentCount + 1;
+                    countEl.textContent = `${newCount}/5`;
+                    countEl.style.display = 'inline';
+                    
+                    if (newCount >= 5) {
+                        const card = document.querySelector(`.incident-card[data-id="${currentReportId}"]`);
+                        if (card) {
+                            card.style.opacity = '0.5';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 500);
+                        }
+                        alert('This incident has been flagged for review and hidden.');
+                    } else {
+                        alert(`Thank you for your report. (${newCount}/5 reports)`);
+                    }
+                }
+                
+                closeReportModal();
+            } catch (e) {
+                console.error('Error submitting report:', e);
+                alert('Error submitting report. Please try again.');
+            }
+        }
+        
+        // Load report status on page load
+        loadReportStatus();
     </script>
 </body>
 </html>

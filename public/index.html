@@ -1248,7 +1248,7 @@
             }
             
             // Check for HTML entity encoded protocols
-            const decoded = urlLower.replace(/&/#x27;/g, "'").replace(/&quot;/g, '"');
+            const decoded = urlLower.replace(/&#x27;/g, "'").replace(/&quot;/g, '"');
             for (const d of dangerous) {
                 if (decoded.startsWith(d)) return '#';
             }

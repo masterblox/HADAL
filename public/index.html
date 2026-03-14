@@ -1098,6 +1098,12 @@
                 <span id="gov-count">25 government</span>
             </div>
             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #666; text-align: center; line-height: 1.5;">
+                <div style="margin-bottom: 10px;">
+                    <strong>Data Export:</strong> 
+                    <a href="feed.json" download style="color: #3498db; text-decoration: none; margin: 0 8px;">JSON</a> • 
+                    <a href="#" onclick="exportCSV(); return false;" style="color: #3498db; text-decoration: none; margin: 0 8px;">CSV</a> • 
+                    <a href="#" onclick="exportGeoJSON(); return false;" style="color: #3498db; text-decoration: none; margin: 0 8px;">GeoJSON</a>
+                </div>
                 GulfWatch Testing and Development aggregates publicly available information for informational purposes only. Not affiliated with any government entity.
             </div>
         </div>
@@ -2118,6 +2124,93 @@
         
         // Load report status on page load
         loadReportStatus();
+        
+        // Data Export Functions
+        function exportCSV() {
+            if (!allIncidents || allIncidents.length === 0) {
+                alert('No data available to export');
+                return;
+            }
+            
+            // CSV Header
+            const headers = ['ID', 'Title', 'Source', 'Type', 'Status', 'Country', 'Lat', 'Lng', 'Published', 'Credibility', 'Is Government', 'Source URL'];
+            
+            // CSV Rows
+            const rows = allIncidents.map(inc => [
+                inc.id,
+                `"${(inc.title || '').replace(/"/g, '""')}"`,
+                inc.source,
+                inc.type,
+                inc.status,
+                inc.location?.country || '',
+                inc.location?.lat || '',
+                inc.location?.lng || '',
+                inc.published,
+                inc.credibility,
+                inc.is_government ? 'Yes' : 'No',
+                inc.source_url
+            ]);
+            
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            
+            // Download
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gulfwatch-data-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function exportGeoJSON() {
+            if (!allIncidents || allIncidents.length === 0) {
+                alert('No data available to export');
+                return;
+            }
+            
+            const features = allIncidents
+                .filter(inc => inc.location?.lat && inc.location?.lng)
+                .map(inc => ({
+                    type: 'Feature',
+                    properties: {
+                        id: inc.id,
+                        title: inc.title,
+                        source: inc.source,
+                        type: inc.type,
+                        status: inc.status,
+                        country: inc.location?.country,
+                        published: inc.published,
+                        credibility: inc.credibility,
+                        is_government: inc.is_government,
+                        source_url: inc.source_url
+                    },
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [inc.location.lng, inc.location.lat]
+                    }
+                }));
+            
+            const geojson = {
+                type: 'FeatureCollection',
+                generated_at: new Date().toISOString(),
+                total_features: features.length,
+                features: features
+            };
+            
+            // Download
+            const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gulfwatch-data-${new Date().toISOString().split('T')[0]}.geojson`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     </script>
 </body>
 </html>

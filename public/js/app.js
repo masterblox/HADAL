@@ -132,6 +132,9 @@ function initializeNavigation() {
             } else if (section === 'prediction') {
                 // Initialize prediction engine
                 initializePrediction();
+            } else if (section === 'reports') {
+                // Initialize reports tab
+                initializeReports();
             }
         });
     });
@@ -1643,6 +1646,83 @@ function getPredictionIcon(category) {
         'Monitoring': '👁️'
     };
     return icons[category] || '🔮';
+}
+
+// ============================================================================
+// REPORTS TAB
+// ============================================================================
+
+function initializeReports() {
+    loadIncomingReports();
+    loadVerificationStats();
+}
+
+function loadIncomingReports() {
+    const container = document.getElementById('incoming-reports');
+    if (!container) return;
+    
+    const reports = JSON.parse(localStorage.getItem('gulfwatch_reports') || '[]');
+    
+    if (reports.length === 0) {
+        container.innerHTML = '<p class="text-muted">No pending reports</p>';
+        return;
+    }
+    
+    // Sort by newest first
+    reports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    let html = '<div class="reports-list">';
+    reports.slice(0, 10).forEach(report => {
+        const date = new Date(report.timestamp).toLocaleString();
+        const reasonLabels = {
+            'false': 'False information',
+            'misleading': 'Misleading content',
+            'outdated': 'Outdated/incorrect date',
+            'duplicate': 'Duplicate incident',
+            'location': 'Wrong location',
+            'other': 'Other'
+        };
+        html += `
+            <div class="report-item">
+                <div class="report-header">
+                    <span class="report-reason">${reasonLabels[report.reason] || report.reason}</span>
+                    <span class="report-date">${date}</span>
+                </div>
+                <div class="report-details">${report.details || 'No details provided'}</div>
+                <div class="report-incident">Incident #${report.incidentId}</div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    container.innerHTML = html;
+}
+
+function loadVerificationStats() {
+    // Calculate stats from incidents
+    const stats = {
+        validated: 0,
+        pending: 0,
+        disputed: 0
+    };
+    
+    state.incidents.forEach(incident => {
+        const verification = incident.verification || {};
+        const badge = verification.badge || 'UNCONFIRMED';
+        
+        if (badge === 'VERIFIED') stats.validated++;
+        else if (badge === 'DISPUTED') stats.disputed++;
+        else stats.pending++;
+    });
+    
+    const updateEl = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+    
+    updateEl('validated-count', stats.validated);
+    updateEl('pending-count', stats.pending);
+    updateEl('disputed-count', stats.disputed);
 }
 
 // Make modal functions globally available

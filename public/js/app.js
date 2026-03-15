@@ -602,6 +602,13 @@ function getCountryCode(country) {
     return map[country.toLowerCase()] || 'unknown';
 }
 
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function getSeverityLevel(incident) {
     // Use verification badge or derive from keywords
     const title = incident.title?.toLowerCase() || '';

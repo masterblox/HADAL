@@ -7,8 +7,9 @@
     <title>Gulf Watch | Real-Time Geopolitical Intelligence</title>
     <meta name="description" content="Real-time monitoring of security events across the Middle East">
     
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- CesiumJS -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.110/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.110/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     
     <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -187,17 +188,35 @@
 
                 <!-- Map Section -->
                 <div class="section" id="map-section" data-section="map" style="display: none;">
-                    <div class="map-container">
-                        <div id="map"></div>
+                    <div class="map-container cesium-container">
+                        <div id="cesiumContainer"></div>
                         <div class="map-controls">
                             <label class="layer-toggle active">
                                 <input type="checkbox" id="layer-events" name="layer-events" checked data-layer="events">
                                 <span>Events</span>
                             </label>
-                            <label class="layer-toggle">
-                                <input type="checkbox" id="layer-airspace" name="layer-airspace" data-layer="airspace">
-                                <span>Airspace</span>
+                            <label class="layer-toggle active">
+                                <input type="checkbox" id="layer-heatmap" name="layer-heatmap" checked data-layer="heatmap">
+                                <span>🔥 Heat Map</span>
                             </label>
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="layer-aircraft" name="layer-aircraft" data-layer="aircraft">
+                                <span>✈️ Aircraft</span>
+                            </label>
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="layer-satellites" name="layer-satellites" data-layer="satellites">
+                                <span>🛰️ Satellites</span>
+                            </label>
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="layer-maritime" name="layer-maritime" data-layer="maritime">
+                                <span>⚓ Maritime</span>
+                            </label>
+                        </div>
+                        <div class="visual-mode-controls">
+                            <button class="visual-mode-btn active" data-mode="normal">Normal</button>
+                            <button class="visual-mode-btn" data-mode="crt">🖥️ CRT</button>
+                            <button class="visual-mode-btn" data-mode="nvg">🌙 NVG</button>
+                            <button class="visual-mode-btn" data-mode="flir">🔥 FLIR</button>
                         </div>
                     </div>
                 </div>

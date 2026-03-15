@@ -25,6 +25,73 @@ const state = {
 };
 
 // ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+function updateEl(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function showError(message) {
+    console.error('❌', message);
+    // Could also show a toast/notification here
+}
+
+function updateLastUpdateTime() {
+    const el = document.getElementById('last-update');
+    if (el) {
+        el.textContent = 'Updated: ' + new Date().toLocaleTimeString();
+    }
+}
+
+function updateCasualtyCounts() {
+    // Calculate casualty statistics from incidents
+    let total = 0, military = 0, civilian = 0;
+    state.filteredIncidents.forEach(inc => {
+        if (inc.casualties) {
+            total += inc.casualties.total || 0;
+            military += inc.casualties.military || 0;
+            civilian += inc.casualties.civilian || 0;
+        }
+    });
+    updateEl('casualty-total', total.toLocaleString());
+    updateEl('casualty-military', military.toLocaleString());
+    updateEl('casualty-civilian', civilian.toLocaleString());
+}
+
+function updateValidationStats() {
+    const stats = { validated: 0, pending: 0, disputed: 0 };
+    state.filteredIncidents.forEach(inc => {
+        const status = inc.verification?.status || 'UNCONFIRMED';
+        if (status === 'VERIFIED') stats.validated++;
+        else if (status === 'DISPUTED') stats.disputed++;
+        else stats.pending++;
+    });
+    updateEl('validated-count', stats.validated);
+    updateEl('pending-count', stats.pending);
+    updateEl('disputed-count', stats.disputed);
+}
+
+function initializeRailModules() {
+    // Rail modules are the side widgets (casualties, validation stats, etc.)
+    updateCasualtyCounts();
+    updateValidationStats();
+}
+
+// ============================================================================
 // INITIALIZATION
 // ============================================================================
 

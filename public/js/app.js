@@ -150,13 +150,17 @@ function updateAirspaceSummary() {
             alerts++;
         }
     });
-    updateEl('airspace-alerts', alerts);
     
-    // Update status text
+    // Update alerts count text
+    const alertsEl = document.getElementById('airspace-alerts');
+    if (alertsEl) {
+        alertsEl.textContent = alerts > 0 ? `${alerts} Active Alerts` : 'Clear';
+    }
+    
+    // Update status indicator
     const statusEl = document.getElementById('airspace-status');
     if (statusEl) {
-        statusEl.textContent = alerts > 0 ? 'Active Alerts' : 'Clear';
-        statusEl.style.color = alerts > 0 ? '#ff8800' : '#44ff88';
+        statusEl.className = 'airspace-status ' + (alerts > 0 ? 'warning' : 'normal');
     }
 }
 

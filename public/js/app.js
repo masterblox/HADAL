@@ -67,9 +67,14 @@ function updateCasualtyCounts() {
             civilian += inc.casualties.civilian || 0;
         }
     });
+    // Update both old and new element IDs for compatibility
     updateEl('casualty-total', total.toLocaleString());
     updateEl('casualty-military', military.toLocaleString());
     updateEl('casualty-civilian', civilian.toLocaleString());
+    // Right rail IDs
+    updateEl('total-casualties', total.toLocaleString());
+    updateEl('military-casualties', military.toLocaleString());
+    updateEl('civilian-casualties', civilian.toLocaleString());
 }
 
 function updateValidationStats() {
@@ -89,6 +94,143 @@ function initializeRailModules() {
     // Rail modules are the side widgets (casualties, validation stats, etc.)
     updateCasualtyCounts();
     updateValidationStats();
+    updateFinancePanel();
+    updateAirspaceSummary();
+    updateSourceReliability();
+    updateConflictIntensity();
+    
+    // Set up rail module toggles
+    document.querySelectorAll('.rail-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const module = header.closest('.rail-module');
+            module.classList.toggle('collapsed');
+        });
+    });
+}
+
+function updateFinancePanel() {
+    const prices = state.financeData || {};
+    
+    // Brent Crude
+    const brent = prices.brent || {};
+    updateEl('brent-price', brent.price ? `$${brent.price.toFixed(2)}` : '--');
+    updateEl('brent-change', brent.change ? `${brent.change > 0 ? '+' : ''}${brent.change.toFixed(2)}%` : '--');
+    
+    // Gold
+    const gold = prices.gold || {};
+    updateEl('gold-price', gold.price ? `$${gold.price.toFixed(2)}` : '--');
+    updateEl('gold-change', gold.change ? `${gold.change > 0 ? '+' : ''}${gold.change.toFixed(2)}%` : '--');
+    
+    // Bitcoin
+    const bitcoin = prices.bitcoin || {};
+    updateEl('bitcoin-price', bitcoin.price ? `$${bitcoin.price.toLocaleString()}` : '--');
+    updateEl('bitcoin-change', bitcoin.change ? `${bitcoin.change > 0 ? '+' : ''}${bitcoin.change.toFixed(2)}%` : '--');
+    
+    // Natural Gas
+    const gas = prices.gas || {};
+    updateEl('gas-price', gas.price ? `$${gas.price.toFixed(2)}` : '--');
+    updateEl('gas-change', gas.change ? `${gas.change > 0 ? '+' : ''}${gas.change.toFixed(2)}%` : '--');
+    
+    // Copper
+    const copper = prices.copper || {};
+    updateEl('copper-price', copper.price ? `$${copper.price.toFixed(2)}` : '--');
+    updateEl('copper-change', copper.change ? `${copper.change > 0 ? '+' : ''}${copper.change.toFixed(2)}%` : '--');
+    
+    // Iron Ore
+    const iron = prices.iron || {};
+    updateEl('iron-price', iron.price ? `$${iron.price.toFixed(2)}` : '--');
+    updateEl('iron-change', iron.change ? `${iron.change > 0 ? '+' : ''}${iron.change.toFixed(2)}%` : '--');
+}
+
+function updateAirspaceSummary() {
+    // Count airspace alerts from incidents
+    let alerts = 0;
+    state.filteredIncidents.forEach(inc => {
+        if (inc.type === 'air_defense' || inc.type === 'alert') {
+            alerts++;
+        }
+    });
+    updateEl('airspace-alerts', alerts);
+    
+    // Update status text
+    const statusEl = document.getElementById('airspace-status');
+    if (statusEl) {
+        statusEl.textContent = alerts > 0 ? 'Active Alerts' : 'Clear';
+        statusEl.style.color = alerts > 0 ? '#ff8800' : '#44ff88';
+    }
+}
+
+function updateSourceReliability() {
+    // Calculate source statistics
+    const sources = {};
+    state.filteredIncidents.forEach(inc => {
+        const source = inc.source || 'Unknown';
+        if (!sources[source]) {
+            sources[source] = { count: 0, verified: 0 };
+        }
+        sources[source].count++;
+        if (inc.verification?.status === 'VERIFIED') {
+            sources[source].verified++;
+        }
+    });
+    
+    // Get top 5 sources
+    const topSources = Object.entries(sources)
+        .sort((a, b) => b[1].count - a[1].count)
+        .slice(0, 5);
+    
+    // Update source list
+    const container = document.getElementById('source-list');
+    if (container) {
+        if (topSources.length === 0) {
+            container.innerHTML = '<div class="source-item"><span>No data</span></div>';
+        } else {
+            container.innerHTML = topSources.map(([name, stats]) => {
+                const reliability = stats.count > 0 ? Math.round((stats.verified / stats.count) * 100) : 0;
+                let color = '#ff4444';
+                if (reliability > 80) color = '#44ff88';
+                else if (reliability > 50) color = '#ffcc00';
+                
+                return `
+                    <div class="source-item">
+                        <span class="source-name">${escapeHtml(name)}</span>
+                        <span class="source-score" style="color: ${color}">${reliability}%</span>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+}
+
+function updateConflictIntensity() {
+    // Calculate severity distribution
+    const severity = { critical: 0, high: 0, medium: 0, low: 0 };
+    state.filteredIncidents.forEach(inc => {
+        const level = getSeverityLevel(inc);
+        severity[level]++;
+    });
+    
+    const total = state.filteredIncidents.length;
+    
+    // Update intensity bars
+    updateIntensityBar('critical-bar', 'critical-count', severity.critical, total);
+    updateIntensityBar('high-bar', 'high-count', severity.high, total);
+    updateIntensityBar('medium-bar', 'medium-count', severity.medium, total);
+    updateIntensityBar('low-bar', 'low-count', severity.low, total);
+}
+
+function updateIntensityBar(barId, countId, count, total) {
+    const bar = document.getElementById(barId);
+    const countEl = document.getElementById(countId);
+    
+    if (bar && total > 0) {
+        const percentage = (count / total) * 100;
+        bar.style.width = `${percentage}%`;
+    }
+    
+    if (countEl) {
+        countEl.textContent = count;
+    }
 }
 
 // ============================================================================

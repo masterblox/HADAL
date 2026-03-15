@@ -310,10 +310,13 @@ async function refreshData() {
 function initializeNavigation() {
     const tabs = document.querySelectorAll('.tab-btn');
     const sections = document.querySelectorAll('.section');
+    
+    console.log(`📑 Initializing navigation: ${tabs.length} tabs, ${sections.length} sections`);
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const section = tab.dataset.section;
+            console.log(`🖱️ Tab clicked: ${section}`);
 
             // Update active tab
             tabs.forEach(t => t.classList.remove('active'));
@@ -321,7 +324,9 @@ function initializeNavigation() {
 
             // Show selected section
             sections.forEach(s => {
-                s.style.display = s.dataset.section === section ? 'block' : 'none';
+                const isMatch = s.dataset.section === section;
+                s.style.display = isMatch ? 'block' : 'none';
+                console.log(`  Section ${s.dataset.section}: ${isMatch ? 'SHOW' : 'hide'}`);
             });
 
             state.currentSection = section;
@@ -1318,11 +1323,13 @@ document.addEventListener('keydown', (e) => {
 });
 
 function initializeAnalysis() {
+    console.log('📊 Initializing Analysis tab...');
     if (!analysisInitialized) {
         analysisInitialized = true;
     }
     // Delay to ensure section is visible before rendering
     setTimeout(() => {
+        console.log('📊 Rendering analysis charts...');
         renderAnalysisCharts();
     }, 50);
 }
@@ -1768,6 +1775,7 @@ function getPredictionIcon(category) {
 // ============================================================================
 
 function initializeReports() {
+    console.log('📝 Initializing Reports tab...');
     loadIncomingReports();
     loadVerificationStats();
 }
@@ -1868,6 +1876,7 @@ document.addEventListener('keydown', (e) => {
 // ============================================================================
 
 function initializeData() {
+    console.log('💾 Initializing Data tab...');
     // Set up data tab switching
     document.querySelectorAll('.data-tab').forEach(tab => {
         tab.addEventListener('click', () => {

@@ -647,7 +647,7 @@ function renderIncidents() {
         const hasCoords = incident.location?.lat && incident.location?.lng;
         
         return `
-            <div class="incident-card" data-id="${incident.id}">
+            <div class="incident-card" data-id="${incident.id}" onclick="selectIncident(${incident.id})">
                 <div class="incident-header">
                     <span class="incident-flag">${flag}</span>
                     <span class="incident-severity ${severity}"></span>

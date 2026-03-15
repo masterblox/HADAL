@@ -10,7 +10,7 @@
 
 A military-grade situational awareness platform monitoring security events across the Middle East. Think **Bloomberg Terminal for geopolitical risk** - designed for analysts, journalists, and decision-makers who need real-time intelligence.
 
-**Inspired by:** [IranWarLive](https://iranwarlive.com/) + [Bilawal Sidhu's WorldView](https://twitter.com/bilawalsidhu)
+**Inspired by:** [WorldMonitor](https://www.worldmonitor.app/)
 
 ---
 

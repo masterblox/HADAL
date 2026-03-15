@@ -202,6 +202,9 @@ function initializeNavigation() {
             } else if (section === 'reports') {
                 // Initialize reports tab
                 initializeReports();
+            } else if (section === 'data') {
+                // Initialize data tab
+                initializeData();
             }
         });
     });
@@ -1176,7 +1179,10 @@ function initializeAnalysis() {
     if (!analysisInitialized) {
         analysisInitialized = true;
     }
-    renderAnalysisCharts();
+    // Delay to ensure section is visible before rendering
+    setTimeout(() => {
+        renderAnalysisCharts();
+    }, 50);
 }
 
 function renderAnalysisCharts() {
@@ -1714,3 +1720,103 @@ document.addEventListener('keydown', (e) => {
         });
     }
 });
+
+// ============================================================================
+// DATA TAB - Exports and API
+// ============================================================================
+
+function initializeData() {
+    // Set up data tab switching
+    document.querySelectorAll('.data-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const panelId = tab.dataset.tab;
+            
+            // Update active tab
+            document.querySelectorAll('.data-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Show selected panel
+            document.querySelectorAll('.data-panel').forEach(p => {
+                p.classList.toggle('active', p.dataset.panel === panelId);
+            });
+        });
+    });
+}
+
+function downloadJSON() {
+    const data = {
+        generated_at: new Date().toISOString(),
+        total_incidents: state.incidents.length,
+        incidents: state.incidents
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gulfwatch-incidents-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadCSV() {
+    const headers = ['ID', 'Title', 'Country', 'Type', 'Severity', 'Published', 'Source', 'Lat', 'Lng', 'Casualties'];
+    const rows = state.incidents.map(inc => [
+        inc.id,
+        `"${(inc.title || '').replace(/"/g, '""')}"`,
+        inc.location?.country || 'Unknown',
+        inc.type || 'unknown',
+        getSeverityLevel(inc),
+        inc.published || '',
+        inc.source || 'Unknown',
+        inc.location?.lat || '',
+        inc.location?.lng || '',
+        inc.casualties?.total || 0
+    ]);
+    
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gulfwatch-incidents-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function downloadGeoJSON() {
+    const geojson = {
+        type: 'FeatureCollection',
+        generated_at: new Date().toISOString(),
+        total_incidents: state.incidents.length,
+        features: state.incidents.filter(inc => inc.location?.lat && inc.location?.lng).map(inc => ({
+            type: 'Feature',
+            properties: {
+                id: inc.id,
+                title: inc.title,
+                country: inc.location?.country,
+                type: inc.type,
+                severity: getSeverityLevel(inc),
+                published: inc.published,
+                source: inc.source
+            },
+            geometry: {
+                type: 'Point',
+                coordinates: [inc.location.lng, inc.location.lat]
+            }
+        }))
+    };
+    
+    const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/geo+json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gulfwatch-incidents-${new Date().toISOString().split('T')[0]}.geojson`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}

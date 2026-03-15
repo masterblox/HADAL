@@ -758,236 +758,182 @@ const heatMapGradient = {
 
 function initializeMap() {
     const container = document.getElementById('cesiumContainer');
-    if (!container) return;
+    if (!container) {
+        console.error('Cesium container not found');
+        return;
+    }
     
-    // Initialize Cesium viewer
-    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYWE3ZjRkNi1jMmYzLTQ0MDgtOTY1Mi0wM2I3ZDk1Y2Q3MTkiLCJpZCI6MjE2MDU4LCJpYXQiOjE3MTY0MjE4MDl9.8YgQYk6E5M8i1sB1m8-0r1eG9vY1Y2U3I4O5P6Q7R8'; // Default token
+    // Check if Cesium is loaded
+    if (typeof Cesium === 'undefined') {
+        console.error('CesiumJS not loaded');
+        container.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">Map loading failed. Please refresh.</div>';
+        return;
+    }
     
-    cesiumViewer = new Cesium.Viewer('cesiumContainer', {
-        terrainProvider: Cesium.createWorldTerrain(),
-        baseLayerPicker: false,
-        geocoder: false,
-        homeButton: false,
-        sceneModePicker: false,
-        navigationHelpButton: false,
-        animation: false,
-        timeline: false,
-        fullscreenButton: false,
-        vrButton: false,
-        shouldAnimate: true,
-        skyBox: new Cesium.SkyBox({
-            sources: {
-                positiveX: 'stars_px.jpg',
-                negativeX: 'stars_nx.jpg',
-                positiveY: 'stars_py.jpg',
-                negativeY: 'stars_ny.jpg',
-                positiveZ: 'stars_pz.jpg',
-                negativeZ: 'stars_nz.jpg'
-            }
-        }),
-        imageryProvider: new Cesium.TileMapServiceImageryProvider({
-            url: Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
-        })
-    });
-    
-    // Dark theme styling
-    cesiumViewer.scene.globe.baseColor = Cesium.Color.BLACK;
-    cesiumViewer.scene.backgroundColor = Cesium.Color.BLACK;
-    cesiumViewer.scene.globe.enableLighting = false;
-    cesiumViewer.scene.globe.depthTestAgainstTerrain = true;
-    
-    // Set initial view over Middle East
-    cesiumViewer.camera.flyTo({
-        destination: Cesium.Rectangle.fromDegrees(34.0, 12.0, 60.0, 35.0),
-        duration: 0
-    });
-    
-    // Layer toggles
-    document.querySelectorAll('.layer-toggle input').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-            const layer = e.target.dataset.layer;
-            const isActive = e.target.checked;
-            
-            switch(layer) {
-                case 'events':
-                    toggleIncidentLayer(isActive);
-                    break;
-                case 'heatmap':
-                    toggleHeatMap(isActive);
-                    break;
-                case 'aircraft':
-                    toggleAircraftLayer(isActive);
-                    break;
-                case 'satellites':
-                    toggleSatelliteLayer(isActive);
-                    break;
-                case 'maritime':
-                    toggleMaritimeLayer(isActive);
-                    break;
-                case 'airspace':
-                    toggleAirspaceLayer(isActive);
-                    break;
-            }
-            
-            e.target.parentElement.classList.toggle('active', isActive);
+    try {
+        // Initialize Cesium viewer with minimal config
+        cesiumViewer = new Cesium.Viewer('cesiumContainer', {
+            terrainProvider: Cesium.createWorldTerrain(),
+            baseLayerPicker: false,
+            geocoder: false,
+            homeButton: false,
+            sceneModePicker: false,
+            navigationHelpButton: false,
+            animation: false,
+            timeline: false,
+            fullscreenButton: false,
+            vrButton: false,
+            shouldAnimate: false,
+            imageryProvider: new Cesium.TileMapServiceImageryProvider({
+                url: Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
+            })
         });
-    });
-    
-    // Visual mode controls
-    document.querySelectorAll('.visual-mode-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const mode = e.target.dataset.mode;
-            setVisualMode(mode);
-            
-            document.querySelectorAll('.visual-mode-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
+        
+        // Dark theme styling
+        cesiumViewer.scene.globe.baseColor = Cesium.Color.BLACK;
+        cesiumViewer.scene.backgroundColor = Cesium.Color.BLACK;
+        cesiumViewer.scene.globe.enableLighting = false;
+        
+        // Set initial view over Middle East
+        cesiumViewer.camera.flyTo({
+            destination: Cesium.Rectangle.fromDegrees(34.0, 12.0, 60.0, 35.0),
+            duration: 0
         });
-    });
-    
-    // Initialize layers
-    updateCesiumMap();
-    createHeatMap();
-    
-    // Start data fetching for aircraft/satellites
-    startRealTimeUpdates();
+        
+        // Layer toggles
+        document.querySelectorAll('.layer-toggle input').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const layer = e.target.dataset.layer;
+                const isActive = e.target.checked;
+                
+                switch(layer) {
+                    case 'events':
+                        toggleIncidentLayer(isActive);
+                        break;
+                    case 'heatmap':
+                        toggleHeatMap(isActive);
+                        break;
+                    case 'aircraft':
+                        toggleAircraftLayer(isActive);
+                        break;
+                    case 'satellites':
+                        toggleSatelliteLayer(isActive);
+                        break;
+                    case 'maritime':
+                        toggleMaritimeLayer(isActive);
+                        break;
+                    case 'airspace':
+                        toggleAirspaceLayer(isActive);
+                        break;
+                }
+                
+                e.target.parentElement.classList.toggle('active', isActive);
+            });
+        });
+        
+        // Visual mode controls
+        document.querySelectorAll('.visual-mode-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const mode = e.target.dataset.mode;
+                setVisualMode(mode);
+                
+                document.querySelectorAll('.visual-mode-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+        
+        // Initialize layers
+        updateCesiumMap();
+        createHeatMap();
+        
+        console.log('✅ Cesium map initialized successfully');
+        
+    } catch (error) {
+        console.error('❌ Failed to initialize Cesium:', error);
+        container.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">Map unavailable. Using data view.</div>';
+    }
 }
 
 function updateCesiumMap() {
     if (!cesiumViewer) return;
     
-    // Clear existing entities
-    cesiumViewer.entities.removeAll();
-    
-    // Add incident markers
-    state.filteredIncidents.forEach(incident => {
-        if (!incident.location?.lat || !incident.location?.lng) return;
+    try {
+        // Clear existing entities
+        cesiumViewer.entities.removeAll();
         
-        const severity = getSeverityLevel(incident);
-        const color = getSeverityColorCesium(severity);
-        const height = getSeverityHeight(severity);
-        
-        // Create pulsing marker
-        const entity = cesiumViewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(
-                incident.location.lng,
-                incident.location.lat,
-                height
-            ),
-            name: incident.title?.substring(0, 60) + '...',
-            description: createIncidentDescription(incident),
-            point: {
-                pixelSize: 15,
-                color: color,
-                outlineColor: Cesium.Color.WHITE,
-                outlineWidth: 2,
-                scaleByDistance: new Cesium.NearFarScalar(1.5e2, 2.0, 1.5e7, 0.5)
-            },
-            ellipse: {
-                semiMinorAxis: 50000.0,
-                semiMajorAxis: 50000.0,
-                material: new Cesium.ColorMaterialProperty(
-                    color.withAlpha(0.3)
+        // Add incident markers
+        state.filteredIncidents.forEach(incident => {
+            if (!incident.location?.lat || !incident.location?.lng) return;
+            
+            const severity = getSeverityLevel(incident);
+            const color = getSeverityColorCesium(severity);
+            
+            // Simple marker
+            cesiumViewer.entities.add({
+                position: Cesium.Cartesian3.fromDegrees(
+                    incident.location.lng,
+                    incident.location.lat,
+                    10000
                 ),
-                outline: true,
-                outlineColor: color
-            },
-            label: {
-                text: getFlagEmoji(incident.location?.country),
-                font: '20px sans-serif',
-                fillColor: Cesium.Color.WHITE,
-                outlineColor: Cesium.Color.BLACK,
-                outlineWidth: 2,
-                verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                pixelOffset: new Cesium.Cartesian2(0, -20),
-                show: false
-            }
+                name: incident.title?.substring(0, 60) || 'Incident',
+                description: incident.title || '',
+                point: {
+                    pixelSize: 12,
+                    color: color,
+                    outlineColor: Cesium.Color.WHITE,
+                    outlineWidth: 2
+                }
+            });
         });
         
-        // Show label on hover
-        entity.properties = {
-            incident: incident
-        };
-    });
-    
-    // Update heat map if enabled
-    if (document.getElementById('layer-heatmap')?.checked) {
-        updateHeatMap();
+        console.log(`✅ Added ${state.filteredIncidents.length} incidents to map`);
+        
+    } catch (error) {
+        console.error('❌ Error updating map:', error);
     }
 }
 
 function createHeatMap() {
     if (!cesiumViewer) return;
     
-    // Create heat map using point cloud with colors
-    const heatPoints = [];
-    const colors = [];
-    
-    // Group incidents by location for intensity
-    const locationGroups = {};
-    state.filteredIncidents.forEach(incident => {
-        if (!incident.location?.lat || !incident.location?.lng) return;
+    try {
+        // Simple heat map using circles
+        const locationGroups = {};
         
-        const key = `${incident.location.lat.toFixed(1)},${incident.location.lng.toFixed(1)}`;
-        if (!locationGroups[key]) {
-            locationGroups[key] = {
-                lat: incident.location.lat,
-                lng: incident.location.lng,
-                count: 0,
-                severity: 0
-            };
-        }
-        locationGroups[key].count++;
-        locationGroups[key].severity += getSeverityScore(incident);
-    });
-    
-    // Create heat map points
-    Object.values(locationGroups).forEach(group => {
-        const intensity = Math.min(group.count / 5, 1.0); // Normalize to 0-1
-        const color = getHeatColor(intensity);
-        
-        // Create multiple points for heat effect
-        for (let i = 0; i < 20; i++) {
-            const offsetLat = (Math.random() - 0.5) * 0.5;
-            const offsetLng = (Math.random() - 0.5) * 0.5;
-            const distance = Math.sqrt(offsetLat * offsetLat + offsetLng * offsetLng);
-            const pointIntensity = intensity * (1 - distance);
+        state.filteredIncidents.forEach(incident => {
+            if (!incident.location?.lat || !incident.location?.lng) return;
             
-            if (pointIntensity > 0.1) {
-                heatPoints.push(group.lat + offsetLat);
-                heatPoints.push(group.lng + offsetLng);
-                heatPoints.push(1000); // Height above ground
-                
-                const pointColor = getHeatColor(pointIntensity);
-                colors.push(pointColor.red);
-                colors.push(pointColor.green);
-                colors.push(pointColor.blue);
-                colors.push(pointIntensity * 0.6); // Alpha
+            const key = `${incident.location.lat.toFixed(1)},${incident.location.lng.toFixed(1)}`;
+            if (!locationGroups[key]) {
+                locationGroups[key] = {
+                    lat: incident.location.lat,
+                    lng: incident.location.lng,
+                    count: 0
+                };
             }
-        }
-    });
-    
-    if (heatPoints.length > 0) {
-        heatMapPrimitive = cesiumViewer.scene.primitives.add(
-            new Cesium.PointPrimitiveCollection()
-        );
+            locationGroups[key].count++;
+        });
         
-        for (let i = 0; i < heatPoints.length; i += 3) {
-            heatMapPrimitive.add({
-                position: Cesium.Cartesian3.fromDegrees(
-                    heatPoints[i + 1],
-                    heatPoints[i],
-                    heatPoints[i + 2]
-                ),
-                color: new Cesium.Color(
-                    colors[i],
-                    colors[i + 1],
-                    colors[i + 2],
-                    colors[i + 3]
-                ),
-                pixelSize: 30,
-                scaleByDistance: new Cesium.NearFarScalar(1.5e2, 3.0, 1.5e7, 0.3)
+        // Add heat circles
+        Object.values(locationGroups).forEach(group => {
+            const intensity = Math.min(group.count / 3, 1.0);
+            const color = getHeatColor(intensity);
+            
+            cesiumViewer.entities.add({
+                position: Cesium.Cartesian3.fromDegrees(group.lng, group.lat, 5000),
+                ellipse: {
+                    semiMinorAxis: 50000 * intensity + 20000,
+                    semiMajorAxis: 50000 * intensity + 20000,
+                    material: color.withAlpha(0.3),
+                    outline: false
+                }
             });
-        }
+        });
+        
+        console.log(`✅ Created heat map with ${Object.keys(locationGroups).length} zones`);
+        
+    } catch (error) {
+        console.error('❌ Error creating heat map:', error);
     }
 }
 

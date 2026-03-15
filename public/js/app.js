@@ -326,6 +326,7 @@ function initializeNavigation() {
             sections.forEach(s => {
                 const isMatch = s.dataset.section === section;
                 s.style.display = isMatch ? 'block' : 'none';
+                s.classList.toggle('active', isMatch);
                 console.log(`  Section ${s.dataset.section}: ${isMatch ? 'SHOW' : 'hide'}`);
             });
 
@@ -844,6 +845,27 @@ function getSeverityLevel(incident) {
 // INCIDENT RENDERING
 // ============================================================================
 
+function getEventTypeIcon(type) {
+    const icons = {
+        'missile': '†',           // Dagger/cross symbol
+        'air_defense': '⌖',       // Target symbol
+        'attack': '⚔',            // Crossed swords
+        'security': '⚑',          // Flag/banner
+        'alert': '⚠',             // Warning triangle
+        'drone': '✦',             // Four point star
+        'airstrike': '✈',         // Aircraft
+        'explosion': '❋',         // Heavy asterisk
+        'naval': '⚓',             // Anchor
+        'cyber': '⌘',             // Command symbol
+        'default': '●'            // Circle bullet
+    };
+    return icons[type?.toLowerCase()] || icons['default'];
+}
+
+function getEventTypeClass(type) {
+    return 'type-' + (type?.toLowerCase() || 'default');
+}
+
 function renderIncidents() {
     const container = document.getElementById('incident-feed');
     if (!container) return;
@@ -876,7 +898,7 @@ function renderIncidents() {
                     <span class="incident-flag">${flag}</span>
                     <span class="incident-severity ${severity}"></span>
                     <span class="incident-time">${timeAgo}</span>
-                    <span class="incident-type">${incident.type || 'INCIDENT'}</span>
+                    <span class="incident-type" title="${incident.type || 'INCIDENT'}">${getEventTypeIcon(incident.type)}</span>
                     <span class="verification-badge ${badgeClass}">${verification.badge || 'UNCONFIRMED'}</span>
                     ${isGov ? `<span class="incident-gov">${isGov}</span>` : ''}
                 </div>

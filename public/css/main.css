@@ -368,13 +368,25 @@
 }
 
 .incident-type {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  text-transform: uppercase;
+  font-size: var(--text-sm);
+  font-weight: 700;
   padding: 2px 6px;
   border-radius: var(--radius-sm);
   background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  min-width: 24px;
+  text-align: center;
+  display: inline-block;
+  color: var(--accent-cyan);
 }
+
+.incident-type.type-missile { color: #ff4444; }
+.incident-type.type-air_defense { color: #00d4ff; }
+.incident-type.type-attack { color: #ff8800; }
+.incident-type.type-security { color: #44ff88; }
+.incident-type.type-alert { color: #ffcc00; }
+.incident-type.type-drone { color: #ff6b9d; }
+.incident-type.type-airstrike { color: #ff8800; }
 
 .incident-confidence {
   font-size: var(--text-xs);
@@ -1285,11 +1297,26 @@
   .section {
     height: auto;
     overflow: visible;
+    display: none;
   }
 
-  #monitor-section {
+  .section.active {
     display: block;
+  }
+
+  #monitor-section,
+  #analysis-section,
+  #data-section,
+  #reports-section {
+    display: none;
     height: auto;
+  }
+
+  #monitor-section.active,
+  #analysis-section.active,
+  #data-section.active,
+  #reports-section.active {
+    display: block;
   }
 
   .incident-feed {

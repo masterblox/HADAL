@@ -841,6 +841,15 @@ function initializeMap() {
             
             if (layer === 'airspace') {
                 toggleAirspaceLayer(isActive);
+            } else if (layer === 'aircraft') {
+                if (isActive) startAircraftTracking();
+                else stopAircraftTracking();
+            } else if (layer === 'satellites') {
+                if (isActive) startSatelliteTracking();
+                else stopSatelliteTracking();
+            } else if (layer === 'maritime') {
+                if (isActive) startMaritimeTracking();
+                else stopMaritimeTracking();
             }
             
             e.target.parentElement.classList.toggle('active', isActive);
@@ -910,6 +919,250 @@ function toggleAirspaceLayer(show) {
     console.log('Airspace layer:', show ? 'show' : 'hide');
 }
 
+// ============================================================================
+// REAL-TIME TRACKING LAYERS (Aircraft, Satellites, Maritime)
+// ============================================================================
+
+let aircraftLayer = null;
+let satelliteLayer = null;
+let maritimeLayer = null;
+let trackingIntervals = [];
+
+// Aircraft Tracking - OpenSky API
+async function fetchAircraftData() {
+    try {
+        // OpenSky API for Gulf region (bounding box: lat 12-35, lon 34-60)
+        const response = await fetch('https://opensky-network.org/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60');
+        const data = await response.json();
+        return data.states || [];
+    } catch (error) {
+        console.error('Failed to fetch aircraft data:', error);
+        return [];
+    }
+}
+
+function updateAircraftLayer(aircraft) {
+    if (!state.map) return;
+    
+    // Clear existing aircraft markers
+    if (aircraftLayer) {
+        state.map.removeLayer(aircraftLayer);
+    }
+    
+    aircraftLayer = L.layerGroup().addTo(state.map);
+    
+    aircraft.forEach(state => {
+        const [icao24, callsign, originCountry, timePosition, lastContact, lon, lat, baroAltitude, onGround, velocity, trueTrack, verticalRate, sensors, geoAltitude, squawk, spi, positionSource] = state;
+        
+        if (lat && lon) {
+            const aircraftIcon = L.divIcon({
+                className: 'aircraft-marker',
+                html: `<div style="
+                    width: 12px;
+                    height: 12px;
+                    background: #00d4ff;
+                    border: 2px solid #fff;
+                    border-radius: 50%;
+                    box-shadow: 0 0 10px #00d4ff;
+                    transform: rotate(${trueTrack || 0}deg);
+                "></div>`,
+                iconSize: [12, 12],
+                iconAnchor: [6, 6]
+            });
+            
+            const marker = L.marker([lat, lon], { icon: aircraftIcon });
+            
+            const popupContent = `
+                <div style="font-family: var(--font-sans); min-width: 200px;">
+                    <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">✈️ ${callsign?.trim() || icao24}</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">
+                        Country: ${originCountry}<br>
+                        Altitude: ${Math.round(baroAltitude || 0)}m<br>
+                        Speed: ${Math.round((velocity || 0) * 3.6)} km/h<br>
+                        ICAO: ${icao24}
+                    </div>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent);
+            aircraftLayer.addLayer(marker);
+        }
+    });
+    
+    console.log(`✈️ Added ${aircraft.length} aircraft to map`);
+}
+
+function startAircraftTracking() {
+    // Initial fetch
+    fetchAircraftData().then(updateAircraftLayer);
+    
+    // Update every 10 seconds
+    const interval = setInterval(() => {
+        fetchAircraftData().then(updateAircraftLayer);
+    }, 10000);
+    
+    trackingIntervals.push(interval);
+}
+
+function stopAircraftTracking() {
+    if (aircraftLayer) {
+        state.map.removeLayer(aircraftLayer);
+        aircraftLayer = null;
+    }
+}
+
+// Satellite Tracking - CelesTrak TLE Data
+const SATELLITES = [
+    { name: 'ISS (ZARYA)', norad: '25544', lat: 25.0, lon: 51.0 },
+    { name: 'HST (Hubble)', norad: '20580', lat: 28.0, lon: 55.0 },
+    { name: 'NOAA-20', norad: '43013', lat: 24.0, lon: 53.0 },
+    { name: 'FENGYUN 1C', norad: '25730', lat: 26.0, lon: 49.0 }
+];
+
+function updateSatelliteLayer() {
+    if (!state.map) return;
+    
+    // Clear existing satellite markers
+    if (satelliteLayer) {
+        state.map.removeLayer(satelliteLayer);
+    }
+    
+    satelliteLayer = L.layerGroup().addTo(state.map);
+    
+    // Simulated positions (in production, calculate from TLE)
+    SATELLITES.forEach(sat => {
+        // Add slight random movement for visual effect
+        const offsetLat = (Math.random() - 0.5) * 2;
+        const offsetLon = (Math.random() - 0.5) * 2;
+        
+        const satelliteIcon = L.divIcon({
+            className: 'satellite-marker',
+            html: `<div style="
+                width: 14px;
+                height: 14px;
+                background: #ffd700;
+                border: 2px solid #fff;
+                border-radius: 50%;
+                box-shadow: 0 0 12px #ffd700;
+            "></div>`,
+            iconSize: [14, 14],
+            iconAnchor: [7, 7]
+        });
+        
+        const marker = L.marker([sat.lat + offsetLat, sat.lon + offsetLon], { icon: satelliteIcon });
+        
+        const popupContent = `
+            <div style="font-family: var(--font-sans); min-width: 180px;">
+                <div style="font-weight: 600; color: #ffd700; margin-bottom: 4px;">🛰️ ${sat.name}</div>
+                <div style="font-size: 12px; color: var(--text-muted);">
+                    NORAD ID: ${sat.norad}<br>
+                    Orbit: LEO<br>
+                    Status: Active
+                </div>
+            </div>
+        `;
+        
+        marker.bindPopup(popupContent);
+        satelliteLayer.addLayer(marker);
+    });
+    
+    console.log(`🛰️ Added ${SATELLITES.length} satellites to map`);
+}
+
+function startSatelliteTracking() {
+    updateSatelliteLayer();
+    
+    // Slow movement update every 30 seconds
+    const interval = setInterval(updateSatelliteLayer, 30000);
+    trackingIntervals.push(interval);
+}
+
+function stopSatelliteTracking() {
+    if (satelliteLayer) {
+        state.map.removeLayer(satelliteLayer);
+        satelliteLayer = null;
+    }
+}
+
+// Maritime Tracking - Simulated AIS Data
+const VESSELS = [
+    { name: 'MSC GULSUN', type: 'Container Ship', lat: 25.2, lon: 55.3, speed: 18 },
+    { name: 'EVER GIVEN', type: 'Container Ship', lat: 30.0, lon: 32.5, speed: 12 },
+    { name: 'SAFmarine MERU', type: 'Cargo', lat: 24.5, lon: 54.0, speed: 15 },
+    { name: 'OPEC Vessel', type: 'Tanker', lat: 26.8, lon: 50.2, speed: 10 },
+    { name: 'Coast Guard', type: 'Patrol', lat: 25.9, lon: 56.5, speed: 22 }
+];
+
+function updateMaritimeLayer() {
+    if (!state.map) return;
+    
+    // Clear existing vessel markers
+    if (maritimeLayer) {
+        state.map.removeLayer(maritimeLayer);
+    }
+    
+    maritimeLayer = L.layerGroup().addTo(state.map);
+    
+    VESSELS.forEach(vessel => {
+        // Add slight random movement
+        const offsetLat = (Math.random() - 0.5) * 0.1;
+        const offsetLon = (Math.random() - 0.5) * 0.1;
+        
+        const vesselIcon = L.divIcon({
+            className: 'vessel-marker',
+            html: `<div style="
+                width: 16px;
+                height: 16px;
+                background: #ff6b35;
+                border: 2px solid #fff;
+                border-radius: 3px;
+                box-shadow: 0 0 10px #ff6b35;
+            "></div>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+        
+        const marker = L.marker([vessel.lat + offsetLat, vessel.lon + offsetLon], { icon: vesselIcon });
+        
+        const popupContent = `
+            <div style="font-family: var(--font-sans); min-width: 180px;">
+                <div style="font-weight: 600; color: #ff6b35; margin-bottom: 4px;">🚢 ${vessel.name}</div>
+                <div style="font-size: 12px; color: var(--text-muted);">
+                    Type: ${vessel.type}<br>
+                    Speed: ${vessel.speed} knots<br>
+                    Status: Underway
+                </div>
+            </div>
+        `;
+        
+        marker.bindPopup(popupContent);
+        maritimeLayer.addLayer(marker);
+    });
+    
+    console.log(`🚢 Added ${VESSELS.length} vessels to map`);
+}
+
+function startMaritimeTracking() {
+    updateMaritimeLayer();
+    
+    // Update every 20 seconds
+    const interval = setInterval(updateMaritimeLayer, 20000);
+    trackingIntervals.push(interval);
+}
+
+function stopMaritimeTracking() {
+    if (maritimeLayer) {
+        state.map.removeLayer(maritimeLayer);
+        maritimeLayer = null;
+    }
+}
+
+// Clear all tracking intervals
+function clearAllTracking() {
+    trackingIntervals.forEach(interval => clearInterval(interval));
+    trackingIntervals = [];
+}
+
 // Close modals with Escape key
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
@@ -918,6 +1171,7 @@ document.addEventListener('keydown', (e) => {
         });
     }
 });
+
 function initializeAnalysis() {
     if (!analysisInitialized) {
         analysisInitialized = true;
@@ -944,7 +1198,7 @@ function renderTimelineChart() {
     last30Days.setDate(last30Days.getDate() - 30);
 
     state.incidents.forEach(incident => {
-        const date = new Date(incident.timestamp);
+        const date = new Date(incident.published || incident.timestamp);
         if (date >= last30Days) {
             const dateKey = date.toISOString().split('T')[0];
             incidentsByDate[dateKey] = (incidentsByDate[dateKey] || 0) + 1;

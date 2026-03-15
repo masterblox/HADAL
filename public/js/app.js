@@ -366,8 +366,6 @@ function initializeNavigation() {
 // MISSILE DEFENSE DASHBOARD
 // ============================================================================
 
-let missileDefenseInitialized = false;
-
 function initializeMissileDefense() {
     if (!missileDefenseInitialized) {
         // Set up country selector
@@ -1103,6 +1101,9 @@ let aircraftLayer = null;
 let satelliteLayer = null;
 let maritimeLayer = null;
 let trackingIntervals = [];
+let analysisInitialized = false;
+let predictionInitialized = false;
+let missileDefenseInitialized = false;
 
 // Aircraft Tracking - OpenSky API
 async function fetchAircraftData() {
@@ -1636,7 +1637,6 @@ function renderIntensityChart() {
 // ============================================================================
 
 let predictor = null;
-let predictionInitialized = false;
 
 function initializePrediction() {
     if (!predictionInitialized) {
@@ -1874,29 +1874,6 @@ function loadVerificationStats() {
     updateEl('disputed-count', stats.disputed);
 }
 
-// Make modal functions globally available
-window.openReportModal = openReportModal;
-window.closeReportModal = closeReportModal;
-window.openTranslateModal = openTranslateModal;
-window.closeTranslateModal = closeTranslateModal;
-window.containsArabic = containsArabic;
-
-// Close modals when clicking outside
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('modal')) {
-        e.target.classList.remove('active');
-    }
-});
-
-// Close modals with Escape key
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        document.querySelectorAll('.modal.active').forEach(modal => {
-            modal.classList.remove('active');
-        });
-    }
-});
-
 // ============================================================================
 // DATA TAB - Exports and API
 // ============================================================================
@@ -1997,4 +1974,68 @@ function downloadGeoJSON() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+// ============================================================================
+// REPORT MODAL FUNCTIONS
+// ============================================================================
+
+function openReportModal(incidentId) {
+    const modal = document.getElementById('report-modal');
+    const incidentIdInput = document.getElementById('report-incident-id');
+    if (modal && incidentIdInput) {
+        incidentIdInput.value = incidentId;
+        modal.classList.add('active');
+    }
+}
+
+function closeReportModal() {
+    const modal = document.getElementById('report-modal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+function openTranslateModal(incidentId) {
+    const modal = document.getElementById('translate-modal');
+    const incidentIdInput = document.getElementById('translate-incident-id');
+    if (modal && incidentIdInput) {
+        incidentIdInput.value = incidentId;
+        modal.classList.add('active');
+    }
+}
+
+function closeTranslateModal() {
+    const modal = document.getElementById('translate-modal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+function containsArabic(text) {
+    if (!text) return false;
+    return /[\u0600-\u06FF]/.test(text);
+}
+
+// Make modal functions globally available
+window.openReportModal = openReportModal;
+window.closeReportModal = closeReportModal;
+window.openTranslateModal = openTranslateModal;
+window.closeTranslateModal = closeTranslateModal;
+window.containsArabic = containsArabic;
+
+// Close modals when clicking outside
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal')) {
+        e.target.classList.remove('active');
+    }
+});
+
+// Close modals with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('.modal.active').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    }
+});
+
 // Cache bust: Sun Mar 15 22:01:28 +04 2026

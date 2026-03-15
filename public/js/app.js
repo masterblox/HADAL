@@ -1201,35 +1201,7 @@ function getSeverityColor(severity) {
 
 function toggleAirspaceLayer(show) {
     // Placeholder for airspace layer toggle
-}
-        // Load airspace data
-        fetch('airspace.json')
-            .then(r => r.json())
-            .then(data => {
-                state.airspaceLayer = L.layerGroup().addTo(state.map);
-                
-                (data.notams || []).forEach(notam => {
-                    if (notam.coordinates) {
-                        const circle = L.circle(notam.coordinates, {
-                            radius: notam.radius || 50000,
-                            fillColor: getNotamColor(notam.severity),
-                            color: getNotamColor(notam.severity),
-                            weight: 1,
-                            fillOpacity: 0.2
-                        }).addTo(state.airspaceLayer);
-                        
-                        circle.bindPopup(`
-                            <strong>${notam.type}</strong><br>
-                            ${notam.description}<br>
-                            <small>${notam.effective}</small>
-                        `);
-                    }
-                });
-            });
-    } else if (!show && state.airspaceLayer) {
-        state.map.removeLayer(state.airspaceLayer);
-        state.airspaceLayer = null;
-    }
+    console.log('Airspace layer:', show ? 'show' : 'hide');
 }
 
 function getNotamColor(severity) {

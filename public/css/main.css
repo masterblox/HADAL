@@ -1285,7 +1285,6 @@
   .section {
     height: auto;
     overflow: visible;
-    display: block;
   }
 
   #monitor-section {

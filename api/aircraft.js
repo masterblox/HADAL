@@ -1,5 +1,6 @@
-// API proxy for OpenSky to bypass CORS
-export default async function handler(req, res) {
+const https = require('https');
+
+module.exports = (req, res) => {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -10,28 +11,42 @@ export default async function handler(req, res) {
         return;
     }
     
-    try {
-        // OpenSky credentials
-        const username = 'arestheagent@gmail.com-api-client';
-        const password = 'E9hWNjvQoXKWmguZcKBbrZSBvIHC5hlw';
-        const authString = Buffer.from(`${username}:${password}`).toString('base64');
+    // OpenSky credentials
+    const username = 'arestheagent@gmail.com-api-client';
+    const password = 'E9hWNjvQoXKWmguZcKBbrZSBvIHC5hlw';
+    const authString = Buffer.from(`${username}:${password}`).toString('base64');
+    
+    const options = {
+        hostname: 'opensky-network.org',
+        path: '/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60',
+        method: 'GET',
+        headers: {
+            'Authorization': `Basic ${authString}`,
+            'Accept': 'application/json'
+        }
+    };
+    
+    const proxyReq = https.request(options, (proxyRes) => {
+        let data = '';
         
-        // Fetch from OpenSky
-        const response = await fetch('https://opensky-network.org/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60', {
-            headers: {
-                'Authorization': `Basic ${authString}`
-            }
+        proxyRes.on('data', (chunk) => {
+            data += chunk;
         });
         
-        if (!response.ok) {
-            res.status(response.status).json({ error: 'OpenSky API error', states: [] });
-            return;
-        }
-        
-        const data = await response.json();
-        res.status(200).json(data);
-    } catch (error) {
-        console.error('Proxy error:', error);
-        res.status(500).json({ error: 'Proxy error', states: [] });
-    }
-}
+        proxyRes.on('end', () => {
+            try {
+                const jsonData = JSON.parse(data);
+                res.status(200).json(jsonData);
+            } catch (e) {
+                res.status(500).json({ error: 'Parse error', message: e.message, raw: data.substring(0, 200) });
+            }
+        });
+    });
+    
+    proxyReq.on('error', (error) => {
+        console.error('Proxy error:', error.message);
+        res.status(500).json({ error: 'Request failed', message: error.message });
+    });
+    
+    proxyReq.end();
+};

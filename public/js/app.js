@@ -890,16 +890,16 @@ function getSeverityLevel(incident) {
 
 function getEventTypeIcon(type) {
     const icons = {
-        'missile': '†',           // Dagger/cross symbol
-        'air_defense': '⌖',       // Target symbol
-        'attack': '⚔',            // Crossed swords
-        'security': '⚑',          // Flag/banner
-        'alert': '⚠',             // Warning triangle
-        'drone': '✦',             // Four point star
-        'airstrike': '✈',         // Aircraft
-        'explosion': '❋',         // Heavy asterisk
-        'naval': '⚓',             // Anchor
-        'cyber': '⌘',             // Command symbol
+        'missile': 'M',           // M for Missile
+        'air_defense': 'D',       // D for Defense
+        'attack': 'A',            // A for Attack
+        'security': 'S',          // S for Security
+        'alert': '!',             // ! for Alert
+        'drone': 'R',             // R for dRone
+        'airstrike': 'F',         // F for Fighter/Air
+        'explosion': 'X',         // X for Explosion
+        'naval': 'N',             // N for Naval
+        'cyber': 'C',             // C for Cyber
         'default': '●'            // Circle bullet
     };
     return icons[type?.toLowerCase()] || icons['default'];

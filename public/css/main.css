@@ -46,16 +46,15 @@
 }
 
 .visitor-counter {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 11px;
+  justify-content: center;
+  font-size: var(--text-xs);
   color: var(--text-muted);
   background: var(--bg-tertiary);
-  padding: 2px 8px;
-  border-radius: 12px;
-  margin-left: var(--space-2);
-  border: 1px solid var(--border-subtle);
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: auto;
 }
 
 .status-dot {

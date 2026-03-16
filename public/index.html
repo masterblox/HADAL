@@ -31,9 +31,6 @@
                 <span class="status-dot"></span>
                 <span>LIVE</span>
             </div>
-            <div class="visitor-counter" id="visitor-counter" style="display: none;">
-                <span id="visitor-count">--</span> visitors
-            </div>
         </div>
         
         <div class="last-update" id="last-update">
@@ -117,6 +114,11 @@
                     <button class="filter-chip" data-time="30d">30 days</button>
                     <button class="filter-chip" data-time="all">All time</button>
                 </div>
+            </div>
+            
+            <!-- Visitor Counter -->
+            <div class="visitor-counter" id="visitor-counter" style="display: none; margin-top: auto; padding: var(--space-3); border-top: 1px solid var(--border-subtle);">
+                <span style="font-size: var(--text-xs); color: var(--text-muted);">Visitors: <span id="visitor-count">--</span></span>
             </div>
         </aside>
 

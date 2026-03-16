@@ -1192,7 +1192,9 @@ function toggleAirspaceLayer(show) {
 let aircraftLayer = null;
 let satelliteLayer = null;
 let maritimeLayer = null;
-let trackingIntervals = [];
+let aircraftInterval = null;
+let satelliteInterval = null;
+let maritimeInterval = null;
 let analysisInitialized = false;
 let predictionInitialized = false;
 let missileDefenseInitialized = false;
@@ -1302,18 +1304,25 @@ function updateAircraftLayer(aircraft) {
 }
 
 function startAircraftTracking() {
+    // Don't start if already running
+    if (aircraftInterval) return;
+    
     // Initial fetch
     fetchAircraftData().then(updateAircraftLayer);
 
     // Update every 30 seconds to avoid rate limiting
-    const interval = setInterval(() => {
+    aircraftInterval = setInterval(() => {
         fetchAircraftData().then(updateAircraftLayer);
     }, 30000);
-
-    trackingIntervals.push(interval);
 }
 
 function stopAircraftTracking() {
+    // Clear the interval
+    if (aircraftInterval) {
+        clearInterval(aircraftInterval);
+        aircraftInterval = null;
+    }
+    // Remove the layer
     if (aircraftLayer) {
         state.map.removeLayer(aircraftLayer);
         aircraftLayer = null;
@@ -1379,14 +1388,22 @@ function updateSatelliteLayer() {
 }
 
 function startSatelliteTracking() {
+    // Don't start if already running
+    if (satelliteInterval) return;
+    
     updateSatelliteLayer();
 
     // Slow movement update every 30 seconds
-    const interval = setInterval(updateSatelliteLayer, 30000);
-    trackingIntervals.push(interval);
+    satelliteInterval = setInterval(updateSatelliteLayer, 30000);
 }
 
 function stopSatelliteTracking() {
+    // Clear the interval
+    if (satelliteInterval) {
+        clearInterval(satelliteInterval);
+        satelliteInterval = null;
+    }
+    // Remove the layer
     if (satelliteLayer) {
         state.map.removeLayer(satelliteLayer);
         satelliteLayer = null;
@@ -1452,24 +1469,26 @@ function updateMaritimeLayer() {
 }
 
 function startMaritimeTracking() {
+    // Don't start if already running
+    if (maritimeInterval) return;
+    
     updateMaritimeLayer();
 
     // Update every 20 seconds
-    const interval = setInterval(updateMaritimeLayer, 20000);
-    trackingIntervals.push(interval);
+    maritimeInterval = setInterval(updateMaritimeLayer, 20000);
 }
 
 function stopMaritimeTracking() {
+    // Clear the interval
+    if (maritimeInterval) {
+        clearInterval(maritimeInterval);
+        maritimeInterval = null;
+    }
+    // Remove the layer
     if (maritimeLayer) {
         state.map.removeLayer(maritimeLayer);
         maritimeLayer = null;
     }
-}
-
-// Clear all tracking intervals
-function clearAllTracking() {
-    trackingIntervals.forEach(interval => clearInterval(interval));
-    trackingIntervals = [];
 }
 
 // Close modals with Escape key

@@ -890,17 +890,17 @@ function getSeverityLevel(incident) {
 
 function getEventTypeIcon(type) {
     const icons = {
-        'missile': 'M',           // M for Missile
-        'air_defense': 'D',       // D for Defense
-        'attack': 'A',            // A for Attack
-        'security': 'S',          // S for Security
-        'alert': '!',             // ! for Alert
-        'drone': 'R',             // R for dRone
-        'airstrike': 'F',         // F for Fighter/Air
-        'explosion': 'X',         // X for Explosion
-        'naval': 'N',             // N for Naval
-        'cyber': 'C',             // C for Cyber
-        'default': '●'            // Circle bullet
+        'missile': '†',           // Dagger/cross
+        'air_defense': '⌖',       // Target
+        'attack': '⚔',            // Crossed swords
+        'security': '⚑',          // Flag
+        'alert': '⚠',             // Warning
+        'drone': '✦',             // Star
+        'airstrike': '✈',         // Aircraft
+        'explosion': '❋',         // Explosion
+        'naval': '⚓',             // Anchor
+        'cyber': '⌘',             // Command
+        'default': '●'            // Circle
     };
     return icons[type?.toLowerCase()] || icons['default'];
 }
@@ -941,7 +941,7 @@ function renderIncidents() {
                     <span class="incident-flag">${flag}</span>
                     <span class="incident-severity ${severity}"></span>
                     <span class="incident-time">${timeAgo}</span>
-                    <span class="incident-type" title="${incident.type || 'INCIDENT'}">${(incident.type || 'INCIDENT').toUpperCase().replace(/_/g, ' ')}</span>
+                    <span class="incident-type" title="${(incident.type || 'INCIDENT').toUpperCase().replace(/_/g, ' ')}">${getEventTypeIcon(incident.type)}</span>
                     <span class="verification-badge ${badgeClass}">${verification.badge || 'UNCONFIRMED'}</span>
                     ${isGov ? `<span class="incident-gov">${isGov}</span>` : ''}
                 </div>
@@ -1160,7 +1160,7 @@ function toggleAirspaceLayer(show) {
                 // Add popup
                 const popupContent = `
                     <div style="font-family: var(--font-sans); min-width: 200px;">
-                        <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">🛡️ ${incident.type.replace('_', ' ').toUpperCase()}</div>
+                        <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">${getEventTypeIcon(incident.type)} ${incident.type.replace('_', ' ').toUpperCase()}</div>
                         <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${escapeHtml(incident.title?.substring(0, 60))}...</div>
                         <div style="font-size: 11px; color: var(--text-muted);">
                             ${getFlagEmoji(incident.location?.country)} ${incident.source || 'Unknown'} • ${getTimeAgo(incident.published)}

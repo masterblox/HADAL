@@ -1437,20 +1437,44 @@ function renderTimelineChart() {
         return;
     }
 
-    // Build simple bar chart with CSS
-    let html = '<div class="chart-timeline">';
-    sortedDates.forEach(date => {
+    // Build bar chart
+    let html = '<div style="padding: 16px;">';
+    
+    // Header with total
+    const totalIncidents = Object.values(incidentsByDate).reduce((a, b) => a + b, 0);
+    html += `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Last 14 Days</span>
+            <span style="font-size: 18px; font-weight: 700; color: var(--accent-cyan);">${totalIncidents} total</span>
+        </div>
+    `;
+
+    // Bar chart
+    html += '<div style="display: flex; align-items: flex-end; justify-content: space-between; height: 120px; gap: 4px; padding-bottom: 24px; border-bottom: 1px solid var(--border-subtle);">';
+    
+    sortedDates.forEach((date, index) => {
         const count = incidentsByDate[date];
-        const height = (count / maxCount) * 100;
-        const label = new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
+        const dateObj = new Date(date);
+        const dayLabel = dateObj.toLocaleDateString('en-US', { weekday: 'narrow' });
+        const dateLabel = dateObj.getDate();
+        
+        let barColor = 'var(--accent-cyan)';
+        if (count === maxCount && maxCount > 0) barColor = '#ff4444';
+        else if (count >= maxCount * 0.7) barColor = '#ff8800';
+        
+        const isToday = index === sortedDates.length - 1;
+        
         html += `
-            <div class="timeline-bar-wrapper">
-                <div class="timeline-bar" style="height: ${height}%" title="${count} incidents on ${label}"></div>
-                <div class="timeline-label">${label}</div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; position: relative;" title="${date}: ${count} incidents">
+                <div style="width: 100%; height: ${height}%; background: ${barColor}; border-radius: 2px 2px 0 0; min-height: 2px; opacity: ${isToday ? 1 : 0.7};"></div>
+                <div style="position: absolute; bottom: -20px; font-size: 10px; color: ${isToday ? 'var(--accent-cyan)' : 'var(--text-muted)'}; font-weight: ${isToday ? '600' : '400'};">${dayLabel}</div>
+                <div style="position: absolute; bottom: -32px; font-size: 9px; color: var(--text-muted);">${dateLabel}</div>
             </div>
         `;
     });
-    html += '</div>';
+    
+    html += '</div></div>';
     container.innerHTML = html;
 }
 
@@ -1458,37 +1482,50 @@ function renderHeatmapChart() {
     const container = document.getElementById('heatmap-chart');
     if (!container) return;
 
+    // All countries in the MENA region we track
+    const allCountries = [
+        'uae', 'saudi', 'qatar', 'bahrain', 'kuwait', 'oman',
+        'israel', 'palestine', 'lebanon', 'syria', 'iraq', 'jordan',
+        'egypt', 'yemen', 'iran'
+    ];
+
     // Count incidents by country
     const countryCounts = {};
+    allCountries.forEach(c => countryCounts[c] = 0);
+    
     state.incidents.forEach(incident => {
-        const country = incident.country || 'unknown';
-        countryCounts[country] = (countryCounts[country] || 0) + 1;
+        const countryCode = getCountryCode(incident.location?.country);
+        if (countryCode && countryCounts[countryCode] !== undefined) {
+            countryCounts[countryCode]++;
+        }
     });
 
+    // Sort by count (highest first)
     const sortedCountries = Object.entries(countryCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 8);
+        .sort((a, b) => b[1] - a[1]);
 
-    if (sortedCountries.length === 0) {
-        container.innerHTML = '<div class="chart-empty">No data available</div>';
-        return;
-    }
-
-    const maxCount = Math.max(...sortedCountries.map(([_, count]) => count));
+    const maxCount = Math.max(...sortedCountries.map(([_, count]) => count), 1);
 
     let html = '<div class="chart-heatmap">';
     sortedCountries.forEach(([country, count]) => {
         const intensity = count / maxCount;
-        const color = intensity > 0.7 ? 'var(--severity-critical)' :
-                      intensity > 0.4 ? 'var(--severity-high)' :
-                      intensity > 0.2 ? 'var(--severity-medium)' : 'var(--severity-low)';
+        const flag = getFlagEmoji(getCountryDisplayName(country));
+        const displayName = getCountryDisplayName(country);
+        
+        // Color based on intensity
+        let barColor = '#44ff88'; // low
+        if (intensity > 0.75) barColor = '#ff4444'; // critical
+        else if (intensity > 0.5) barColor = '#ff8800'; // high
+        else if (intensity > 0.25) barColor = '#ffcc00'; // medium
+        
         html += `
-            <div class="heatmap-row">
-                <span class="heatmap-country">${getCountryDisplayName(country)}</span>
-                <div class="heatmap-bar-wrapper">
-                    <div class="heatmap-bar" style="width: ${intensity * 100}%; background: ${color}"></div>
+            <div class="heatmap-row" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 16px;">${flag}</span>
+                <span style="flex: 0 0 80px; font-size: 12px; color: var(--text-secondary);">${displayName}</span>
+                <div style="flex: 1; height: 20px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden;">
+                    <div style="width: ${intensity * 100}%; height: 100%; background: ${barColor}; transition: width 0.3s;"></div>
                 </div>
-                <span class="heatmap-count">${count}</span>
+                <span style="flex: 0 0 30px; text-align: right; font-size: 12px; font-weight: 600; color: var(--text-primary);">${count}</span>
             </div>
         `;
     });
@@ -1539,36 +1576,29 @@ function renderCasualtyChart() {
 
     state.incidents.forEach(incident => {
         const casualties = incident.casualties || {};
-        if (casualties.deaths) {
-            total += casualties.deaths;
-            if (casualties.type === 'military') military += casualties.deaths;
-            else if (casualties.type === 'civilian') civilian += casualties.deaths;
-        }
-        if (casualties.injured) injured += casualties.injured;
+        total += casualties.total || 0;
+        military += casualties.military || 0;
+        civilian += casualties.civilian || 0;
+        injured += casualties.injured || 0;
     });
 
-    if (total === 0 && injured === 0) {
-        container.innerHTML = '<div class="chart-empty">No casualty data available</div>';
-        return;
-    }
-
     container.innerHTML = `
-        <div class="casualty-chart-grid">
-            <div class="casualty-chart-item">
-                <div class="casualty-chart-value critical">${total}</div>
-                <div class="casualty-chart-label">Total Deaths</div>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 8px; border-left: 3px solid #ff4444;">
+                <div style="font-size: 28px; font-weight: 700; color: #ff4444; margin-bottom: 4px;">${total.toLocaleString()}</div>
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Total Deaths</div>
             </div>
-            <div class="casualty-chart-item">
-                <div class="casualty-chart-value">${military}</div>
-                <div class="casualty-chart-label">Military</div>
+            <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 8px; border-left: 3px solid #ff8800;">
+                <div style="font-size: 28px; font-weight: 700; color: #ff8800; margin-bottom: 4px;">${military.toLocaleString()}</div>
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Military</div>
             </div>
-            <div class="casualty-chart-item">
-                <div class="casualty-chart-value">${civilian}</div>
-                <div class="casualty-chart-label">Civilian</div>
+            <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 8px; border-left: 3px solid #ffcc00;">
+                <div style="font-size: 28px; font-weight: 700; color: #ffcc00; margin-bottom: 4px;">${civilian.toLocaleString()}</div>
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Civilian</div>
             </div>
-            <div class="casualty-chart-item">
-                <div class="casualty-chart-value">${injured}</div>
-                <div class="casualty-chart-label">Injured</div>
+            <div style="text-align: center; padding: 16px; background: var(--bg-secondary); border-radius: 8px; border-left: 3px solid #44ff88;">
+                <div style="font-size: 28px; font-weight: 700; color: #44ff88; margin-bottom: 4px;">${injured.toLocaleString()}</div>
+                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Injured</div>
             </div>
         </div>
     `;
@@ -1578,46 +1608,74 @@ function renderReliabilityChart() {
     const container = document.getElementById('reliability-chart');
     if (!container) return;
 
-    const sourceStats = {
-        'Government': { count: 0, score: 95 },
-        'News Agency': { count: 0, score: 75 },
-        'Social Media': { count: 0, score: 45 },
-        'Other': { count: 0, score: 60 }
+    // Group sources by type and calculate actual reliability
+    const sourceGroups = {
+        'Government': { sources: [], count: 0, verified: 0 },
+        'Major News': { sources: [], count: 0, verified: 0 },
+        'Regional News': { sources: [], count: 0, verified: 0 },
+        'Other': { sources: [], count: 0, verified: 0 }
     };
 
     state.incidents.forEach(incident => {
-        const source = incident.source || 'Other';
-        if (source.includes('gov') || source.includes('official')) {
-            sourceStats['Government'].count++;
-        } else if (source.includes('news') || source.includes('reuters') || source.includes('ap')) {
-            sourceStats['News Agency'].count++;
-        } else if (source.includes('social') || source.includes('twitter') || source.includes('x')) {
-            sourceStats['Social Media'].count++;
-        } else {
-            sourceStats['Other'].count++;
+        const source = incident.source || 'Unknown';
+        const status = incident.verification?.status || 'UNCONFIRMED';
+        
+        let group = 'Other';
+        const sourceLower = source.toLowerCase();
+        
+        if (sourceLower.includes('ministry') || sourceLower.includes('defense') || 
+            sourceLower.includes('moi') || sourceLower.includes('idf') ||
+            sourceLower.includes('government') || sourceLower.includes('official')) {
+            group = 'Government';
+        } else if (sourceLower.includes('reuters') || sourceLower.includes('bbc') || 
+                   sourceLower.includes('ap') || sourceLower.includes('al jazeera') ||
+                   sourceLower.includes('france24') || sourceLower.includes('dw')) {
+            group = 'Major News';
+        } else if (sourceLower.includes('news') || sourceLower.includes('times') || 
+                   sourceLower.includes('post') || sourceLower.includes('agency')) {
+            group = 'Regional News';
+        }
+        
+        if (!sourceGroups[group].sources.includes(source)) {
+            sourceGroups[group].sources.push(source);
+        }
+        sourceGroups[group].count++;
+        if (status === 'VERIFIED') {
+            sourceGroups[group].verified++;
         }
     });
 
-    let html = '<div class="chart-reliability">';
-    Object.entries(sourceStats).forEach(([source, data]) => {
+    let html = '<div style="space-y: 12px;">';
+    
+    Object.entries(sourceGroups).forEach(([group, data]) => {
         if (data.count > 0) {
-            const reliabilityClass = data.score >= 80 ? 'high' : data.score >= 60 ? 'medium' : 'low';
+            const reliability = data.count > 0 ? Math.round((data.verified / data.count) * 100) : 0;
+            const uniqueSources = data.sources.length;
+            
+            let color = '#ff4444';
+            let label = 'Low';
+            if (reliability >= 80) { color = '#44ff88'; label = 'High'; }
+            else if (reliability >= 50) { color = '#ffcc00'; label = 'Medium'; }
+            
             html += `
-                <div class="reliability-row">
-                    <div class="reliability-info">
-                        <span class="reliability-source">${source}</span>
-                        <span class="reliability-count">${data.count} incidents</span>
+                <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 8px; border-left: 3px solid ${color};">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; color: var(--text-primary);">${group}</span>
+                        <span style="font-size: 12px; color: ${color}; font-weight: 600;">${reliability}% ${label}</span>
                     </div>
-                    <div class="reliability-score-wrapper">
-                        <div class="reliability-bar-bg">
-                            <div class="reliability-bar ${reliabilityClass}" style="width: ${data.score}%"></div>
-                        </div>
-                        <span class="reliability-score">${data.score}%</span>
+                    <div style="display: flex; gap: 16px; font-size: 11px; color: var(--text-muted);">
+                        <span>${data.count} reports</span>
+                        <span>${uniqueSources} sources</span>
+                        <span>${data.verified} verified</span>
+                    </div>
+                    <div style="margin-top: 8px; height: 4px; background: var(--bg-tertiary); border-radius: 2px; overflow: hidden;">
+                        <div style="width: ${reliability}%; height: 100%; background: ${color}; border-radius: 2px;"></div>
                     </div>
                 </div>
             `;
         }
     });
+    
     html += '</div>';
     container.innerHTML = html || '<div class="chart-empty">No source data available</div>';
 }
@@ -1626,50 +1684,104 @@ function renderIntensityChart() {
     const container = document.getElementById('intensity-chart');
     if (!container) return;
 
+    // Calculate intensity based on event type AND severity
+    // Bombing/strikes count more than alerts
+    const eventWeights = {
+        'missile': 4,
+        'airstrike': 4,
+        'attack': 4,
+        'explosion': 3,
+        'drone': 3,
+        'air_defense': 2,
+        'security': 1,
+        'alert': 1
+    };
+
+    const severityMultipliers = {
+        'critical': 3,
+        'high': 2,
+        'medium': 1.5,
+        'low': 1
+    };
+
+    let totalIntensity = 0;
+    let maxPossibleIntensity = 0;
+
+    // Count incidents by weighted severity
     const severityCounts = { critical: 0, high: 0, medium: 0, low: 0 };
+    const eventTypeBreakdown = {};
+
     state.incidents.forEach(incident => {
-        const severity = incident.severity || 'low';
-        if (severityCounts[severity] !== undefined) {
-            severityCounts[severity]++;
-        }
+        const type = (incident.type || 'unknown').toLowerCase();
+        const severity = getSeverityLevel(incident);
+        
+        severityCounts[severity]++;
+        
+        const eventWeight = eventWeights[type] || 1;
+        const severityMult = severityMultipliers[severity] || 1;
+        const incidentIntensity = eventWeight * severityMult;
+        
+        totalIntensity += incidentIntensity;
+        maxPossibleIntensity += 12; // max weight (4) * max severity (3)
+        
+        // Track event types
+        const displayType = type.replace(/_/g, ' ').toUpperCase();
+        eventTypeBreakdown[displayType] = (eventTypeBreakdown[displayType] || 0) + 1;
     });
 
-    const total = Object.values(severityCounts).reduce((a, b) => a + b, 0);
-
+    const total = state.incidents.length;
     if (total === 0) {
         container.innerHTML = '<div class="chart-empty">No intensity data available</div>';
         return;
     }
 
-    // Calculate intensity score (weighted average)
-    const weights = { critical: 4, high: 3, medium: 2, low: 1 };
-    const weightedSum = Object.entries(severityCounts).reduce((sum, [sev, count]) => sum + (weights[sev] * count), 0);
-    const intensityScore = Math.round((weightedSum / (total * 4)) * 100);
+    // Calculate overall intensity score (0-100)
+    const intensityScore = Math.min(100, Math.round((totalIntensity / Math.max(maxPossibleIntensity * 0.3, 1)) * 100));
+    
+    // Determine status
+    let status = 'LOW';
+    let color = '#44ff88';
+    if (intensityScore >= 75) { status = 'CRITICAL'; color = '#ff4444'; }
+    else if (intensityScore >= 50) { status = 'HIGH'; color = '#ff8800'; }
+    else if (intensityScore >= 25) { status = 'ELEVATED'; color = '#ffcc00'; }
 
-    let html = '<div class="chart-intensity">';
+    let html = '<div style="text-align: center; padding: 16px;">';
 
-    // Intensity meter
+    // Main intensity gauge
     html += `
-        <div class="intensity-main">
-            <div class="intensity-value ${intensityScore > 70 ? 'critical' : intensityScore > 40 ? 'high' : 'medium'}">${intensityScore}%</div>
-            <div class="intensity-label">Conflict Intensity Index</div>
+        <div style="margin-bottom: 20px;">
+            <div style="font-size: 48px; font-weight: 700; color: ${color}; margin-bottom: 4px;">${intensityScore}%</div>
+            <div style="font-size: 14px; font-weight: 600; color: ${color}; letter-spacing: 1px;">${status}</div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Conflict Intensity Index</div>
         </div>
     `;
 
-    // Breakdown by severity
-    html += '<div class="intensity-breakdown">';
-    Object.entries(severityCounts).forEach(([severity, count]) => {
-        const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
-        html += `
-            <div class="intensity-item">
-                <span class="intensity-dot ${severity}"></span>
-                <span class="intensity-severity">${severity.charAt(0).toUpperCase() + severity.slice(1)}</span>
-                <span class="intensity-percentage">${percentage}%</span>
-            </div>
-        `;
-    });
-    html += '</div></div>';
+    // Intensity bar
+    html += `
+        <div style="height: 8px; background: var(--bg-secondary); border-radius: 4px; margin-bottom: 20px; overflow: hidden;">
+            <div style="width: ${intensityScore}%; height: 100%; background: linear-gradient(90deg, #44ff88 0%, #ffcc00 50%, #ff4444 100%); border-radius: 4px; transition: width 0.5s ease;"></div>
+        </div>
+    `;
 
+    // Top event types
+    const topEvents = Object.entries(eventTypeBreakdown)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4);
+    
+    if (topEvents.length > 0) {
+        html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; text-align: left;">';
+        topEvents.forEach(([type, count]) => {
+            html += `
+                <div style="padding: 8px; background: var(--bg-secondary); border-radius: 6px;">
+                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">${type}</div>
+                    <div style="font-size: 16px; font-weight: 600; color: var(--text-primary);">${count}</div>
+                </div>
+            `;
+        });
+        html += '</div>';
+    }
+
+    html += '</div>';
     container.innerHTML = html;
 }
 

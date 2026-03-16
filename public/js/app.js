@@ -1197,16 +1197,10 @@ let analysisInitialized = false;
 let predictionInitialized = false;
 let missileDefenseInitialized = false;
 
-// Aircraft Tracking - OpenSky API
+// Aircraft Tracking - OpenSky API (via proxy)
 let aircraftCache = null;
 let aircraftCacheTime = 0;
 const AIRCRAFT_CACHE_TTL = 30000; // 30 seconds
-
-// OpenSky API credentials
-const OPENSKY_CREDENTIALS = {
-    username: 'arestheagent@gmail.com-api-client',
-    password: 'E9hWNjvQoXKWmguZcKBbrZSBvIHC5hlw'
-};
 
 async function fetchAircraftData() {
     try {
@@ -1216,31 +1210,19 @@ async function fetchAircraftData() {
             console.log('✈️ Using cached aircraft data');
             return aircraftCache;
         }
-
-        // Create Basic Auth header
-        const authString = btoa(`${OPENSKY_CREDENTIALS.username}:${OPENSKY_CREDENTIALS.password}`);
-
-        // OpenSky API for Gulf region (bounding box: lat 12-35, lon 34-60)
-        const response = await fetch('https://opensky-network.org/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60', {
-            headers: {
-                'Authorization': `Basic ${authString}`
-            }
-        });
-
-        if (response.status === 429) {
-            console.warn('✈️ Rate limited by OpenSky API. Using cached data if available.');
-            return aircraftCache || [];
-        }
-
+        
+        // Use local API proxy to avoid CORS
+        const response = await fetch('/api/aircraft');
+        
         if (!response.ok) {
             console.warn(`✈️ API error ${response.status}. Using cached data if available.`);
             return aircraftCache || [];
         }
-
+        
         const data = await response.json();
         aircraftCache = data.states || [];
         aircraftCacheTime = now;
-        console.log(`✈️ Fetched ${aircraftCache.length} aircraft from API (authenticated)`);
+        console.log(`✈️ Fetched ${aircraftCache.length} aircraft from API`);
         return aircraftCache;
     } catch (error) {
         console.error('Failed to fetch aircraft data:', error);
@@ -1253,35 +1235,35 @@ function updateAircraftLayer(aircraft) {
         console.log('❌ No map available');
         return;
     }
-    
+
     console.log(`✈️ Processing ${aircraft?.length || 0} aircraft`);
-    
+
     // Clear existing aircraft markers
     if (aircraftLayer) {
         state.map.removeLayer(aircraftLayer);
         aircraftLayer = null;
     }
-    
+
     if (!aircraft || aircraft.length === 0) {
         console.log('❌ No aircraft data');
         return;
     }
-    
+
     // Create layer group
     aircraftLayer = L.layerGroup();
-    
+
     let added = 0;
     const center = state.map.getCenter();
     const zoom = state.map.getZoom();
     console.log(`✈️ Map center: [${center.lat}, ${center.lng}], zoom: ${zoom}`);
-    
+
     // Sample some aircraft to see where they are
     const sampleAircraft = aircraft.slice(0, 10);
     console.log('✈️ Sample aircraft locations:', sampleAircraft.map(a => `${a[0]}: [${a[6]}, ${a[5]}]`));
-    
+
     aircraft.forEach((state, index) => {
         const [icao24, callsign, originCountry, timePosition, lastContact, lon, lat, baroAltitude, onGround, velocity, trueTrack, verticalRate, sensors, geoAltitude, squawk, spi, positionSource] = state;
-        
+
         if (lat != null && lon != null && !isNaN(lat) && !isNaN(lon)) {
             // Validate coordinates
             if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
@@ -1294,7 +1276,7 @@ function updateAircraftLayer(aircraft) {
                     opacity: 1,
                     fillOpacity: 1
                 });
-                
+
                 const popupContent = `
                     <div style="font-family: sans-serif; min-width: 180px; padding: 8px;">
                         <div style="font-weight: bold; color: #00d4ff; margin-bottom: 4px;">✈️ ${(callsign || '').trim() || icao24}</div>
@@ -1305,17 +1287,17 @@ function updateAircraftLayer(aircraft) {
                         </div>
                     </div>
                 `;
-                
+
                 marker.bindPopup(popupContent);
                 aircraftLayer.addLayer(marker);
                 added++;
             }
         }
     });
-    
+
     // Add the layer to map
     aircraftLayer.addTo(state.map);
-    
+
     console.log(`✈️ SUCCESS: ${added} aircraft displayed as RED circles`);
 }
 

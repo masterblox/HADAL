@@ -1209,41 +1209,45 @@ async function fetchAircraftData() {
 }
 
 function updateAircraftLayer(aircraft) {
-    if (!state.map) return;
+    if (!state.map) {
+        console.log('❌ No map available');
+        return;
+    }
+    
+    console.log(`✈️ Processing ${aircraft?.length || 0} aircraft`);
     
     // Clear existing aircraft markers
     if (aircraftLayer) {
         state.map.removeLayer(aircraftLayer);
     }
     
+    if (!aircraft || aircraft.length === 0) {
+        console.log('❌ No aircraft data');
+        return;
+    }
+    
     aircraftLayer = L.layerGroup().addTo(state.map);
     
+    let added = 0;
     aircraft.forEach(state => {
         const [icao24, callsign, originCountry, timePosition, lastContact, lon, lat, baroAltitude, onGround, velocity, trueTrack, verticalRate, sensors, geoAltitude, squawk, spi, positionSource] = state;
         
         if (lat && lon) {
-            const aircraftIcon = L.divIcon({
-                className: 'aircraft-marker',
-                html: `<div style="
-                    width: 12px;
-                    height: 12px;
-                    background: #00d4ff;
-                    border: 2px solid #fff;
-                    border-radius: 50%;
-                    box-shadow: 0 0 10px #00d4ff;
-                    transform: rotate(${trueTrack || 0}deg);
-                "></div>`,
-                iconSize: [12, 12],
-                iconAnchor: [6, 6]
+            // Simple circle marker that always works
+            const marker = L.circleMarker([lat, lon], {
+                radius: 6,
+                fillColor: '#00d4ff',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
             });
-            
-            const marker = L.marker([lat, lon], { icon: aircraftIcon });
             
             const popupContent = `
                 <div style="font-family: var(--font-sans); min-width: 200px;">
-                    <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">✈️ ${callsign?.trim() || icao24}</div>
+                    <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">✈️ ${(callsign || '').trim() || icao24}</div>
                     <div style="font-size: 12px; color: var(--text-muted);">
-                        Country: ${originCountry}<br>
+                        Country: ${originCountry || 'Unknown'}<br>
                         Altitude: ${Math.round(baroAltitude || 0)}m<br>
                         Speed: ${Math.round((velocity || 0) * 3.6)} km/h<br>
                         ICAO: ${icao24}
@@ -1252,11 +1256,12 @@ function updateAircraftLayer(aircraft) {
             `;
             
             marker.bindPopup(popupContent);
-            aircraftLayer.addLayer(marker);
+            marker.addTo(aircraftLayer);
+            added++;
         }
     });
     
-    console.log(`✈️ Added ${aircraft.length} aircraft to map`);
+    console.log(`✈️ Added ${added} aircraft to map`);
 }
 
 function startAircraftTracking() {

@@ -1219,6 +1219,7 @@ function updateAircraftLayer(aircraft) {
     // Clear existing aircraft markers
     if (aircraftLayer) {
         state.map.removeLayer(aircraftLayer);
+        aircraftLayer = null;
     }
     
     if (!aircraft || aircraft.length === 0) {
@@ -1226,42 +1227,58 @@ function updateAircraftLayer(aircraft) {
         return;
     }
     
-    aircraftLayer = L.layerGroup().addTo(state.map);
+    aircraftLayer = L.layerGroup();
     
     let added = 0;
     aircraft.forEach(state => {
         const [icao24, callsign, originCountry, timePosition, lastContact, lon, lat, baroAltitude, onGround, velocity, trueTrack, verticalRate, sensors, geoAltitude, squawk, spi, positionSource] = state;
         
-        if (lat && lon) {
-            // Simple circle marker that always works
-            const marker = L.circleMarker([lat, lon], {
-                radius: 6,
-                fillColor: '#00d4ff',
-                color: '#fff',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.8
-            });
-            
-            const popupContent = `
-                <div style="font-family: var(--font-sans); min-width: 200px;">
-                    <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">✈️ ${(callsign || '').trim() || icao24}</div>
-                    <div style="font-size: 12px; color: var(--text-muted);">
-                        Country: ${originCountry || 'Unknown'}<br>
-                        Altitude: ${Math.round(baroAltitude || 0)}m<br>
-                        Speed: ${Math.round((velocity || 0) * 3.6)} km/h<br>
-                        ICAO: ${icao24}
+        // Log first few aircraft to debug
+        if (added < 3) {
+            console.log(`✈️ Aircraft ${icao24}: lat=${lat}, lon=${lon}, callsign=${callsign}`);
+        }
+        
+        if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
+            // Validate coordinates are in reasonable range
+            if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                // Simple circle marker with larger radius
+                const marker = L.circleMarker([lat, lon], {
+                    radius: 8,
+                    fillColor: '#00d4ff',
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                });
+                
+                const popupContent = `
+                    <div style="font-family: var(--font-sans); min-width: 200px;">
+                        <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">✈️ ${(callsign || '').trim() || icao24}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">
+                            Country: ${originCountry || 'Unknown'}<br>
+                            Altitude: ${Math.round(baroAltitude || 0)}m<br>
+                            Speed: ${Math.round((velocity || 0) * 3.6)} km/h<br>
+                            ICAO: ${icao24}
+                        </div>
                     </div>
-                </div>
-            `;
-            
-            marker.bindPopup(popupContent);
-            marker.addTo(aircraftLayer);
-            added++;
+                `;
+                
+                marker.bindPopup(popupContent);
+                marker.addTo(aircraftLayer);
+                added++;
+            }
         }
     });
     
+    // Add the layer to map
+    aircraftLayer.addTo(state.map);
+    
     console.log(`✈️ Added ${added} aircraft to map`);
+    
+    // If no aircraft added, show message
+    if (added === 0) {
+        console.log('⚠️ No valid aircraft coordinates found');
+    }
 }
 
 function startAircraftTracking() {

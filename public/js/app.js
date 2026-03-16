@@ -1131,7 +1131,56 @@ function getSeverityColor(severity) {
 }
 
 function toggleAirspaceLayer(show) {
-    console.log('Airspace layer:', show ? 'show' : 'hide');
+    if (!state.map) return;
+    
+    if (show) {
+        // Create airspace layer showing air defense and alert incidents
+        if (state.airspaceLayer) {
+            state.map.removeLayer(state.airspaceLayer);
+        }
+        
+        state.airspaceLayer = L.layerGroup().addTo(state.map);
+        
+        state.filteredIncidents.forEach(incident => {
+            if (incident.type === 'air_defense' || incident.type === 'alert') {
+                if (!incident.location?.lat || !incident.location?.lng) return;
+                
+                const { lat, lng } = incident.location;
+                
+                // Create airspace marker (circle with pulse effect)
+                const marker = L.circleMarker([lat, lng], {
+                    radius: 15,
+                    fillColor: '#00d4ff',
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 0.8,
+                    fillOpacity: 0.3
+                }).addTo(state.airspaceLayer);
+                
+                // Add popup
+                const popupContent = `
+                    <div style="font-family: var(--font-sans); min-width: 200px;">
+                        <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">🛡️ ${incident.type.replace('_', ' ').toUpperCase()}</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${escapeHtml(incident.title?.substring(0, 60))}...</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">
+                            ${getFlagEmoji(incident.location?.country)} ${incident.source || 'Unknown'} • ${getTimeAgo(incident.published)}
+                        </div>
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent);
+            }
+        });
+        
+        console.log('✅ Airspace layer showing air defense/alert incidents');
+    } else {
+        // Hide airspace layer
+        if (state.airspaceLayer) {
+            state.map.removeLayer(state.airspaceLayer);
+            state.airspaceLayer = null;
+        }
+        console.log('❌ Airspace layer hidden');
+    }
 }
 
 // ============================================================================

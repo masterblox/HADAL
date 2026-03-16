@@ -930,10 +930,13 @@ function renderIncidents() {
         const timeAgo = getTimeAgo(incident.published);
         const verification = incident.verification || {};
         const badgeClass = verification.badge?.toLowerCase() || 'unconfirmed';
-        const isGov = incident.is_government ? '✓' : '';
+        const isGov = incident.is_government;
         
         const sourceUrl = incident.source_url || incident.url || '#';
         const hasCoords = incident.location?.lat && incident.location?.lng;
+        
+        // Determine badge: Government posts get green "VERIFIED", others get regular badge
+        const govBadge = isGov ? `<span class="verification-badge verified" style="background: #22c55e; color: #fff; border-color: #22c55e;">VERIFIED</span>` : `<span class="verification-badge ${badgeClass}">${verification.badge || 'UNCONFIRMED'}</span>`;
         
         return `
             <div class="incident-card" data-id="${incident.id}" onclick="selectIncident(${incident.id})">
@@ -942,8 +945,7 @@ function renderIncidents() {
                     <span class="incident-severity ${severity}"></span>
                     <span class="incident-time">${timeAgo}</span>
                     <span class="incident-type" title="${(incident.type || 'INCIDENT').toUpperCase().replace(/_/g, ' ')}">${(incident.type || 'INCIDENT').toUpperCase().replace(/_/g, ' ')}</span>
-                    <span class="verification-badge ${badgeClass}">${verification.badge || 'UNCONFIRMED'}</span>
-                    ${isGov ? `<span class="incident-gov">${isGov}</span>` : ''}
+                    ${govBadge}
                 </div>
                 <div class="incident-title line-clamp-2">${escapeHtml(incident.title)}</div>
                 <div class="incident-coords">

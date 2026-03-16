@@ -83,15 +83,16 @@ Multi-source confidence scoring:
 
 | Layer | Data Source | Update Rate | Visual |
 |-------|-------------|-------------|--------|
-| ✈️ **Aircraft** | OpenSky API | 10 seconds | Cyan pulsing dots |
+| ✈️ **Aircraft** | OpenSky API (authenticated) | 30 seconds | Bright red circles |
 | 🛰️ **Satellites** | CelesTrak TLE | 30 seconds | Gold pulsing dots |
 | 🚢 **Maritime** | AIS (simulated) | 20 seconds | Orange squares |
 
 **Features:**
-- Toggle layers on/off
+- Toggle layers on/off (properly clears intervals when hidden)
 - Click for details (callsign, altitude, speed)
-- Pulsing glow animations
-- Gulf region coverage
+- CORS-safe API proxy for authenticated OpenSky access
+- Bright red markers for maximum visibility
+- Gulf region coverage (lat 12-35°, lon 34-60°)
 
 #### 7. Airspace Tracking
 - NOTAMs layer (toggle)
@@ -130,23 +131,34 @@ Multi-source confidence scoring:
 
 ### 🎯 Prediction Engine
 
-#### 11. Scenario Prediction (Phase 1)
-**NEW:** Rule-based scenario modeling.
+#### 11. Scenario Prediction (Phase 1 - Enhanced)
+**NEW:** Rule-based scenario modeling trained on last 14 days of data.
 
 **How it works:**
 1. Select Actor (Iran, Israel, Houthis, etc.)
 2. Select Action (Missile strike, Drone attack, etc.)
 3. Select Target (Country/region)
-4. **Output:** Probability outcomes based on 220+ historical incidents
+4. **Output:** Probability outcomes based on recent 14-day incident patterns
 
-**Pattern Extraction:**
-- Actor → Action → Target relationships
-- Historical probability calculation
-- Next 24h/7d/30d predictions
+**New Features:**
+- **14-Day Focus:** Predictions based on most recent data only
+- **Trend Analysis:** Detects escalation patterns (early vs late period comparison)
+- **Escalation Alerts:** Warns if activity is trending up X% in last 3 days
+- **Most Active Actor:** Identifies dominant actor from recent incidents
+- **Most Targeted Country:** Shows which country faces most activity
+- **Daily Frequency Tracking:** Monitors incident velocity over time
+
+**Prediction Types:**
+- **Escalation Alert:** Activity up X% in recent period
+- **Regional Response:** Likelihood of spillover to neighboring countries
+- **Follow-up Events:** Probable next event types based on patterns
+- **Default Predictions:** Military, diplomatic, market impact scenarios
 
 **Example:**
-> Actor: Iran → Action: Missile Strike → Target: Israel  
-> **Prediction:** 68% probability of air defense activation, 23% probability of casualties
+> Actor: Houthis → Action: Missile Launch → Target: Saudi Arabia  
+> **Escalation Alert:** Activity up 35% in last 3 days  
+> **Prediction:** 75% probability of retaliatory strikes, 60% oil price volatility  
+> **Confidence:** Based on 47 recent incidents
 
 ---
 
@@ -301,9 +313,11 @@ API & UI (Vercel + GitHub Actions)
 | Sources | 48+ |
 | Countries Covered | 15 |
 | Cities in DB | 50+ |
-| API Endpoints | 2 |
+| API Endpoints | 3 (including /api/aircraft) |
 | Charts | 6 |
 | Tracking Layers | 3 |
+| Prediction Training Window | 14 days |
+| Pattern Recognition | Actor→Action→Target chains |
 
 ---
 
@@ -337,4 +351,4 @@ MIT
 ---
 
 Built with ⚔️ by Ares for Nikola
-Last Updated: 2026-03-15
+Last Updated: 2026-03-16

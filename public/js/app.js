@@ -1229,57 +1229,67 @@ function updateAircraftLayer(aircraft) {
         return;
     }
     
+    // Create layer group
     aircraftLayer = L.layerGroup();
     
     let added = 0;
-    aircraft.forEach(state => {
+    const bounds = state.map.getBounds();
+    console.log(`✈️ Map bounds: ${JSON.stringify(bounds)}`);
+    
+    aircraft.forEach((state, index) => {
         const [icao24, callsign, originCountry, timePosition, lastContact, lon, lat, baroAltitude, onGround, velocity, trueTrack, verticalRate, sensors, geoAltitude, squawk, spi, positionSource] = state;
         
-        // Log first few aircraft to debug
-        if (added < 3) {
-            console.log(`✈️ Aircraft ${icao24}: lat=${lat}, lon=${lon}, callsign=${callsign}`);
+        // Log ALL aircraft first 5
+        if (index < 5) {
+            console.log(`✈️ Raw[${index}]: ${icao24}, lat=${lat}, lon=${lon}`);
         }
         
-        if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
-            // Validate coordinates are in reasonable range for Gulf region
-            if (lat >= 12 && lat <= 35 && lon >= 34 && lon <= 60) {
-                // Larger, more visible marker
+        if (lat != null && lon != null && !isNaN(lat) && !isNaN(lon)) {
+            // Validate coordinates are in reasonable range
+            if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                // Create marker - use simple circle
                 const marker = L.circleMarker([lat, lon], {
-                    radius: 12,
+                    radius: 10,
                     fillColor: '#00ffff',
-                    color: '#ffffff',
-                    weight: 3,
+                    color: '#000000',
+                    weight: 2,
                     opacity: 1,
-                    fillOpacity: 1
+                    fillOpacity: 0.9
                 });
                 
                 const popupContent = `
-                    <div style="font-family: var(--font-sans); min-width: 200px;">
-                        <div style="font-weight: 600; color: #00d4ff; margin-bottom: 4px;">✈️ ${(callsign || '').trim() || icao24}</div>
-                        <div style="font-size: 12px; color: var(--text-muted);">
+                    <div style="font-family: sans-serif; min-width: 180px; padding: 8px;">
+                        <div style="font-weight: bold; color: #00d4ff; margin-bottom: 4px;">✈️ ${(callsign || '').trim() || icao24}</div>
+                        <div style="font-size: 11px; color: #666;">
                             Country: ${originCountry || 'Unknown'}<br>
                             Altitude: ${Math.round(baroAltitude || 0)}m<br>
-                            Speed: ${Math.round((velocity || 0) * 3.6)} km/h<br>
-                            ICAO: ${icao24}
+                            Speed: ${Math.round((velocity || 0) * 3.6)} km/h
                         </div>
                     </div>
                 `;
                 
                 marker.bindPopup(popupContent);
-                marker.addTo(aircraftLayer);
+                aircraftLayer.addLayer(marker);
                 added++;
-            } else {
-                console.log(`⚠️ Aircraft ${icao24} outside Gulf region: lat=${lat}, lon=${lon}`);
+                
+                if (added <= 3) {
+                    console.log(`✈️ ADDED: ${icao24} at [${lat}, ${lon}]`);
+                }
             }
         }
     });
     
     // Add the layer to map
+    console.log(`✈️ Adding layer with ${added} markers to map...`);
+    aircraftLayer.addTo(state.map);
+    
+    // Force map refresh
+    state.map.invalidateSize();
+    
     if (added > 0) {
-        aircraftLayer.addTo(state.map);
-        console.log(`✈️ SUCCESS: Added ${added} aircraft to map`);
+        console.log(`✈️ SUCCESS: ${added} aircraft displayed`);
     } else {
-        console.log('⚠️ No valid aircraft in Gulf region');
+        console.log('⚠️ No aircraft to display');
     }
 }
 

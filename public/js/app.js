@@ -98,7 +98,7 @@ function initializeRailModules() {
     updateAirspaceSummary();
     updateSourceReliability();
     updateConflictIntensity();
-    
+
     // Set up rail module toggles
     document.querySelectorAll('.rail-header').forEach(header => {
         header.addEventListener('click', () => {
@@ -110,32 +110,32 @@ function initializeRailModules() {
 
 function updateFinancePanel() {
     const prices = state.financeData || {};
-    
+
     // Brent Crude
     const brent = prices.brent || {};
     updateEl('brent-price', brent.price ? `$${brent.price.toFixed(2)}` : '--');
     updateEl('brent-change', brent.change ? `${brent.change > 0 ? '+' : ''}${brent.change.toFixed(2)}%` : '--');
-    
+
     // Gold
     const gold = prices.gold || {};
     updateEl('gold-price', gold.price ? `$${gold.price.toFixed(2)}` : '--');
     updateEl('gold-change', gold.change ? `${gold.change > 0 ? '+' : ''}${gold.change.toFixed(2)}%` : '--');
-    
+
     // Bitcoin
     const bitcoin = prices.bitcoin || {};
     updateEl('bitcoin-price', bitcoin.price ? `$${bitcoin.price.toLocaleString()}` : '--');
     updateEl('bitcoin-change', bitcoin.change ? `${bitcoin.change > 0 ? '+' : ''}${bitcoin.change.toFixed(2)}%` : '--');
-    
+
     // Natural Gas
     const gas = prices.gas || {};
     updateEl('gas-price', gas.price ? `$${gas.price.toFixed(2)}` : '--');
     updateEl('gas-change', gas.change ? `${gas.change > 0 ? '+' : ''}${gas.change.toFixed(2)}%` : '--');
-    
+
     // Copper
     const copper = prices.copper || {};
     updateEl('copper-price', copper.price ? `$${copper.price.toFixed(2)}` : '--');
     updateEl('copper-change', copper.change ? `${copper.change > 0 ? '+' : ''}${copper.change.toFixed(2)}%` : '--');
-    
+
     // Iron Ore
     const iron = prices.iron || {};
     updateEl('iron-price', iron.price ? `$${iron.price.toFixed(2)}` : '--');
@@ -150,13 +150,13 @@ function updateAirspaceSummary() {
             alerts++;
         }
     });
-    
+
     // Update alerts count text
     const alertsEl = document.getElementById('airspace-alerts');
     if (alertsEl) {
         alertsEl.textContent = alerts > 0 ? `${alerts} Active Alerts` : 'Clear';
     }
-    
+
     // Update status indicator
     const statusEl = document.getElementById('airspace-status');
     if (statusEl) {
@@ -177,12 +177,12 @@ function updateSourceReliability() {
             sources[source].verified++;
         }
     });
-    
+
     // Get top 5 sources
     const topSources = Object.entries(sources)
         .sort((a, b) => b[1].count - a[1].count)
         .slice(0, 5);
-    
+
     // Update source list
     const container = document.getElementById('source-list');
     if (container) {
@@ -194,7 +194,7 @@ function updateSourceReliability() {
                 let color = '#ff4444';
                 if (reliability > 80) color = '#44ff88';
                 else if (reliability > 50) color = '#ffcc00';
-                
+
                 return `
                     <div class="source-item">
                         <span class="source-name">${escapeHtml(name)}</span>
@@ -213,9 +213,9 @@ function updateConflictIntensity() {
         const level = getSeverityLevel(inc);
         severity[level]++;
     });
-    
+
     const total = state.filteredIncidents.length;
-    
+
     // Update intensity bars
     updateIntensityBar('critical-bar', 'critical-count', severity.critical, total);
     updateIntensityBar('high-bar', 'high-count', severity.high, total);
@@ -226,12 +226,12 @@ function updateConflictIntensity() {
 function updateIntensityBar(barId, countId, count, total) {
     const bar = document.getElementById(barId);
     const countEl = document.getElementById(countId);
-    
+
     if (bar && total > 0) {
         const percentage = (count / total) * 100;
         bar.style.width = `${percentage}%`;
     }
-    
+
     if (countEl) {
         countEl.textContent = count;
     }
@@ -246,25 +246,25 @@ function trackVisitor() {
     const visitorKey = 'gulfwatch_visitor_id';
     const countKey = 'gulfwatch_visitor_count';
     const lastVisitKey = 'gulfwatch_last_visit';
-    
+
     let visitorId = localStorage.getItem(visitorKey);
     const now = Date.now();
     const lastVisit = parseInt(localStorage.getItem(lastVisitKey) || '0');
     const isNewSession = (now - lastVisit) > (30 * 60 * 1000); // 30 min session timeout
-    
+
     if (!visitorId || isNewSession) {
         // New visitor or new session
         visitorId = 'visitor_' + Math.random().toString(36).substr(2, 9);
         localStorage.setItem(visitorKey, visitorId);
-        
+
         // Increment count (in production this would be server-side)
         let count = parseInt(localStorage.getItem(countKey) || '0');
         count++;
         localStorage.setItem(countKey, count.toString());
     }
-    
+
     localStorage.setItem(lastVisitKey, now.toString());
-    
+
     // Display count
     const countEl = document.getElementById('visitor-count');
     const counterEl = document.getElementById('visitor-counter');
@@ -273,7 +273,7 @@ function trackVisitor() {
         countEl.textContent = count.toLocaleString();
         counterEl.style.display = 'inline-flex';
     }
-    
+
     return visitorId;
 }
 
@@ -288,24 +288,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function initializeApp() {
     console.log('🌊 Gulf Watch initializing...');
-    
+
     // Load data
     await loadIncidents();
     await loadFinanceData();
-    
+
     // Initialize UI
     initializeNavigation();
     initializeFilters();
     initializeMap();
     initializeRailModules();
-    
+
     // Render initial state
     renderIncidents();
     updateLastUpdateTime();
-    
+
     // Start auto-refresh
     setInterval(refreshData, 60000); // Every minute
-    
+
     console.log('✅ Gulf Watch ready');
 }
 
@@ -317,10 +317,10 @@ async function loadIncidents() {
     try {
         const response = await fetch('incidents.json?t=' + Date.now());
         const data = await response.json();
-        
+
         state.incidents = data.incidents || [];
         applyFilters();
-        
+
         console.log(`📊 Loaded ${state.incidents.length} incidents`);
     } catch (error) {
         console.error('❌ Failed to load incidents:', error);
@@ -342,7 +342,7 @@ async function loadFinanceData() {
 async function refreshData() {
     await loadIncidents();
     updateLastUpdateTime();
-    
+
     if (state.currentSection === 'map') {
         updateMapMarkers();
     }
@@ -355,7 +355,7 @@ async function refreshData() {
 function initializeNavigation() {
     const tabs = document.querySelectorAll('.tab-btn');
     const sections = document.querySelectorAll('.section');
-    
+
     console.log(`📑 Initializing navigation: ${tabs.length} tabs, ${sections.length} sections`);
 
     tabs.forEach(tab => {
@@ -709,28 +709,28 @@ function initializeFilters() {
             toggleFilterChip(chip, 'country');
         });
     });
-    
+
     // Severity filters
     document.querySelectorAll('#severity-filters .filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             toggleFilterChip(chip, 'severity');
         });
     });
-    
+
     // Type filters
     document.querySelectorAll('#type-filters .filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             toggleFilterChip(chip, 'type');
         });
     });
-    
+
     // Time filters
     document.querySelectorAll('#time-filters .filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             toggleFilterChip(chip, 'time');
         });
     });
-    
+
     // Search
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
@@ -743,11 +743,11 @@ function initializeFilters() {
 
 function toggleFilterChip(chip, filterType) {
     const container = chip.parentElement;
-    
+
     // For country/severity/type: allow multiple selections or 'all'
     if (filterType === 'country' || filterType === 'severity' || filterType === 'type') {
         const isAll = chip.dataset[filterType] === 'all';
-        
+
         if (isAll) {
             // Clicking 'all' clears others
             container.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -757,10 +757,10 @@ function toggleFilterChip(chip, filterType) {
             // Remove 'all' selection
             const allChip = container.querySelector(`[data-${filterType}="all"]`);
             if (allChip) allChip.classList.remove('active');
-            
+
             // Toggle this chip
             chip.classList.toggle('active');
-            
+
             // Update state
             const activeChips = container.querySelectorAll('.filter-chip.active');
             const values = Array.from(activeChips).map(c => c.dataset[filterType]);
@@ -772,7 +772,7 @@ function toggleFilterChip(chip, filterType) {
         chip.classList.add('active');
         state.filters[filterType] = chip.dataset[filterType];
     }
-    
+
     applyFilters();
 }
 
@@ -780,13 +780,13 @@ function applyFilters() {
     state.filteredIncidents = state.incidents.filter(incident => {
         // Country filter
         if (state.filters.country !== 'all') {
-            const countries = Array.isArray(state.filters.country) 
-                ? state.filters.country 
+            const countries = Array.isArray(state.filters.country)
+                ? state.filters.country
                 : [state.filters.country];
             const incidentCountry = getCountryCode(incident.location?.country);
             if (!countries.includes(incidentCountry)) return false;
         }
-        
+
         // Severity filter
         if (state.filters.severity !== 'all') {
             const severities = Array.isArray(state.filters.severity)
@@ -795,7 +795,7 @@ function applyFilters() {
             const incidentSeverity = getSeverityLevel(incident);
             if (!severities.includes(incidentSeverity)) return false;
         }
-        
+
         // Type filter
         if (state.filters.type !== 'all') {
             const types = Array.isArray(state.filters.type)
@@ -804,13 +804,13 @@ function applyFilters() {
             const incidentType = incident.type?.toLowerCase() || 'unknown';
             if (!types.includes(incidentType)) return false;
         }
-        
+
         // Time filter
         if (state.filters.time !== 'all') {
             const incidentDate = new Date(incident.published);
             const now = new Date();
             const hoursAgo = (now - incidentDate) / (1000 * 60 * 60);
-            
+
             switch (state.filters.time) {
                 case '24h':
                     if (hoursAgo > 24) return false;
@@ -823,24 +823,24 @@ function applyFilters() {
                     break;
             }
         }
-        
+
         // Search filter
         if (state.filters.search) {
             const searchText = state.filters.search;
             const title = incident.title?.toLowerCase() || '';
             const source = incident.source?.toLowerCase() || '';
             const country = incident.location?.country?.toLowerCase() || '';
-            
-            if (!title.includes(searchText) && 
-                !source.includes(searchText) && 
+
+            if (!title.includes(searchText) &&
+                !source.includes(searchText) &&
                 !country.includes(searchText)) {
                 return false;
             }
         }
-        
+
         return true;
     });
-    
+
     renderIncidents();
     updateMapMarkers();
     updateCasualtyCounts();
@@ -873,7 +873,7 @@ function escapeHtml(text) {
 function getSeverityLevel(incident) {
     // Use verification badge or derive from keywords
     const title = incident.title?.toLowerCase() || '';
-    
+
     if (incident.verification?.badge === 'CRITICAL') return 'critical';
     if (title.includes('killed') || title.includes('death') || title.includes('attack')) {
         return 'high';
@@ -912,7 +912,7 @@ function getEventTypeClass(type) {
 function renderIncidents() {
     const container = document.getElementById('incident-feed');
     if (!container) return;
-    
+
     if (state.filteredIncidents.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
@@ -923,7 +923,7 @@ function renderIncidents() {
         `;
         return;
     }
-    
+
     container.innerHTML = state.filteredIncidents.map(incident => {
         const flag = getFlagEmoji(incident.location?.country);
         const severity = getSeverityLevel(incident);
@@ -931,13 +931,13 @@ function renderIncidents() {
         const verification = incident.verification || {};
         const badgeClass = verification.badge?.toLowerCase() || 'unconfirmed';
         const isGov = incident.is_government;
-        
+
         const sourceUrl = incident.source_url || incident.url || '#';
         const hasCoords = incident.location?.lat && incident.location?.lng;
-        
+
         // Determine badge: Government posts get green "VERIFIED", others get regular badge
         const govBadge = isGov ? `<span class="verification-badge verified" style="background: #22c55e; color: #fff; border-color: #22c55e;">VERIFIED</span>` : `<span class="verification-badge ${badgeClass}">${verification.badge || 'UNCONFIRMED'}</span>`;
-        
+
         return `
             <div class="incident-card" data-id="${incident.id}" onclick="selectIncident(${incident.id})">
                 <div class="incident-header">
@@ -952,7 +952,7 @@ function renderIncidents() {
                     ${hasCoords ? `📍 ${incident.location.lat.toFixed(4)}, ${incident.location.lng.toFixed(4)}` : '📍 No coordinates'}
                 </div>
                 <div class="incident-source">
-                    ${incident.source || 'Unknown'} 
+                    ${incident.source || 'Unknown'}
                     ${incident.num_sources ? `+ ${incident.num_sources - 1} sources` : ''}
                 </div>
                 <div class="incident-actions">
@@ -974,17 +974,17 @@ function renderIncidents() {
 function selectIncident(id) {
     const card = document.querySelector(`.incident-card[data-id="${id}"]`);
     if (!card) return;
-    
+
     // Toggle expanded state
     const isExpanded = card.classList.contains('expanded');
-    
+
     // Collapse all others
     document.querySelectorAll('.incident-card').forEach(c => c.classList.remove('expanded', 'active'));
-    
+
     if (!isExpanded) {
         card.classList.add('expanded', 'active');
         state.selectedIncident = state.incidents.find(i => i.id === id);
-        
+
         // Center map on incident
         if (state.map && state.selectedIncident?.location) {
             const { lat, lng } = state.selectedIncident.location;
@@ -1012,11 +1012,11 @@ function getFlagEmoji(country) {
 
 function getTimeAgo(dateString) {
     if (!dateString) return 'Unknown';
-    
+
     const date = new Date(dateString);
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
-    
+
     if (seconds < 60) return `${seconds}s ago`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
@@ -1028,7 +1028,7 @@ function getTimeAgo(dateString) {
 function initializeMap() {
     const mapContainer = document.getElementById('map');
     if (!mapContainer) return;
-    
+
     // Initialize Leaflet
     state.map = L.map('map', {
         center: [29.0, 48.0],
@@ -1037,25 +1037,25 @@ function initializeMap() {
         maxZoom: 12,
         zoomControl: false
     });
-    
+
     // Add zoom control to top right
     L.control.zoom({
         position: 'topright'
     }).addTo(state.map);
-    
+
     // Add dark theme tile layer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap &copy; CARTO',
         subdomains: 'abcd',
         maxZoom: 19
     }).addTo(state.map);
-    
+
     // Layer toggles
     document.querySelectorAll('.layer-toggle input').forEach(checkbox => {
         checkbox.addEventListener('change', (e) => {
             const layer = e.target.dataset.layer;
             const isActive = e.target.checked;
-            
+
             if (layer === 'airspace') {
                 toggleAirspaceLayer(isActive);
             } else if (layer === 'aircraft') {
@@ -1068,29 +1068,29 @@ function initializeMap() {
                 if (isActive) startMaritimeTracking();
                 else stopMaritimeTracking();
             }
-            
+
             e.target.parentElement.classList.toggle('active', isActive);
         });
     });
-    
+
     updateMapMarkers();
 }
 
 function updateMapMarkers() {
     if (!state.map) return;
-    
+
     // Clear existing markers
     state.markers.forEach(marker => state.map.removeLayer(marker));
     state.markers = [];
-    
+
     // Add markers for filtered incidents
     state.filteredIncidents.forEach(incident => {
         if (!incident.location?.lat || !incident.location?.lng) return;
-        
+
         const { lat, lng } = incident.location;
         const severity = getSeverityLevel(incident);
         const color = getSeverityColor(severity);
-        
+
         // Create custom marker
         const marker = L.circleMarker([lat, lng], {
             radius: 8,
@@ -1100,7 +1100,7 @@ function updateMapMarkers() {
             opacity: 1,
             fillOpacity: 0.8
         }).addTo(state.map);
-        
+
         // Add popup
         const popupContent = `
             <div style="font-family: var(--font-sans); min-width: 200px;">
@@ -1110,14 +1110,14 @@ function updateMapMarkers() {
                 </div>
             </div>
         `;
-        
+
         marker.bindPopup(popupContent);
-        
+
         // Click to select
         marker.on('click', () => {
             selectIncident(incident.id);
         });
-        
+
         state.markers.push(marker);
     });
 }
@@ -1134,21 +1134,21 @@ function getSeverityColor(severity) {
 
 function toggleAirspaceLayer(show) {
     if (!state.map) return;
-    
+
     if (show) {
         // Create airspace layer showing air defense and alert incidents
         if (state.airspaceLayer) {
             state.map.removeLayer(state.airspaceLayer);
         }
-        
+
         state.airspaceLayer = L.layerGroup().addTo(state.map);
-        
+
         state.filteredIncidents.forEach(incident => {
             if (incident.type === 'air_defense' || incident.type === 'alert') {
                 if (!incident.location?.lat || !incident.location?.lng) return;
-                
+
                 const { lat, lng } = incident.location;
-                
+
                 // Create airspace marker (circle with pulse effect)
                 const marker = L.circleMarker([lat, lng], {
                     radius: 15,
@@ -1158,7 +1158,7 @@ function toggleAirspaceLayer(show) {
                     opacity: 0.8,
                     fillOpacity: 0.3
                 }).addTo(state.airspaceLayer);
-                
+
                 // Add popup
                 const popupContent = `
                     <div style="font-family: var(--font-sans); min-width: 200px;">
@@ -1169,11 +1169,11 @@ function toggleAirspaceLayer(show) {
                         </div>
                     </div>
                 `;
-                
+
                 marker.bindPopup(popupContent);
             }
         });
-        
+
         console.log('✅ Airspace layer showing air defense/alert incidents');
     } else {
         // Hide airspace layer
@@ -1216,27 +1216,27 @@ async function fetchAircraftData() {
             console.log('✈️ Using cached aircraft data');
             return aircraftCache;
         }
-        
+
         // Create Basic Auth header
         const authString = btoa(`${OPENSKY_CREDENTIALS.username}:${OPENSKY_CREDENTIALS.password}`);
-        
+
         // OpenSky API for Gulf region (bounding box: lat 12-35, lon 34-60)
         const response = await fetch('https://opensky-network.org/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60', {
             headers: {
                 'Authorization': `Basic ${authString}`
             }
         });
-        
+
         if (response.status === 429) {
             console.warn('✈️ Rate limited by OpenSky API. Using cached data if available.');
             return aircraftCache || [];
         }
-        
+
         if (!response.ok) {
             console.warn(`✈️ API error ${response.status}. Using cached data if available.`);
             return aircraftCache || [];
         }
-        
+
         const data = await response.json();
         aircraftCache = data.states || [];
         aircraftCacheTime = now;
@@ -1271,28 +1271,28 @@ function updateAircraftLayer(aircraft) {
     aircraftLayer = L.layerGroup();
     
     let added = 0;
-    const bounds = state.map.getBounds();
-    console.log(`✈️ Map bounds: ${JSON.stringify(bounds)}`);
+    const center = state.map.getCenter();
+    const zoom = state.map.getZoom();
+    console.log(`✈️ Map center: [${center.lat}, ${center.lng}], zoom: ${zoom}`);
+    
+    // Sample some aircraft to see where they are
+    const sampleAircraft = aircraft.slice(0, 10);
+    console.log('✈️ Sample aircraft locations:', sampleAircraft.map(a => `${a[0]}: [${a[6]}, ${a[5]}]`));
     
     aircraft.forEach((state, index) => {
         const [icao24, callsign, originCountry, timePosition, lastContact, lon, lat, baroAltitude, onGround, velocity, trueTrack, verticalRate, sensors, geoAltitude, squawk, spi, positionSource] = state;
         
-        // Log ALL aircraft first 5
-        if (index < 5) {
-            console.log(`✈️ Raw[${index}]: ${icao24}, lat=${lat}, lon=${lon}`);
-        }
-        
         if (lat != null && lon != null && !isNaN(lat) && !isNaN(lon)) {
-            // Validate coordinates are in reasonable range
+            // Validate coordinates
             if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                // Create marker - use simple circle
+                // Create marker - BRIGHT RED for maximum visibility
                 const marker = L.circleMarker([lat, lon], {
-                    radius: 10,
-                    fillColor: '#00ffff',
-                    color: '#000000',
-                    weight: 2,
+                    radius: 15,
+                    fillColor: '#ff0000',
+                    color: '#ffffff',
+                    weight: 3,
                     opacity: 1,
-                    fillOpacity: 0.9
+                    fillOpacity: 1
                 });
                 
                 const popupContent = `
@@ -1309,37 +1309,25 @@ function updateAircraftLayer(aircraft) {
                 marker.bindPopup(popupContent);
                 aircraftLayer.addLayer(marker);
                 added++;
-                
-                if (added <= 3) {
-                    console.log(`✈️ ADDED: ${icao24} at [${lat}, ${lon}]`);
-                }
             }
         }
     });
     
     // Add the layer to map
-    console.log(`✈️ Adding layer with ${added} markers to map...`);
     aircraftLayer.addTo(state.map);
     
-    // Force map refresh
-    state.map.invalidateSize();
-    
-    if (added > 0) {
-        console.log(`✈️ SUCCESS: ${added} aircraft displayed`);
-    } else {
-        console.log('⚠️ No aircraft to display');
-    }
+    console.log(`✈️ SUCCESS: ${added} aircraft displayed as RED circles`);
 }
 
 function startAircraftTracking() {
     // Initial fetch
     fetchAircraftData().then(updateAircraftLayer);
-    
+
     // Update every 30 seconds to avoid rate limiting
     const interval = setInterval(() => {
         fetchAircraftData().then(updateAircraftLayer);
     }, 30000);
-    
+
     trackingIntervals.push(interval);
 }
 
@@ -1360,20 +1348,20 @@ const SATELLITES = [
 
 function updateSatelliteLayer() {
     if (!state.map) return;
-    
+
     // Clear existing satellite markers
     if (satelliteLayer) {
         state.map.removeLayer(satelliteLayer);
     }
-    
+
     satelliteLayer = L.layerGroup().addTo(state.map);
-    
+
     // Simulated positions (in production, calculate from TLE)
     SATELLITES.forEach(sat => {
         // Add slight random movement for visual effect
         const offsetLat = (Math.random() - 0.5) * 2;
         const offsetLon = (Math.random() - 0.5) * 2;
-        
+
         const satelliteIcon = L.divIcon({
             className: 'satellite-marker',
             html: `<div style="
@@ -1387,9 +1375,9 @@ function updateSatelliteLayer() {
             iconSize: [14, 14],
             iconAnchor: [7, 7]
         });
-        
+
         const marker = L.marker([sat.lat + offsetLat, sat.lon + offsetLon], { icon: satelliteIcon });
-        
+
         const popupContent = `
             <div style="font-family: var(--font-sans); min-width: 180px;">
                 <div style="font-weight: 600; color: #ffd700; margin-bottom: 4px;">🛰️ ${sat.name}</div>
@@ -1400,17 +1388,17 @@ function updateSatelliteLayer() {
                 </div>
             </div>
         `;
-        
+
         marker.bindPopup(popupContent);
         satelliteLayer.addLayer(marker);
     });
-    
+
     console.log(`🛰️ Added ${SATELLITES.length} satellites to map`);
 }
 
 function startSatelliteTracking() {
     updateSatelliteLayer();
-    
+
     // Slow movement update every 30 seconds
     const interval = setInterval(updateSatelliteLayer, 30000);
     trackingIntervals.push(interval);
@@ -1434,19 +1422,19 @@ const VESSELS = [
 
 function updateMaritimeLayer() {
     if (!state.map) return;
-    
+
     // Clear existing vessel markers
     if (maritimeLayer) {
         state.map.removeLayer(maritimeLayer);
     }
-    
+
     maritimeLayer = L.layerGroup().addTo(state.map);
-    
+
     VESSELS.forEach(vessel => {
         // Add slight random movement
         const offsetLat = (Math.random() - 0.5) * 0.1;
         const offsetLon = (Math.random() - 0.5) * 0.1;
-        
+
         const vesselIcon = L.divIcon({
             className: 'vessel-marker',
             html: `<div style="
@@ -1460,9 +1448,9 @@ function updateMaritimeLayer() {
             iconSize: [16, 16],
             iconAnchor: [8, 8]
         });
-        
+
         const marker = L.marker([vessel.lat + offsetLat, vessel.lon + offsetLon], { icon: vesselIcon });
-        
+
         const popupContent = `
             <div style="font-family: var(--font-sans); min-width: 180px;">
                 <div style="font-weight: 600; color: #ff6b35; margin-bottom: 4px;">🚢 ${vessel.name}</div>
@@ -1473,17 +1461,17 @@ function updateMaritimeLayer() {
                 </div>
             </div>
         `;
-        
+
         marker.bindPopup(popupContent);
         maritimeLayer.addLayer(marker);
     });
-    
+
     console.log(`🚢 Added ${VESSELS.length} vessels to map`);
 }
 
 function startMaritimeTracking() {
     updateMaritimeLayer();
-    
+
     // Update every 20 seconds
     const interval = setInterval(updateMaritimeLayer, 20000);
     trackingIntervals.push(interval);
@@ -1560,7 +1548,7 @@ function renderTimelineChart() {
 
     // Build bar chart
     let html = '<div style="padding: 16px; height: 100%; display: flex; flex-direction: column;">';
-    
+
     // Header with total
     const totalIncidents = Object.values(incidentsByDate).reduce((a, b) => a + b, 0);
     html += `
@@ -1572,7 +1560,7 @@ function renderTimelineChart() {
 
     // Chart container with Y-axis
     html += '<div style="display: flex; flex: 1; min-height: 0;">';
-    
+
     // Y-axis labels
     const yAxisMax = Math.ceil(maxCount / 5) * 5; // Round up to nearest 5
     html += '<div style="display: flex; flex-direction: column; justify-content: space-between; padding-right: 8px; font-size: 10px; color: var(--text-muted);">';
@@ -1581,32 +1569,32 @@ function renderTimelineChart() {
         html += `<span>${value}</span>`;
     }
     html += '</div>';
-    
+
     // Bar chart area
     html += '<div style="flex: 1; display: flex; flex-direction: column;">';
-    
+
     // Grid lines
     html += '<div style="position: relative; flex: 1;">';
     for (let i = 0; i < 5; i++) {
         html += `<div style="position: absolute; left: 0; right: 0; top: ${i * 25}%; border-top: 1px dashed var(--border-subtle); opacity: 0.5;"></div>`;
     }
-    
+
     // Bars
     html += '<div style="display: flex; align-items: flex-end; justify-content: space-between; height: 100%; gap: 3px; padding-bottom: 32px; position: relative; z-index: 1;">';
-    
+
     sortedDates.forEach((date, index) => {
         const count = incidentsByDate[date];
         const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
         const dateObj = new Date(date);
         const dayLabel = dateObj.toLocaleDateString('en-US', { weekday: 'narrow' });
         const dateLabel = dateObj.getDate();
-        
+
         let barColor = 'var(--accent-cyan)';
         if (count === maxCount && maxCount > 0) barColor = '#ff4444';
         else if (count >= maxCount * 0.7) barColor = '#ff8800';
-        
+
         const isToday = index === sortedDates.length - 1;
-        
+
         html += `
             <div style="flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; height: 100%; justify-content: flex-end;" title="${date}: ${count} incidents">
                 <div style="width: 100%; height: ${height}%; background: ${barColor}; border-radius: 2px 2px 0 0; min-height: 2px; opacity: ${isToday ? 1 : 0.7}; transition: height 0.3s;"></div>
@@ -1615,7 +1603,7 @@ function renderTimelineChart() {
             </div>
         `;
     });
-    
+
     html += '</div></div></div></div>';
     container.innerHTML = html;
 }
@@ -1634,7 +1622,7 @@ function renderHeatmapChart() {
     // Count incidents by country
     const countryCounts = {};
     allCountries.forEach(c => countryCounts[c] = 0);
-    
+
     state.incidents.forEach(incident => {
         const countryCode = getCountryCode(incident.location?.country);
         if (countryCode && countryCounts[countryCode] !== undefined) {
@@ -1652,27 +1640,27 @@ function renderHeatmapChart() {
     const visibleCount = 10;
     const topCountries = sortedCountries.slice(0, visibleCount);
     const remainingCountries = sortedCountries.slice(visibleCount);
-    
+
     let html = '<div style="height: 100%; display: flex; flex-direction: column;">';
-    
+
     // Header
     html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 0 4px;">';
     html += '<span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Country</span>';
     html += '<span style="font-size: 11px; color: var(--text-muted);">Incidents</span>';
     html += '</div>';
-    
+
     // Top countries (always visible)
     html += '<div style="flex-shrink: 0;">';
     topCountries.forEach(([country, count]) => {
         const intensity = count / maxCount;
         const flag = getFlagEmoji(getCountryDisplayName(country));
         const displayName = getCountryDisplayName(country);
-        
+
         let barColor = '#44ff88';
         if (intensity > 0.75) barColor = '#ff4444';
         else if (intensity > 0.5) barColor = '#ff8800';
         else if (intensity > 0.25) barColor = '#ffcc00';
-        
+
         html += `
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding: 4px; background: var(--bg-secondary); border-radius: 4px;">
                 <span style="font-size: 14px;">${flag}</span>
@@ -1685,7 +1673,7 @@ function renderHeatmapChart() {
         `;
     });
     html += '</div>';
-    
+
     // Scrollable remaining countries
     if (remainingCountries.length > 0) {
         html += '<div style="flex: 1; overflow-y: auto; margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--border-subtle);">';
@@ -1693,12 +1681,12 @@ function renderHeatmapChart() {
             const intensity = count / maxCount;
             const flag = getFlagEmoji(getCountryDisplayName(country));
             const displayName = getCountryDisplayName(country);
-            
+
             let barColor = '#44ff88';
             if (intensity > 0.75) barColor = '#ff4444';
             else if (intensity > 0.5) barColor = '#ff8800';
             else if (intensity > 0.25) barColor = '#ffcc00';
-            
+
             html += `
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding: 4px; background: var(--bg-secondary); border-radius: 4px; opacity: 0.8;">
                     <span style="font-size: 14px;">${flag}</span>
@@ -1712,7 +1700,7 @@ function renderHeatmapChart() {
         });
         html += '</div>';
     }
-    
+
     html += '</div>';
     container.innerHTML = html;
 }
@@ -1803,23 +1791,23 @@ function renderReliabilityChart() {
     state.incidents.forEach(incident => {
         const source = incident.source || 'Unknown';
         const status = incident.verification?.status || 'UNCONFIRMED';
-        
+
         let group = 'Other';
         const sourceLower = source.toLowerCase();
-        
-        if (sourceLower.includes('ministry') || sourceLower.includes('defense') || 
+
+        if (sourceLower.includes('ministry') || sourceLower.includes('defense') ||
             sourceLower.includes('moi') || sourceLower.includes('idf') ||
             sourceLower.includes('government') || sourceLower.includes('official')) {
             group = 'Government';
-        } else if (sourceLower.includes('reuters') || sourceLower.includes('bbc') || 
+        } else if (sourceLower.includes('reuters') || sourceLower.includes('bbc') ||
                    sourceLower.includes('ap') || sourceLower.includes('al jazeera') ||
                    sourceLower.includes('france24') || sourceLower.includes('dw')) {
             group = 'Major News';
-        } else if (sourceLower.includes('news') || sourceLower.includes('times') || 
+        } else if (sourceLower.includes('news') || sourceLower.includes('times') ||
                    sourceLower.includes('post') || sourceLower.includes('agency')) {
             group = 'Regional News';
         }
-        
+
         if (!sourceGroups[group].sources.includes(source)) {
             sourceGroups[group].sources.push(source);
         }
@@ -1830,17 +1818,17 @@ function renderReliabilityChart() {
     });
 
     let html = '<div style="space-y: 12px;">';
-    
+
     Object.entries(sourceGroups).forEach(([group, data]) => {
         if (data.count > 0) {
             const reliability = data.count > 0 ? Math.round((data.verified / data.count) * 100) : 0;
             const uniqueSources = data.sources.length;
-            
+
             let color = '#ff4444';
             let label = 'Low';
             if (reliability >= 80) { color = '#44ff88'; label = 'High'; }
             else if (reliability >= 50) { color = '#ffcc00'; label = 'Medium'; }
-            
+
             html += `
                 <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 8px; border-left: 3px solid ${color};">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -1859,7 +1847,7 @@ function renderReliabilityChart() {
             `;
         }
     });
-    
+
     html += '</div>';
     container.innerHTML = html || '<div class="chart-empty">No source data available</div>';
 }
@@ -1898,16 +1886,16 @@ function renderIntensityChart() {
     state.incidents.forEach(incident => {
         const type = (incident.type || 'unknown').toLowerCase();
         const severity = getSeverityLevel(incident);
-        
+
         severityCounts[severity]++;
-        
+
         const eventWeight = eventWeights[type] || 1;
         const severityMult = severityMultipliers[severity] || 1;
         const incidentIntensity = eventWeight * severityMult;
-        
+
         totalIntensity += incidentIntensity;
         maxPossibleIntensity += 12; // max weight (4) * max severity (3)
-        
+
         // Track event types
         const displayType = type.replace(/_/g, ' ').toUpperCase();
         eventTypeBreakdown[displayType] = (eventTypeBreakdown[displayType] || 0) + 1;
@@ -1921,7 +1909,7 @@ function renderIntensityChart() {
 
     // Calculate overall intensity score (0-100)
     const intensityScore = Math.min(100, Math.round((totalIntensity / Math.max(maxPossibleIntensity * 0.3, 1)) * 100));
-    
+
     // Determine status
     let status = 'LOW';
     let color = '#44ff88';
@@ -1951,7 +1939,7 @@ function renderIntensityChart() {
     const topEvents = Object.entries(eventTypeBreakdown)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 4);
-    
+
     if (topEvents.length > 0) {
         html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; text-align: left;">';
         topEvents.forEach(([type, count]) => {
@@ -1979,20 +1967,20 @@ function initializePrediction() {
     if (!predictionInitialized) {
         // Initialize predictor with current incidents
         predictor = new GulfPredictor(state.incidents);
-        
+
         // Populate dropdowns
         populatePredictionDropdowns();
-        
+
         // Set up event listeners
         setupPredictionListeners();
-        
+
         predictionInitialized = true;
     }
 }
 
 function populatePredictionDropdowns() {
     if (!predictor) return;
-    
+
     // Populate actors
     const actorSelect = document.getElementById('predict-actor');
     if (actorSelect) {
@@ -2004,7 +1992,7 @@ function populatePredictionDropdowns() {
             actorSelect.appendChild(option);
         });
     }
-    
+
     // Populate actions
     const actionSelect = document.getElementById('predict-action');
     if (actionSelect) {
@@ -2016,7 +2004,7 @@ function populatePredictionDropdowns() {
             actionSelect.appendChild(option);
         });
     }
-    
+
     // Populate targets
     const targetSelect = document.getElementById('predict-target');
     if (targetSelect) {
@@ -2028,7 +2016,7 @@ function populatePredictionDropdowns() {
             targetSelect.appendChild(option);
         });
     }
-    
+
     // Populate countries
     const countrySelect = document.getElementById('predict-country');
     if (countrySelect) {
@@ -2054,16 +2042,16 @@ function runPrediction() {
     const action = document.getElementById('predict-action')?.value;
     const target = document.getElementById('predict-target')?.value;
     const country = document.getElementById('predict-country')?.value;
-    
+
     if (!actor || !action) {
         showError('Please select at least an actor and action');
         return;
     }
-    
+
     // Run prediction
     const scenario = { actor, action, target, country };
     const predictions = predictor.predict(scenario);
-    
+
     // Display results
     displayPredictions(predictions, scenario);
 }
@@ -2073,26 +2061,26 @@ function displayPredictions(predictions, scenario) {
     const emptyState = document.getElementById('prediction-empty');
     const grid = document.getElementById('predictions-grid');
     const context = document.getElementById('prediction-context');
-    
+
     if (!resultsContainer || !grid) return;
-    
+
     // Hide empty state, show results
     if (emptyState) emptyState.style.display = 'none';
     resultsContainer.style.display = 'block';
-    
+
     // Update context
     if (context) {
         const actorName = predictor.getActors().find(a => a.id === scenario.actor)?.name || scenario.actor;
         const actionName = predictor.getActions().find(a => a.id === scenario.action)?.name || scenario.action;
         context.textContent = `${actorName} → ${actionName}${scenario.target ? ' → ' + predictor.getTargets().find(t => t.id === scenario.target)?.name : ''}`;
     }
-    
+
     // Build predictions grid
     let html = '';
     predictions.forEach((pred, index) => {
         const probabilityClass = pred.probability >= 70 ? 'high' : pred.probability >= 40 ? 'medium' : 'low';
         const icon = getPredictionIcon(pred.category);
-        
+
         html += `
             <div class="prediction-card ${probabilityClass}" style="animation-delay: ${index * 0.1}s">
                 <div class="prediction-card-header">
@@ -2113,7 +2101,7 @@ function displayPredictions(predictions, scenario) {
             </div>
         `;
     });
-    
+
     grid.innerHTML = html;
 }
 
@@ -2146,17 +2134,17 @@ function initializeReports() {
 function loadIncomingReports() {
     const container = document.getElementById('incoming-reports');
     if (!container) return;
-    
+
     const reports = JSON.parse(localStorage.getItem('gulfwatch_reports') || '[]');
-    
+
     if (reports.length === 0) {
         container.innerHTML = '<p class="text-muted">No pending reports</p>';
         return;
     }
-    
+
     // Sort by newest first
     reports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    
+
     let html = '<div class="reports-list">';
     reports.slice(0, 10).forEach(report => {
         const date = new Date(report.timestamp).toLocaleString();
@@ -2180,7 +2168,7 @@ function loadIncomingReports() {
         `;
     });
     html += '</div>';
-    
+
     container.innerHTML = html;
 }
 
@@ -2191,21 +2179,21 @@ function loadVerificationStats() {
         pending: 0,
         disputed: 0
     };
-    
+
     state.incidents.forEach(incident => {
         const verification = incident.verification || {};
         const badge = verification.badge || 'UNCONFIRMED';
-        
+
         if (badge === 'VERIFIED') stats.validated++;
         else if (badge === 'DISPUTED') stats.disputed++;
         else stats.pending++;
     });
-    
+
     const updateEl = (id, value) => {
         const el = document.getElementById(id);
         if (el) el.textContent = value;
     };
-    
+
     updateEl('validated-count', stats.validated);
     updateEl('pending-count', stats.pending);
     updateEl('disputed-count', stats.disputed);
@@ -2221,11 +2209,11 @@ function initializeData() {
     document.querySelectorAll('.data-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             const panelId = tab.dataset.tab;
-            
+
             // Update active tab
             document.querySelectorAll('.data-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            
+
             // Show selected panel
             document.querySelectorAll('.data-panel').forEach(p => {
                 p.classList.toggle('active', p.dataset.panel === panelId);
@@ -2265,7 +2253,7 @@ function downloadCSV() {
         inc.location?.lng || '',
         inc.casualties?.total || 0
     ]);
-    
+
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -2300,7 +2288,7 @@ function downloadGeoJSON() {
             }
         }))
     };
-    
+
     const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/geo+json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

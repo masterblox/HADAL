@@ -941,7 +941,7 @@ function renderIncidents() {
                     <span class="incident-flag">${flag}</span>
                     <span class="incident-severity ${severity}"></span>
                     <span class="incident-time">${timeAgo}</span>
-                    <span class="incident-type" title="${incident.type || 'INCIDENT'}">${getEventTypeIcon(incident.type)}</span>
+                    <span class="incident-type" title="${incident.type || 'INCIDENT'}">${(incident.type || 'INCIDENT').toUpperCase().replace(/_/g, ' ')}</span>
                     <span class="verification-badge ${badgeClass}">${verification.badge || 'UNCONFIRMED'}</span>
                     ${isGov ? `<span class="incident-gov">${isGov}</span>` : ''}
                 </div>

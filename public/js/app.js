@@ -1487,19 +1487,40 @@ function renderTimelineChart() {
     }
 
     // Build bar chart
-    let html = '<div style="padding: 16px;">';
+    let html = '<div style="padding: 16px; height: 100%; display: flex; flex-direction: column;">';
     
     // Header with total
     const totalIncidents = Object.values(incidentsByDate).reduce((a, b) => a + b, 0);
     html += `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Last 14 Days</span>
             <span style="font-size: 18px; font-weight: 700; color: var(--accent-cyan);">${totalIncidents} total</span>
         </div>
     `;
 
-    // Bar chart
-    html += '<div style="display: flex; align-items: flex-end; justify-content: space-between; height: 120px; gap: 4px; padding-bottom: 24px; border-bottom: 1px solid var(--border-subtle);">';
+    // Chart container with Y-axis
+    html += '<div style="display: flex; flex: 1; min-height: 0;">';
+    
+    // Y-axis labels
+    const yAxisMax = Math.ceil(maxCount / 5) * 5; // Round up to nearest 5
+    html += '<div style="display: flex; flex-direction: column; justify-content: space-between; padding-right: 8px; font-size: 10px; color: var(--text-muted);">';
+    for (let i = 4; i >= 0; i--) {
+        const value = Math.round((yAxisMax / 4) * i);
+        html += `<span>${value}</span>`;
+    }
+    html += '</div>';
+    
+    // Bar chart area
+    html += '<div style="flex: 1; display: flex; flex-direction: column;">';
+    
+    // Grid lines
+    html += '<div style="position: relative; flex: 1;">';
+    for (let i = 0; i < 5; i++) {
+        html += `<div style="position: absolute; left: 0; right: 0; top: ${i * 25}%; border-top: 1px dashed var(--border-subtle); opacity: 0.5;"></div>`;
+    }
+    
+    // Bars
+    html += '<div style="display: flex; align-items: flex-end; justify-content: space-between; height: 100%; gap: 3px; padding-bottom: 32px; position: relative; z-index: 1;">';
     
     sortedDates.forEach((date, index) => {
         const count = incidentsByDate[date];
@@ -1515,15 +1536,15 @@ function renderTimelineChart() {
         const isToday = index === sortedDates.length - 1;
         
         html += `
-            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; position: relative;" title="${date}: ${count} incidents">
-                <div style="width: 100%; height: ${height}%; background: ${barColor}; border-radius: 2px 2px 0 0; min-height: 2px; opacity: ${isToday ? 1 : 0.7};"></div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; height: 100%; justify-content: flex-end;" title="${date}: ${count} incidents">
+                <div style="width: 100%; height: ${height}%; background: ${barColor}; border-radius: 2px 2px 0 0; min-height: 2px; opacity: ${isToday ? 1 : 0.7}; transition: height 0.3s;"></div>
                 <div style="position: absolute; bottom: -20px; font-size: 10px; color: ${isToday ? 'var(--accent-cyan)' : 'var(--text-muted)'}; font-weight: ${isToday ? '600' : '400'};">${dayLabel}</div>
                 <div style="position: absolute; bottom: -32px; font-size: 9px; color: var(--text-muted);">${dateLabel}</div>
             </div>
         `;
     });
     
-    html += '</div></div>';
+    html += '</div></div></div></div>';
     container.innerHTML = html;
 }
 
@@ -1555,29 +1576,71 @@ function renderHeatmapChart() {
 
     const maxCount = Math.max(...sortedCountries.map(([_, count]) => count), 1);
 
-    let html = '<div class="chart-heatmap">';
-    sortedCountries.forEach(([country, count]) => {
+    // Show top 10 countries visible, rest scrollable
+    const visibleCount = 10;
+    const topCountries = sortedCountries.slice(0, visibleCount);
+    const remainingCountries = sortedCountries.slice(visibleCount);
+    
+    let html = '<div style="height: 100%; display: flex; flex-direction: column;">';
+    
+    // Header
+    html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 0 4px;">';
+    html += '<span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Country</span>';
+    html += '<span style="font-size: 11px; color: var(--text-muted);">Incidents</span>';
+    html += '</div>';
+    
+    // Top countries (always visible)
+    html += '<div style="flex-shrink: 0;">';
+    topCountries.forEach(([country, count]) => {
         const intensity = count / maxCount;
         const flag = getFlagEmoji(getCountryDisplayName(country));
         const displayName = getCountryDisplayName(country);
         
-        // Color based on intensity
-        let barColor = '#44ff88'; // low
-        if (intensity > 0.75) barColor = '#ff4444'; // critical
-        else if (intensity > 0.5) barColor = '#ff8800'; // high
-        else if (intensity > 0.25) barColor = '#ffcc00'; // medium
+        let barColor = '#44ff88';
+        if (intensity > 0.75) barColor = '#ff4444';
+        else if (intensity > 0.5) barColor = '#ff8800';
+        else if (intensity > 0.25) barColor = '#ffcc00';
         
         html += `
-            <div class="heatmap-row" style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                <span style="font-size: 16px;">${flag}</span>
-                <span style="flex: 0 0 80px; font-size: 12px; color: var(--text-secondary);">${displayName}</span>
-                <div style="flex: 1; height: 20px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden;">
-                    <div style="width: ${intensity * 100}%; height: 100%; background: ${barColor}; transition: width 0.3s;"></div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding: 4px; background: var(--bg-secondary); border-radius: 4px;">
+                <span style="font-size: 14px;">${flag}</span>
+                <span style="flex: 0 0 70px; font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${displayName}</span>
+                <div style="flex: 1; height: 16px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden;">
+                    <div style="width: ${intensity * 100}%; height: 100%; background: ${barColor};"></div>
                 </div>
-                <span style="flex: 0 0 30px; text-align: right; font-size: 12px; font-weight: 600; color: var(--text-primary);">${count}</span>
+                <span style="flex: 0 0 24px; text-align: right; font-size: 11px; font-weight: 600; color: var(--text-primary);">${count}</span>
             </div>
         `;
     });
+    html += '</div>';
+    
+    // Scrollable remaining countries
+    if (remainingCountries.length > 0) {
+        html += '<div style="flex: 1; overflow-y: auto; margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--border-subtle);">';
+        remainingCountries.forEach(([country, count]) => {
+            const intensity = count / maxCount;
+            const flag = getFlagEmoji(getCountryDisplayName(country));
+            const displayName = getCountryDisplayName(country);
+            
+            let barColor = '#44ff88';
+            if (intensity > 0.75) barColor = '#ff4444';
+            else if (intensity > 0.5) barColor = '#ff8800';
+            else if (intensity > 0.25) barColor = '#ffcc00';
+            
+            html += `
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding: 4px; background: var(--bg-secondary); border-radius: 4px; opacity: 0.8;">
+                    <span style="font-size: 14px;">${flag}</span>
+                    <span style="flex: 0 0 70px; font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${displayName}</span>
+                    <div style="flex: 1; height: 16px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${intensity * 100}%; height: 100%; background: ${barColor};"></div>
+                    </div>
+                    <span style="flex: 0 0 24px; text-align: right; font-size: 11px; font-weight: 600; color: var(--text-primary);">${count}</span>
+                </div>
+            `;
+        });
+        html += '</div>';
+    }
+    
     html += '</div>';
     container.innerHTML = html;
 }

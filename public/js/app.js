@@ -238,10 +238,51 @@ function updateIntensityBar(barId, countId, count, total) {
 }
 
 // ============================================================================
+// VISITOR TRACKING
+// ============================================================================
+
+function trackVisitor() {
+    // Track unique visitor with localStorage
+    const visitorKey = 'gulfwatch_visitor_id';
+    const countKey = 'gulfwatch_visitor_count';
+    const lastVisitKey = 'gulfwatch_last_visit';
+    
+    let visitorId = localStorage.getItem(visitorKey);
+    const now = Date.now();
+    const lastVisit = parseInt(localStorage.getItem(lastVisitKey) || '0');
+    const isNewSession = (now - lastVisit) > (30 * 60 * 1000); // 30 min session timeout
+    
+    if (!visitorId || isNewSession) {
+        // New visitor or new session
+        visitorId = 'visitor_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem(visitorKey, visitorId);
+        
+        // Increment count (in production this would be server-side)
+        let count = parseInt(localStorage.getItem(countKey) || '0');
+        count++;
+        localStorage.setItem(countKey, count.toString());
+    }
+    
+    localStorage.setItem(lastVisitKey, now.toString());
+    
+    // Display count
+    const countEl = document.getElementById('visitor-count');
+    const counterEl = document.getElementById('visitor-counter');
+    if (countEl && counterEl) {
+        const count = parseInt(localStorage.getItem(countKey) || '0');
+        countEl.textContent = count.toLocaleString();
+        counterEl.style.display = 'inline-flex';
+    }
+    
+    return visitorId;
+}
+
+// ============================================================================
 // INITIALIZATION
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    trackVisitor();
     initializeApp();
 });
 

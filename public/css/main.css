@@ -45,6 +45,19 @@
   color: var(--text-secondary);
 }
 
+.visitor-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: var(--space-2);
+  border: 1px solid var(--border-subtle);
+}
+
 .status-dot {
   width: 8px;
   height: 8px;

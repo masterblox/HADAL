@@ -1241,16 +1241,16 @@ function updateAircraftLayer(aircraft) {
         }
         
         if (lat && lon && !isNaN(lat) && !isNaN(lon)) {
-            // Validate coordinates are in reasonable range
-            if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                // Simple circle marker with larger radius
+            // Validate coordinates are in reasonable range for Gulf region
+            if (lat >= 12 && lat <= 35 && lon >= 34 && lon <= 60) {
+                // Larger, more visible marker
                 const marker = L.circleMarker([lat, lon], {
-                    radius: 8,
-                    fillColor: '#00d4ff',
-                    color: '#fff',
-                    weight: 2,
+                    radius: 12,
+                    fillColor: '#00ffff',
+                    color: '#ffffff',
+                    weight: 3,
                     opacity: 1,
-                    fillOpacity: 0.9
+                    fillOpacity: 1
                 });
                 
                 const popupContent = `
@@ -1268,18 +1268,18 @@ function updateAircraftLayer(aircraft) {
                 marker.bindPopup(popupContent);
                 marker.addTo(aircraftLayer);
                 added++;
+            } else {
+                console.log(`⚠️ Aircraft ${icao24} outside Gulf region: lat=${lat}, lon=${lon}`);
             }
         }
     });
     
     // Add the layer to map
-    aircraftLayer.addTo(state.map);
-    
-    console.log(`✈️ Added ${added} aircraft to map`);
-    
-    // If no aircraft added, show message
-    if (added === 0) {
-        console.log('⚠️ No valid aircraft coordinates found');
+    if (added > 0) {
+        aircraftLayer.addTo(state.map);
+        console.log(`✈️ SUCCESS: Added ${added} aircraft to map`);
+    } else {
+        console.log('⚠️ No valid aircraft in Gulf region');
     }
 }
 

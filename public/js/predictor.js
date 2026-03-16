@@ -5,9 +5,20 @@
 
 class GulfPredictor {
   constructor(incidents) {
-    this.incidents = incidents || [];
+    // Filter to last 14 days for focused analysis
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - 14);
+    
+    this.incidents = (incidents || []).filter(inc => {
+      const incDate = new Date(inc.published || inc.timestamp);
+      return incDate >= cutoffDate;
+    });
+    
+    console.log(`🧠 GulfPredictor initialized with ${this.incidents.length} incidents from last 14 days`);
+    
     this.patterns = this.extractPatterns();
     this.outcomes = this.calculateOutcomes();
+    this.trends = this.analyzeTrends();
   }
 
   /**
@@ -176,11 +187,102 @@ class GulfPredictor {
   }
 
   /**
+   * Analyze recent trends from last 14 days
+   */
+  analyzeTrends() {
+    const trends = {
+      escalationRate: 0,
+      mostActiveActor: null,
+      mostTargetedCountry: null,
+      dominantEventType: null,
+      dailyFrequency: [],
+      hotspots: []
+    };
+
+    if (this.incidents.length === 0) return trends;
+
+    // Group by day
+    const byDay = {};
+    const byActor = {};
+    const byCountry = {};
+    const byType = {};
+
+    this.incidents.forEach(inc => {
+      const day = new Date(inc.published).toISOString().split('T')[0];
+      byDay[day] = (byDay[day] || 0) + 1;
+
+      // Extract actor
+      const extracted = this.extractActorAction(inc.title);
+      if (extracted) {
+        byActor[extracted.actor] = (byActor[extracted.actor] || 0) + 1;
+      }
+
+      // Country
+      const country = inc.location?.country || inc.country || 'Unknown';
+      byCountry[country] = (byCountry[country] || 0) + 1;
+
+      // Type
+      byType[inc.type] = (byType[inc.type] || 0) + 1;
+    });
+
+    // Calculate trends
+    const days = Object.keys(byDay).length || 1;
+    trends.dailyFrequency = Object.entries(byDay).map(([date, count]) => ({ date, count }));
+    
+    // Most active actor
+    trends.mostActiveActor = Object.entries(byActor)
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || 'Unknown';
+    
+    // Most targeted country
+    trends.mostTargetedCountry = Object.entries(byCountry)
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || 'Unknown';
+    
+    // Dominant event type
+    trends.dominantEventType = Object.entries(byType)
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || 'Unknown';
+
+    // Escalation rate (events in last 3 days vs first 3 days)
+    const sortedDays = trends.dailyFrequency.sort((a, b) => new Date(a.date) - new Date(b.date));
+    if (sortedDays.length >= 6) {
+      const earlyCount = sortedDays.slice(0, 3).reduce((sum, d) => sum + d.count, 0);
+      const lateCount = sortedDays.slice(-3).reduce((sum, d) => sum + d.count, 0);
+      trends.escalationRate = earlyCount > 0 ? ((lateCount - earlyCount) / earlyCount * 100).toFixed(1) : 0;
+    }
+
+    return trends;
+  }
+
+  /**
+   * Get trend summary for display
+   */
+  getTrendSummary() {
+    const { mostActiveActor, mostTargetedCountry, dominantEventType, escalationRate } = this.trends;
+    const total = this.incidents.length;
+    
+    return {
+      summary: `Last 14 days: ${total} incidents. ${mostActiveActor ? mostActiveActor.toUpperCase() + ' most active' : 'No clear actor pattern'}. ${escalationRate > 0 ? escalationRate + '% escalation trend' : 'Stable activity'}.`,
+      hotspots: this.trends.hotspots,
+      dailyAvg: (total / 14).toFixed(1)
+    };
+  }
+
+  /**
    * Main prediction method
    */
   predict(scenario) {
     const { actor, action, target, country } = scenario;
     const predictions = [];
+
+    // 0. Trend-based prediction (NEW - based on last 14 days)
+    if (this.trends.escalationRate > 10) {
+      predictions.push({
+        category: 'Escalation Alert',
+        outcome: `Activity up ${this.trends.escalationRate}% in last 3 days`,
+        probability: Math.min(50 + parseFloat(this.trends.escalationRate), 90),
+        timeframe: 'Next 48-72 hours',
+        confidence: `Based on ${this.incidents.length} recent incidents`
+      });
+    }
 
     // 1. Pattern-based prediction
     const patternKey = `${actor}_${action}`;

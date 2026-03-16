@@ -1198,15 +1198,40 @@ let predictionInitialized = false;
 let missileDefenseInitialized = false;
 
 // Aircraft Tracking - OpenSky API
+let aircraftCache = null;
+let aircraftCacheTime = 0;
+const AIRCRAFT_CACHE_TTL = 30000; // 30 seconds
+
 async function fetchAircraftData() {
     try {
+        // Check cache first
+        const now = Date.now();
+        if (aircraftCache && (now - aircraftCacheTime) < AIRCRAFT_CACHE_TTL) {
+            console.log('✈️ Using cached aircraft data');
+            return aircraftCache;
+        }
+        
         // OpenSky API for Gulf region (bounding box: lat 12-35, lon 34-60)
         const response = await fetch('https://opensky-network.org/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60');
+        
+        if (response.status === 429) {
+            console.warn('✈️ Rate limited by OpenSky API. Using cached data if available.');
+            return aircraftCache || [];
+        }
+        
+        if (!response.ok) {
+            console.warn(`✈️ API error ${response.status}. Using cached data if available.`);
+            return aircraftCache || [];
+        }
+        
         const data = await response.json();
-        return data.states || [];
+        aircraftCache = data.states || [];
+        aircraftCacheTime = now;
+        console.log(`✈️ Fetched ${aircraftCache.length} aircraft from API`);
+        return aircraftCache;
     } catch (error) {
         console.error('Failed to fetch aircraft data:', error);
-        return [];
+        return aircraftCache || [];
     }
 }
 
@@ -1297,10 +1322,10 @@ function startAircraftTracking() {
     // Initial fetch
     fetchAircraftData().then(updateAircraftLayer);
     
-    // Update every 10 seconds
+    // Update every 30 seconds to avoid rate limiting
     const interval = setInterval(() => {
         fetchAircraftData().then(updateAircraftLayer);
-    }, 10000);
+    }, 30000);
     
     trackingIntervals.push(interval);
 }

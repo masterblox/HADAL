@@ -703,33 +703,51 @@ function updateMissileDefenseSource(selectedCountry) {
 // ============================================================================
 
 function initializeFilters() {
-    // Country filters
+    // Country filters (desktop)
     document.querySelectorAll('#country-filters .filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             toggleFilterChip(chip, 'country');
         });
     });
 
-    // Severity filters
+    // Severity filters (desktop)
     document.querySelectorAll('#severity-filters .filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             toggleFilterChip(chip, 'severity');
         });
     });
 
-    // Type filters
+    // Type filters (desktop)
     document.querySelectorAll('#type-filters .filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             toggleFilterChip(chip, 'type');
         });
     });
 
-    // Time filters
+    // Time filters (desktop)
     document.querySelectorAll('#time-filters .filter-chip').forEach(chip => {
         chip.addEventListener('click', () => {
             toggleFilterChip(chip, 'time');
         });
     });
+
+    // Mobile country filter
+    const mobileCountryFilter = document.getElementById('mobile-country-filter');
+    if (mobileCountryFilter) {
+        mobileCountryFilter.addEventListener('change', (e) => {
+            state.filters.country = e.target.value;
+            applyFilters();
+        });
+    }
+
+    // Mobile severity filter
+    const mobileSeverityFilter = document.getElementById('mobile-severity-filter');
+    if (mobileSeverityFilter) {
+        mobileSeverityFilter.addEventListener('change', (e) => {
+            state.filters.severity = e.target.value;
+            applyFilters();
+        });
+    }
 
     // Search
     const searchInput = document.getElementById('search-input');
@@ -773,7 +791,28 @@ function toggleFilterChip(chip, filterType) {
         state.filters[filterType] = chip.dataset[filterType];
     }
 
+    // Sync mobile filters
+    syncMobileFilters(filterType);
+
     applyFilters();
+}
+
+function syncMobileFilters(filterType) {
+    // Sync mobile country filter
+    if (filterType === 'country') {
+        const mobileCountry = document.getElementById('mobile-country-filter');
+        if (mobileCountry && typeof state.filters.country === 'string') {
+            mobileCountry.value = state.filters.country;
+        }
+    }
+    
+    // Sync mobile severity filter
+    if (filterType === 'severity') {
+        const mobileSeverity = document.getElementById('mobile-severity-filter');
+        if (mobileSeverity && typeof state.filters.severity === 'string') {
+            mobileSeverity.value = state.filters.severity;
+        }
+    }
 }
 
 function applyFilters() {

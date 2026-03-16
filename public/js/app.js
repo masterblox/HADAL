@@ -1202,6 +1202,12 @@ let aircraftCache = null;
 let aircraftCacheTime = 0;
 const AIRCRAFT_CACHE_TTL = 30000; // 30 seconds
 
+// OpenSky API credentials
+const OPENSKY_CREDENTIALS = {
+    username: 'arestheagent@gmail.com-api-client',
+    password: 'E9hWNjvQoXKWmguZcKBbrZSBvIHC5hlw'
+};
+
 async function fetchAircraftData() {
     try {
         // Check cache first
@@ -1211,8 +1217,15 @@ async function fetchAircraftData() {
             return aircraftCache;
         }
         
+        // Create Basic Auth header
+        const authString = btoa(`${OPENSKY_CREDENTIALS.username}:${OPENSKY_CREDENTIALS.password}`);
+        
         // OpenSky API for Gulf region (bounding box: lat 12-35, lon 34-60)
-        const response = await fetch('https://opensky-network.org/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60');
+        const response = await fetch('https://opensky-network.org/api/states/all?lamin=12&lamax=35&lomin=34&lomax=60', {
+            headers: {
+                'Authorization': `Basic ${authString}`
+            }
+        });
         
         if (response.status === 429) {
             console.warn('✈️ Rate limited by OpenSky API. Using cached data if available.');
@@ -1227,7 +1240,7 @@ async function fetchAircraftData() {
         const data = await response.json();
         aircraftCache = data.states || [];
         aircraftCacheTime = now;
-        console.log(`✈️ Fetched ${aircraftCache.length} aircraft from API`);
+        console.log(`✈️ Fetched ${aircraftCache.length} aircraft from API (authenticated)`);
         return aircraftCache;
     } catch (error) {
         console.error('Failed to fetch aircraft data:', error);

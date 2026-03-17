@@ -20,10 +20,17 @@ interface LeafletMapProps {
   onDatalinkUpdate: (s: string) => void
 }
 
-export function LeafletMap({ layerVisibility, incidents: _incidents, onSyncUpdate, onDatalinkUpdate }: LeafletMapProps) {
+export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalinkUpdate }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<L.Map | null>(null)
   const layerGroups = useRef<Record<string, L.LayerGroup>>({})
+  const syncUpdateRef = useRef(onSyncUpdate)
+  const datalinkUpdateRef = useRef(onDatalinkUpdate)
+
+  useEffect(() => {
+    syncUpdateRef.current = onSyncUpdate
+    datalinkUpdateRef.current = onDatalinkUpdate
+  }, [onSyncUpdate, onDatalinkUpdate])
 
   useEffect(() => {
     if (mapInstance.current || !mapRef.current) return
@@ -137,16 +144,16 @@ export function LeafletMap({ layerVisibility, incidents: _incidents, onSyncUpdat
     fetch('https://iranwarlive.com/feed.json')
       .then(r => r.ok ? r.json() : Promise.reject('cors'))
       .then(() => {
-        onSyncUpdate('LIVE · IRANWARLIVE.COM')
-        onDatalinkUpdate('SECURE DATALINK ESTABLISHED · IRANWARLIVE.COM · LIVE')
+        syncUpdateRef.current(`LIVE · IRANWARLIVE.COM · ${incidents.length} EVENTS`)
+        datalinkUpdateRef.current('SECURE DATALINK ESTABLISHED · IRANWARLIVE.COM · LIVE')
       })
       .catch(() => {
-        onSyncUpdate('STATIC · OSINT DATABASE')
-        onDatalinkUpdate('STATIC DATALINK · OSINT DATABASE · ' + new Date().toISOString().slice(0, 10))
+        syncUpdateRef.current(`STATIC · OSINT DATABASE · ${incidents.length} EVENTS`)
+        datalinkUpdateRef.current('STATIC DATALINK · OSINT DATABASE · ' + new Date().toISOString().slice(0, 10))
       })
 
     return () => { map.remove(); mapInstance.current = null }
-  }, [])
+  }, [incidents.length])
 
   // Sync layer visibility
   useEffect(() => {

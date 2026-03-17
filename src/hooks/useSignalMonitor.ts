@@ -23,11 +23,13 @@ function formatSpeed(obj: TrackedObject): string {
 export function useSignalMonitor(objects?: TrackedObject[]) {
   const [tickerIdx, setTickerIdx] = useState(0)
   const [signalStrength, setSignalStrength] = useState(91)
+  const [signalFrequency, setSignalFrequency] = useState('0.000 kHz')
 
   useEffect(() => {
     const iv = setInterval(() => {
       setTickerIdx(i => i + 1)
       setSignalStrength(78 + Math.floor(Math.random() * 18))
+      setSignalFrequency(`${(4 + Math.random() * 12).toFixed(3)} kHz`)
     }, 3000)
     return () => clearInterval(iv)
   }, [])
@@ -39,9 +41,7 @@ export function useSignalMonitor(objects?: TrackedObject[]) {
     ? `${current.callsign} · ${current.type.toUpperCase()} · ${formatAlt(current)} ${formatSpeed(current)} · ${formatAgo(current.lastSeen)}`
     : 'NO TRACKING DATA'
 
-  const freq = current
-    ? `${(4 + Math.random() * 12).toFixed(3)} kHz`
-    : '0.000 kHz'
+  const freq = current ? signalFrequency : '0.000 kHz'
 
   const typeLabel = current
     ? { aircraft: '✈ AIR', satellite: '◉ SAT', maritime: '⚓ MAR' }[current.type]

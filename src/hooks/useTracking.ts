@@ -101,9 +101,11 @@ function drift(objs: TrackedObject[]): TrackedObject[] {
 export function useTracking(): TrackingState {
   const [objects, setObjects] = useState<TrackedObject[]>(() => generateSeed())
   const [status, setStatus] = useState<'ONLINE' | 'DEGRADED' | 'OFFLINE'>('ONLINE')
+  const [lastUpdate, setLastUpdate] = useState(() => Date.now())
 
   const update = useCallback(() => {
     setObjects(prev => drift(prev))
+    setLastUpdate(Date.now())
     // Occasionally toggle status for realism
     setStatus(Math.random() > 0.92 ? 'DEGRADED' : 'ONLINE')
   }, [])
@@ -119,5 +121,5 @@ export function useTracking(): TrackingState {
     maritime: objects.filter(o => o.type === 'maritime').length,
   }
 
-  return { objects, counts, lastUpdate: Date.now(), status }
+  return { objects, counts, lastUpdate, status }
 }

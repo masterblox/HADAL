@@ -72,9 +72,14 @@ export function useDataPipeline() {
   }, [])
 
   useEffect(() => {
-    refresh()
+    const initialRefresh = setTimeout(() => {
+      void refresh()
+    }, 0)
     const id = setInterval(refresh, 60000)
-    return () => clearInterval(id)
+    return () => {
+      clearTimeout(initialRefresh)
+      clearInterval(id)
+    }
   }, [refresh])
 
   return data

@@ -9,6 +9,7 @@ interface NoiseOptions {
 
 export function useNoiseCanvas(opts: NoiseOptions = {}) {
   const ref = useRef<HTMLCanvasElement>(null)
+  const { grayscale = true, interval = 90, amberTint = false } = opts
 
   useEffect(() => {
     const C = ref.current
@@ -25,8 +26,6 @@ export function useNoiseCanvas(opts: NoiseOptions = {}) {
 
     const ctx = C.getContext('2d')
     if (!ctx) return
-
-    const { grayscale = true, interval = 90, amberTint = false } = opts
 
     function frame() {
       if (!C || !ctx) return
@@ -75,7 +74,7 @@ export function useNoiseCanvas(opts: NoiseOptions = {}) {
       clearInterval(tid)
       window.removeEventListener('resize', handleResize)
     }
-  }, [opts.grayscale, opts.interval, opts.amberTint])
+  }, [amberTint, grayscale, interval])
 
   return ref
 }

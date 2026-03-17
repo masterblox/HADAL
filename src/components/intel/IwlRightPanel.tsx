@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNoiseCanvas } from '@/canvas/useNoiseCanvas'
 import { usePizzaSlice } from '@/canvas/usePizzaSlice'
 import { useCasualtyCounter } from '@/hooks/useCasualtyCounter'
@@ -9,7 +9,7 @@ interface IwlRightPanelProps {
   incidents: Incident[]
 }
 
-export function IwlRightPanel({ incidents: _incidents }: IwlRightPanelProps) {
+export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
   const [feedTab, setFeedTab] = useState<'mil' | 'civ' | 'ent'>('mil')
   const noiseRef = useNoiseCanvas({ grayscale: true, interval: 80 })
   const pizzaRef = usePizzaSlice()
@@ -20,7 +20,7 @@ export function IwlRightPanel({ incidents: _incidents }: IwlRightPanelProps) {
   const [pizzaVal, setPizzaVal] = useState('$18.40')
   const [pizzaTime, setPizzaTime] = useState('—')
 
-  useState(() => {
+  useEffect(() => {
     const tick = () => {
       const jitter = (Math.random() - .5) * .18
       setPizzaVal('$' + (18.40 + jitter).toFixed(2))
@@ -29,7 +29,7 @@ export function IwlRightPanel({ incidents: _incidents }: IwlRightPanelProps) {
     tick()
     const id = setInterval(tick, 8000)
     return () => clearInterval(id)
-  })
+  }, [])
 
   const typeTag: Record<string, string> = {missile:'iwl-tag-strike',airstrike:'iwl-tag-launch',intercept:'iwl-tag-intercept',diplomatic:'iwl-tag-conf'}
   const typeCol: Record<string, string> = {missile:'rgba(255,140,0,.9)',airstrike:'rgba(255,140,0,.9)',intercept:'rgba(196,255,44,.9)',diplomatic:'rgba(180,120,255,.9)'}
@@ -85,7 +85,7 @@ export function IwlRightPanel({ incidents: _incidents }: IwlRightPanelProps) {
         <div className="iwl-telem-h">&#9670; TACTICAL TELEMETRY</div>
         <div className="iwl-telem-row"><span className="iwl-telem-k">THEATRE THREAT</span><span className="iwl-telem-v" style={{color:'var(--warn)'}}>CRITICAL</span></div>
         <div className="iwl-telem-row"><span className="iwl-telem-k">AIR DEF COVER</span><span className="iwl-telem-v" style={{color:'rgba(255,140,0,.7)'}}>61%</span></div>
-        <div className="iwl-telem-row"><span className="iwl-telem-k">ACTIVE VECTORS</span><span className="iwl-telem-v" style={{color:'rgba(255,140,0,.8)'}}>8</span></div>
+        <div className="iwl-telem-row"><span className="iwl-telem-k">ACTIVE VECTORS</span><span className="iwl-telem-v" style={{color:'rgba(255,140,0,.8)'}}>{incidents.length || 8}</span></div>
         <div className="iwl-telem-row"><span className="iwl-telem-k">OSINT FEEDS</span><span className="iwl-telem-v" style={{color:'var(--g)'}}>44</span></div>
         <div className="iwl-telem-row"><span className="iwl-telem-k">LAST STRIKE</span><span className="iwl-telem-v" style={{color:'var(--g5)'}}>—</span></div>
       </div>

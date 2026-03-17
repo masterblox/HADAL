@@ -2013,6 +2013,14 @@ spawnNoise(document.getElementById('feed-noise'),80);
   }
   setTimeout(()=>{animateCounter('cas-mil',1847);animateCounter('cas-civ',423);animateCounter('cas-ent',11);},800);
 
+  // Expose marker factories globally for pipeline integration
+  window.mkMissile=mkMissile;
+  window.mkAirstrike=mkAirstrike;
+  window.mkIntercept=mkIntercept;
+  window.mkGround=mkGround;
+  window.mkCombatant=mkCombatant;
+  window.mkDiplomatic=mkDiplomatic;
+
 })();
 
 /* ══ CLOCK + PRESSURE ══ */
@@ -2033,6 +2041,309 @@ setInterval(()=>{
   dli=(dli+1)%dlmsgs.length;
   el.textContent=dlmsgs[dli];
 },3200);
+
+/* ══════════════════════════════════════════════════════
+   HADAL LIVE DATA PIPELINE — connects to donor pipeline
+   Reuses: prices.json, incidents.json, airspace.json, feed.json
+══════════════════════════════════════════════════════ */
+(function(){
+  const HADAL={incidents:[],prices:null,airspace:null,feedIncidents:[]};
+
+  /* ── 1. ECONOMIC INTELLIGENCE — fetch live prices.json ── */
+  async function loadPrices(){
+    try{
+      const r=await fetch('public/prices.json?t='+Date.now());
+      if(!r.ok)throw new Error(r.status);
+      const data=await r.json();
+      HADAL.prices=data.prices||{};
+      renderLivePrices(HADAL.prices);
+    }catch(e){
+      /* Try alternate path */
+      try{
+        const r2=await fetch('prices.json?t='+Date.now());
+        if(!r2.ok)throw new Error(r2.status);
+        const data2=await r2.json();
+        HADAL.prices=data2.prices||{};
+        renderLivePrices(HADAL.prices);
+      }catch(e2){
+        console.log('HADAL ECO: static mode — no live prices available');
+      }
+    }
+  }
+
+  function renderLivePrices(p){
+    if(!p)return;
+    /* Update Brent Crude in Gulf Economic Index */
+    const brent=p.brent||{};
+    const gold=p.gold||{};
+    const gas=p.gas||{};
+    const bitcoin=p.bitcoin||{};
+
+    /* Update the RH chart cards with live data */
+    const chartWrap=document.getElementById('gulf-charts');
+    if(chartWrap&&brent.price){
+      const liveGulf=[
+        {n:'BRENT CRUDE',v:'$'+brent.price.toFixed(2),chg:brent.formatted_change||((brent.change>0?'+':'')+brent.change.toFixed(2)+'%'),up:brent.change>=0,pts:genSparkline(brent.price,12)},
+        {n:'GOLD',v:'$'+gold.price.toFixed(0),chg:gold.formatted_change||((gold.change>0?'+':'')+gold.change.toFixed(2)+'%'),up:gold.change>=0,pts:genSparkline(gold.price,12)},
+        {n:'NAT GAS',v:'$'+gas.price.toFixed(3),chg:gas.formatted_change||((gas.change>0?'+':'')+gas.change.toFixed(2)+'%'),up:gas.change>=0,pts:genSparkline(gas.price,12)},
+        {n:'BITCOIN',v:'$'+bitcoin.price.toLocaleString(undefined,{maximumFractionDigits:0}),chg:bitcoin.formatted_change||((bitcoin.change>0?'+':'')+bitcoin.change.toFixed(2)+'%'),up:bitcoin.change>=0,pts:genSparkline(bitcoin.price,12)},
+      ];
+      chartWrap.innerHTML=liveGulf.map(g=>`<div class="rh-card"><div class="rh-name">${g.n}</div><div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="rh-val" style="color:${g.up?'rgba(255,160,30,.9)':'rgba(255,100,30,.9)'};">${g.v}</span><span class="rh-chg ${g.up?'UP':'DN'}">${g.chg}</span></div>${rhChart(g.pts,g.up,110,32)}</div>`).join('');
+    }
+
+    /* Update currency spreads with live timestamp */
+    const ts=p.brent?.updated_at;
+    if(ts){
+      const ecoHead=document.querySelector('.eco-head span:last-child');
+      if(ecoHead)ecoHead.textContent='LIVE · '+new Date(ts).toISOString().slice(0,16).replace('T',' ')+' UTC';
+    }
+  }
+
+  function genSparkline(base,len){
+    const pts=[];
+    let v=base*.92;
+    for(let i=0;i<len;i++){v+=((base-v)*.15)+(Math.random()-.4)*(base*.02);pts.push(v);}
+    pts[len-1]=base;
+    return pts;
+  }
+
+  /* ── 2. INTEL WIRE LIVE — fetch incidents for map + feed ── */
+  async function loadIncidents(){
+    try{
+      const r=await fetch('public/incidents.json?t='+Date.now());
+      if(!r.ok)throw new Error(r.status);
+      const data=await r.json();
+      HADAL.incidents=data.incidents||[];
+      ingestIncidents(HADAL.incidents);
+    }catch(e){
+      try{
+        const r2=await fetch('incidents.json?t='+Date.now());
+        if(!r2.ok)throw new Error(r2.status);
+        const data2=await r2.json();
+        HADAL.incidents=data2.incidents||[];
+        ingestIncidents(HADAL.incidents);
+      }catch(e2){
+        console.log('HADAL IWL: static mode — no live incidents');
+      }
+    }
+  }
+
+  function ingestIncidents(incidents){
+    if(!incidents.length)return;
+    /* Update threat feed with real OSINT data */
+    const liveFeeds=incidents.slice(0,30).map((inc,i)=>{
+      const sev=inc.credibility>=90?'CRITICAL':inc.credibility>=80?'HIGH':'MEDIUM';
+      const region=mapCountryToRegion(inc.location?.country||'');
+      return{
+        id:'TH-'+String(1000+i).padStart(4,'0'),
+        region:region,
+        type:inc.title||'UNKNOWN',
+        sev:sev,
+        src:inc.source?inc.source.split(' ')[0].toUpperCase().slice(0,6):'OSINT',
+        conf:inc.credibility||50,
+        tags:[region],
+        live:true,
+        lat:inc.location?.lat,
+        lon:inc.location?.lng,
+        published:inc.published
+      };
+    });
+
+    /* Append live data to existing feed */
+    if(liveFeeds.length>0){
+      feedData.push(...liveFeeds);
+      renderFeed();
+      const fc=document.getElementById('feed-count');
+      if(fc)fc.textContent=feedData.length+' ACTIVE · LIVE';
+    }
+
+    /* Add live incident markers to IWL map */
+    if(typeof L!=='undefined'){
+      incidents.slice(0,40).forEach(inc=>{
+        const lat=inc.location?.lat;
+        const lon=inc.location?.lng;
+        if(!lat||!lon)return;
+        const tp=(inc.type||'').toLowerCase();
+        const title=(inc.title||'').slice(0,60);
+        const conf=inc.credibility||50;
+        const src=inc.source||'OSINT';
+        const time=inc.published?new Date(inc.published).toISOString().slice(0,16).replace('T',' '):'—';
+        const detail=inc.source_url?'Source: '+src:'';
+
+        /* Route to appropriate marker factory */
+        if(tp.includes('explo')||tp.includes('missile')||tp.includes('attack')){
+          if(typeof mkMissile==='function')mkMissile(lat,lon,title,detail,conf,src,time);
+        }else if(tp.includes('air')||tp.includes('drone')){
+          if(typeof mkAirstrike==='function')mkAirstrike(lat,lon,title,detail,conf,src,time);
+        }else{
+          /* Generic — add as ground event */
+          if(typeof mkGround==='function')mkGround(lat,lon,title,detail);
+        }
+      });
+    }
+
+    /* Update casualty counters from real data */
+    let milCas=0,civCas=0;
+    incidents.forEach(inc=>{
+      if(inc.casualties){
+        milCas+=inc.casualties.military||0;
+        civCas+=inc.casualties.civilian||0;
+      }
+    });
+    if(milCas>0){const el=document.getElementById('cas-mil');if(el)el.textContent=milCas.toLocaleString();}
+    if(civCas>0){const el=document.getElementById('cas-civ');if(el)el.textContent=civCas.toLocaleString();}
+
+    /* Update system status dot */
+    const sysDot=document.getElementById('iwl-status-dot');
+    if(sysDot)sysDot.className='sys-dot on';
+
+    /* Update sync label */
+    const syncLbl=document.getElementById('iwl-sync-lbl');
+    if(syncLbl)syncLbl.textContent='LIVE · '+incidents.length+' INCIDENTS';
+
+    /* Update datalink */
+    const dl=document.getElementById('iwl-datalink-t');
+    if(dl)dl.textContent='SECURE DATALINK · OSINT PIPELINE · '+incidents.length+' EVENTS INGESTED';
+  }
+
+  function mapCountryToRegion(country){
+    const map={'UAE':'UAE','United Arab Emirates':'UAE','Iran':'IRAN','Iraq':'GULF','Kuwait':'GULF',
+      'Qatar':'GULF','Bahrain':'GULF','Saudi Arabia':'GULF','Yemen':'RED SEA','Israel':'ISRAEL',
+      'Jordan':'GULF','Oman':'GULF','Lebanon':'ISRAEL','Syria':'GULF','International':'GULF'};
+    return map[country]||'GULF';
+  }
+
+  /* ── 3. AIRSPACE — fetch live airspace.json ── */
+  async function loadAirspace(){
+    try{
+      const r=await fetch('public/airspace.json?t='+Date.now());
+      if(!r.ok)throw new Error(r.status);
+      const data=await r.json();
+      HADAL.airspace=data;
+      renderLiveAirspace(data);
+    }catch(e){
+      try{
+        const r2=await fetch('airspace.json?t='+Date.now());
+        if(!r2.ok)throw new Error(r2.status);
+        const data2=await r2.json();
+        HADAL.airspace=data2;
+        renderLiveAirspace(data2);
+      }catch(e2){
+        console.log('HADAL AIRSPACE: static mode');
+      }
+    }
+  }
+
+  function renderLiveAirspace(data){
+    if(!data||!data.notams)return;
+    const tbody=document.querySelector('#tab-airspace .iwl-table tbody');
+    if(!tbody)return;
+
+    const sevColors={'CRITICAL':'rgba(255,140,0,.9)','WARNING':'rgba(255,140,0,.7)',
+      'ELEVATED':'rgba(255,140,0,.5)','INFORMATION':'var(--g5)'};
+    const sevIcons={'CRITICAL':'■ CLOSED','WARNING':'◆ RESTRICTED','ELEVATED':'◆ ELEVATED','INFORMATION':'● OPEN'};
+
+    tbody.innerHTML=data.notams.map(n=>{
+      const col=sevColors[n.severity]||'var(--g5)';
+      const icon=sevIcons[n.severity]||'● NORMAL';
+      const validTo=n.valid_until?new Date(n.valid_until).toISOString().slice(0,16).replace('T',' ')+' UTC':'—';
+      return `<tr>
+        <td>${n.country||'—'}</td>
+        <td style="color:${col};">${icon}</td>
+        <td>${validTo}</td>
+        <td>${n.category||'—'}</td>
+        <td>${n.icao||'NOTAM'}</td>
+      </tr>`;
+    }).join('');
+
+    /* Update airspace NOTAM summary */
+    const critCount=(data.severity_counts?.CRITICAL||0)+(data.severity_counts?.WARNING||0);
+    const summaryEl=document.querySelector('#tab-airspace p');
+    if(summaryEl)summaryEl.textContent=`Live tracking: ${data.total_notams||0} NOTAMs · ${critCount} critical/warning · ${data.airports_tracked||0} airports monitored.`;
+  }
+
+  /* ── 4. ENHANCED calcThreat() — use real data ── */
+  const origCalcThreat=window.calcThreat;
+  window.calcThreat=function(){
+    const inc=HADAL.incidents;
+    if(!inc.length){if(origCalcThreat)origCalcThreat();return;}
+    const total=inc.length;
+    const critical=inc.filter(i=>i.credibility>=90).length;
+    const confirmed=inc.filter(i=>i.status==='confirmed').length;
+    const govSources=inc.filter(i=>i.is_government).length;
+    const score=Math.min(99,Math.floor(60+(critical/total)*25+(confirmed/total)*10+5));
+    const classification=score>=85?'CRITICAL':score>=70?'HIGH':score>=50?'ELEVATED':'MODERATE';
+    const airClosed=HADAL.airspace?.severity_counts?.CRITICAL||0;
+    const oilPrice=HADAL.prices?.brent?.price||'N/A';
+
+    alert(`HADAL THREAT CALC — LIVE DATA\n\nTHEATRE THREAT INDEX: ${score}/100\nCLASSIFICATION: ${classification}\n\nTOTAL INCIDENTS: ${total}\nCRITICAL CREDIBILITY: ${critical}\nCONFIRMED: ${confirmed}\nGOVERNMENT SOURCES: ${govSources}\nAIRSPACE CRITICAL: ${airClosed}\nBRENT CRUDE: $${typeof oilPrice==='number'?oilPrice.toFixed(2):oilPrice}\n\nSOURCE: HADAL OSINT PIPELINE`);
+  };
+
+  /* ── 5. ENHANCED exportSitrep() — use real data ── */
+  const origExport=window.exportSitrep;
+  window.exportSitrep=function(){
+    const t=new Date().toISOString();
+    const inc=HADAL.incidents;
+    const p=HADAL.prices||{};
+    const lines=[
+      '═══════════════════════════════════════════════',
+      'HADAL THREAT INTELLIGENCE TERMINAL',
+      'TACTICAL SITREP · '+t,
+      '═══════════════════════════════════════════════',
+      'THEATRE: GULF / MIDDLE EAST',
+      'CLASSIFICATION: OSINT UNCLASSIFIED',
+      'GENERATED BY: HADAL v1.0 / MASTERBLOX CAPITAL',
+      '',
+      '■ DATA PIPELINE STATUS: '+(inc.length>0?'LIVE · '+inc.length+' INCIDENTS':'STATIC'),
+      '■ THEATRE STATUS: CRITICAL — ACTIVE CONFLICT',
+      '■ INTERCEPTIONS CONFIRMED: 1,160+',
+      '■ THAAD NODES DEGRADED: 5 of 5',
+      '■ AIR DEFENCE COVERAGE: 61% (DEGRADED)',
+      '■ AIRSPACE CRITICAL NOTAMS: '+(HADAL.airspace?.severity_counts?.CRITICAL||'—'),
+      '',
+      '■ STRIKE DATA:',
+      '  UAE: 165 BALLISTIC + 2 CRUISE + 541 DRONES · 35 IMPACTS',
+      '  KUWAIT: 97 BALLISTIC + 283 DRONES INTERCEPTED',
+      '  QATAR: 18 ENGAGED · UEWR RADAR DESTROYED ($1.1B)',
+      '  BAHRAIN: 45 MISSILES + 9 DRONES · 5TH FLEET HQ HIT',
+      '  JORDAN: MUWAFFAQ THAAD DESTROYED (SAT MAR 2)',
+      '',
+      '■ ECONOMIC INTELLIGENCE:',
+      '  BRENT CRUDE: '+(p.brent?'$'+p.brent.price.toFixed(2)+' ('+p.brent.formatted_change+')':'N/A'),
+      '  GOLD: '+(p.gold?'$'+p.gold.price.toFixed(0)+' ('+p.gold.formatted_change+')':'N/A'),
+      '  NAT GAS: '+(p.gas?'$'+p.gas.price.toFixed(3)+' ('+p.gas.formatted_change+')':'N/A'),
+      '  BITCOIN: '+(p.bitcoin?'$'+p.bitcoin.price.toLocaleString()+' ('+p.bitcoin.formatted_change+')':'N/A'),
+      '',
+      '■ LIVE OSINT FEED (LAST 15):',
+      ...(inc.length>0?inc.slice(0,15).map(i=>`  [${(i.type||'—').toUpperCase()}] ${(i.title||'').slice(0,80)} · ${i.source||'OSINT'} · CONF ${i.credibility||'—'}%`):['  (no live data — static fallback)']),
+      '',
+      'DATA SOURCES: HADAL OSINT PIPELINE / IRANWARLIVE / MoD VERIFIED',
+      '═══════════════════════════════════════════════',
+    ].join('\n');
+    const blob=new Blob([lines],{type:'text/plain'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='HADAL_SITREP_'+t.slice(0,10)+'.txt';a.click();
+  };
+
+  /* ── 6. AUTO-REFRESH — periodic pipeline sync ── */
+  async function refreshPipeline(){
+    await Promise.allSettled([loadPrices(),loadIncidents(),loadAirspace()]);
+  }
+
+  /* Initial load */
+  refreshPipeline();
+
+  /* Refresh every 60 seconds */
+  setInterval(refreshPipeline,60000);
+
+  /* Update pressure gauge with live data awareness */
+  setInterval(()=>{
+    const el=document.getElementById('pressure');
+    if(!el)return;
+    const base=HADAL.incidents.length>0?10924+HADAL.incidents.length:10924;
+    const v=base+Math.floor(Math.random()*3-1);
+    el.textContent=v.toLocaleString()+' BAR';
+  },5000);
+})();
 </script>
 </body>
 </html>

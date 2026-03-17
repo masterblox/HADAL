@@ -115,7 +115,7 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
       const pts = arcPts(tr.o, tr.t, 50, isBallistic ? 4 : 1.5)
       L.polyline(pts, { color: col, weight: isBallistic ? 2 : 1.4, dashArray: isBallistic ? undefined : '5 4', opacity: .8 })
         .addTo(groups['missile'])
-        .bindTooltip(`<span style="font-size:8px;">${tr.label} · CONF ${tr.conf}%</span>`)
+        .bindTooltip(`<span style="font-size:var(--fs-micro);">${tr.label} · CONF ${tr.conf}%</span>`)
     })
 
     // THAAD rings

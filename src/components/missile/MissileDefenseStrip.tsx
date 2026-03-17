@@ -16,8 +16,8 @@ interface MissileDefenseStripProps {
 export function MissileDefenseStrip({ sandbox }: MissileDefenseStripProps) {
   return (
     <div className="missile-section">
-      <div className="ms-hdr">
-        <div className="HDR-DOT" />
+      <div className="ms-hdr jp-panel-header">
+        <div className="HDR-DOT jp-status-dot active" />
         &#9670; THEATRE KINETIC DATA · VERIFIED MoD + SAT
         <span style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color:'var(--g3)',marginLeft:'auto'}}>FEB 28 – MAR 10, 2026</span>
       </div>
@@ -37,12 +37,12 @@ export function MissileDefenseStrip({ sandbox }: MissileDefenseStripProps) {
           })}
         </ResizablePanelGroup>
       </div>
-      <div className="m-agg">
-        <div className="ag"><div className="ag-l">TOTAL BALLISTIC</div><div className="ag-v">325</div></div>
-        <div className="ag"><div className="ag-l">TOTAL DRONES</div><div className="ag-v">833</div></div>
-        <div className="ag"><div className="ag-l">CRUISE</div><div className="ag-v">2</div></div>
-        <div className="ag"><div className="ag-l">TERRITORY IMPACTS</div><div className="ag-v warn">35+</div></div>
-        <div className="ag"><div className="ag-l">RADAR NODES LOST</div><div className="ag-v warn">5</div></div>
+      <div className="jp-intel m-agg">
+        <div className="jp-intel-cell"><div className="jp-intel-lbl">TOTAL BALLISTIC</div><div className="ag-v jp-intel-val">325</div></div>
+        <div className="jp-intel-cell"><div className="jp-intel-lbl">TOTAL DRONES</div><div className="ag-v jp-intel-val">833</div></div>
+        <div className="jp-intel-cell"><div className="jp-intel-lbl">CRUISE</div><div className="ag-v jp-intel-val">2</div></div>
+        <div className="jp-intel-cell"><div className="jp-intel-lbl">TERRITORY IMPACTS</div><div className="ag-v warn jp-intel-val">35+</div></div>
+        <div className="jp-intel-cell"><div className="jp-intel-lbl">RADAR NODES LOST</div><div className="ag-v warn jp-intel-val">5</div></div>
       </div>
     </div>
   )

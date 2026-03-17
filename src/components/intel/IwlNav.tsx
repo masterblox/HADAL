@@ -43,7 +43,7 @@ export function IwlNav({ activeTab, onTabChange, syncStatus, onCalc }: IwlNavPro
       </div>
       <div className="iwl-nav-r">
         <div className="iwl-sync">
-          <div className="iwl-sync-dot" />
+          <div className="iwl-sync-dot jp-status-dot active" />
           <span>{syncStatus}</span>
         </div>
         <button className="iwl-btn" onClick={onCalc}>CALC</button>

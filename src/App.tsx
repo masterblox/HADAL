@@ -16,23 +16,22 @@ import { usePressureGauge } from './hooks/usePressureGauge'
 export function App() {
   const skipLogin = new URLSearchParams(window.location.search).has('bypass')
   const [phase, setPhase] = useState<'login' | 'exploding' | 'terminal'>(skipLogin ? 'terminal' : 'login')
-  const [terminalVisible, setTerminalVisible] = useState(false)
+  const [terminalVisible, setTerminalVisible] = useState(skipLogin)
   const { prices, incidents, airspace } = useDataPipeline()
   const pressure = usePressureGauge(incidents.length)
   const [sandbox, setSandbox] = useState(false)
 
   const handleAccess = () => {
-    // Explosion started in LoginPage, now begin transition
+    // Login card already faded — now fade overlay and reveal terminal
     setPhase('exploding')
+    setTerminalVisible(true)
   }
 
   useEffect(() => {
     if (phase === 'exploding') {
-      // Start fading in terminal behind the login overlay
-      const t1 = setTimeout(() => setTerminalVisible(true), 800)
-      // Remove login overlay after explosion completes
-      const t2 = setTimeout(() => setPhase('terminal'), 2400)
-      return () => { clearTimeout(t1); clearTimeout(t2) }
+      // Remove login overlay after fade completes
+      const t = setTimeout(() => setPhase('terminal'), 1000)
+      return () => clearTimeout(t)
     }
   }, [phase])
 
@@ -50,7 +49,7 @@ export function App() {
             <ThreatFeed incidents={incidents} />
             <IntelWireSection incidents={incidents} airspace={airspace} sandbox={sandbox} />
             <RegionalPanel />
-            <PredictorEngine incidents={incidents} />
+            <PredictorEngine incidents={incidents} airspace={airspace} prices={prices} />
             <AnalysisSection incidents={incidents} />
             <EconomicSection prices={prices} sandbox={sandbox} />
           </div>

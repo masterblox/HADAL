@@ -41,7 +41,7 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
   const filtered = filt === 'ALL' ? allData : allData.filter(r => r.tags.includes(filt))
 
   return (
-    <div className="panel">
+    <div className="jp-panel">
       <div className="TABS">
         {regions.map(r => (
           <div key={r} className={`TAB${filt === r ? ' on' : ''}`} onClick={() => setFilt(r)}>{r}</div>

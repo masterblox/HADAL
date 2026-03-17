@@ -1,23 +1,8 @@
 import { useState, useMemo } from 'react'
-import type { Incident } from '../../hooks/useDataPipeline'
+import type { Incident, AirspaceData, PriceData } from '../../hooks/useDataPipeline'
+import { usePrediction } from '../../hooks/usePrediction'
 
-/* ── types ── */
-interface Prediction {
-  category: string
-  outcome: string
-  probability: number
-  timeframe: string
-  confidence: string
-}
-
-interface Scenario {
-  actor: string
-  action: string
-  target: string
-  country: string
-}
-
-/* ── static options ── */
+/* ── static options (from Gulf Watch) ── */
 const ACTORS = [
   { id: 'houthi', name: 'Houthis (Yemen)' },
   { id: 'israel', name: 'Israel / IDF' },
@@ -67,246 +52,202 @@ const COUNTRIES = [
   { id: 'lebanon', name: 'Lebanon' },
 ]
 
-/* ── prediction logic (ported from GulfWatch GulfPredictor) ── */
-
-const ACTOR_KEYWORDS: Record<string, string[]> = {
-  houthi: ['houthi', 'houthis'],
-  israel: ['israel', 'israeli', 'idf'],
-  iran: ['iran', 'iranian', 'irgc'],
-  saudi: ['saudi', 'arabia', 'ksa'],
-  uae: ['uae', 'emirates', 'emirati'],
-  us: ['us', 'usa', 'american', 'pentagon'],
-  uk: ['uk', 'british', 'britain'],
-  hezbollah: ['hezbollah', 'hizbullah'],
-  hamas: ['hamas'],
-  isis: ['isis', 'islamic state', 'daesh'],
+interface Scenario {
+  actor: string
+  action: string
+  target: string
+  country: string
 }
 
-const ACTION_KEYWORDS: Record<string, string[]> = {
-  strike: ['strike', 'strikes', 'struck', 'attack', 'attacks', 'attacked'],
-  drone: ['drone', 'drones', 'uav'],
-  missile: ['missile', 'missiles', 'rocket', 'rockets', 'ballistic'],
-  intercept: ['intercept', 'intercepted', 'shot down', 'destroyed'],
-  bomb: ['bomb', 'bombing', 'explosion', 'explosive'],
-  naval: ['naval', 'ship', 'ships', 'vessel'],
-  sanction: ['sanction', 'sanctions', 'embargo'],
-  deploy: ['deploy', 'deployment', 'deployed', 'troops', 'forces'],
-}
+/* ── helpers ── */
 
-function extractActorAction(title: string) {
-  const lower = title.toLowerCase()
-  let actor: string | null = null
-  let action: string | null = null
-  for (const [a, kw] of Object.entries(ACTOR_KEYWORDS)) {
-    if (kw.some(k => lower.includes(k))) { actor = a; break }
-  }
-  for (const [a, kw] of Object.entries(ACTION_KEYWORDS)) {
-    if (kw.some(k => lower.includes(k))) { action = a; break }
-  }
-  return actor && action ? { actor, action } : null
-}
+const probColor = (p: number) =>
+  p >= 70 ? 'var(--warn)' : p >= 40 ? 'var(--g)' : 'var(--g3)'
 
-function predict(incidents: Incident[], scenario: Scenario): Prediction[] {
-  const cutoff = Date.now() - 14 * 86400000
-  const recent = incidents.filter(i => i.published && new Date(i.published).getTime() >= cutoff)
+const trendIcon = (t: string) =>
+  t === 'escalating' ? '▲' : t === 'de-escalating' ? '▼' : '—'
 
-  // Build actor-action patterns
-  const actorActions: Record<string, { count: number; countries: Record<string, number> }> = {}
-  recent.forEach(inc => {
-    if (!inc.title) return
-    const ex = extractActorAction(inc.title)
-    if (ex) {
-      const key = `${ex.actor}_${ex.action}`
-      if (!actorActions[key]) actorActions[key] = { count: 0, countries: {} }
-      actorActions[key].count++
-      const c = inc.location?.country || 'unknown'
-      actorActions[key].countries[c] = (actorActions[key].countries[c] || 0) + 1
-    }
-  })
-
-  // Escalation rate
-  const byDay: Record<string, number> = {}
-  recent.forEach(inc => {
-    if (!inc.published) return
-    const day = new Date(inc.published).toISOString().slice(0, 10)
-    byDay[day] = (byDay[day] || 0) + 1
-  })
-  const sorted = Object.entries(byDay).sort((a, b) => a[0].localeCompare(b[0]))
-  let escalation = 0
-  if (sorted.length >= 6) {
-    const early = sorted.slice(0, 3).reduce((s, d) => s + d[1], 0)
-    const late = sorted.slice(-3).reduce((s, d) => s + d[1], 0)
-    if (early > 0) escalation = +((late - early) / early * 100).toFixed(1)
-  }
-
-  const preds: Prediction[] = []
-
-  // Escalation alert
-  if (escalation > 10) {
-    preds.push({
-      category: 'ESCALATION ALERT',
-      outcome: `Activity up ${escalation}% in last 3 days vs prior 3`,
-      probability: Math.min(50 + escalation, 90),
-      timeframe: '48–72 HRS',
-      confidence: `${recent.length} incidents analyzed`,
-    })
-  }
-
-  // Pattern-based
-  const patternKey = `${scenario.actor}_${scenario.action}`
-  const ap = actorActions[patternKey]
-  if (ap) {
-    const countries = Object.entries(ap.countries).sort((a, b) => b[1] - a[1]).slice(0, 3)
-    if (countries.length) {
-      preds.push({
-        category: 'REGIONAL RESPONSE',
-        outcome: `Escalation likely in ${countries.map(c => c[0].toUpperCase()).join(', ')}`,
-        probability: Math.min(60 + countries[0][1] * 5, 95),
-        timeframe: '24–72 HRS',
-        confidence: 'Historical pattern match',
-      })
-    }
-  }
-
-  // Default predictions based on action
-  if (['missile', 'drone', 'strike'].includes(scenario.action)) {
-    preds.push(
-      { category: 'MILITARY RESPONSE', outcome: 'Retaliatory strikes or defense activation', probability: 75, timeframe: '< 48 HRS', confidence: 'Standard military doctrine' },
-      { category: 'MARKET IMPACT', outcome: 'Oil price volatility (+2–5%)', probability: 60, timeframe: '24 HRS', confidence: 'Historical commodity response' },
-      { category: 'DIPLOMATIC RESPONSE', outcome: 'Emergency consultations or condemnations', probability: 45, timeframe: '24–72 HRS', confidence: 'Standard diplomatic protocol' },
-    )
-  } else if (['naval'].includes(scenario.action)) {
-    preds.push(
-      { category: 'MARITIME SECURITY', outcome: 'Increased naval patrols in region', probability: 70, timeframe: '48–96 HRS', confidence: 'Standard naval response' },
-      { category: 'SHIPPING IMPACT', outcome: 'Insurance premiums rise, route changes', probability: 55, timeframe: '1–2 WEEKS', confidence: 'Market response pattern' },
-    )
-  } else if (['intercept'].includes(scenario.action)) {
-    preds.push(
-      { category: 'ESCALATION RISK', outcome: 'Attacker may attempt follow-up strikes', probability: 65, timeframe: '24–48 HRS', confidence: 'Post-interception patterns' },
-      { category: 'DEFENSE POSTURE', outcome: 'Heightened alert status maintained', probability: 80, timeframe: '7+ DAYS', confidence: 'Standard defense protocol' },
-    )
-  } else {
-    preds.push(
-      { category: 'MONITORING', outcome: 'Continued surveillance and analysis', probability: 90, timeframe: 'ONGOING', confidence: 'Standard procedure' },
-      { category: 'DIPLOMATIC', outcome: 'Official statements from involved parties', probability: 70, timeframe: '24 HRS', confidence: 'Standard protocol' },
-    )
-  }
-
-  // Deduplicate, sort, limit
-  const seen = new Set<string>()
-  return preds.filter(p => {
-    const k = `${p.category}_${p.outcome}`
-    if (seen.has(k)) return false
-    seen.add(k)
-    return true
-  }).sort((a, b) => b.probability - a.probability).slice(0, 6)
-}
+const trendColor = (t: string) =>
+  t === 'escalating' ? 'var(--warn)' : t === 'de-escalating' ? 'var(--g)' : 'var(--g3)'
 
 /* ── Component ── */
 
-export function PredictorEngine({ incidents }: { incidents: Incident[] }) {
+interface Props {
+  incidents: Incident[]
+  airspace: AirspaceData | null
+  prices: PriceData | null
+}
+
+export function PredictorEngine({ incidents, airspace, prices }: Props) {
   const [scenario, setScenario] = useState<Scenario>({ actor: 'houthi', action: 'missile', target: 'oil_facility', country: 'uae' })
-  const [active, setActive] = useState(false)
+  const [showScenarios, setShowScenarios] = useState(false)
+  const prediction = usePrediction(incidents, airspace, prices)
 
-  const predictions = useMemo(() => active ? predict(incidents, scenario) : [], [incidents, scenario, active])
+  // Filter scenario predictions by selected actor
+  const filteredScenarios = useMemo(() => {
+    if (!prediction?.scenarios) return []
+    if (!showScenarios) return []
+    return prediction.scenarios.filter(s =>
+      s.actors.includes(scenario.actor) || s.actors.length === 0
+    ).slice(0, 6)
+  }, [prediction, scenario.actor, showScenarios])
 
-  // Trend summary
-  const [predNow] = useState(Date.now)
-  const trendSummary = useMemo(() => {
-    const cutoff = predNow - 14 * 86400000
-    const recent = incidents.filter(i => i.published && new Date(i.published).getTime() >= cutoff)
-    const byActor: Record<string, number> = {}
-    recent.forEach(inc => {
-      if (!inc.title) return
-      const ex = extractActorAction(inc.title)
-      if (ex) byActor[ex.actor] = (byActor[ex.actor] || 0) + 1
-    })
-    const top = Object.entries(byActor).sort((a, b) => b[1] - a[1])[0]
-    return {
-      total: recent.length,
-      dailyAvg: (recent.length / 14).toFixed(1),
-      topActor: top ? top[0].toUpperCase() : '—',
-    }
-  }, [incidents, predNow])
-
-  const probColor = (p: number) =>
-    p >= 70 ? 'var(--warn)' : p >= 40 ? 'var(--g)' : 'var(--g3)'
+  if (!prediction) return null
 
   return (
-    <section className="predictor-section">
+    <section className="predictor-section jp-panel jp-corners">
       {/* Header */}
-      <div className="predictor-header">
+      <div className="predictor-header jp-panel-header">
         <div className="predictor-title-row">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ marginRight: 8 }}>
             <circle cx="8" cy="8" r="7" stroke="var(--g3)" strokeWidth="1" />
             <path d="M8 3v5l3 3" stroke="var(--g)" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <span className="predictor-title">SCENARIO PREDICTOR</span>
-          <span className="predictor-subtitle">RULE-BASED · 14-DAY WINDOW</span>
+          <span className="predictor-title">PREDICTION ENGINE</span>
+          <span className="predictor-subtitle">BOOTSTRAP · {prediction.sufficient ? 'ACTIVE' : 'INSUFFICIENT DATA'}</span>
         </div>
         <div className="predictor-trend">
-          <span>{trendSummary.total} incidents</span>
+          <span>THREAT: {prediction.theatreThreatLevel}</span>
           <span className="sep">|</span>
-          <span>{trendSummary.dailyAvg}/day avg</span>
+          <span>AIRSPACE: {prediction.airspacePressure}</span>
           <span className="sep">|</span>
-          <span>TOP: {trendSummary.topActor}</span>
+          <span>CASCADE: {prediction.cascadeRisk.contagionScore}</span>
         </div>
       </div>
 
-      {/* Scenario Builder */}
-      <div className="scenario-builder">
-        <div className="scenario-grid">
-          <label>
-            <span className="sc-label">ACTOR</span>
-            <select value={scenario.actor} onChange={e => setScenario(s => ({ ...s, actor: e.target.value }))}>
-              {ACTORS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-            </select>
-          </label>
-          <label>
-            <span className="sc-label">ACTION</span>
-            <select value={scenario.action} onChange={e => setScenario(s => ({ ...s, action: e.target.value }))}>
-              {ACTIONS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-            </select>
-          </label>
-          <label>
-            <span className="sc-label">TARGET</span>
-            <select value={scenario.target} onChange={e => setScenario(s => ({ ...s, target: e.target.value }))}>
-              {TARGETS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </select>
-          </label>
-          <label>
-            <span className="sc-label">COUNTRY</span>
-            <select value={scenario.country} onChange={e => setScenario(s => ({ ...s, country: e.target.value }))}>
-              {COUNTRIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
-          </label>
-        </div>
-        <button className="predict-btn" onClick={() => setActive(true)}>
-          RUN PREDICTION
-        </button>
-      </div>
+      {prediction.sufficient && (
+        <>
+          {/* Bootstrap Profile Strip */}
+          <div className="pred-profile-strip">
+            <ProfileCard label="THEATRE THREAT" value={prediction.theatreThreatLevel} max={100} warn={prediction.theatreThreatLevel >= 60} />
+            <ProfileCard label="P50 SEVERITY" value={prediction.global?.percentiles.p50 ?? 0} max={100} />
+            <ProfileCard label="P90 SEVERITY" value={prediction.global?.percentiles.p90 ?? 0} max={100} warn={(prediction.global?.percentiles.p90 ?? 0) >= 70} />
+            <ProfileCard label="PROB SEVERE" value={prediction.global?.probSevere ?? 0} max={100} warn={(prediction.global?.probSevere ?? 0) >= 40} unit="%" />
+            <ProfileCard label="CONTAGION" value={prediction.cascadeRisk.contagionScore} max={100} warn={prediction.cascadeRisk.contagionScore >= 50} />
+            <ProfileCard label="AIRSPACE" value={prediction.airspacePressure} max={100} warn={prediction.airspacePressure >= 40} />
+          </div>
 
-      {/* Predictions */}
-      {active && predictions.length > 0 && (
-        <div className="predictions-grid">
-          {predictions.map((p, i) => (
-            <div key={i} className="prediction-card" style={{ '--delay': `${i * 60}ms` } as React.CSSProperties}>
-              <div className="pred-category">{p.category}</div>
-              <div className="pred-outcome">{p.outcome}</div>
-              <div className="pred-prob-row">
-                <div className="pred-bar-bg">
-                  <div className="pred-bar-fill" style={{ width: `${p.probability}%`, background: probColor(p.probability) }} />
+          {/* Time Windows */}
+          <div className="pred-time-windows">
+            <TimeWindow label="24H" data={prediction.timeWindows.h24} />
+            <TimeWindow label="72H" data={prediction.timeWindows.h72} />
+            <TimeWindow label="7D" data={prediction.timeWindows.d7} />
+            {prediction.reactionWindow && (
+              <div className="pred-tw-cell">
+                <div className="jp-intel-lbl">REACTION</div>
+                <div className="pred-tw-val">{prediction.reactionWindow.medianResponseHours}h</div>
+              </div>
+            )}
+          </div>
+
+          {/* Category Breakdown */}
+          <div className="jp-breakdown">
+            {Object.entries(prediction.categories)
+              .sort((a, b) => b[1].count - a[1].count)
+              .map(([type, cat]) => (
+                <div key={type} className="jp-brow">
+                  <span className="jp-bname">{type.toUpperCase()}</span>
+                  <div className="jp-bbar">
+                    <div className="jp-bfill" style={{
+                      width: `${Math.min(100, cat.meanSeverity)}%`,
+                      background: cat.meanSeverity >= 70 ? 'var(--warn)' : 'var(--g)',
+                    }} />
+                  </div>
+                  <span className="jp-bval">{cat.count}</span>
+                  <span className="pred-trend-icon" style={{ color: trendColor(cat.trend) }}>{trendIcon(cat.trend)}</span>
                 </div>
-                <span className="pred-pct" style={{ color: probColor(p.probability) }}>{p.probability}%</span>
-              </div>
-              <div className="pred-meta">
-                <span>{p.timeframe}</span>
-                <span className="pred-conf">{p.confidence}</span>
-              </div>
+              ))}
+          </div>
+
+          {/* Scenario Builder */}
+          <div className="scenario-builder">
+            <div className="scenario-grid">
+              <label>
+                <span className="sc-label">ACTOR</span>
+                <select value={scenario.actor} onChange={e => setScenario(s => ({ ...s, actor: e.target.value }))}>
+                  {ACTORS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                </select>
+              </label>
+              <label>
+                <span className="sc-label">ACTION</span>
+                <select value={scenario.action} onChange={e => setScenario(s => ({ ...s, action: e.target.value }))}>
+                  {ACTIONS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                </select>
+              </label>
+              <label>
+                <span className="sc-label">TARGET</span>
+                <select value={scenario.target} onChange={e => setScenario(s => ({ ...s, target: e.target.value }))}>
+                  {TARGETS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+              </label>
+              <label>
+                <span className="sc-label">COUNTRY</span>
+                <select value={scenario.country} onChange={e => setScenario(s => ({ ...s, country: e.target.value }))}>
+                  {COUNTRIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </label>
             </div>
-          ))}
+            <button className="predict-btn" onClick={() => setShowScenarios(true)}>
+              RUN SCENARIOS
+            </button>
+          </div>
+
+          {/* Scenario Predictions */}
+          {showScenarios && filteredScenarios.length > 0 && (
+            <div className="predictions-grid">
+              {filteredScenarios.map((p, i) => (
+                <div key={i} className="prediction-card jp-panel" style={{ '--delay': `${i * 60}ms` } as React.CSSProperties}>
+                  <div className="pred-category jp-intel-lbl">{p.category}</div>
+                  <div className="pred-outcome">{p.outcome}</div>
+                  <div className="pred-prob-row">
+                    <div className="pred-bar-bg jp-intel-bar">
+                      <div className="pred-bar-fill jp-intel-fill" style={{ width: `${p.probability}%`, background: probColor(p.probability) }} />
+                    </div>
+                    <span className="pred-pct" style={{ color: probColor(p.probability) }}>{p.probability}%</span>
+                  </div>
+                  <div className="pred-meta">
+                    <span>{p.timeframe}</span>
+                    <span className="pred-sev" style={{ color: p.severity === 'CRITICAL' || p.severity === 'HIGH' ? 'var(--warn)' : 'var(--g3)' }}>{p.severity}</span>
+                    {p.actors.length > 0 && <span className="pred-actors">{p.actors.join(', ')}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {!prediction.sufficient && (
+        <div className="pred-insufficient">
+          <span className="jp-intel-lbl">INSUFFICIENT DATA — NEED 5+ EVENTS IN 14-DAY WINDOW</span>
         </div>
       )}
     </section>
+  )
+}
+
+/* ── Sub-components ── */
+
+function ProfileCard({ label, value, max, warn, unit }: { label: string; value: number; max: number; warn?: boolean; unit?: string }) {
+  return (
+    <div className="pred-profile-card">
+      <div className="jp-intel-lbl">{label}</div>
+      <div className="pred-profile-val" style={{ color: warn ? 'var(--warn)' : 'var(--g7)' }}>
+        {value}{unit || ''}
+      </div>
+      <div className="jp-intel-bar">
+        <div className="jp-intel-fill" style={{ width: `${Math.min(100, (value / max) * 100)}%`, background: warn ? 'var(--warn)' : 'var(--g)' }} />
+      </div>
+    </div>
+  )
+}
+
+function TimeWindow({ label, data }: { label: string; data: { meanSeverity: number; count: number } }) {
+  return (
+    <div className="pred-tw-cell">
+      <div className="jp-intel-lbl">{label}</div>
+      <div className="pred-tw-val">{data.count > 0 ? data.meanSeverity : '—'}</div>
+      <div className="pred-tw-ct">{data.count} events</div>
+    </div>
   )
 }

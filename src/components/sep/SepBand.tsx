@@ -6,6 +6,12 @@ export function SepBand() {
   return (
     <div className="sep-band">
       <canvas ref={staticRef} />
+      {/* JP Depth Track — ocean depth visualization */}
+      <div className="jp-depth" style={{position:'absolute',left:0,right:0,bottom:0,height:'100%',zIndex:1,opacity:.35}}>
+        <div className="jp-depth-surface" style={{position:'absolute',top:0,left:0,right:0,height:'40%'}} />
+        <div className="jp-depth-line" style={{top:'40%'}} />
+        <div className="jp-depth-sub" style={{position:'absolute',bottom:0,left:0,right:0,height:'60%'}} />
+      </div>
       <div className="sep-overlay">
         <svg className="birdmissile" width="48" height="48" viewBox="0 0 48 48" fill="none">
           <circle cx="24" cy="24" r="22" stroke="rgba(196,255,44,.3)" strokeWidth="1.5" strokeDasharray="5 3"/>

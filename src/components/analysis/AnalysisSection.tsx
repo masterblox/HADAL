@@ -64,8 +64,8 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
   const maxCountry = countryData[0]?.count || 1
 
   return (
-    <section className="analysis-section">
-      <div className="analysis-header">
+    <section className="analysis-section jp-panel">
+      <div className="analysis-header jp-panel-header">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ marginRight: 8 }}>
           <rect x="1" y="8" width="2" height="5" fill="var(--g3)" />
           <rect x="5" y="5" width="2" height="8" fill="var(--g7)" />

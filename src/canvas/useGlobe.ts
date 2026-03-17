@@ -154,11 +154,21 @@ export function useGlobe() {
       x.fillStyle = sh; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       x.restore()
 
-      // Border
+      // Animated outer glow ring
+      const t0 = Date.now() / 1e3
+      const pulse0 = .5 + .5 * Math.sin(t0 * 1.6)
+      // Outer glow halo (pulsing)
+      x.beginPath(); x.arc(cx, cy, R + 6, 0, PI * 2)
+      x.shadowColor = `rgba(196,255,44,${.15 + pulse0 * .2})`
+      x.shadowBlur = 18 + pulse0 * 14
+      x.strokeStyle = `rgba(196,255,44,${.06 + pulse0 * .08})`; x.lineWidth = 4; x.stroke()
+      x.shadowBlur = 0
+      // Bright inner border
       x.beginPath(); x.arc(cx, cy, R, 0, PI * 2)
-      x.strokeStyle = 'rgba(196,255,44,.38)'; x.lineWidth = 1.4; x.stroke()
+      x.strokeStyle = `rgba(196,255,44,${.32 + pulse0 * .15})`; x.lineWidth = 1.4; x.stroke()
+      // Secondary ring
       x.beginPath(); x.arc(cx, cy, R + 3, 0, PI * 2)
-      x.strokeStyle = 'rgba(196,255,44,.12)'; x.lineWidth = 2.5; x.stroke()
+      x.strokeStyle = `rgba(196,255,44,${.08 + pulse0 * .06})`; x.lineWidth = 2; x.stroke()
 
       // Markers
       const t = Date.now() / 1e3

@@ -34,20 +34,22 @@ export function RightRail({ sandbox }: RightRailProps) {
       <canvas ref={noiseRef} className="NOISE" />
       <ResizablePanelGroup orientation="vertical" className="rc-panels">
         <ResizablePanel id="rc-thaad" defaultSize="20%">
-          <div className="rc-block">
-            <div className="rc-lbl"><div className="HDR-DOT" />THAAD STATUS</div>
-            <div className="tsite"><span className="ts-k">JORDAN MUWAFFAQ</span><span className="ts-w">DESTROYED</span></div>
-            <div className="tsite"><span className="ts-k">UAE RUWAIS</span><span className="ts-w">HIT</span></div>
-            <div className="tsite"><span className="ts-k">UAE AL SADER</span><span className="ts-w">HIT</span></div>
-            <div className="tsite"><span className="ts-k">SAUDI SULTAN AB</span><span className="ts-w">SMOKE</span></div>
-            <div className="tsite"><span className="ts-k">QATAR UMM DAHAL</span><span className="ts-w">DESTROYED</span></div>
+          <div className="jp-panel rc-block">
+            <div className="jp-panel-header rc-lbl"><div className="HDR-DOT jp-status-dot active" />THAAD STATUS</div>
+            <div className="jp-breakdown">
+              <div className="tsite jp-brow"><span className="ts-k jp-bname">JORDAN MUWAFFAQ</span><span className="ts-w jp-bval">DESTROYED</span></div>
+              <div className="tsite jp-brow"><span className="ts-k jp-bname">UAE RUWAIS</span><span className="ts-w jp-bval">HIT</span></div>
+              <div className="tsite jp-brow"><span className="ts-k jp-bname">UAE AL SADER</span><span className="ts-w jp-bval">HIT</span></div>
+              <div className="tsite jp-brow"><span className="ts-k jp-bname">SAUDI SULTAN AB</span><span className="ts-w jp-bval">SMOKE</span></div>
+              <div className="tsite jp-brow"><span className="ts-k jp-bname">QATAR UMM DAHAL</span><span className="ts-w jp-bval">DESTROYED</span></div>
+            </div>
           </div>
         </ResizablePanel>
         <ResizableHandle disabled={!sandbox} />
         <ResizablePanel id="rc-sonar" defaultSize="30%">
-          <div className="rc-block">
-            <div className="rc-lbl">
-              <div className="HDR-DOT" style={{ background: status === 'ONLINE' ? 'var(--g)' : 'var(--warn)' }} />
+          <div className="jp-panel rc-block">
+            <div className="jp-panel-header rc-lbl">
+              <div className={`HDR-DOT jp-status-dot ${status === 'ONLINE' ? 'active' : 'error'}`} style={{ background: status === 'ONLINE' ? 'var(--g)' : 'var(--warn)' }} />
               TRACKING RADAR
               <span style={{marginLeft:'auto',fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color: status === 'ONLINE' ? 'var(--g3)' : 'var(--warn)'}}>{status}</span>
             </div>
@@ -64,8 +66,8 @@ export function RightRail({ sandbox }: RightRailProps) {
         </ResizablePanel>
         <ResizableHandle disabled={!sandbox} />
         <ResizablePanel id="rc-signal" defaultSize="22%">
-          <div className="rc-block">
-            <div className="rc-lbl">TRACKING FEED</div>
+          <div className="jp-panel rc-block">
+            <div className="jp-panel-header rc-lbl">TRACKING FEED</div>
             <div className="sig-row">{sigBars}</div>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:'4px'}}>
               <span style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color:'var(--g3)'}}>FREQ: {freq}</span>
@@ -79,15 +81,15 @@ export function RightRail({ sandbox }: RightRailProps) {
         </ResizablePanel>
         <ResizableHandle disabled={!sandbox} />
         <ResizablePanel id="rc-gcc" defaultSize="28%">
-          <div className="rc-block" style={{flex:1}}>
-            <div className="rc-lbl">GCC INTERCEPTS</div>
-            <div className="gcc-row">
+          <div className="jp-panel rc-block" style={{flex:1}}>
+            <div className="jp-panel-header rc-lbl">GCC INTERCEPTS</div>
+            <div className="gcc-row jp-breakdown">
               {gccData.map(r => (
-                <div key={r.f} className="GCC-ROW">
+                <div key={r.f} className="GCC-ROW jp-brow">
                   <span className="GCF">{r.f}</span>
                   <span className="GCN">{r.n}</span>
                   <div className="GC-BC">
-                    <div className="BAR-S"><div className="BAR-SF" style={{width:`${r.p * 100}%`}} /></div>
+                    <div className="BAR-S jp-bbar"><div className="BAR-SF jp-bfill" style={{width:`${r.p * 100}%`}} /></div>
                     <div className="GC-TP">{r.t}</div>
                   </div>
                 </div>

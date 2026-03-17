@@ -8,6 +8,12 @@
 
 **Coming soon:** HADAL is the next architecture pass for this project, intended to evolve the current stack into a stricter threat-intelligence terminal with clearer module boundaries and better separation between ingestion, scoring, and UI delivery.
 
+Canonical system model:
+
+- Gulf Watch = original source system and inherited capability
+- HADAL = target product UX and frontend shell
+- MIT = selective pattern donor only
+
 ## Repo Map
 
 - Active frontend shell: [src](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/src)
@@ -20,6 +26,8 @@
 
 ## Key Docs
 
+- System boundaries: [docs/architecture/SYSTEM_BOUNDARIES.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/SYSTEM_BOUNDARIES.md)
+- Page architecture: [docs/architecture/HADAL_PAGE_ARCHITECTURE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PAGE_ARCHITECTURE.md)
 - Architecture blueprint: [docs/architecture/HADAL_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_BLUEPRINT.md)
 - Repurposing blueprint: [docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md)
 - Extraction plan: [docs/architecture/HADAL_EXTRACTION_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_EXTRACTION_PLAN.md)

@@ -23,7 +23,7 @@ export function MissileCard({ country, src, val, valStr, label, bars, chip, warn
   const display = useC2Type(val, 600 + index * 280)
 
   return (
-    <div className="mc">
+    <div className="mc jp-panel">
       <canvas ref={noiseRef} className="mc-noise" width={200} height={320} />
       <div className="wtype-icon"><WeaponIcon type={icon} /></div>
       <div className="mc-inner" style={{paddingRight:'32px'}}>
@@ -33,12 +33,12 @@ export function MissileCard({ country, src, val, valStr, label, bars, chip, warn
         </div>
         <div className="MC-BIGL">{label}</div>
         {bars && (
-          <div className="mc-bk">
+          <div className="mc-bk jp-breakdown">
             {bars.map(b => (
-              <div key={b.l} className="mc-br">
-                <span className="mc-brl">{b.l}</span>
-                <div className="mc-sbar"><div className="mc-sfill" style={{width:`${b.w}%`}} /></div>
-                <span className="mc-brv">{b.v}</span>
+              <div key={b.l} className="mc-br jp-brow">
+                <span className="mc-brl jp-bname">{b.l}</span>
+                <div className="mc-sbar jp-bbar"><div className="mc-sfill jp-bfill" style={{width:`${b.w}%`}} /></div>
+                <span className="mc-brv jp-bval">{b.v}</span>
               </div>
             ))}
           </div>

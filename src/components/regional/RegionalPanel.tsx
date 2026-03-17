@@ -65,9 +65,9 @@ export function RegionalPanel() {
   const country = selected !== 'all' && data ? data.countries[selected] : null
 
   return (
-    <section className="regional-section">
+    <section className="regional-section jp-panel">
       {/* Header */}
-      <div className="regional-header">
+      <div className="regional-header jp-panel-header">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ marginRight: 8 }}>
           <circle cx="7" cy="7" r="6" stroke="var(--g3)" strokeWidth="1" />
           <path d="M2 5h10M2 9h10M7 1c-2 2-2 10 0 12M7 1c2 2 2 10 0 12" stroke="var(--g3)" strokeWidth=".7" fill="none" />
@@ -152,9 +152,9 @@ function StatBox({ label, value, detail, bar }: {
   bar?: { mil: number; civ: number; total: number }
 }) {
   return (
-    <div className="stat-box">
-      <div className="stat-label">{label}</div>
-      <div className="stat-value">{value.toLocaleString()}</div>
+    <div className="stat-box jp-panel">
+      <div className="stat-label jp-stat-lbl">{label}</div>
+      <div className="stat-value jp-stat-val">{value.toLocaleString()}</div>
       {bar && bar.total > 0 && (
         <div className="stat-bar">
           <div className="stat-bar-mil" style={{ width: `${(bar.mil / bar.total) * 100}%` }} />

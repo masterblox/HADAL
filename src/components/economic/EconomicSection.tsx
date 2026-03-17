@@ -25,7 +25,7 @@ export function EconomicSection({ prices, sandbox }: EconomicSectionProps) {
   ]
 
   return (
-    <div className="eco-section">
+    <div className="eco-section jp-panel">
       <canvas ref={noiseRef} className="eco-noise" />
       <div className="eco-head">
         <span className="eco-ht">&#9670; ECONOMIC INTELLIGENCE</span>

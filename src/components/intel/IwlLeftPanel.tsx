@@ -21,8 +21,8 @@ export function IwlLeftPanel({ layerVisibility, onToggle }: IwlLeftPanelProps) {
 
   return (
     <div className="iwl-left-inner">
-      <div className="iwl-panel">
-        <div className="iwl-ph" onClick={() => setOpen(!open)}>
+      <div className="iwl-panel jp-panel">
+        <div className="iwl-ph jp-panel-header" onClick={() => setOpen(!open)}>
           <span className="iwl-ph-t">Map Layers</span>
           <span className={`iwl-ph-arrow${open ? ' open' : ''}`}>&#9662;</span>
         </div>

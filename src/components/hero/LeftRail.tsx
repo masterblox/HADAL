@@ -21,8 +21,8 @@ export function LeftRail({ sandbox }: LeftRailProps) {
         </ResizablePanel>
         <ResizableHandle disabled={!sandbox} />
         <ResizablePanel id="lc-threat" defaultSize="22%">
-          <div className="ti-block">
-            <div className="ti-lbl">&#9670; THREAT INDEX</div>
+          <div className="jp-panel ti-block">
+            <div className="jp-panel-header ti-lbl">&#9670; THREAT INDEX</div>
             <div className="ti-big">91</div>
             <div className="ti-sub">CRITICAL · ESCALATING</div>
             <div className="ti-bar"><div className="ti-bar-fill" /></div>
@@ -30,8 +30,8 @@ export function LeftRail({ sandbox }: LeftRailProps) {
         </ResizablePanel>
         <ResizableHandle disabled={!sandbox} />
         <ResizablePanel id="lc-spec" defaultSize="40%">
-          <div className="spec-block">
-            <div className="spec-lbl">S.P.E.C.I.A.L.</div>
+          <div className="jp-panel spec-block">
+            <div className="jp-panel-header spec-lbl">S.P.E.C.I.A.L.</div>
             <div className="spec-row"><span className="spec-k">STRENGTH</span><span className="spec-v" style={{color:'var(--warn)'}}>09</span></div>
             <div className="spec-row"><span className="spec-k">PERCEPTION</span><span className="spec-v">10</span></div>
             <div className="spec-row"><span className="spec-k">ENDURANCE</span><span className="spec-v">07</span></div>
@@ -43,13 +43,13 @@ export function LeftRail({ sandbox }: LeftRailProps) {
         </ResizablePanel>
         <ResizableHandle disabled={!sandbox} />
         <ResizablePanel id="lc-sys" defaultSize="23%">
-          <div className="sys-block">
-            <div className="sys-lbl">SYSTEM STATUS</div>
-            <div className="sys-row"><span className="sys-k">OSINT ENGINE</span><div className="sys-dot on" /></div>
-            <div className="sys-row"><span className="sys-k">LEAFLET MAP</span><div className="sys-dot on" /></div>
-            <div className="sys-row"><span className="sys-k">IRANWARLIVE FEED</span><div className="sys-dot warn" /></div>
-            <div className="sys-row"><span className="sys-k">THAAD NETWORK</span><div className="sys-dot off" /></div>
-            <div className="sys-row"><span className="sys-k">ECON DATA</span><div className="sys-dot on" /></div>
+          <div className="jp-panel sys-block">
+            <div className="jp-panel-header sys-lbl">SYSTEM STATUS</div>
+            <div className="sys-row jp-status-row"><span className="sys-k jp-status-text">OSINT ENGINE</span><div className="sys-dot on jp-status-dot active" /></div>
+            <div className="sys-row jp-status-row"><span className="sys-k jp-status-text">LEAFLET MAP</span><div className="sys-dot on jp-status-dot active" /></div>
+            <div className="sys-row jp-status-row"><span className="sys-k jp-status-text">IRANWARLIVE FEED</span><div className="sys-dot warn jp-status-dot error" /></div>
+            <div className="sys-row jp-status-row"><span className="sys-k jp-status-text">THAAD NETWORK</span><div className="sys-dot off jp-status-dot error" /></div>
+            <div className="sys-row jp-status-row"><span className="sys-k jp-status-text">ECON DATA</span><div className="sys-dot on jp-status-dot active" /></div>
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>

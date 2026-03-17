@@ -29,10 +29,10 @@ export function Topbar({ pressure, sandbox, onSandboxToggle }: TopbarProps) {
       <button className={`tb-sandbox${sandbox ? ' active' : ''}`} onClick={onSandboxToggle}>
         {sandbox ? '// SANDBOX ON' : '// SANDBOX OFF'}
       </button>
-      <div className="tb-stats">
-        <div className="tb-stat"><div className="tb-stat-l">DEPTH</div><div className="tb-stat-v">10,924M</div></div>
-        <div className="tb-stat"><div className="tb-stat-l">PRESSURE</div><div className="tb-stat-v">{pressure.toLocaleString()} BAR</div></div>
-        <div className="tb-stat"><div className="tb-stat-l">UTC</div><div className="tb-stat-v" style={{fontSize:'var(--fs-small)'}}>{clock}</div></div>
+      <div className="tb-stats jp-intel">
+        <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">DEPTH</div><div className="tb-stat-v jp-intel-val">10,924M</div></div>
+        <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">PRESSURE</div><div className="tb-stat-v jp-intel-val">{pressure.toLocaleString()} BAR</div></div>
+        <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">UTC</div><div className="tb-stat-v jp-intel-val" style={{fontSize:'var(--fs-small)'}}>{clock}</div></div>
       </div>
     </div>
   )

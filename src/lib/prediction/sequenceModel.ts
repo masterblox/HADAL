@@ -1,0 +1,192 @@
+/* ══════════════════════════════════════════════════════════
+   STAGE 3 — SEQUENCE MODEL
+   Follow-on prediction from Gulf Watch legacy.
+   Given actor+action patterns, what follows within 24h/72h/7d?
+   ══════════════════════════════════════════════════════════ */
+
+import type { NormalizedEvent, ScenarioPrediction, EventType, SeverityLabel, Timeframe } from './types'
+
+const TIMEFRAMES: { label: Timeframe; ms: number }[] = [
+  { label: '24H', ms: 24 * 3600000 },
+  { label: '72H', ms: 72 * 3600000 },
+  { label: '7D', ms: 7 * 86400000 },
+]
+
+// ── Build outcome patterns: after event_type in country, what follows? ──
+
+interface OutcomeMap {
+  [key: string]: {
+    total: number
+    followUps: Record<Timeframe, Record<string, number>>
+  }
+}
+
+function buildOutcomePatterns(events: NormalizedEvent[]): OutcomeMap {
+  const byCountry: Record<string, NormalizedEvent[]> = {}
+  for (const e of events) {
+    if (!byCountry[e.country]) byCountry[e.country] = []
+    byCountry[e.country].push(e)
+  }
+
+  const outcomes: OutcomeMap = {}
+
+  for (const [country, countryEvents] of Object.entries(byCountry)) {
+    const sorted = [...countryEvents].sort((a, b) => a.timestamp - b.timestamp)
+
+    for (let i = 0; i < sorted.length; i++) {
+      const key = `${sorted[i].type}_${country}`
+      if (!outcomes[key]) {
+        outcomes[key] = { total: 0, followUps: { '24H': {}, '72H': {}, '7D': {} } }
+      }
+      outcomes[key].total++
+
+      for (let j = i + 1; j < sorted.length; j++) {
+        const dt = sorted[j].timestamp - sorted[i].timestamp
+        for (const tf of TIMEFRAMES) {
+          if (dt <= tf.ms) {
+            const ftype = sorted[j].type
+            outcomes[key].followUps[tf.label][ftype] = (outcomes[key].followUps[tf.label][ftype] || 0) + 1
+          }
+        }
+      }
+    }
+  }
+
+  return outcomes
+}
+
+// ── Escalation rate: last 3 days vs prior 3 days ──
+
+function computeEscalation(events: NormalizedEvent[]): number {
+  const byDay: Record<string, number> = {}
+  for (const e of events) {
+    const day = new Date(e.timestamp).toISOString().slice(0, 10)
+    byDay[day] = (byDay[day] || 0) + 1
+  }
+  const sorted = Object.entries(byDay).sort((a, b) => a[0].localeCompare(b[0]))
+  if (sorted.length < 6) return 0
+  const early = sorted.slice(0, 3).reduce((s, d) => s + d[1], 0)
+  const late = sorted.slice(-3).reduce((s, d) => s + d[1], 0)
+  return early > 0 ? +((late - early) / early * 100).toFixed(1) : 0
+}
+
+// ── Actor frequency ranking ──
+
+function topActors(events: NormalizedEvent[]): Record<string, number> {
+  const counts: Record<string, number> = {}
+  for (const e of events) {
+    if (e.actor !== 'unknown') counts[e.actor] = (counts[e.actor] || 0) + 1
+  }
+  return counts
+}
+
+// ── Severity label ──
+
+function severityLabel(prob: number): SeverityLabel {
+  if (prob >= 80) return 'CRITICAL'
+  if (prob >= 60) return 'HIGH'
+  if (prob >= 35) return 'MEDIUM'
+  return 'LOW'
+}
+
+// ── Main sequence prediction ──
+
+export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[] {
+  if (events.length < 5) return []
+
+  const outcomes = buildOutcomePatterns(events)
+  const escalation = computeEscalation(events)
+  const actors = topActors(events)
+  const topActorList = Object.entries(actors).sort((a, b) => b[1] - a[1]).slice(0, 3).map(a => a[0])
+
+  const predictions: ScenarioPrediction[] = []
+  const seen = new Set<string>()
+
+  // Escalation alert
+  if (escalation > 10) {
+    predictions.push({
+      category: 'ESCALATION ALERT',
+      outcome: `Activity up ${escalation}% in last 3 days vs prior 3`,
+      probability: Math.min(50 + escalation, 90),
+      timeframe: '72H',
+      severity: severityLabel(Math.min(50 + escalation, 90)),
+      actors: topActorList,
+    })
+  }
+
+  // Type-based follow-on predictions from outcome patterns
+  for (const [key, data] of Object.entries(outcomes)) {
+    if (data.total < 2) continue
+
+    for (const tf of TIMEFRAMES) {
+      const followUps = Object.entries(data.followUps[tf.label])
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 2)
+
+      for (const [followType, count] of followUps) {
+        const prob = Math.round((count / data.total) * 100)
+        if (prob < 15) continue
+
+        const dedup = `${followType}_${key}_${tf.label}`
+        if (seen.has(dedup)) continue
+        seen.add(dedup)
+
+        const [srcType, country] = key.split('_')
+        const relevantActors = events
+          .filter(e => e.type === srcType as EventType && e.country === country && e.actor !== 'unknown')
+          .map(e => e.actor)
+          .filter((v, i, a) => a.indexOf(v) === i)
+          .slice(0, 3)
+
+        predictions.push({
+          category: 'FOLLOW-ON EVENT',
+          outcome: `${formatType(followType)} activity in ${(country || 'REGION').toUpperCase()} after ${formatType(srcType)}`,
+          probability: Math.min(prob, 95),
+          timeframe: tf.label,
+          severity: severityLabel(prob),
+          actors: relevantActors.length ? relevantActors : topActorList,
+        })
+      }
+    }
+  }
+
+  // Default military doctrine predictions based on dominant event types
+  const typeCounts: Record<string, number> = {}
+  for (const e of events) typeCounts[e.type] = (typeCounts[e.type] || 0) + 1
+  const dominantType = Object.entries(typeCounts).sort((a, b) => b[1] - a[1])[0]?.[0]
+
+  if (dominantType && ['missile', 'drone', 'airstrike'].includes(dominantType)) {
+    if (!seen.has('MILITARY_RESPONSE')) {
+      predictions.push({
+        category: 'MILITARY RESPONSE',
+        outcome: 'Retaliatory strikes or defense activation',
+        probability: 75,
+        timeframe: '72H',
+        severity: 'HIGH',
+        actors: topActorList,
+      })
+    }
+    if (!seen.has('MARKET_IMPACT')) {
+      predictions.push({
+        category: 'MARKET IMPACT',
+        outcome: 'Oil price volatility (+2-5%)',
+        probability: 60,
+        timeframe: '24H',
+        severity: 'MEDIUM',
+        actors: [],
+      })
+    }
+  }
+
+  // Sort by probability, limit to 8
+  return predictions.sort((a, b) => b.probability - a.probability).slice(0, 8)
+}
+
+function formatType(type: string): string {
+  const formats: Record<string, string> = {
+    missile: 'Missile', airstrike: 'Airstrike', drone: 'Drone',
+    ground: 'Ground Op', naval: 'Naval', cyber: 'Cyber',
+    diplomatic: 'Diplomatic', general: 'Security',
+  }
+  return formats[type] || type.charAt(0).toUpperCase() + type.slice(1)
+}

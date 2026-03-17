@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { SonarParticles, type SonarParticlesHandle } from './SonarParticles'
+import { SonarParticles } from './SonarParticles'
 
 const ACCESS_CODE = '0000'
 
@@ -12,7 +12,6 @@ export function LoginPage({ onAccess }: LoginPageProps) {
   const [error, setError] = useState(false)
   const [entering, setEntering] = useState(false)
   const markRef = useRef<HTMLCanvasElement>(null)
-  const particlesRef = useRef<SonarParticlesHandle>(null)
 
   // Draw HADAL mark — small, single color, per rule 005
   useEffect(() => {
@@ -44,10 +43,8 @@ export function LoginPage({ onAccess }: LoginPageProps) {
       const code = next.join('')
       if (code === ACCESS_CODE) {
         setEntering(true)
-        // Trigger particle explosion
-        particlesRef.current?.explode()
-        // Wait for explosion to play out, then transition
-        setTimeout(onAccess, 2200)
+        // Card fades out, then notify parent to fade overlay
+        setTimeout(onAccess, 500)
       } else {
         setError(true)
         setTimeout(() => { setDigits([]); setError(false) }, 800)
@@ -72,8 +69,8 @@ export function LoginPage({ onAccess }: LoginPageProps) {
   })
 
   return (
-    <div className={`login-page ${entering ? 'login-whiteout' : ''}`}>
-      <SonarParticles ref={particlesRef} />
+    <div className="login-page">
+      <SonarParticles />
 
       <div className={`login-card ${entering ? 'entering' : ''} ${error ? 'error-shake' : ''}`}>
         <canvas ref={markRef} className="login-mark" />
@@ -81,20 +78,20 @@ export function LoginPage({ onAccess }: LoginPageProps) {
         <div className="login-subtitle">THREAT INTELLIGENCE TERMINAL</div>
 
         {/* Digit display */}
-        <div className="keypad-display">
+        <div className="keypad-display jp-dots">
           {[0, 1, 2, 3].map(i => (
-            <div key={i} className={`keypad-dot ${digits[i] ? 'filled' : ''} ${error ? 'dot-error' : ''} ${entering ? 'dot-success' : ''}`}>
+            <div key={i} className={`keypad-dot jp-dot ${digits[i] ? 'filled' : ''} ${error ? 'dot-error error' : ''} ${entering ? 'dot-success success' : ''}`}>
               {digits[i] ? '●' : '○'}
             </div>
           ))}
         </div>
 
         {/* Keypad */}
-        <div className="keypad-grid">
+        <div className="keypad-grid jp-keypad">
           {['1', '2', '3', '4', '5', '6', '7', '8', '9', 'CLR', '0', '⏎'].map(key => (
             <button
               key={key}
-              className={`keypad-btn ${key === 'CLR' ? 'key-fn' : ''} ${key === '⏎' ? 'key-fn' : ''}`}
+              className={`keypad-btn jp-key ${key === 'CLR' ? 'key-fn jp-key-clear' : ''} ${key === '⏎' ? 'key-fn jp-key-enter' : ''}`}
               onClick={() => {
                 if (key === 'CLR') pressClear()
                 else if (key === '⏎') { /* auto-submit on 4 digits */ }
@@ -107,9 +104,9 @@ export function LoginPage({ onAccess }: LoginPageProps) {
           ))}
         </div>
 
-        <div className="login-status">
-          <span className={`login-dot ${entering ? 'dot-flash' : ''}`} />
-          <span>{entering ? 'ACCESS GRANTED · DETONATING...' : 'ENTER ACCESS CODE'}</span>
+        <div className="login-status jp-status-row">
+          <span className={`login-dot jp-status-dot ${entering ? 'dot-flash active' : 'active'}`} />
+          <span className="jp-status-text">{entering ? 'ACCESS GRANTED' : 'ENTER ACCESS CODE'}</span>
         </div>
       </div>
 

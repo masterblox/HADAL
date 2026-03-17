@@ -48,7 +48,7 @@ export function MissileCard({ country, src, val, valStr, label, bars, chip, warn
           <div style={{marginTop:'8px'}}>
             {thaadSites.map(s => (
               <div key={s.label} className="tsite">
-                <span className="ts-k" style={{fontSize:'7px'}}>{s.label.split(' ').slice(-1)[0] === 'MUWAFFAQ' ? 'MUWAFFAQ' : s.label.replace('JORDAN ','').replace('QATAR ','').replace('SAUDI ','')}</span>
+                <span className="ts-k" style={{fontSize:'var(--fs-micro)'}}>{s.label.split(' ').slice(-1)[0] === 'MUWAFFAQ' ? 'MUWAFFAQ' : s.label.replace('JORDAN ','').replace('QATAR ','').replace('SAUDI ','')}</span>
                 <span className="ts-w">{s.status === 'DESTROYED' ? 'DESTR.' : s.status}</span>
               </div>
             ))}

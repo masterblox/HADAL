@@ -8,7 +8,7 @@ export function CasualtiesTab({ sandbox }: CasualtiesTabProps) {
   return (
     <div className="iwl-tabcontent active">
       <div className="iwl-section-h">PARTICIPANTS &amp; CASUALTIES</div>
-      <p style={{fontFamily:'var(--MONO)',fontSize:'8px',color:'var(--g3)',marginBottom:'14px'}}>Automated intelligence estimates based on active geopolitical events.</p>
+      <p style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-small)',color:'var(--g3)',marginBottom:'14px'}}>Automated intelligence estimates based on active geopolitical events.</p>
       <div className="iwl-stat-grid">
         <ResizablePanelGroup orientation="horizontal">
           <ResizablePanel id="cas-1" defaultSize="25%" minSize="15%">

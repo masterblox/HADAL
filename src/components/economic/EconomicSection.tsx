@@ -29,7 +29,7 @@ export function EconomicSection({ prices, sandbox }: EconomicSectionProps) {
       <canvas ref={noiseRef} className="eco-noise" />
       <div className="eco-head">
         <span className="eco-ht">&#9670; ECONOMIC INTELLIGENCE</span>
-        <span style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'8px',color:'rgba(255,140,0,.4)',letterSpacing:'.16em'}}>
+        <span style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-small)',color:'rgba(255,140,0,.4)',letterSpacing:'.16em'}}>
           {prices?.brent ? 'LIVE · WAR-ADJUSTED' : 'LIVE · WAR-ADJUSTED'}
         </span>
       </div>
@@ -84,7 +84,7 @@ export function EconomicSection({ prices, sandbox }: EconomicSectionProps) {
             </div>
           ))}
         </div>
-        <div style={{marginTop:'18px',paddingTop:'10px',borderTop:'1px solid rgba(255,140,0,.06)',textAlign:'right',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'11px',letterSpacing:'.18em',color:'rgba(255,140,0,.16)'}}>
+        <div style={{marginTop:'18px',paddingTop:'10px',borderTop:'1px solid rgba(255,140,0,.06)',textAlign:'right',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'var(--fs-med)',letterSpacing:'.18em',color:'rgba(255,140,0,.16)'}}>
           At 10,924 metres, only the truth survives.
         </div>
       </div>

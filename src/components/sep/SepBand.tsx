@@ -31,7 +31,7 @@ export function SepBand() {
           <div className="sep-txt">ACTIVE SINCE FEB 28 · 5 GCC STATES</div>
         </div>
       </div>
-      <div style={{position:'absolute',bottom:'7px',left:'50%',transform:'translateX(-50%)',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'10px',letterSpacing:'.22em',color:'rgba(196,255,44,.14)',whiteSpace:'nowrap',pointerEvents:'none',zIndex:2}}>
+      <div style={{position:'absolute',bottom:'7px',left:'50%',transform:'translateX(-50%)',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'var(--fs-small)',letterSpacing:'.22em',color:'rgba(196,255,44,.14)',whiteSpace:'nowrap',pointerEvents:'none',zIndex:2}}>
         Intelligence lives in the dark.
       </div>
     </div>

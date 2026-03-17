@@ -31,8 +31,8 @@ export function IwlNav({ activeTab, onTabChange, syncStatus, onCalc }: IwlNavPro
         </svg>
       </div>
       <div style={{position:'absolute',left:'50%',transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none'}}>
-        <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'13px',letterSpacing:'.18em',color:'rgba(200,220,200,.82)',lineHeight:1}}>MARIANA TRENCH VIEWER</div>
-        <div style={{fontFamily:'var(--MONO)',fontSize:'6.5px',letterSpacing:'.22em',color:'rgba(160,180,160,.32)',marginTop:'2px'}}>HADAL DEEP-SEA INTELLIGENCE LAYER</div>
+        <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-med)',letterSpacing:'.18em',color:'rgba(200,220,200,.82)',lineHeight:1}}>MARIANA TRENCH VIEWER</div>
+        <div style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',letterSpacing:'.22em',color:'rgba(160,180,160,.32)',marginTop:'2px'}}>HADAL DEEP-SEA INTELLIGENCE LAYER</div>
       </div>
       <div className="iwl-tabs">
         {tabs.map(t => (

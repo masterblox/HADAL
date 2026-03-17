@@ -47,7 +47,7 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
           <div key={r} className={`TAB${filt === r ? ' on' : ''}`} onClick={() => setFilt(r)}>{r}</div>
         ))}
         <div className="TAB-R" />
-        <div style={{padding:'0 14px',fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'8px',color:'var(--g3)',letterSpacing:'.1em',alignSelf:'center'}}>
+        <div style={{padding:'0 14px',fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-small)',color:'var(--g3)',letterSpacing:'.1em',alignSelf:'center'}}>
           {filtered.length} ACTIVE{incidents.length > 0 ? ' · LIVE' : ''}
         </div>
         <div className="HDR-DOT" style={{marginRight:'14px',alignSelf:'center'}} />

@@ -19,7 +19,7 @@ export function MissileDefenseStrip({ sandbox }: MissileDefenseStripProps) {
       <div className="ms-hdr">
         <div className="HDR-DOT" />
         &#9670; THEATRE KINETIC DATA · VERIFIED MoD + SAT
-        <span style={{fontFamily:'var(--MONO)',fontSize:'7px',color:'var(--g3)',marginLeft:'auto'}}>FEB 28 – MAR 10, 2026</span>
+        <span style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color:'var(--g3)',marginLeft:'auto'}}>FEB 28 – MAR 10, 2026</span>
       </div>
       <div className="mc-grid">
         <ResizablePanelGroup orientation="horizontal">

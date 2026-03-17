@@ -33,7 +33,7 @@ export function AirspaceTab({ airspace }: AirspaceTabProps) {
   return (
     <div className="iwl-tabcontent active">
       <div className="iwl-section-h">REGIONAL AIRSPACE STATUS</div>
-      <p style={{fontFamily:'var(--MONO)',fontSize:'8px',color:'var(--g3)',marginBottom:'14px'}}>
+      <p style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-small)',color:'var(--g3)',marginBottom:'14px'}}>
         {airspace?.notams
           ? `Live tracking: ${airspace.total_notams ?? 0} NOTAMs · ${(airspace.severity_counts?.CRITICAL ?? 0) + (airspace.severity_counts?.WARNING ?? 0)} critical/warning · ${airspace.airports_tracked ?? 0} airports monitored.`
           : 'Live tracking of commercial airspace closures and flight restrictions.'}

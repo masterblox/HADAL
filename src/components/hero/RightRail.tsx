@@ -49,12 +49,12 @@ export function RightRail({ sandbox }: RightRailProps) {
             <div className="rc-lbl">
               <div className="HDR-DOT" style={{ background: status === 'ONLINE' ? 'var(--g)' : 'var(--warn)' }} />
               TRACKING RADAR
-              <span style={{marginLeft:'auto',fontFamily:'var(--MONO)',fontSize:'7px',color: status === 'ONLINE' ? 'var(--g3)' : 'var(--warn)'}}>{status}</span>
+              <span style={{marginLeft:'auto',fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color: status === 'ONLINE' ? 'var(--g3)' : 'var(--warn)'}}>{status}</span>
             </div>
             <div className="sonar-wrap">
               <canvas ref={sonarRef} width={140} height={140} />
             </div>
-            <div style={{display:'flex',justifyContent:'space-between',fontFamily:'var(--MONO)',fontSize:'7px',color:'var(--g3)',marginTop:'4px',padding:'0 2px'}}>
+            <div style={{display:'flex',justifyContent:'space-between',fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color:'var(--g3)',marginTop:'4px',padding:'0 2px'}}>
               <span style={{color:'rgb(0,212,255)'}}>✈ {counts.aircraft}</span>
               <span style={{color:'rgb(255,215,0)'}}>◉ {counts.satellite}</span>
               <span style={{color:'rgb(255,140,0)'}}>⚓ {counts.maritime}</span>
@@ -68,10 +68,10 @@ export function RightRail({ sandbox }: RightRailProps) {
             <div className="rc-lbl">TRACKING FEED</div>
             <div className="sig-row">{sigBars}</div>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:'4px'}}>
-              <span style={{fontFamily:'var(--MONO)',fontSize:'7px',color:'var(--g3)'}}>FREQ: {freq}</span>
-              <span style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'7px',color:'var(--g5)'}}>{typeLabel}</span>
+              <span style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color:'var(--g3)'}}>FREQ: {freq}</span>
+              <span style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-micro)',color:'var(--g5)'}}>{typeLabel}</span>
             </div>
-            <div style={{fontFamily:'var(--MONO)',fontSize:'7.5px',color:'var(--g5)',marginTop:'4px'}}>{msg}</div>
+            <div style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',color:'var(--g5)',marginTop:'4px'}}>{msg}</div>
             <div style={{height:'3px',background:'var(--g07)',marginTop:'6px'}}>
               <div style={{height:'100%',background:'var(--g5)',width:`${sigWidth}%`,transition:'width .3s ease'}} />
             </div>

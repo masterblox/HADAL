@@ -32,7 +32,7 @@ export function Topbar({ pressure, sandbox, onSandboxToggle }: TopbarProps) {
       <div className="tb-stats">
         <div className="tb-stat"><div className="tb-stat-l">DEPTH</div><div className="tb-stat-v">10,924M</div></div>
         <div className="tb-stat"><div className="tb-stat-l">PRESSURE</div><div className="tb-stat-v">{pressure.toLocaleString()} BAR</div></div>
-        <div className="tb-stat"><div className="tb-stat-l">UTC</div><div className="tb-stat-v" style={{fontSize:'10px'}}>{clock}</div></div>
+        <div className="tb-stat"><div className="tb-stat-l">UTC</div><div className="tb-stat-v" style={{fontSize:'var(--fs-small)'}}>{clock}</div></div>
       </div>
     </div>
   )

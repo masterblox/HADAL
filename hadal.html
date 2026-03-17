@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HADAL · Threat Intelligence Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&family=Teko:wght@600;700&family=Cormorant+Garamond:ital,wght@1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --g:#C4FF2C;--g9:rgba(196,255,44,.95);--g7:rgba(196,255,44,.7);
+  --g5:rgba(196,255,44,.5);--g3:rgba(196,255,44,.3);--g15:rgba(196,255,44,.15);--g07:rgba(196,255,44,.07);
+  --warn:rgba(255,140,0,.9);--warn5:rgba(255,140,0,.5);--warn2:rgba(255,140,0,.2);--warn1:rgba(255,140,0,.1);
+  --bg:#060800;--bg1:rgba(8,10,2,.98);--bg2:rgba(6,8,0,.95);
+  --HEAD:'Rajdhani',sans-serif;--C2:'Teko',sans-serif;--MONO:'Share Tech Mono',monospace;
+}
+html,body{background:var(--bg);color:var(--g7);font-family:var(--MONO);min-height:100vh;overflow-x:hidden;}
+
+/* ── GRAIN TEXTURE ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:.5;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.6) 100%);pointer-events:none;z-index:0;}
+
+/* scanlines */
+.scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);pointer-events:none;z-index:1;}
+
+/* ── TOPBAR ── */
+.topbar{position:relative;height:46px;border-bottom:1px solid var(--g3);background:rgba(4,6,0,.96);display:flex;align-items:center;gap:0;padding:0 18px;z-index:10;flex-shrink:0;}
+.lockup{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.lockup-word-top{font-family:var(--HEAD);font-weight:300;font-size:26px;letter-spacing:.06em;color:transparent;-webkit-text-stroke:1.2px var(--g);line-height:1;}
+.lockup-sub{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.32em;color:var(--g3);padding-top:2px;}
+.tb-div{flex:1;}
+.tb-alert{display:flex;align-items:center;gap:8px;padding:4px 14px;border:1px solid rgba(255,140,0,.35);background:rgba(255,140,0,.05);}
+.tb-alert-icon{color:var(--warn);font-size:11px;animation:blink 1.2s infinite;}
+.tb-alert-t{font-family:var(--HEAD);font-weight:700;font-size:8px;letter-spacing:.2em;color:var(--warn);}
+.tb-stats{display:flex;gap:20px;padding:0 18px;}
+.tb-stat{display:flex;flex-direction:column;align-items:flex-end;}
+.tb-stat-l{font-family:var(--HEAD);font-weight:700;font-size:6px;letter-spacing:.2em;color:var(--g3);}
+.tb-stat-v{font-family:var(--C2);font-weight:700;font-size:14px;color:var(--g5);line-height:1;}
+#clock{font-family:var(--MONO);font-size:10px;color:var(--g5);letter-spacing:.1em;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── MAIN LAYOUT ── */
+.terminal{position:relative;z-index:2;max-width:1600px;margin:0 auto;padding:0 14px 14px;}
+
+/* ── HERO ── */
+.hero-grid{display:grid;grid-template-columns:260px 1fr 260px;gap:0;border:1px solid var(--g15);border-top:none;margin-bottom:0;}
+
+/* ── STANDARD NOISE ELEMENT ── */
+canvas.NOISE{position:absolute;inset:0;pointer-events:none;opacity:.09;mix-blend-mode:overlay;z-index:0;}
+/* hero blocks need position:relative to host noise */
+.lc{display:flex;flex-direction:column;border-right:1px solid var(--g15);position:relative;overflow:hidden;}
+.rc{display:flex;flex-direction:column;border-left:1px solid var(--g15);position:relative;overflow:hidden;}
+.globe-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;position:relative;overflow:hidden;}
+/* intel feed gets noise too */
+.iwl-feed-wrap{flex:1;background:rgba(6,9,6,.94);border:1px solid rgba(140,160,140,.18);pointer-events:all;display:flex;flex-direction:column;overflow:hidden;min-height:0;position:relative;}
+.brand-plate{padding:18px 16px 14px;border-bottom:1px solid var(--g15);}
+.bp-name{font-family:var(--HEAD);font-weight:700;font-size:9px;letter-spacing:.28em;color:var(--g5);margin-bottom:2px;}
+.bp-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:11px;color:var(--g3);letter-spacing:.12em;}
+.bp-ver{font-family:var(--MONO);font-size:7px;color:var(--g15);margin-top:6px;}
+
+.ti-block{padding:14px 16px;border-bottom:1px solid var(--g15);}
+.ti-lbl{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.22em;color:var(--g3);margin-bottom:8px;}
+.ti-big{font-family:var(--C2);font-weight:700;font-size:62px;color:var(--g);line-height:.9;position:relative;display:inline-block;}
+.ti-big::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(52deg,transparent,transparent 4px,rgba(196,255,44,.05) 4px,rgba(196,255,44,.05) 5px);pointer-events:none;mix-blend-mode:overlay;}
+.ti-sub{font-family:var(--HEAD);font-weight:600;font-size:8px;letter-spacing:.2em;color:var(--warn);}
+.ti-bar{height:3px;background:var(--g15);margin-top:8px;position:relative;overflow:hidden;}
+.ti-bar-fill{height:100%;background:linear-gradient(90deg,var(--g3),var(--g));width:91%;position:relative;}
+.ti-bar-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:6px;background:var(--g);box-shadow:0 0 4px var(--g);}
+
+.spec-block{padding:14px 16px;border-bottom:1px solid var(--g15);}
+.spec-lbl{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.22em;color:var(--g3);margin-bottom:8px;}
+.spec-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(196,255,44,.04);}
+.spec-k{font-family:var(--MONO);font-size:8px;color:var(--g3);}
+.spec-v{font-family:var(--C2);font-weight:700;font-size:13px;color:var(--g5);}
+
+.sys-block{padding:12px 16px;flex:1;}
+.sys-lbl{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.22em;color:var(--g3);margin-bottom:8px;}
+.sys-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
+.sys-k{font-family:var(--MONO);font-size:7.5px;color:var(--g3);}
+.sys-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.sys-dot.on{background:var(--g);box-shadow:0 0 5px var(--g);animation:blink 2s infinite;}
+.sys-dot.warn{background:var(--warn);box-shadow:0 0 5px var(--warn);animation:blink 1.2s infinite;}
+.sys-dot.off{background:rgba(255,140,0,.7);box-shadow:0 0 5px rgba(255,140,0,.7);}
+
+/* CENTER GLOBE */
+#outerTicks{position:absolute;pointer-events:none;}
+canvas#globe{border-radius:50%;display:block;}
+.globe-label{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.28em;color:var(--g3);margin-top:10px;text-align:center;}
+.globe-ring{position:absolute;border-radius:50%;border:1px solid;pointer-events:none;}
+
+/* RIGHT COLUMN */
+.rc-block{padding:12px 14px;border-bottom:1px solid var(--g15);}
+.rc-lbl{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.22em;color:var(--g3);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.HDR-DOT{width:5px;height:5px;border-radius:50%;background:var(--g);box-shadow:0 0 5px var(--g);animation:blink 2s infinite;flex-shrink:0;}
+.tsite{border-left:2px solid var(--g3);display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(196,255,44,.04);}
+.ts-k{font-family:var(--MONO);font-size:8px;color:var(--g5);}
+.ts-w{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.1em;color:var(--warn);border:1px solid rgba(255,140,0,.3);padding:1px 4px;}
+.ts-ok{color:var(--g5);border-color:var(--g15);}
+.sonar-wrap{position:relative;height:148px;display:flex;align-items:center;justify-content:center;}
+canvas#sonarC{border-radius:50%;}
+.sig-row{display:flex;gap:3px;align-items:flex-end;height:30px;margin-bottom:6px;}
+.SB{width:5px;background:var(--g3);border-radius:1px;animation:sig var(--rd,1s) ease-in-out var(--rl,0s) infinite alternate;flex-shrink:0;}
+@keyframes sig{from{opacity:.14;height:4px}to{opacity:1;height:var(--rh,14px)}}
+.gcc-row{display:flex;flex-direction:column;gap:5px;}
+.GCC-ROW{display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid rgba(196,255,44,.04);}
+.GCF{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.1em;color:var(--g5);width:52px;flex-shrink:0;}
+.GCN{font-family:var(--C2);font-weight:700;font-size:16px;color:var(--g);line-height:1;width:34px;flex-shrink:0;}
+.GC-BC{flex:1;display:flex;flex-direction:column;gap:2px;}
+.BAR-S{height:3px;background:var(--g07);position:relative;}
+.BAR-SF{height:100%;background:linear-gradient(90deg,var(--g3),var(--g));box-shadow:2px 0 4px var(--g);}
+.GC-TP{font-family:var(--MONO);font-size:6.5px;color:var(--g3);}
+
+/* ── MISSILE SECTION ── */
+.missile-section{border-top:1px solid var(--g15);padding:12px 14px;position:relative;overflow:hidden;}
+canvas.mc-noise{position:absolute;inset:0;pointer-events:none;opacity:.11;mix-blend-mode:overlay;}
+.mc-inner{position:relative;z-index:1;}
+.ms-hdr{font-family:var(--HEAD);font-weight:700;font-size:8px;letter-spacing:.28em;color:var(--g5);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.mc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.mc{position:relative;border:2px solid var(--g3);overflow:hidden;background:rgba(3,5,0,.9);}
+.mc-inner{padding:10px 12px;}
+.MCC{font-family:var(--HEAD);font-weight:700;font-size:7.5px;letter-spacing:.15em;color:var(--g5);display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.MCS{font-size:6px;color:var(--g3);font-weight:400;letter-spacing:.08em;}
+.MC-BIG{font-family:var(--C2);font-weight:700;font-size:40px;color:var(--g);line-height:.9;position:relative;display:inline-block;}
+.MC-BIG::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(52deg,transparent,transparent 3px,rgba(196,255,44,.055) 3px,rgba(196,255,44,.055) 4px);pointer-events:none;mix-blend-mode:overlay;}
+.MC-BIG.warn{color:var(--warn);}
+.MC-BIG.warn::after{background:repeating-linear-gradient(52deg,transparent,transparent 3px,rgba(255,140,0,.055) 3px,rgba(255,140,0,.055) 4px);}
+.MC-BIGL{font-family:var(--HEAD);font-weight:600;font-size:6.5px;letter-spacing:.12em;color:var(--g3);margin-bottom:8px;}
+.mc-bk{display:flex;flex-direction:column;gap:3px;}
+.mc-br{display:flex;align-items:center;gap:5px;}
+.mc-brl{font-family:var(--HEAD);font-weight:700;font-size:6px;letter-spacing:.08em;color:var(--g3);width:44px;flex-shrink:0;}
+.mc-sbar{flex:1;height:5px;background:var(--g07);}
+.mc-sfill{height:100%;background:var(--g5);}
+.mc-brv{font-family:var(--C2);font-weight:700;font-size:13px;color:var(--g5);line-height:1;}
+.CHIP{font-family:var(--HEAD);font-weight:700;font-size:6px;letter-spacing:.1em;padding:2px 5px;display:inline-block;margin-top:6px;}
+.C-WARN{color:var(--warn);border:1px solid rgba(255,140,0,.3);background:rgba(255,140,0,.05);}
+.m-agg{display:flex;gap:0;border-top:1px solid var(--g15);margin-top:10px;padding-top:8px;}
+.ag{flex:1;text-align:center;border-right:1px solid var(--g15);}
+.ag:last-child{border-right:none;}
+.ag-l{font-family:var(--HEAD);font-weight:700;font-size:6.5px;letter-spacing:.1em;color:var(--g3);}
+.ag-v{font-family:var(--C2);font-weight:700;font-size:16px;color:var(--g5);line-height:1.1;position:relative;display:inline-block;}
+.ag-v::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(52deg,transparent,transparent 2px,rgba(196,255,44,.06) 2px,rgba(196,255,44,.06) 3px);pointer-events:none;mix-blend-mode:overlay;}
+.ag-v.warn{color:var(--warn);}
+.ag-v.warn::after{background:repeating-linear-gradient(52deg,transparent,transparent 2px,rgba(255,140,0,.06) 2px,rgba(255,140,0,.06) 3px);}
+
+/* ── SEP BAND ── */
+.sep-band{position:relative;height:80px;overflow:hidden;border-top:1px solid var(--g15);}
+canvas#sepStatic{position:absolute;inset:0;}
+.sep-overlay{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;gap:28px;}
+.birdmissile{flex-shrink:0;}
+.sep-vtx{width:1px;height:40px;background:linear-gradient(transparent,var(--g3),transparent);}
+.sep-msg-block{display:flex;flex-direction:column;gap:2px;}
+.sep-icon-wrap{font-family:var(--HEAD);font-weight:700;font-size:9px;letter-spacing:.22em;color:var(--warn);border:1px solid rgba(255,140,0,.35);padding:3px 8px;background:rgba(255,140,0,.04);}
+.sep-txt{font-family:var(--MONO);font-size:7px;color:var(--g3);letter-spacing:.1em;}
+
+
+/* ── WEAPON TYPE ICONS — CSS 2D animated ── */
+.wtype-icon{position:absolute;top:10px;right:10px;z-index:10;opacity:.8;}
+
+/* ballistic missile — nose up, floating, exhaust flicker */
+.ico-ballistic{width:16px;height:28px;position:relative;animation:iconFloat 3s ease-in-out infinite;}
+@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.ico-ballistic::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:0;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid var(--g);}
+.ico-ballistic::after{content:'';position:absolute;left:50%;transform:translateX(-50%);top:8px;width:10px;height:14px;background:var(--g);opacity:.75;border-radius:0 0 2px 2px;}
+.ico-ballistic-exhaust{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:7px solid rgba(255,140,0,.85);animation:exhaust .35s ease-in-out infinite alternate;}
+@keyframes exhaust{to{border-top-width:4px;opacity:.35;}}
+
+/* drone — spinning rotors */
+.ico-drone{width:24px;height:24px;position:relative;animation:droneSpin 4.5s linear infinite;}
+@keyframes droneSpin{to{transform:rotate(360deg)}}
+.ico-drone-body{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:9px;height:9px;border:1.5px solid var(--g);background:rgba(196,255,44,.06);}
+.ico-drone-arm{position:absolute;background:rgba(196,255,44,.45);width:9px;height:1.5px;top:50%;transform-origin:center;}
+.ico-drone-rotor{position:absolute;width:7px;height:7px;border-radius:50%;border:1.5px solid var(--g);}
+
+/* cruise missile — side view, floating, wings */
+.ico-cruise{width:26px;height:16px;position:relative;animation:iconFloat 4s ease-in-out infinite .5s;}
+.ico-cruise-body{position:absolute;top:50%;transform:translateY(-50%);left:2px;width:17px;height:6px;background:var(--g);opacity:.72;border-radius:0 3px 3px 0;}
+.ico-cruise-nose{position:absolute;top:50%;transform:translateY(-50%);right:0;width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid var(--g);}
+.ico-cruise-wing{position:absolute;top:0;left:7px;width:9px;height:6px;background:rgba(196,255,44,.4);clip-path:polygon(0 100%,100% 100%,50% 0);}
+.ico-cruise-tail{position:absolute;bottom:0;left:4px;width:6px;height:5px;background:rgba(196,255,44,.3);clip-path:polygon(0 100%,100% 100%,50% 0);}
+
+/* interception burst — expanding ring + X */
+.ico-intercept{width:22px;height:22px;position:relative;}
+.ico-intercept-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;border:1.5px solid var(--warn);animation:intBurst 1.4s ease-out infinite;}
+@keyframes intBurst{0%{width:4px;height:4px;opacity:1}100%{width:22px;height:22px;opacity:0}}
+.ico-intercept-x{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:11px;height:11px;}
+.ico-intercept-x::before,.ico-intercept-x::after{content:'';position:absolute;top:50%;left:50%;width:11px;height:1.5px;background:var(--warn);transform-origin:center;}
+.ico-intercept-x::before{transform:translate(-50%,-50%) rotate(45deg);}
+.ico-intercept-x::after{transform:translate(-50%,-50%) rotate(-45deg);}
+
+/* radar/THAAD icon — rotating sweep dish */
+.ico-radar{width:22px;height:22px;position:relative;}
+.ico-radar-base{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:14px;height:4px;background:rgba(196,255,44,.5);border-radius:1px;}
+.ico-radar-post{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:1.5px;height:7px;background:var(--g5);}
+.ico-radar-dish{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:18px;height:9px;border:1.5px solid var(--g7);border-bottom:none;border-radius:9px 9px 0 0;animation:radarSweep 2s ease-in-out infinite;}
+@keyframes radarSweep{0%,100%{transform:translateX(-50%) scaleX(1);opacity:.8}50%{transform:translateX(-50%) scaleX(.4);opacity:.4}}
+.ico-radar-dot{position:absolute;top:2px;right:2px;width:3px;height:3px;border-radius:50%;background:var(--warn);animation:blink .8s infinite;}
+
+/* satellite — spinning solar panels */
+.sat-icon{width:26px;height:26px;position:relative;flex-shrink:0;}
+.sat-body{width:12px;height:7px;border:1.5px solid var(--g5);background:rgba(196,255,44,.07);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:satBody 5s linear infinite;}
+@keyframes satBody{from{transform:translate(-50%,-50%) rotateY(0deg)}to{transform:translate(-50%,-50%) rotateY(360deg)}}
+.sat-pl{width:10px;height:5px;background:rgba(196,255,44,.1);border:1px solid var(--g3);position:absolute;top:50%;transform:translateY(-50%);animation:satBody 5s linear infinite;}
+.sat-pl-l{right:calc(50% + 6px);border-right:none;}
+.sat-pl-r{left:calc(50% + 6px);border-left:none;}
+.sat-dot{width:3px;height:3px;border-radius:50%;background:var(--g);position:absolute;top:3px;right:3px;animation:blink 1.4s infinite;}
+
+/* mc card corner brackets */
+.mc::before,.mc::after{content:'';position:absolute;width:7px;height:7px;border-style:solid;border-color:var(--g5);z-index:3;}
+.mc::before{top:0;left:0;border-width:1.5px 0 0 1.5px;}
+.mc::after{bottom:0;right:0;border-width:0 1.5px 1.5px 0;}
+
+/* birdmissile flash */
+.birdmissile{flex-shrink:0;animation:bmFlash 2.8s ease-in-out infinite;}
+@keyframes bmFlash{0%,100%{opacity:.55;filter:drop-shadow(0 0 2px rgba(196,255,44,.2))}50%{opacity:1;filter:drop-shadow(0 0 6px var(--g));}}
+
+/* ── LOWER GRID ── */
+.grid{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--g15);}
+.panel{border-bottom:1px solid var(--g15);position:relative;}
+.HDR{display:flex;align-items:center;padding:0 14px;height:30px;border-bottom:1px solid var(--g15);gap:8px;}
+.HDR-T{font-family:var(--HEAD);font-weight:700;font-size:8px;letter-spacing:.25em;color:var(--g5);}
+.HDR-L{flex:1;}
+.TABS{display:flex;align-items:stretch;border-bottom:1px solid var(--g15);}
+.TAB{font-family:var(--HEAD);font-weight:700;font-size:7.5px;letter-spacing:.15em;color:var(--g3);padding:0 14px;height:28px;display:flex;align-items:center;cursor:pointer;border-right:1px solid var(--g15);transition:all .15s;}
+.TAB:hover{color:var(--g5);background:rgba(196,255,44,.03);}
+.TAB.on{color:var(--g);border-bottom:1px solid var(--g);}
+.TAB-R{flex:1;}
+.THEAD{display:flex;gap:0;padding:4px 14px;font-family:var(--HEAD);font-weight:700;font-size:6.5px;letter-spacing:.12em;color:var(--g3);border-bottom:1px solid rgba(196,255,44,.04);}
+.feed-row{display:flex;align-items:center;gap:0;padding:6px 14px;border-bottom:1px solid rgba(196,255,44,.03);cursor:pointer;transition:background .1s;}
+.feed-row:hover{background:rgba(196,255,44,.025);}
+.feed-id{font-family:var(--MONO);font-size:8px;color:var(--g3);width:72px;flex-shrink:0;}
+.feed-region{font-family:var(--HEAD);font-weight:700;font-size:8px;letter-spacing:.08em;color:var(--g5);width:62px;flex-shrink:0;}
+.feed-type{font-family:var(--MONO);font-size:8px;color:var(--g7);flex:1;}
+.sev-chip{font-family:var(--HEAD);font-weight:700;font-size:6px;letter-spacing:.1em;padding:2px 5px;border:1px solid;width:80px;flex-shrink:0;text-align:center;}
+.sev-CRITICAL{color:var(--warn);border-color:rgba(255,140,0,.4);background:rgba(255,140,0,.04);}
+.sev-HIGH{color:rgba(255,140,0,.7);border-color:rgba(255,140,0,.3);}
+.sev-MEDIUM{color:var(--g5);border-color:var(--g15);}
+.feed-src{font-family:var(--MONO);font-size:7px;color:var(--g3);width:36px;flex-shrink:0;}
+.feed-conf{font-family:var(--C2);font-weight:700;font-size:14px;color:var(--g5);width:46px;text-align:right;}
+
+/* ── MARIANA TRENCH VIEWER ── */
+.iwl-wrap{position:relative;width:100%;height:680px;background:#060806;border-bottom:1px solid var(--g15);overflow:hidden;display:flex;flex-direction:column;}
+/* deep-sea grain texture overlay for the whole section */
+.iwl-wrap::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");opacity:.75;pointer-events:none;z-index:1;mix-blend-mode:overlay;}
+.iwl-wrap::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.18) 2px,rgba(0,0,0,.18) 3px);pointer-events:none;z-index:1;}
+
+/* IWL top nav */
+.iwl-nav{height:44px;background:rgba(5,7,5,.98);border-bottom:1px solid rgba(140,160,140,.18);display:flex;align-items:stretch;flex-shrink:0;z-index:900;position:relative;}
+.iwl-logo{display:flex;align-items:center;gap:8px;padding:0 16px;border-right:1px solid rgba(140,160,140,.1);}
+.iwl-logo-glyph{width:20px;height:20px;flex-shrink:0;}
+.iwl-logo-t{font-family:var(--HEAD);font-weight:700;font-size:11px;letter-spacing:.08em;color:rgba(180,200,180,.7);}
+.iwl-logo-t span{color:rgba(200,220,200,.9);font-weight:300;}
+.iwl-tabs{display:flex;align-items:stretch;}
+.iwl-tab{display:flex;align-items:center;padding:0 16px;font-family:var(--HEAD);font-weight:600;font-size:8px;letter-spacing:.14em;color:rgba(180,200,180,.35);cursor:pointer;border-right:1px solid rgba(180,200,180,.07);transition:all .15s;white-space:nowrap;}
+.iwl-tab:hover{color:rgba(180,200,180,.6);background:rgba(180,200,180,.03);}
+.iwl-tab.on{color:rgba(200,220,200,.85);border-bottom:2px solid rgba(160,190,160,.6);background:rgba(180,200,180,.03);}
+.iwl-nav-r{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0 14px;}
+.iwl-sync{display:flex;align-items:center;gap:6px;font-family:var(--MONO);font-size:8px;color:rgba(180,200,180,.5);}
+.iwl-sync-dot{width:6px;height:6px;border-radius:50%;background:rgba(160,200,160,.7);box-shadow:0 0 6px rgba(160,200,160,.5);animation:blink 1.4s infinite;}
+.iwl-btn{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.14em;padding:4px 10px;border:1px solid rgba(180,200,180,.2);color:rgba(180,200,180,.5);background:transparent;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.iwl-btn:hover{background:rgba(180,200,180,.06);color:rgba(200,220,200,.8);}
+.iwl-btn.warn{border-color:rgba(255,140,0,.3);color:rgba(255,140,0,.7);}
+.iwl-btn.warn:hover{background:rgba(255,140,0,.08);color:var(--warn);}
+
+/* IWL map area */
+.iwl-map-area{flex:1;position:relative;overflow:hidden;}
+#iwl-map{position:absolute;inset:0;}
+
+/* IWL left/right panel — grayscale deep-sea aesthetic */
+.iwl-left{position:absolute;top:10px;left:10px;bottom:10px;width:190px;z-index:810;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.iwl-panel{background:rgba(6,9,6,.94);border:1px solid rgba(140,160,140,.18);pointer-events:all;overflow:hidden;}
+.iwl-ph{display:flex;align-items:center;gap:7px;padding:8px 11px;border-bottom:1px solid rgba(140,160,140,.1);cursor:pointer;user-select:none;}
+.iwl-ph-t{font-family:var(--HEAD);font-weight:700;font-size:8px;letter-spacing:.18em;color:rgba(180,200,180,.6);flex:1;}
+.iwl-ph-arrow{font-size:8px;color:rgba(180,200,180,.3);transition:transform .2s;}
+.iwl-ph-arrow.open{transform:rotate(180deg);}
+.iwl-layer-body{padding:5px 0;}
+.iwl-lyr{display:flex;align-items:center;gap:8px;padding:6px 11px;cursor:pointer;transition:background .1s;border-bottom:1px solid rgba(180,200,180,.03);}
+.iwl-lyr:hover{background:rgba(180,200,180,.04);}
+.iwl-lyr-icon{width:14px;height:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.iwl-lyr-t{font-family:var(--HEAD);font-weight:600;font-size:7.5px;letter-spacing:.1em;color:rgba(180,200,180,.55);flex:1;}
+.iwl-lyr-ct{font-family:var(--C2);font-weight:700;font-size:12px;line-height:1;flex-shrink:0;}
+.iwl-toggle{width:26px;height:12px;border-radius:0;border:1px solid rgba(180,200,180,.3);position:relative;flex-shrink:0;transition:all .15s;cursor:pointer;background:rgba(0,0,0,0);}
+.iwl-toggle::before{content:'[';position:absolute;left:-1px;top:50%;transform:translateY(-50%);font-family:var(--MONO);font-size:9px;color:rgba(180,200,180,.4);line-height:1;}
+.iwl-toggle::after{content:'';position:absolute;top:2px;left:3px;width:7px;height:7px;border-radius:0;background:rgba(180,200,180,.75);transition:transform .15s;}
+.iwl-toggle.off{border-color:rgba(180,200,180,.1);}
+.iwl-toggle.off::after{transform:translateX(12px);background:rgba(180,200,180,.12);}
+/* right panel */
+.iwl-right{position:absolute;top:10px;right:10px;bottom:10px;width:260px;z-index:810;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.iwl-cas-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;pointer-events:all;}
+.iwl-cas{background:rgba(6,9,6,.94);border:1px solid rgba(140,160,140,.15);padding:8px 10px;text-align:center;}
+.iwl-cas-v{font-family:var(--C2);font-weight:700;font-size:22px;color:rgba(180,200,180,.75);line-height:1;}
+.iwl-cas-v.red{color:rgba(255,140,0,.9);}
+.iwl-cas-v.oran{color:var(--warn);}
+.iwl-cas-l{font-family:var(--HEAD);font-weight:700;font-size:6px;letter-spacing:.12em;color:rgba(180,200,180,.3);}
+.iwl-feed-tabs{display:flex;align-items:stretch;border-bottom:1px solid rgba(140,160,140,.1);flex-shrink:0;}
+.iwl-ftab{flex:1;display:flex;align-items:center;justify-content:center;padding:7px 4px;font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.12em;color:rgba(180,200,180,.3);cursor:pointer;border-right:1px solid rgba(180,200,180,.07);transition:all .15s;}
+.iwl-ftab:last-child{border-right:none;}
+.iwl-ftab:hover{color:rgba(180,200,180,.6);background:rgba(180,200,180,.03);}
+.iwl-ftab.on{color:rgba(200,220,200,.85);background:rgba(180,200,180,.04);border-bottom:1.5px solid rgba(180,200,180,.5);}
+.iwl-feed-hdr{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid rgba(140,160,140,.08);flex-shrink:0;}
+.iwl-feed-title{font-family:var(--HEAD);font-weight:700;font-size:7.5px;letter-spacing:.18em;color:rgba(180,200,180,.55);flex:1;}
+.iwl-feed-ct{font-family:var(--C2);font-weight:700;font-size:14px;color:rgba(180,200,180,.75);line-height:1;}
+.iwl-feed-scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(180,200,180,.08) transparent;min-height:0;}
+.iwl-feed-scroll::-webkit-scrollbar{width:2px;}
+.iwl-feed-scroll::-webkit-scrollbar-thumb{background:rgba(180,200,180,.08);}
+.iwl-evt{padding:7px 10px;border-bottom:1px solid rgba(180,200,180,.04);cursor:pointer;transition:background .1s;}
+.iwl-evt:hover{background:rgba(180,200,180,.03);}
+.iwl-evt-top{display:flex;align-items:center;gap:5px;margin-bottom:3px;}
+.iwl-evt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.iwl-evt-time{font-family:var(--MONO);font-size:6.5px;color:rgba(180,200,180,.28);margin-left:auto;}
+.iwl-evt-id{font-family:var(--HEAD);font-weight:700;font-size:6.5px;color:rgba(180,200,180,.35);letter-spacing:.1em;}
+.iwl-evt-title{font-family:var(--MONO);font-size:8.5px;color:rgba(200,220,200,.75);line-height:1.35;margin-bottom:3px;}
+.iwl-evt-tags{display:flex;gap:4px;flex-wrap:wrap;}
+.iwl-tag{font-family:var(--HEAD);font-weight:700;font-size:6px;letter-spacing:.08em;padding:1px 5px;border:1px solid;}
+.iwl-tag-strike{color:rgba(255,140,0,.8);border-color:rgba(255,140,0,.12);background:rgba(255,140,0,.03);}
+.iwl-tag-intercept{color:rgba(180,200,180,.5);border-color:rgba(180,200,180,.12);}
+.iwl-tag-launch{color:rgba(255,140,0,.8);border-color:rgba(255,140,0,.25);}
+.iwl-tag-conf{color:rgba(180,200,180,.28);border-color:rgba(180,200,180,.07);}
+.iwl-telem{background:rgba(6,9,6,.94);border:1px solid rgba(140,160,140,.15);pointer-events:all;padding:8px 11px;flex-shrink:0;}
+.iwl-telem-h{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.18em;color:rgba(180,200,180,.3);margin-bottom:6px;}
+.iwl-telem-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(180,200,180,.04);}
+.iwl-telem-k{font-family:var(--MONO);font-size:7px;color:rgba(180,200,180,.35);}
+.iwl-telem-v{font-family:var(--C2);font-weight:700;font-size:12px;line-height:1;}
+.iwl-bottom{height:34px;background:rgba(5,8,5,.98);border-top:1px solid rgba(140,160,140,.12);display:flex;align-items:center;gap:12px;padding:0 12px;flex-shrink:0;z-index:900;position:relative;}
+.iwl-datalink{font-family:var(--MONO);font-size:7.5px;color:rgba(180,200,180,.28);display:flex;align-items:center;gap:6px;letter-spacing:.08em;}
+.iwl-datalink-blink{color:rgba(180,200,180,.5);animation:blink .8s infinite;}
+.iwl-bot-div{flex:1;}
+.iwl-share-btn,.iwl-export-btn{display:flex;align-items:center;gap:5px;font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.12em;padding:3px 9px;border:1px solid rgba(180,200,180,.18);color:rgba(180,200,180,.45);cursor:pointer;background:transparent;transition:all .15s;}
+.iwl-share-btn:hover,.iwl-export-btn:hover{background:rgba(180,200,180,.05);color:rgba(200,220,200,.75);}
+.iwl-tabcontent{position:absolute;inset:0;background:rgba(5,8,5,.97);overflow-y:auto;z-index:850;display:none;padding:20px;}
+.iwl-tabcontent.active{display:block;}
+.iwl-table{width:100%;border-collapse:collapse;}
+.iwl-table th{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.15em;color:rgba(180,200,180,.3);padding:7px 10px;border-bottom:1px solid rgba(180,200,180,.12);text-align:left;}
+.iwl-table td{font-family:var(--MONO);font-size:8.5px;color:rgba(180,200,180,.55);padding:6px 10px;border-bottom:1px solid rgba(180,200,180,.04);}
+.iwl-table tr:hover td{background:rgba(180,200,180,.02);}
+.iwl-section-h{font-family:var(--HEAD);font-weight:700;font-size:9px;letter-spacing:.24em;color:rgba(200,220,200,.6);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(180,200,180,.12);}
+.iwl-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.iwl-stat-box{border:1px solid rgba(140,160,140,.15);padding:12px;text-align:center;background:rgba(6,10,6,.5);}
+.iwl-sb-v{font-family:var(--C2);font-weight:700;font-size:28px;line-height:1;margin-bottom:2px;}
+.iwl-sb-l{font-family:var(--HEAD);font-weight:700;font-size:6.5px;letter-spacing:.12em;color:rgba(180,200,180,.3);}
+
+/* ── PENTAGON PIZZA INDEX ── */
+.pizza-card{background:rgba(4,8,4,.97);border:1px solid rgba(140,160,140,.18);padding:12px;pointer-events:all;position:relative;overflow:hidden;}
+.pizza-card::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(196,255,44,.01) 3px,rgba(196,255,44,.01) 4px);pointer-events:none;}
+.pizza-hdr{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.2em;color:rgba(196,255,44,.5);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.pizza-hdr::before{content:'';width:4px;height:4px;background:var(--g);box-shadow:0 0 6px var(--g);animation:blink 1.4s infinite;}
+.pizza-val{font-family:var(--C2);font-weight:700;font-size:22px;color:var(--g);text-align:center;line-height:1;text-shadow:0 0 10px rgba(196,255,44,.35);}
+.pizza-sub{font-family:var(--MONO);font-size:6px;color:rgba(196,255,44,.28);text-align:center;letter-spacing:.08em;margin-top:2px;}
+.pizza-ticker{margin-top:8px;font-family:var(--MONO);font-size:6px;color:rgba(196,255,44,.22);letter-spacing:.06em;border-top:1px solid rgba(196,255,44,.07);padding-top:6px;}
+.pizza-ticker-row{display:flex;justify-content:space-between;padding:1px 0;}
+canvas#pizzaSlice{display:block;margin:0 auto 6px;}
+
+/* Leaflet overrides */
+.leaflet-container{background:#0a0d0a!important;}
+.leaflet-tile-pane{filter:brightness(.72) contrast(1.1) saturate(.08) grayscale(.9)!important;}
+.leaflet-control-zoom{border:1px solid rgba(196,255,44,.2)!important;background:rgba(8,10,4,.95)!important;border-radius:0!important;}
+.leaflet-control-zoom a{background:transparent!important;color:var(--g)!important;border-bottom:1px solid rgba(196,255,44,.1)!important;font-family:var(--MONO)!important;border-radius:0!important;width:24px!important;height:24px!important;line-height:24px!important;}
+.leaflet-control-zoom a:hover{background:rgba(196,255,44,.08)!important;}
+.leaflet-control-attribution{display:none!important;}
+.leaflet-popup-content-wrapper{background:rgba(6,8,2,.97)!important;border:1px solid rgba(196,255,44,.3)!important;border-radius:0!important;box-shadow:0 0 20px rgba(196,255,44,.1),0 0 1px rgba(196,255,44,.3)!important;padding:0!important;}
+.leaflet-popup-content{margin:0!important;}
+.leaflet-popup-tip-container{display:none!important;}
+.leaflet-popup-close-button{color:rgba(196,255,44,.4)!important;top:6px!important;right:8px!important;font-size:16px!important;}
+.leaflet-tooltip{background:rgba(6,8,2,.96)!important;border:1px solid rgba(196,255,44,.25)!important;border-radius:0!important;color:rgba(196,255,44,.8)!important;font-family:var(--MONO)!important;font-size:8.5px!important;padding:4px 8px!important;box-shadow:none!important;}
+.leaflet-tooltip::before{display:none!important;}
+.iwl-popup{font-family:'Share Tech Mono',monospace;padding:10px 14px;min-width:210px;}
+.iwl-popup-head{display:flex;align-items:center;gap:6px;padding-bottom:7px;border-bottom:1px solid rgba(196,255,44,.1);margin-bottom:7px;}
+.iwl-popup-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.iwl-popup-title{color:#C4FF2C;font-size:10px;font-weight:700;letter-spacing:.08em;}
+.iwl-popup-grid{display:grid;grid-template-columns:65px 1fr;gap:2px 6px;font-size:8px;}
+.iwl-popup-k{color:rgba(196,255,44,.35);}
+.iwl-popup-v{color:rgba(196,255,44,.75);}
+.iwl-popup-detail{margin-top:7px;padding-top:6px;border-top:1px solid rgba(196,255,44,.06);color:rgba(196,255,44,.45);font-size:7.5px;line-height:1.5;}
+
+/* ── ECONOMIC SECTION ── */
+.eco-section{position:relative;overflow:hidden;padding:20px 14px;border-top:1px solid rgba(255,140,0,.15);background:rgba(6,5,0,.85);}
+canvas.eco-noise{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.24;}
+.eco-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;position:relative;z-index:1;}
+.eco-ht{font-family:var(--HEAD);font-weight:700;font-size:9px;letter-spacing:.28em;color:rgba(255,140,0,.8);}
+.eco-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;position:relative;z-index:1;}
+.eco-half{}
+.eco-sub{font-family:var(--HEAD);font-weight:700;font-size:7.5px;letter-spacing:.2em;color:rgba(255,140,0,.5);margin-bottom:10px;}
+.CUR-ROW{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,140,0,.06);}
+.CUR-PAIR{font-family:var(--HEAD);font-weight:700;font-size:13px;letter-spacing:.1em;color:rgba(255,140,0,.9);width:36px;flex-shrink:0;}
+.CUR-META{flex:1;}
+.CUR-NAME{font-family:var(--HEAD);font-weight:600;font-size:7.5px;letter-spacing:.1em;color:rgba(255,140,0,.6);}
+.CUR-SPREAD{font-family:var(--MONO);font-size:6.5px;color:rgba(255,140,0,.3);}
+.CUR-VAL{font-family:var(--C2);font-weight:700;font-size:16px;color:rgba(255,140,0,.9);line-height:1;}
+.CUR-CHG{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.1em;}
+.UP{color:rgba(255,160,30,.85);}
+.DN{color:rgba(255,90,20,.75);}
+.rh-chart-wrap{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.rh-card{border:1px solid rgba(255,140,0,.1);padding:6px 8px;background:rgba(255,140,0,.02);}
+.rh-name{font-family:var(--HEAD);font-weight:700;font-size:6.5px;letter-spacing:.12em;color:rgba(255,140,0,.5);margin-bottom:3px;}
+.rh-val{font-family:var(--C2);font-weight:700;font-size:16px;line-height:1;}
+.rh-chg{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.1em;}
+.rh-svg{display:block;margin-top:2px;}
+.dre-box{margin-top:18px;position:relative;z-index:1;}
+.dre-sub{font-family:var(--HEAD);font-weight:700;font-size:7.5px;letter-spacing:.2em;color:rgba(255,140,0,.5);margin-bottom:10px;}
+.dre-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.dre-cell{border:1px solid rgba(255,140,0,.12);padding:10px;background:rgba(255,140,0,.02);}
+.dre-area{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.12em;color:rgba(255,140,0,.5);margin-bottom:4px;}
+.dre-v{font-family:var(--C2);font-weight:700;font-size:22px;color:rgba(255,140,0,.9);line-height:1;}
+.dre-chg{font-family:var(--HEAD);font-weight:700;font-size:7px;letter-spacing:.1em;}
+</style>
+</head>
+<body>
+<div class="scanlines"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="lockup">
+    <canvas id="markTop" width="32" height="32"></canvas>
+    <div><div class="lockup-word-top">HADAL</div><div class="lockup-sub">THREAT INTELLIGENCE TERMINAL</div></div>
+  </div>
+  <div class="tb-div"></div>
+  <div class="tb-alert">
+    <span class="tb-alert-icon">⚠</span>
+    <span class="tb-alert-t">DAY 10 · OP. EPIC FURY · MOST INTENSE STRIKES — GULF ACTIVE</span>
+  </div>
+  <div class="tb-div"></div>
+  <div class="tb-stats">
+    <div class="tb-stat"><div class="tb-stat-l">DEPTH</div><div class="tb-stat-v">10,924M</div></div>
+    <div class="tb-stat"><div class="tb-stat-l">PRESSURE</div><div class="tb-stat-v" id="pressure">10,924 BAR</div></div>
+    <div class="tb-stat"><div class="tb-stat-l">UTC</div><div id="clock" class="tb-stat-v" style="font-size:10px;"></div></div>
+  </div>
+</div>
+
+<div class="terminal">
+<!-- HERO -->
+<div class="hero-grid">
+
+  <!-- LEFT COLUMN -->
+  <div class="lc">
+    <canvas class="NOISE" id="lc-noise"></canvas>
+    <div class="brand-plate">
+      <div class="bp-name">HADAL INTELLIGENCE</div>
+      <div class="bp-tagline">Intelligence lives in the dark.</div>
+      <div class="bp-ver">v1.0.0 · MASTERBLOX CAPITAL · GULF THEATRE</div>
+    </div>
+    <div class="ti-block">
+      <div class="ti-lbl">◈ THREAT INDEX</div>
+      <div class="ti-big">91</div>
+      <div class="ti-sub">CRITICAL · ESCALATING</div>
+      <div class="ti-bar"><div class="ti-bar-fill"></div></div>
+    </div>
+    <div class="spec-block">
+      <div class="spec-lbl">S.P.E.C.I.A.L.</div>
+      <div class="spec-row"><span class="spec-k">STRENGTH</span><span class="spec-v" style="color:var(--warn)">09</span></div>
+      <div class="spec-row"><span class="spec-k">PERCEPTION</span><span class="spec-v">10</span></div>
+      <div class="spec-row"><span class="spec-k">ENDURANCE</span><span class="spec-v">07</span></div>
+      <div class="spec-row"><span class="spec-k">CHARISMA</span><span class="spec-v" style="color:var(--warn)">03</span></div>
+      <div class="spec-row"><span class="spec-k">INTELLIGENCE</span><span class="spec-v">10</span></div>
+      <div class="spec-row"><span class="spec-k">AGILITY</span><span class="spec-v">08</span></div>
+      <div class="spec-row"><span class="spec-k">LUCK</span><span class="spec-v" style="color:rgba(255,140,0,.9)">02</span></div>
+    </div>
+    <div class="sys-block">
+      <div class="sys-lbl">SYSTEM STATUS</div>
+      <div class="sys-row"><span class="sys-k">OSINT ENGINE</span><div class="sys-dot on"></div></div>
+      <div class="sys-row"><span class="sys-k">LEAFLET MAP</span><div class="sys-dot on"></div></div>
+      <div class="sys-row"><span class="sys-k">IRANWARLIVE FEED</span><div class="sys-dot warn" id="iwl-status-dot"></div></div>
+      <div class="sys-row"><span class="sys-k">THAAD NETWORK</span><div class="sys-dot off"></div></div>
+      <div class="sys-row"><span class="sys-k">ECON DATA</span><div class="sys-dot on"></div></div>
+    </div>
+  </div>
+
+  <!-- CENTER GLOBE -->
+  <div class="globe-wrap" style="background:radial-gradient(ellipse at center,rgba(196,255,44,.04) 0%,transparent 70%);">
+    <canvas id="outerTicks" width="520" height="520" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+    <canvas id="globe" width="420" height="420"></canvas>
+    <div class="globe-label">◈ GULF THEATRE · REAL-TIME OSINT</div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="rc">
+    <canvas class="NOISE" id="rc-noise"></canvas>
+    <div class="rc-block">
+      <div class="rc-lbl"><div class="HDR-DOT"></div>THAAD STATUS</div>
+      <div class="tsite"><span class="ts-k">JORDAN MUWAFFAQ</span><span class="ts-w">DESTROYED</span></div>
+      <div class="tsite"><span class="ts-k">UAE RUWAIS</span><span class="ts-w">HIT</span></div>
+      <div class="tsite"><span class="ts-k">UAE AL SADER</span><span class="ts-w">HIT</span></div>
+      <div class="tsite"><span class="ts-k">SAUDI SULTAN AB</span><span class="ts-w">SMOKE</span></div>
+      <div class="tsite"><span class="ts-k">QATAR UMM DAHAL</span><span class="ts-w">DESTROYED</span></div>
+    </div>
+    <div class="rc-block">
+      <div class="rc-lbl">SONAR</div>
+      <div class="sonar-wrap">
+        <canvas id="sonarC" width="140" height="140"></canvas>
+      </div>
+    </div>
+    <div class="rc-block">
+      <div class="rc-lbl">SIGNAL MONITOR</div>
+      <div id="sig-bars" class="sig-row"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+        <span style="font-family:var(--MONO);font-size:7px;color:var(--g3);" id="freq-lbl">FREQ: 4.625 kHz</span>
+        <span style="font-family:var(--HEAD);font-weight:700;font-size:7px;color:var(--g5);" id="sig-val">91/100</span>
+      </div>
+      <div style="font-family:var(--MONO);font-size:7.5px;color:var(--g5);margin-top:4px;" id="radio-msg">SIGNAL ACQUIRED · SECTOR ALPHA</div>
+      <div style="height:3px;background:var(--g07);margin-top:6px;"><div id="sig-fill" style="height:100%;background:var(--g5);width:91%;"></div></div>
+    </div>
+    <div class="rc-block" style="flex:1;">
+      <div class="rc-lbl">GCC INTERCEPTS</div>
+      <div id="gcc-rows" class="gcc-row"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MISSILE SECTION -->
+<div class="missile-section">
+  <div class="ms-hdr">
+    <div class="HDR-DOT"></div>
+    ◈ THEATRE KINETIC DATA · VERIFIED MoD + SAT
+    <span style="font-family:var(--MONO);font-size:7px;color:var(--g3);margin-left:auto;">FEB 28 – MAR 10, 2026</span>
+  </div>
+  <div class="mc-grid">
+    <!-- UAE -->
+    <div class="mc">
+      <canvas class="mc-noise" width="200" height="320"></canvas>
+      <div class="wtype-icon"><div class="ico-ballistic"><div class="ico-ballistic-exhaust"></div></div></div>
+      <div class="mc-inner" style="padding-right:32px;">
+        <div class="MCC">UAE<span class="MCS">UAE MoD</span></div>
+        <div class="MC-BIG" data-val="165">165</div><div class="MC-BIGL">INTERCEPTED</div>
+        <div class="mc-bk">
+          <div class="mc-br"><span class="mc-brl">BALLISTIC</span><div class="mc-sbar"><div class="mc-sfill" style="width:100%"></div></div><span class="mc-brv">165</span></div>
+          <div class="mc-br"><span class="mc-brl">CRUISE</span><div class="mc-sbar"><div class="mc-sfill" style="width:1%"></div></div><span class="mc-brv">2</span></div>
+          <div class="mc-br"><span class="mc-brl">DRONES</span><div class="mc-sbar"><div class="mc-sfill" style="width:100%"></div></div><span class="mc-brv">541</span></div>
+        </div>
+        <span class="CHIP C-WARN">35 TERRITORY IMPACTS</span>
+      </div>
+    </div>
+    <!-- KUWAIT -->
+    <div class="mc">
+      <canvas class="mc-noise" width="200" height="320"></canvas>
+      <div class="wtype-icon"><div class="ico-drone"><div class="ico-drone-body"></div><div class="ico-drone-arm" style="transform:rotate(45deg);left:0;"></div><div class="ico-drone-arm" style="transform:rotate(-45deg);right:0;"></div><div class="ico-drone-rotor" style="top:1px;left:1px;"></div><div class="ico-drone-rotor" style="top:1px;right:1px;"></div><div class="ico-drone-rotor" style="bottom:1px;left:1px;"></div><div class="ico-drone-rotor" style="bottom:1px;right:1px;"></div></div></div>
+      <div class="mc-inner" style="padding-right:32px;">
+        <div class="MCC">KUWAIT<span class="MCS">KWT MoD</span></div>
+        <div class="MC-BIG" data-val="97">97</div><div class="MC-BIGL">BALLISTIC INT.</div>
+        <div class="mc-bk">
+          <div class="mc-br"><span class="mc-brl">BALLISTIC</span><div class="mc-sbar"><div class="mc-sfill" style="width:59%"></div></div><span class="mc-brv">97</span></div>
+          <div class="mc-br"><span class="mc-brl">DRONES</span><div class="mc-sbar"><div class="mc-sfill" style="width:34%"></div></div><span class="mc-brv">283</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- QATAR -->
+    <div class="mc">
+      <canvas class="mc-noise" width="200" height="320"></canvas>
+      <div class="wtype-icon"><div class="ico-cruise"><div class="ico-cruise-body"></div><div class="ico-cruise-nose"></div><div class="ico-cruise-wing"></div><div class="ico-cruise-tail"></div></div></div>
+      <div class="mc-inner" style="padding-right:32px;">
+        <div class="MCC">QATAR<span class="MCS">QTR MoD</span></div>
+        <div class="MC-BIG" data-val="18">18</div><div class="MC-BIGL">ENGAGED</div>
+        <div class="mc-bk">
+          <div class="mc-br"><span class="mc-brl">TOTAL</span><div class="mc-sbar"><div class="mc-sfill" style="width:11%"></div></div><span class="mc-brv">18</span></div>
+        </div>
+        <span class="CHIP C-WARN">UEWR DESTROYED</span>
+      </div>
+    </div>
+    <!-- BAHRAIN -->
+    <div class="mc">
+      <canvas class="mc-noise" width="200" height="320"></canvas>
+      <div class="wtype-icon"><div class="ico-intercept"><div class="ico-intercept-ring"></div><div class="ico-intercept-x"></div></div></div>
+      <div class="mc-inner" style="padding-right:32px;">
+        <div class="MCC">BAHRAIN<span class="MCS">BHR MoD</span></div>
+        <div class="MC-BIG" data-val="45">45</div><div class="MC-BIGL">MISSILES INT.</div>
+        <div class="mc-bk">
+          <div class="mc-br"><span class="mc-brl">MISSILES</span><div class="mc-sbar"><div class="mc-sfill" style="width:100%"></div></div><span class="mc-brv">45</span></div>
+          <div class="mc-br"><span class="mc-brl">DRONES</span><div class="mc-sbar"><div class="mc-sfill" style="width:20%"></div></div><span class="mc-brv">9</span></div>
+        </div>
+        <span class="CHIP C-WARN">5TH FLEET HQ HIT</span>
+      </div>
+    </div>
+    <!-- THAAD -->
+    <div class="mc">
+      <canvas class="mc-noise" width="200" height="320"></canvas>
+      <div class="wtype-icon"><div class="ico-radar"><div class="ico-radar-dish"></div><div class="ico-radar-post"></div><div class="ico-radar-base"></div><div class="ico-radar-dot"></div></div></div>
+      <div class="mc-inner" style="padding-right:32px;">
+        <div class="MCC">THAAD NET<span class="MCS">SAT/CNN</span></div>
+        <div class="MC-BIG warn" data-val="DEG">DEG.</div><div class="MC-BIGL">RADAR COVERAGE</div>
+        <div style="margin-top:8px;">
+          <div class="tsite"><span class="ts-k" style="font-size:7px;">MUWAFFAQ</span><span class="ts-w">DESTR.</span></div>
+          <div class="tsite"><span class="ts-k" style="font-size:7px;">UAE RUWAIS</span><span class="ts-w">HIT</span></div>
+          <div class="tsite"><span class="ts-k" style="font-size:7px;">UAE SADER</span><span class="ts-w">HIT</span></div>
+          <div class="tsite"><span class="ts-k" style="font-size:7px;">SULTAN AB</span><span class="ts-w">SMOKE</span></div>
+          <div class="tsite"><span class="ts-k" style="font-size:7px;">UMM DAHAL</span><span class="ts-w">DESTR.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="m-agg">
+    <div class="ag"><div class="ag-l">TOTAL BALLISTIC</div><div class="ag-v">325</div></div>
+    <div class="ag"><div class="ag-l">TOTAL DRONES</div><div class="ag-v">833</div></div>
+    <div class="ag"><div class="ag-l">CRUISE</div><div class="ag-v">2</div></div>
+    <div class="ag"><div class="ag-l">TERRITORY IMPACTS</div><div class="ag-v warn">35+</div></div>
+    <div class="ag"><div class="ag-l">RADAR NODES LOST</div><div class="ag-v warn">5</div></div>
+  </div>
+</div>
+
+<!-- SEP BAND -->
+<div class="sep-band">
+  <canvas id="sepStatic"></canvas>
+  <div class="sep-overlay">
+    <svg class="birdmissile" width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="24" r="22" stroke="rgba(196,255,44,.3)" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <circle cx="24" cy="24" r="15" stroke="rgba(196,255,44,.18)" stroke-width="1"/>
+      <line x1="24" y1="2" x2="24" y2="9" stroke="rgba(196,255,44,.55)" stroke-width="1.5"/>
+      <line x1="24" y1="39" x2="24" y2="46" stroke="rgba(196,255,44,.55)" stroke-width="1.5"/>
+      <line x1="2" y1="24" x2="9" y2="24" stroke="rgba(196,255,44,.55)" stroke-width="1.5"/>
+      <line x1="39" y1="24" x2="46" y2="24" stroke="rgba(196,255,44,.55)" stroke-width="1.5"/>
+      <rect x="21" y="10" width="6" height="20" rx="3" fill="rgba(196,255,44,.12)" stroke="rgba(196,255,44,.85)" stroke-width="1.5"/>
+      <polygon points="21,27 15,34 21,32" fill="rgba(196,255,44,.3)" stroke="rgba(196,255,44,.5)" stroke-width="1"/>
+      <polygon points="27,27 33,34 27,32" fill="rgba(196,255,44,.3)" stroke="rgba(196,255,44,.5)" stroke-width="1"/>
+      <circle cx="24" cy="11" r="2.5" fill="rgba(196,255,44,.95)"/>
+      <circle cx="24" cy="30" r="3.5" fill="rgba(255,140,0,.35)" stroke="rgba(255,140,0,.65)" stroke-width="1"/>
+    </svg>
+    <div class="sep-vtx"></div>
+    <div class="sep-msg-block">
+      <div class="sep-icon-wrap">THAAD DEGRADED</div>
+      <div class="sep-txt">5 NODES LOST · AIR DEFENCE AT 61%</div>
+    </div>
+    <div class="sep-vtx"></div>
+    <div class="sep-msg-block">
+      <div class="sep-icon-wrap">1,160 INTERCEPTIONS</div>
+      <div class="sep-txt">ACTIVE SINCE FEB 28 · 5 GCC STATES</div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:10px;letter-spacing:.22em;color:rgba(196,255,44,.14);white-space:nowrap;pointer-events:none;z-index:2;">Intelligence lives in the dark.</div>
+</div>
+
+<!-- LOWER GRID -->
+<div class="grid">
+  <!-- THREAT FEED -->
+  <div class="panel">
+    <div class="TABS">
+      <div class="TAB on" onclick="fr(this,'ALL')">ALL</div>
+      <div class="TAB" onclick="fr(this,'UAE')">UAE</div>
+      <div class="TAB" onclick="fr(this,'GULF')">GULF</div>
+      <div class="TAB" onclick="fr(this,'IRAN')">IRAN</div>
+      <div class="TAB" onclick="fr(this,'RED SEA')">RED SEA</div>
+      <div class="TAB" onclick="fr(this,'ISRAEL')">ISRAEL</div>
+      <div class="TAB-R"></div>
+      <div style="padding:0 14px;font-family:var(--HEAD);font-weight:700;font-size:8px;color:var(--g3);letter-spacing:.1em;align-self:center;" id="feed-count">— ACTIVE</div>
+      <div class="HDR-DOT" style="margin-right:14px;align-self:center;"></div>
+    </div>
+    <div class="THEAD">
+      <span style="width:72px;flex-shrink:0;">ID</span>
+      <span style="width:62px;flex-shrink:0;">REGION</span>
+      <span style="flex:1;">TYPE</span>
+      <span style="width:80px;flex-shrink:0;">SEVERITY</span>
+      <span style="width:36px;flex-shrink:0;">SRC</span>
+      <span style="width:46px;text-align:right;">CONF</span>
+    </div>
+    <div id="feed"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MARIANA TRENCH VIEWER — DEEP-SEA INTELLIGENCE LAYER
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="iwl-wrap">
+
+    <!-- nav -->
+    <div class="iwl-nav">
+      <!-- glyph left anchor -->
+      <div class="iwl-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" class="iwl-logo-glyph">
+          <!-- outer ring -->
+          <circle cx="14" cy="14" r="12.5" stroke="rgba(160,190,160,.55)" stroke-width="1"/>
+          <!-- sonar rings — 3 concentric, fading -->
+          <circle cx="14" cy="14" r="9" stroke="rgba(160,190,160,.35)" stroke-width=".7"/>
+          <circle cx="14" cy="14" r="5.5" stroke="rgba(160,190,160,.25)" stroke-width=".6"/>
+          <!-- vertical depth axis -->
+          <line x1="14" y1="1.5" x2="14" y2="26.5" stroke="rgba(160,190,160,.3)" stroke-width=".6"/>
+          <!-- horizontal -->
+          <line x1="1.5" y1="14" x2="26.5" y2="14" stroke="rgba(160,190,160,.15)" stroke-width=".5"/>
+          <!-- nadir point — the descent marker -->
+          <circle cx="14" cy="20" r="2.2" fill="rgba(160,190,160,.8)"/>
+          <!-- small tick marks at cardinal points on outer ring -->
+          <line x1="14" y1="1.5" x2="14" y2="4" stroke="rgba(160,190,160,.6)" stroke-width="1.2"/>
+          <line x1="14" y1="24" x2="14" y2="26.5" stroke="rgba(160,190,160,.4)" stroke-width=".8"/>
+          <line x1="1.5" y1="14" x2="4" y2="14" stroke="rgba(160,190,160,.4)" stroke-width=".8"/>
+          <line x1="24" y1="14" x2="26.5" y2="14" stroke="rgba(160,190,160,.4)" stroke-width=".8"/>
+          <!-- depth label -->
+          <text x="16" y="21.5" font-family="monospace" font-size="3.5" fill="rgba(160,190,160,.4)" letter-spacing=".04em">10K</text>
+        </svg>
+      </div>
+      <!-- CENTERED TITLE — absolute -->
+      <div style="position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;">
+        <div style="font-family:var(--HEAD);font-weight:700;font-size:13px;letter-spacing:.18em;color:rgba(200,220,200,.82);line-height:1;">MARIANA TRENCH VIEWER</div>
+        <div style="font-family:var(--MONO);font-size:6.5px;letter-spacing:.22em;color:rgba(160,180,160,.32);margin-top:2px;">HADAL DEEP-SEA INTELLIGENCE LAYER</div>
+      </div>
+      <div class="iwl-tabs">
+        <div class="iwl-tab on" onclick="iwlTab(this,'map')">Tactical Map</div>
+        <div class="iwl-tab" onclick="iwlTab(this,'airspace')">Airspace Status</div>
+        <div class="iwl-tab" onclick="iwlTab(this,'casualties')">Participants &amp; Casualties</div>
+        <div class="iwl-tab" onclick="iwlTab(this,'posturing')">Global Posturing</div>
+      </div>
+      <div class="iwl-nav-r">
+        <div class="iwl-sync"><div class="iwl-sync-dot" id="iwl-dot"></div><span id="iwl-sync-lbl">SYNCING...</span></div>
+        <button class="iwl-btn" onclick="calcThreat()">CALC</button>
+        <button class="iwl-btn warn" onclick="exportSitrep()">⬇ EXPORT SITREP</button>
+      </div>
+    </div>
+
+    <!-- IWL map area -->
+    <div class="iwl-map-area">
+      <div id="iwl-map"></div>
+
+      <!-- Tab content overlays (non-map tabs) -->
+      <div class="iwl-tabcontent" id="tab-airspace">
+        <div class="iwl-section-h">REGIONAL AIRSPACE STATUS</div>
+        <p style="font-family:var(--MONO);font-size:8px;color:var(--g3);margin-bottom:14px;">Live tracking of commercial airspace closures and flight restrictions.</p>
+        <table class="iwl-table">
+          <thead><tr><th>COUNTRY</th><th>STATUS</th><th>LAST UPDATED</th><th>FLIGHT LEVEL</th><th>SOURCE</th></tr></thead>
+          <tbody>
+            <tr><td>IRAN</td><td style="color:rgba(255,140,0,.9);">■ CLOSED</td><td>MAR 10, 03:14 UTC</td><td>ALL</td><td>NOTAM</td></tr>
+            <tr><td>IRAQ</td><td style="color:rgba(255,140,0,.9);">■ CLOSED</td><td>MAR 09, 21:00 UTC</td><td>ALL</td><td>NOTAM</td></tr>
+            <tr><td>YEMEN</td><td style="color:rgba(255,140,0,.9);">■ CLOSED</td><td>MAR 01, 00:00 UTC</td><td>ALL</td><td>ICAO</td></tr>
+            <tr><td>JORDAN</td><td style="color:rgba(255,140,0,.7);">◆ RESTRICTED</td><td>MAR 08, 18:30 UTC</td><td>FL200–FL400</td><td>RJAC</td></tr>
+            <tr><td>UAE</td><td style="color:rgba(255,140,0,.7);">◆ RESTRICTED</td><td>MAR 10, 06:00 UTC</td><td>PARTIAL</td><td>GCAA</td></tr>
+            <tr><td>QATAR</td><td style="color:rgba(255,140,0,.7);">◆ RESTRICTED</td><td>MAR 03, 14:00 UTC</td><td>PARTIAL</td><td>CAA</td></tr>
+            <tr><td>KUWAIT</td><td style="color:var(--g5);">● OPEN</td><td>MAR 07, 08:00 UTC</td><td>ALL</td><td>DGCA</td></tr>
+            <tr><td>SAUDI ARABIA</td><td style="color:var(--g5);">● OPEN</td><td>MAR 06, 12:00 UTC</td><td>ALL</td><td>GACA</td></tr>
+            <tr><td>BAHRAIN</td><td style="color:rgba(255,140,0,.7);">◆ RESTRICTED</td><td>MAR 05, 09:00 UTC</td><td>FL000–FL100</td><td>CAA</td></tr>
+            <tr><td>OMAN</td><td style="color:var(--g5);">● OPEN</td><td>MAR 08, 00:00 UTC</td><td>ALL</td><td>CAA</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="iwl-tabcontent" id="tab-casualties">
+        <div class="iwl-section-h">PARTICIPANTS &amp; CASUALTIES</div>
+        <p style="font-family:var(--MONO);font-size:8px;color:var(--g3);margin-bottom:14px;">Automated intelligence estimates based on active geopolitical events.</p>
+        <div class="iwl-stat-grid">
+          <div class="iwl-stat-box"><div class="iwl-sb-v" style="color:rgba(255,140,0,.9);">2,340+</div><div class="iwl-sb-l">MILITARY KIA (EST)</div></div>
+          <div class="iwl-stat-box"><div class="iwl-sb-v" style="color:var(--warn);">1,100+</div><div class="iwl-sb-l">CIVILIAN KIA (IRAN)</div></div>
+          <div class="iwl-stat-box"><div class="iwl-sb-v" style="color:var(--g);">1,160</div><div class="iwl-sb-l">INTERCEPTS CONFIRMED</div></div>
+          <div class="iwl-stat-box"><div class="iwl-sb-v" style="color:var(--g5);">DAY 10</div><div class="iwl-sb-l">OP. EPIC FURY</div></div>
+        </div>
+        <table class="iwl-table">
+          <thead><tr><th>ENTITY</th><th>ALLIANCE</th><th>EST. TROOPS</th><th>EST. AIRCRAFT</th><th>ARMOR</th><th>MIL CASUALTIES</th><th>CIV CASUALTIES</th><th>STATUS</th></tr></thead>
+          <tbody>
+            <tr><td>IRAN (IRGC)</td><td>AXIS</td><td>190,000</td><td>340</td><td>1,650</td><td style="color:rgba(255,140,0,.8);">580+ (EST)</td><td style="color:var(--warn);">1,100+</td><td style="color:var(--warn);">OFFENSIVE</td></tr>
+            <tr><td>USA (CENTCOM)</td><td>COALITION</td><td>45,000</td><td>280</td><td>420</td><td style="color:rgba(255,140,0,.8);">24 (KIA)</td><td>0</td><td style="color:var(--g5);">OP. EPIC FURY</td></tr>
+            <tr><td>UAE</td><td>COALITION</td><td>63,000</td><td>95</td><td>545</td><td style="color:rgba(255,140,0,.8);">41</td><td style="color:var(--warn);">38</td><td style="color:var(--warn);">UNDER ATTACK</td></tr>
+            <tr><td>SAUDI ARABIA</td><td>COALITION</td><td>227,000</td><td>348</td><td>1,142</td><td style="color:rgba(255,140,0,.8);">29</td><td style="color:var(--warn);">12</td><td style="color:rgba(255,140,0,.7);">ELEVATED</td></tr>
+            <tr><td>ISRAEL (IDF)</td><td>COALITION</td><td>170,000</td><td>339</td><td>1,700</td><td style="color:rgba(255,140,0,.8);">156</td><td style="color:var(--warn);">94</td><td style="color:var(--warn);">MULTI-FRONT</td></tr>
+            <tr><td>HOUTHI (YEMEN)</td><td>AXIS</td><td>200,000</td><td>12</td><td>80</td><td style="color:rgba(255,140,0,.8);">387</td><td style="color:var(--warn);">—</td><td style="color:var(--warn);">OFFENSIVE</td></tr>
+            <tr><td>HEZBOLLAH</td><td>AXIS</td><td>100,000</td><td>0</td><td>0</td><td style="color:rgba(255,140,0,.8);">612</td><td style="color:var(--warn);">—</td><td style="color:rgba(255,140,0,.9);">DEGRADED</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="iwl-tabcontent" id="tab-posturing">
+        <div class="iwl-section-h">GLOBAL POSTURING DASHBOARD</div>
+        <p style="font-family:var(--MONO);font-size:8px;color:var(--g3);margin-bottom:14px;">Automated parsing of diplomatic and military statements.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div>
+            <div style="font-family:var(--HEAD);font-weight:700;font-size:7.5px;letter-spacing:.18em;color:var(--g3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(196,255,44,.1);">ESCALATION POSTURES</div>
+            <div style="display:flex;flex-direction:column;gap:6px;" id="posturing-list"></div>
+          </div>
+          <div>
+            <div style="font-family:var(--HEAD);font-weight:700;font-size:7.5px;letter-spacing:.18em;color:var(--g3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(196,255,44,.1);">DIPLOMATIC SIGNALS</div>
+            <div style="display:flex;flex-direction:column;gap:6px;" id="diplomatic-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Left floating panel: Map Layers -->
+      <div class="iwl-left">
+        <div class="iwl-panel">
+          <div class="iwl-ph" onclick="togglePanel(this)">
+            <span class="iwl-ph-t">Map Layers</span>
+            <span class="iwl-ph-arrow open">▾</span>
+          </div>
+          <div class="iwl-layer-body" id="layer-body">
+            <div class="iwl-lyr" data-layer="satellite" onclick="iwlToggle(this)">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" fill="rgba(180,200,180,.06)" stroke="rgba(180,200,180,.45)" stroke-width="1"/><line x1="1" y1="4" x2="11" y2="4" stroke="rgba(180,200,180,.25)" stroke-width=".6"/><line x1="1" y1="7" x2="11" y2="7" stroke="rgba(180,200,180,.25)" stroke-width=".6"/><line x1="4" y1="1" x2="4" y2="11" stroke="rgba(180,200,180,.25)" stroke-width=".6"/><line x1="7" y1="1" x2="7" y2="11" stroke="rgba(180,200,180,.25)" stroke-width=".6"/></svg></div>
+              <span class="iwl-lyr-t">Satellite Terrain</span>
+              <div class="iwl-toggle" id="tog-satellite"></div>
+            </div>
+            <div class="iwl-lyr" data-layer="missile" onclick="iwlToggle(this)">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><line x1="6" y1="1" x2="6" y2="9" stroke="rgba(180,200,180,.8)" stroke-width="1.5" stroke-linecap="round"/><polygon points="4,7 6,11 8,7" fill="rgba(180,200,180,.1)" stroke="rgba(180,200,180,.6)" stroke-width=".8"/><line x1="3" y1="5" x2="1" y2="7" stroke="rgba(180,200,180,.45)" stroke-width="1"/><line x1="9" y1="5" x2="11" y2="7" stroke="rgba(180,200,180,.45)" stroke-width="1"/></svg></div>
+              <span class="iwl-lyr-t">Missile Strike</span>
+              <span class="iwl-lyr-ct" style="color:rgba(180,200,180,.65);">10</span>
+              <div class="iwl-toggle" id="tog-missile"></div>
+            </div>
+            <div class="iwl-lyr" data-layer="airstrike" onclick="iwlToggle(this)">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,1 11,9 1,9" fill="rgba(180,200,180,.06)" stroke="rgba(180,200,180,.7)" stroke-width="1"/><line x1="6" y1="4" x2="6" y2="7" stroke="rgba(180,200,180,.8)" stroke-width="1.2"/></svg></div>
+              <span class="iwl-lyr-t">Air Strike</span>
+              <span class="iwl-lyr-ct" style="color:rgba(180,200,180,.65);">6</span>
+              <div class="iwl-toggle" id="tog-airstrike"></div>
+            </div>
+            <div class="iwl-lyr" data-layer="ground" onclick="iwlToggle(this)">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><rect x="2" y="5" width="8" height="5" rx="1" fill="rgba(180,200,180,.06)" stroke="rgba(180,200,180,.5)" stroke-width="1"/><rect x="1" y="7" width="2" height="2" rx=".5" fill="rgba(180,200,180,.3)"/><rect x="9" y="7" width="2" height="2" rx=".5" fill="rgba(180,200,180,.3)"/><line x1="4" y1="5" x2="4" y2="2" stroke="rgba(180,200,180,.45)" stroke-width="1"/><line x1="4" y1="2" x2="7" y2="2" stroke="rgba(180,200,180,.45)" stroke-width="1"/></svg></div>
+              <span class="iwl-lyr-t">Ground Forces</span>
+              <span class="iwl-lyr-ct" style="color:rgba(180,200,180,.65);">14</span>
+              <div class="iwl-toggle" id="tog-ground"></div>
+            </div>
+            <div class="iwl-lyr" data-layer="intercept" onclick="iwlToggle(this)">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,1 11,6 6,11 1,6" fill="rgba(180,200,180,.06)" stroke="rgba(180,200,180,.7)" stroke-width="1"/><line x1="3.5" y1="3.5" x2="8.5" y2="8.5" stroke="rgba(180,200,180,.8)" stroke-width="1"/><line x1="8.5" y1="3.5" x2="3.5" y2="8.5" stroke="rgba(180,200,180,.8)" stroke-width="1"/></svg></div>
+              <span class="iwl-lyr-t">Interception</span>
+              <span class="iwl-lyr-ct" style="color:rgba(180,200,180,.65);">1160</span>
+              <div class="iwl-toggle" id="tog-intercept"></div>
+            </div>
+            <div class="iwl-lyr" data-layer="combatants" onclick="iwlToggle(this)">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="4" r="2.5" fill="rgba(180,200,180,.06)" stroke="rgba(180,200,180,.6)" stroke-width="1"/><path d="M2,11 C2,8 10,8 10,11" fill="rgba(180,200,180,.06)" stroke="rgba(180,200,180,.6)" stroke-width="1"/></svg></div>
+              <span class="iwl-lyr-t">Active Combatants</span>
+              <span class="iwl-lyr-ct" style="color:rgba(180,200,180,.65);">7</span>
+              <div class="iwl-toggle" id="tog-combatants"></div>
+            </div>
+            <!-- DIPLOMATIC — special purple treatment -->
+            <div class="iwl-lyr iwl-lyr-diplomatic" data-layer="diplomatic" onclick="iwlToggle(this)" style="border-top:1px solid rgba(180,100,255,.12);background:rgba(140,60,220,.04);">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,1 11,4.5 9,10 3,10 1,4.5" fill="rgba(180,100,255,.12)" stroke="rgba(200,130,255,.75)" stroke-width="1"/><circle cx="6" cy="5.5" r="1.2" fill="rgba(200,130,255,.5)"/></svg></div>
+              <span class="iwl-lyr-t" style="color:rgba(200,130,255,.8);text-shadow:0 0 8px rgba(200,100,255,.35);letter-spacing:.12em;">Diplomatic Actors</span>
+              <span class="iwl-lyr-ct" style="color:rgba(210,140,255,.95);text-shadow:0 0 6px rgba(200,100,255,.5);">4</span>
+              <div class="iwl-toggle" id="tog-diplomatic" style="border-color:rgba(200,130,255,.35);" ></div>
+            </div>
+            <div class="iwl-lyr" data-layer="airspace-lyr" onclick="iwlToggle(this)">
+              <div class="iwl-lyr-icon"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M1,6 Q3,2 6,2 Q9,2 11,6" fill="rgba(180,200,180,.04)" stroke="rgba(180,200,180,.5)" stroke-width="1" stroke-dasharray="2 1.5"/><path d="M1,6 Q3,10 6,10 Q9,10 11,6" fill="rgba(180,200,180,.04)" stroke="rgba(180,200,180,.3)" stroke-width=".8" stroke-dasharray="2 1.5"/></svg></div>
+              <span class="iwl-lyr-t">Airspace Closed</span>
+              <span class="iwl-lyr-ct" style="color:rgba(180,200,180,.65);">6</span>
+              <div class="iwl-toggle" id="tog-airspace-lyr"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right floating panel: Intel Feed + Telemetry -->
+      <div class="iwl-right">
+        <!-- Casualty counters -->
+        <div class="iwl-cas-grid iwl-panel" style="display:grid;">
+          <div class="iwl-cas"><div class="iwl-cas-v red" id="cas-mil">1,847</div><div class="iwl-cas-l">MILITARY</div></div>
+          <div class="iwl-cas"><div class="iwl-cas-v oran" id="cas-civ">423</div><div class="iwl-cas-l">CIVILIANS</div></div>
+          <div class="iwl-cas"><div class="iwl-cas-v" id="cas-ent">11</div><div class="iwl-cas-l">ENTITIES</div></div>
+        </div>
+
+        <!-- Intel feed -->
+        <div class="iwl-feed-wrap">
+          <canvas class="NOISE" id="feed-noise"></canvas>
+          <div class="iwl-feed-tabs">
+            <div class="iwl-ftab on" onclick="iwlFtab(this,'mil')"> Military</div>
+            <div class="iwl-ftab" onclick="iwlFtab(this,'civ')">Civilians</div>
+            <div class="iwl-ftab" onclick="iwlFtab(this,'ent')">Entities</div>
+          </div>
+          <div class="iwl-feed-hdr">
+            <div class="iwl-sync-dot"></div>
+            <span class="iwl-feed-title">Intel Feed</span>
+            <span class="iwl-feed-ct" id="iwl-feed-ct">—</span>
+          </div>
+          <div class="iwl-feed-scroll" id="iwl-feed"></div>
+        </div>
+
+        <!-- Tactical Telemetry -->
+        <div class="iwl-telem">
+          <div class="iwl-telem-h">◈ TACTICAL TELEMETRY</div>
+          <div class="iwl-telem-row"><span class="iwl-telem-k">THEATRE THREAT</span><span class="iwl-telem-v" style="color:var(--warn);">CRITICAL</span></div>
+          <div class="iwl-telem-row"><span class="iwl-telem-k">AIR DEF COVER</span><span class="iwl-telem-v" style="color:rgba(255,140,0,.7);">61%</span></div>
+          <div class="iwl-telem-row"><span class="iwl-telem-k">ACTIVE VECTORS</span><span class="iwl-telem-v" style="color:rgba(255,140,0,.8);">8</span></div>
+          <div class="iwl-telem-row"><span class="iwl-telem-k">OSINT FEEDS</span><span class="iwl-telem-v" style="color:var(--g);">44</span></div>
+          <div class="iwl-telem-row"><span class="iwl-telem-k">LAST STRIKE</span><span class="iwl-telem-v" style="color:var(--g5);" id="last-strike">—</span></div>
+        </div>
+
+        <!-- PENTAGON PIZZA INDEX -->
+        <div class="pizza-card">
+          <div class="pizza-hdr">◈ PENTAGON PIZZA INDEX</div>
+          <canvas id="pizzaSlice" width="110" height="90"></canvas>
+          <div class="pizza-val" id="pizza-val">$18.40</div>
+          <div class="pizza-sub">ARLINGTON VA · SLICE PRICE · WAR-ADJUSTED</div>
+          <div class="pizza-ticker">
+            <div class="pizza-ticker-row"><span>▲ WAR PREMIUM</span><span style="color:rgba(196,255,44,.5);">+$2.10</span></div>
+            <div class="pizza-ticker-row"><span>BASELINE (FY24)</span><span>$16.30</span></div>
+            <div class="pizza-ticker-row"><span>LAST UPDATE</span><span id="pizza-time">—</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /iwl-map-area -->
+
+    <!-- IWL bottom status bar -->
+    <div class="iwl-bottom">
+      <div class="iwl-datalink">
+        <span class="iwl-datalink-blink">█</span>
+        <span id="iwl-datalink-t">ESTABLISHING SECURE DATALINK...</span>
+      </div>
+      <div class="iwl-bot-div"></div>
+      <button class="iwl-share-btn"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="flex-shrink:0"><circle cx="5" cy="5" r="3.5" stroke="rgba(255,140,0,.8)" stroke-width="1"/><line x1="5" y1="1" x2="5" y2="9" stroke="rgba(255,140,0,.5)" stroke-width=".8"/><line x1="1" y1="5" x2="9" y2="5" stroke="rgba(255,140,0,.5)" stroke-width=".8"/></svg> SHARE LIVE MAP</button>
+      <button class="iwl-export-btn" onclick="exportSitrep()">⬇ EXPORT TACTICAL SITREP</button>
+    </div>
+
+  </div><!-- /iwl-wrap -->
+
+</div><!-- /grid -->
+
+<!-- ECONOMIC SECTION -->
+<div class="eco-section">
+  <canvas class="eco-noise" id="ecoNoise"></canvas>
+  <div class="eco-head">
+    <span class="eco-ht">◈ ECONOMIC INTELLIGENCE</span>
+    <span style="font-family:var(--HEAD);font-weight:700;font-size:8px;color:rgba(255,140,0,.4);letter-spacing:.16em;">LIVE · WAR-ADJUSTED</span>
+  </div>
+  <div class="eco-grid">
+    <div class="eco-half">
+      <div class="eco-sub">WORLD RESERVE CURRENCIES</div>
+      <div class="CUR-ROW"><div class="CUR-PAIR">USD</div><div class="CUR-META"><div class="CUR-NAME">US DOLLAR — GLOBAL BASE RESERVE</div><div class="CUR-SPREAD">BID 3.6724 · ASK 3.6726 · SPREAD 0.0002</div></div><div style="text-align:right;"><div class="CUR-VAL">3.6725</div><div class="CUR-CHG UP">▲ PEGGED</div></div></div>
+      <div class="CUR-ROW"><div class="CUR-PAIR">EUR</div><div class="CUR-META"><div class="CUR-NAME">EURO — WAR PREMIUM PRICED IN</div><div class="CUR-SPREAD">BID 1.0838 · ASK 1.0844 · SPREAD 0.0006</div></div><div style="text-align:right;"><div class="CUR-VAL">1.0841</div><div class="CUR-CHG DN">▼ -0.31%</div></div></div>
+      <div class="CUR-ROW"><div class="CUR-PAIR">GBP</div><div class="CUR-META"><div class="CUR-NAME">STERLING — RISK-OFF POSITIONING</div><div class="CUR-SPREAD">BID 1.2670 · ASK 1.2676 · SPREAD 0.0006</div></div><div style="text-align:right;"><div class="CUR-VAL">1.2673</div><div class="CUR-CHG UP">▲ +0.12%</div></div></div>
+    </div>
+    <div class="eco-half">
+      <div class="eco-sub">GULF ECONOMIC INDEX</div>
+      <div class="rh-chart-wrap" id="gulf-charts"></div>
+    </div>
+  </div>
+  <div class="dre-box">
+    <div class="dre-sub">◈ DUBAI REAL ESTATE INDEX — WAR PREMIUM MONITOR</div>
+    <div class="dre-grid" id="dre-grid"></div>
+    <div style="margin-top:18px;padding-top:10px;border-top:1px solid rgba(255,140,0,.06);text-align:right;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:11px;letter-spacing:.18em;color:rgba(255,140,0,.16);">At 10,924 metres, only the truth survives.</div>
+  </div>
+</div>
+</div><!-- /terminal -->
+
+<script>
+/* ══ MARK ══ */
+function drawMark(id,W){
+  const C=document.getElementById(id);if(!C)return;
+  C.width=W;C.height=W;
+  const x=C.getContext('2d'),cx=W/2,cy=W/2,R=W*.38,LW=Math.max(W*.04,.7);
+  let t=0;
+  function frame(){
+    x.clearRect(0,0,W,W);
+    const breath=.5+Math.sin(t*1.6)*.5;
+    const gapHalf=Math.PI*.11,down=Math.PI*.5;
+    x.beginPath();x.arc(cx,cy,R,down+gapHalf,down-gapHalf+Math.PI*2);
+    x.strokeStyle='rgba(196,255,44,.88)';x.lineWidth=LW;x.setLineDash([]);x.stroke();
+    if(W>=28){
+      x.beginPath();x.arc(cx,cy,R*.5,Math.PI*1.08,Math.PI*1.92);
+      x.strokeStyle='rgba(196,255,44,.28)';x.lineWidth=Math.max(LW*.55,.5);
+      x.setLineDash([W*.028,W*.038]);x.stroke();x.setLineDash([]);
+    }
+    x.beginPath();x.moveTo(cx,cy-R*.9);x.lineTo(cx,cy+R*.9);
+    x.strokeStyle='rgba(196,255,44,.2)';x.lineWidth=Math.max(LW*.5,.4);x.stroke();
+    const nadirY=cy+R*.4,nr=Math.max(W*.075,2.5);
+    const glow=x.createRadialGradient(cx,nadirY,0,cx,nadirY,nr*3.5);
+    glow.addColorStop(0,`rgba(196,255,44,${breath*.28})`);glow.addColorStop(1,'rgba(196,255,44,0)');
+    x.beginPath();x.arc(cx,nadirY,nr*3.5,0,Math.PI*2);x.fillStyle=glow;x.fill();
+    x.beginPath();x.arc(cx,nadirY,nr,0,Math.PI*2);
+    x.fillStyle=`rgba(196,255,44,${.6+breath*.38})`;
+    x.shadowColor=`rgba(196,255,44,${breath*.45})`;x.shadowBlur=nr*1.8;x.fill();x.shadowBlur=0;
+    if(W>=28){
+      [0,Math.PI/2,Math.PI,Math.PI*1.5].forEach(a=>{
+        x.beginPath();x.moveTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);
+        x.lineTo(cx+Math.cos(a)*(R+W*.06),cy+Math.sin(a)*(R+W*.06));
+        x.strokeStyle='rgba(196,255,44,.3)';x.lineWidth=Math.max(LW*.8,.5);x.stroke();
+      });
+    }
+    t+=.011;requestAnimationFrame(frame);
+  }
+  frame();
+}
+drawMark('markTop',32);
+
+/* ══ OUTER TICKS ══ */
+(function(){
+  const C=document.getElementById('outerTicks'),x=C.getContext('2d'),cx=260,cy=260,G='rgba(196,255,44,';
+  for(let i=0;i<120;i++){
+    const a=i*(Math.PI*2/120)-Math.PI/2,maj=i%10===0;
+    const r1=maj?245:248,r2=maj?235:244;
+    x.beginPath();x.moveTo(cx+r1*Math.cos(a),cy+r1*Math.sin(a));x.lineTo(cx+r2*Math.cos(a),cy+r2*Math.sin(a));
+    x.strokeStyle=maj?G+'.3)':G+'.1)';x.lineWidth=maj?1.5:.7;x.stroke();
+  }
+})();
+
+/* ══ GLOBE v2 — ATMOSPHERIC 3D ══ */
+(function(){
+  const C=document.getElementById('globe'),x=C.getContext('2d');
+  const W=420,H=420,cx=W/2,cy=H/2,R=196,PI=Math.PI;
+  /* light source (unit vector) — upper-left */
+  const Lx=-.55,Ly=-.65,Lz=.52;
+
+  /* Continent polys — lon/lat pairs, highlight flag for Gulf/Arabian */
+  const conts=[
+    /* Arabian Peninsula — HIGHLIGHTED */
+    {pts:[[37,29],[40,22],[44,15],[50,12],[55,12],[60,16],[58,22],[56,24],[58,28],[60,22],[63,17],[58,13],[56,18],[56,25],[58,28],[60,24],[62,21],[65,17],[58,13],[52,16],[49,18],[46,21],[44,22],[44,27],[46,28],[48,26],[50,28],[51,27],[51,24],[55,25],[57,28],[56,22],[54,22],[54,27],[51,27],[47,29],[42,32],[37,29]],hot:true},
+    /* Iraq + Syria */
+    {pts:[[36,37],[42,38],[48,37],[53,35],[58,30],[60,28],[56,30],[52,28],[47,32],[44,36],[40,36],[38,37],[36,37]]},
+    /* Iran — ORANGE HIGHLIGHT */
+    {pts:[[44,37],[48,37],[53,37],[56,37],[60,36],[64,34],[63,29],[61,27],[60,23],[58,24],[56,26],[53,26],[52,30],[49,32],[46,38],[44,37]]},
+    /* Turkey */
+    {pts:[[26,42],[30,42],[35,41],[40,40],[44,38],[43,36],[36,36],[30,37],[26,40],[26,42]]},
+    /* Egypt / N Africa east */
+    {pts:[[25,32],[30,32],[35,31],[36,33],[34,37],[30,38],[26,35],[25,32]]},
+    /* Saudi + Yemen */
+    {pts:[[37,29],[42,30],[46,28],[50,28],[51,27],[47,29],[42,32],[37,29]]},
+    /* Pakistan / India */
+    {pts:[[61,24],[68,24],[72,22],[77,20],[80,14],[76,8],[70,8],[65,10],[62,12],[61,17],[63,22],[61,24]]},
+    /* Central Asia blob */
+    {pts:[[50,38],[56,40],[63,40],[68,38],[72,37],[70,34],[66,32],[60,32],[54,34],[50,38]]},
+    /* East Africa */
+    {pts:[[30,14],[34,12],[38,10],[42,12],[44,18],[40,24],[36,24],[30,20],[30,14]]},
+    /* W Europe */
+    {pts:[[-10,36],[-4,38],[2,42],[5,47],[10,52],[15,54],[18,52],[14,48],[10,44],[4,44],[0,44],[-4,44],[-8,42],[-10,36]]},
+    /* C+E Europe */
+    {pts:[[18,52],[24,52],[30,52],[36,50],[40,46],[38,42],[34,40],[28,42],[22,48],[18,52]]},
+    /* Russia blob */
+    {pts:[[36,52],[50,52],[65,54],[80,56],[90,56],[95,52],[90,48],[80,48],[65,50],[50,50],[36,52]]},
+    /* China */
+    {pts:[[75,40],[85,42],[95,38],[110,36],[120,30],[118,24],[112,22],[105,24],[100,28],[95,32],[85,36],[75,40]]},
+    /* SE Asia */
+    {pts:[[100,18],[105,16],[110,14],[115,10],[118,6],[116,2],[112,4],[108,8],[104,12],[100,18]]},
+    /* Japan */
+    {pts:[[130,34],[133,32],[136,34],[134,36],[130,36],[130,34]]},
+    /* Horn Africa */
+    {pts:[[42,12],[44,10],[46,8],[48,10],[46,14],[44,16],[42,12]]},
+    /* S Africa */
+    {pts:[[18,-10],[24,-14],[30,-18],[32,-26],[28,-32],[22,-34],[16,-30],[14,-22],[16,-14],[18,-10]]},
+    /* S America NW */
+    {pts:[[-76,-2],[-72,2],[-68,6],[-64,8],[-60,8],[-56,6],[-52,4],[-52,-4],[-56,-8],[-60,-10],[-64,-8],[-68,-4],[-72,-4],[-76,-2]]},
+    /* S America SE */
+    {pts:[[-52,-8],[-48,-12],[-44,-18],[-42,-24],[-44,-30],[-48,-34],[-54,-36],[-60,-36],[-64,-32],[-64,-26],[-60,-20],[-56,-14],[-52,-8]]},
+    /* N America E */
+    {pts:[[-80,24],[-74,26],[-68,30],[- 66,44],[-70,46],[-74,44],[-76,38],[-80,34],[-84,30],[-80,24]]},
+    /* N America W */
+    {pts:[[-124,48],[-118,48],[-110,46],[-106,42],[-104,38],[-106,30],[-108,24],[-112,22],[-118,24],[-122,32],[-124,38],[-124,48]]},
+    /* Mexico */
+    {pts:[[-118,30],[-110,24],[-105,20],[-98,18],[-92,16],[-88,16],[-90,20],[-95,22],[-100,24],[-106,28],[-110,28],[-118,30]]},
+    /* Australia N */
+    {pts:[[114,-22],[120,-18],[128,-14],[136,-12],[140,-16],[144,-20],[140,-26],[134,-26],[128,-24],[122,-24],[114,-22]]},
+    /* Australia S */
+    {pts:[[114,-22],[118,-28],[122,-32],[128,-34],[136,-32],[144,-28],[148,-24],[145,-32],[138,-36],[132,-36],[125,-33],[118,-32],[114,-26],[114,-22]]},
+  ];
+
+  /* Iran polygon for special highlight */
+  const iranPts=[[44,37],[48,37],[53,37],[56,37],[60,36],[64,34],[63,29],[61,27],[60,23],[58,24],[56,26],[53,26],[52,30],[49,32],[46,38],[44,37]];
+
+  /* Hatch canvas for hot zones */
+  const hatch=document.createElement('canvas');hatch.width=6;hatch.height=6;
+  const hx=hatch.getContext('2d');hx.strokeStyle='rgba(196,255,44,.9)';hx.lineWidth=.6;
+  hx.beginPath();hx.moveTo(0,6);hx.lineTo(6,0);hx.stroke();
+  hx.beginPath();hx.moveTo(-1,6);hx.lineTo(6,-1);hx.stroke();
+  hx.beginPath();hx.moveTo(1,7);hx.lineTo(7,1);hx.stroke();
+  const hPat=x.createPattern(hatch,'repeat');
+
+  let rot=40;
+  const markers=[
+    /* Impact sites */
+    {lon:54.4,lat:24.2,t:'i'},{lon:47.9,lat:29.3,t:'i'},
+    {lon:51.1,lat:25.3,t:'i'},{lon:50.6,lat:26.2,t:'i'},
+    {lon:35.9,lat:31.9,t:'i'},{lon:36.5,lat:33.5,t:'i'},
+    /* Launch origin — Iran (orange) */
+    {lon:59.6,lat:36.3,t:'l'},{lon:48.7,lat:31.3,t:'l'},
+    {lon:51.4,lat:35.6,t:'l'},{lon:44.2,lat:15.5,t:'l'},
+  ];
+
+  function proj(lon,lat){
+    const th=(lon+rot)*PI/180,ph=(90-lat)*PI/180;
+    const X=Math.sin(ph)*Math.cos(th),Y=Math.cos(ph),Z=Math.sin(ph)*Math.sin(th);
+    if(Z<0)return null;
+    /* Phong: diffuse intensity based on light dot normal */
+    const diff=Math.max(0,X*Lx+Y*(-Ly)+Z*Lz);
+    return[cx+R*X,cy-R*Y,Z,diff];
+  }
+
+  function drawPoly(ptsArr,fillAlpha,strokeCol,strokeW,doHatch,hatchAlpha){
+    const pts=ptsArr.map(([lo,la])=>proj(lo,la)).filter(Boolean);
+    if(pts.length<3)return;
+    x.beginPath();
+    pts.forEach(([px,py],i)=>i===0?x.moveTo(px,py):x.lineTo(px,py));
+    x.closePath();
+    if(doHatch){
+      x.fillStyle=`rgba(196,255,44,${fillAlpha})`;x.fill();
+      x.save();x.clip();x.globalAlpha=hatchAlpha;x.fillStyle=hPat;x.fillRect(0,0,W,H);x.restore();x.globalAlpha=1;
+    }else{
+      x.fillStyle=`rgba(196,255,44,${fillAlpha})`;x.fill();
+    }
+    x.strokeStyle=strokeCol;x.lineWidth=strokeW;x.stroke();
+  }
+
+  function drawGlobe(){
+    x.clearRect(0,0,W,H);
+
+    /* ─ 1. Atmosphere halo (outside sphere) ─ */
+    const atmo=x.createRadialGradient(cx,cy,R*.88,cx,cy,R*1.22);
+    atmo.addColorStop(0,'rgba(196,255,44,.18)');
+    atmo.addColorStop(.45,'rgba(196,255,44,.07)');
+    atmo.addColorStop(.8,'rgba(196,255,44,.02)');
+    atmo.addColorStop(1,'rgba(196,255,44,0)');
+    x.beginPath();x.arc(cx,cy,R*1.22,0,PI*2);x.fillStyle=atmo;x.fill();
+
+    /* ─ 2. Ocean base — deep blue-green radial gradient ─ */
+    const ocean=x.createRadialGradient(cx-R*.28,cy-R*.22,R*.05,cx,cy,R);
+    ocean.addColorStop(0,'rgba(6,18,8,1)');
+    ocean.addColorStop(.5,'rgba(2,10,4,.98)');
+    ocean.addColorStop(1,'rgba(0,4,1,1)');
+    x.save();x.beginPath();x.arc(cx,cy,R,0,PI*2);x.clip();
+    x.fillStyle=ocean;x.fillRect(cx-R,cy-R,R*2,R*2);
+
+    /* ─ 3. Deep ocean specular hotspot ─ */
+    const spec=x.createRadialGradient(cx-R*.3,cy-R*.25,0,cx-R*.3,cy-R*.25,R*.6);
+    spec.addColorStop(0,'rgba(196,255,44,.055)');
+    spec.addColorStop(.4,'rgba(196,255,44,.018)');
+    spec.addColorStop(1,'rgba(196,255,44,0)');
+    x.fillStyle=spec;x.fillRect(cx-R,cy-R,R*2,R*2);
+    x.restore();
+
+    /* ─ 4. Lat/lon grid ─ */
+    x.save();x.beginPath();x.arc(cx,cy,R,0,PI*2);x.clip();
+    x.setLineDash([2,8]);x.lineWidth=.35;
+    for(let ln=-80;ln<=80;ln+=20){
+      const pts=[];for(let lo=-180;lo<=180;lo+=4){const p=proj(lo,ln);if(p)pts.push(p);}
+      if(pts.length>1){x.beginPath();pts.forEach(([px,py],i)=>i===0?x.moveTo(px,py):x.lineTo(px,py));x.strokeStyle=ln===0?'rgba(196,255,44,.18)':'rgba(196,255,44,.07)';x.stroke();}
+    }
+    for(let lo=0;lo<360;lo+=20){
+      const pts=[];for(let ln=-80;ln<=80;ln+=4){const p=proj(lo,ln);if(p)pts.push(p);}
+      if(pts.length>1){x.beginPath();pts.forEach(([px,py],i)=>i===0?x.moveTo(px,py):x.lineTo(px,py));x.strokeStyle='rgba(196,255,44,.05)';x.stroke();}
+    }
+    x.setLineDash([]);
+
+    /* ─ 5. Day/night terminator (great circle) ─ */
+    const TLon=30+rot; /* terminator long -- moves with globe */
+    const termPts=[];
+    for(let lat=-90;lat<=90;lat+=2){
+      const p=proj(TLon,lat);if(p)termPts.push(p);
+    }
+    if(termPts.length>1){
+      x.beginPath();termPts.forEach(([px,py],i)=>i===0?x.moveTo(px,py):x.lineTo(px,py));
+      x.strokeStyle='rgba(196,255,44,.12)';x.lineWidth=1;x.stroke();
+    }
+
+    /* ─ 6. Night-side darkness overlay ─ */
+    const termX=proj(TLon,0);
+    if(termX){
+      const ng=x.createRadialGradient(termX[0]+60,termX[1],0,termX[0]+60,termX[1],R*1.4);
+      ng.addColorStop(0,'rgba(0,0,0,.38)');ng.addColorStop(1,'rgba(0,0,0,0)');
+      x.fillStyle=ng;x.fillRect(cx-R,cy-R,R*2,R*2);
+    }
+    x.restore();
+
+    /* ─ 7. Continent fill ─ */
+    x.save();x.beginPath();x.arc(cx,cy,R,0,PI*2);x.clip();
+    conts.forEach(c=>{
+      if(c.hot){
+        drawPoly(c.pts,.055,'rgba(196,255,44,.7)',1.4,true,.08);
+      } else {
+        drawPoly(c.pts,.04,'rgba(196,255,44,.35)',.7,false,0);
+      }
+    });
+    /* Iran orange tint */
+    drawPoly(iranPts,.06,'rgba(255,140,0,.6)',1.2,false,0);
+    const ip=proj(53,32);
+    if(ip){
+      const iranGlow=x.createRadialGradient(ip[0],ip[1],0,ip[0],ip[1],48);
+      iranGlow.addColorStop(0,'rgba(255,140,0,.18)');iranGlow.addColorStop(1,'rgba(255,140,0,0)');
+      x.fillStyle=iranGlow;x.beginPath();x.arc(ip[0],ip[1],48,0,PI*2);x.fill();
+    }
+    /* Gulf glow */
+    const gp=proj(52,26);
+    if(gp){
+      const gg=x.createRadialGradient(gp[0],gp[1],0,gp[0],gp[1],42);
+      gg.addColorStop(0,'rgba(196,255,44,.2)');gg.addColorStop(1,'rgba(196,255,44,0)');
+      x.fillStyle=gg;x.beginPath();x.arc(gp[0],gp[1],42,0,PI*2);x.fill();
+    }
+    x.restore();
+
+    /* ─ 8. Sphere rim darkening (3D illusion) ─ */
+    x.save();x.beginPath();x.arc(cx,cy,R,0,PI*2);x.clip();
+    const rim=x.createRadialGradient(cx-R*.25,cy-R*.2,R*.28,cx,cy,R);
+    rim.addColorStop(0,'rgba(0,0,0,0)');
+    rim.addColorStop(.62,'rgba(0,0,0,0)');
+    rim.addColorStop(.82,'rgba(0,0,0,.32)');
+    rim.addColorStop(1,'rgba(0,0,0,.72)');
+    x.fillStyle=rim;x.fillRect(cx-R,cy-R,R*2,R*2);
+    /* specular highlight top-left */
+    const sh=x.createRadialGradient(cx-R*.32,cy-R*.28,0,cx-R*.32,cy-R*.28,R*.38);
+    sh.addColorStop(0,'rgba(196,255,44,.09)');
+    sh.addColorStop(.5,'rgba(196,255,44,.03)');
+    sh.addColorStop(1,'rgba(196,255,44,0)');
+    x.fillStyle=sh;x.fillRect(cx-R,cy-R,R*2,R*2);
+    x.restore();
+
+    /* ─ 9. Sphere border ─ */
+    x.beginPath();x.arc(cx,cy,R,0,PI*2);
+    x.strokeStyle='rgba(196,255,44,.38)';x.lineWidth=1.4;x.stroke();
+    /* Atmosphere glow ring */
+    x.beginPath();x.arc(cx,cy,R+3,0,PI*2);
+    x.strokeStyle='rgba(196,255,44,.12)';x.lineWidth=2.5;x.stroke();
+
+    /* ─ 10. Markers ─ */
+    const t=Date.now()/1e3;
+    markers.forEach(m=>{
+      const p=proj(m.lon,m.lat);
+      if(!p)return;
+      const[px,py]=p;
+      const pulse=.5+.5*Math.abs(Math.sin(t*2.2+m.lon*.3));
+      if(m.t==='l'){
+        /* LAUNCH — orange */
+        x.beginPath();x.arc(px,py,3.5,0,PI*2);x.fillStyle='rgba(255,100,0,.95)';
+        x.shadowColor='rgba(255,80,0,1)';x.shadowBlur=12;x.fill();x.shadowBlur=0;
+        x.beginPath();x.arc(px,py,7+pulse*8,0,PI*2);
+        x.strokeStyle=`rgba(255,100,0,${.35*pulse})`;x.lineWidth=1.2;x.stroke();
+      } else {
+        /* IMPACT — lemon */
+        x.beginPath();x.arc(px,py,3,0,PI*2);x.fillStyle='rgba(196,255,44,.95)';
+        x.shadowColor='rgba(196,255,44,1)';x.shadowBlur=10;x.fill();x.shadowBlur=0;
+        x.beginPath();x.arc(px,py,6+pulse*7,0,PI*2);
+        x.strokeStyle=`rgba(196,255,44,${.4*pulse})`;x.lineWidth=1;x.stroke();
+      }
+    });
+
+    /* Tehran label */
+    const teh=proj(51.4,35.6);
+    if(teh){
+      x.fillStyle='rgba(255,100,0,.85)';x.font='700 7px "Rajdhani",sans-serif';
+      x.letterSpacing='.08em';x.fillText('TEHRAN',teh[0]+6,teh[1]-4);
+    }
+    /* Dubai label */
+    const dxb=proj(55.3,25.2);
+    if(dxb){
+      x.fillStyle='rgba(196,255,44,.65)';x.font='700 7px "Rajdhani",sans-serif';
+      x.fillText('DUBAI',dxb[0]+5,dxb[1]+10);
+    }
+
+    rot+=.048;
+    requestAnimationFrame(drawGlobe);
+  }
+  drawGlobe();
+})();
+
+/* ══ SONAR ══ */
+(function(){
+  const C=document.getElementById('sonarC');
+  C.width=140;C.height=140;
+  const x=C.getContext('2d'),W=140,cx=70,cy=70,R=64;
+  let a=0;
+  /* slow-moving contact blips that "appear" on sweep pass */
+  const contacts=[
+    {r:R*.55,ang:.82,born:-99},{r:R*.72,ang:1.55,born:-99},
+    {r:R*.38,ang:2.8,born:-99},{r:R*.85,ang:4.1,born:-99},
+    {r:R*.6,ang:5.2,born:-99},{r:R*.45,ang:0.3,born:-99},
+  ];
+  function f(){
+    x.clearRect(0,0,W,W);
+    /* base circle */
+    const base=x.createRadialGradient(cx,cy,0,cx,cy,R);
+    base.addColorStop(0,'rgba(2,8,2,.98)');base.addColorStop(1,'rgba(0,4,0,.99)');
+    x.beginPath();x.arc(cx,cy,R,0,Math.PI*2);x.fillStyle=base;x.fill();
+    /* grid rings */
+    [R*.25,R*.5,R*.75,R].forEach((r,i)=>{
+      x.beginPath();x.arc(cx,cy,r,0,Math.PI*2);
+      x.strokeStyle=`rgba(196,255,44,${i===3?.22:.1})`;x.lineWidth=i===3?1:.6;x.stroke();
+    });
+    /* crosshairs */
+    x.beginPath();x.moveTo(cx-R,cy);x.lineTo(cx+R,cy);x.strokeStyle='rgba(196,255,44,.07)';x.lineWidth=.6;x.stroke();
+    x.beginPath();x.moveTo(cx,cy-R);x.lineTo(cx,cy+R);x.stroke();
+    x.setLineDash([3,6]);
+    x.beginPath();x.moveTo(cx-R*.7,cy-R*.7);x.lineTo(cx+R*.7,cy+R*.7);x.strokeStyle='rgba(196,255,44,.04)';x.stroke();
+    x.beginPath();x.moveTo(cx+R*.7,cy-R*.7);x.lineTo(cx-R*.7,cy+R*.7);x.stroke();
+    x.setLineDash([]);
+    /* sweep fan — 22 fade steps */
+    x.save();x.translate(cx,cy);
+    for(let i=0;i<22;i++){
+      const fa=a-i*.06;
+      x.beginPath();x.moveTo(0,0);x.arc(0,0,R,fa,fa+.1);x.closePath();
+      x.fillStyle=`rgba(196,255,44,${(.28-i*.012).toFixed(3)})`;x.fill();
+    }
+    x.restore();
+    /* sweep tip glow line */
+    x.save();x.translate(cx,cy);
+    x.beginPath();x.moveTo(0,0);x.lineTo(R*Math.cos(a),R*Math.sin(a));
+    x.strokeStyle='rgba(196,255,44,.55)';x.lineWidth=1.2;x.stroke();
+    x.restore();
+    /* contacts — light up when sweep passes over */
+    contacts.forEach(c=>{
+      const diff=((a-c.ang)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+      if(diff<.15)c.born=a;
+      const age=((a-c.born)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+      const alpha=age<Math.PI*2?Math.max(0,.9-age*.18):0;
+      if(alpha>0){
+        const bx=cx+c.r*Math.cos(c.ang),by=cy+c.r*Math.sin(c.ang);
+        x.beginPath();x.arc(bx,by,2.5,0,Math.PI*2);
+        x.fillStyle=`rgba(196,255,44,${alpha})`;
+        x.shadowColor='rgba(196,255,44,1)';x.shadowBlur=6;x.fill();x.shadowBlur=0;
+      }
+    });
+    /* centre dot */
+    x.beginPath();x.arc(cx,cy,2,0,Math.PI*2);x.fillStyle='rgba(196,255,44,.6)';x.fill();
+    a+=.012; /* SLOW — was .04 */
+    requestAnimationFrame(f);
+  }
+  f();
+})();
+
+/* ══ SEP STATIC — grayscale ══ */
+(function(){
+  const C=document.getElementById('sepStatic');
+  function sz(){C.width=C.parentElement.offsetWidth||800;C.height=80;}
+  sz();window.addEventListener('resize',sz);
+  const x=C.getContext('2d');
+  function frame(){
+    const W=C.width,H=C.height,id=x.createImageData(W,H),d=id.data;
+    for(let i=0;i<d.length;i+=4){
+      if(Math.random()>.42){
+        const v=Math.floor(Math.random()*130+40);
+        d[i]=v;d[i+1]=v;d[i+2]=v; /* grayscale */
+        d[i+3]=Math.random()>.55?Math.floor(30+Math.random()*55):0; /* 50% more transparent */
+      }
+    }
+    x.putImageData(id,0,0);
+    /* occasional horizontal glitch lines — grayscale */
+    for(let i=0;i<2;i++){if(Math.random()>.7){const y=Math.floor(Math.random()*H);x.fillStyle=`rgba(180,180,180,${Math.random()*.14})`;x.fillRect(0,y,W,1+Math.floor(Math.random()*2));}}
+  }
+  setInterval(frame,55);frame();
+})();
+
+/* ══ MC NOISE — grayscale ══ */
+document.querySelectorAll('.mc-noise').forEach(C=>{
+  C.width=200;C.height=320;
+  const x=C.getContext('2d');
+  function f(){
+    const id=x.createImageData(200,320),d=id.data;
+    for(let i=0;i<d.length;i+=4){
+      if(Math.random()>.42){
+        const v=Math.floor(Math.random()*120+40);
+        d[i]=v;d[i+1]=v;d[i+2]=v; /* grayscale */
+        d[i+3]=Math.floor(25+Math.random()*45); /* ~50% more transparent than before */
+      }else{d[i+3]=0;}
+    }
+    x.putImageData(id,0,0);
+  }
+  setInterval(f,80);f();
+});
+
+/* ══ C2 TYPE ANIMATION ══ */
+(function(){
+  document.querySelectorAll('.MC-BIG[data-val]').forEach((el,idx)=>{
+    const t=el.getAttribute('data-val');if(isNaN(t))return;
+    const tN=parseInt(t);
+    function type(){let f=0;(function s(){if(f<8){el.textContent=Math.floor(Math.random()*(tN*1.4));f++;setTimeout(s,55);}else el.textContent=tN;})();}
+    setTimeout(type,600+idx*280);setInterval(()=>type(),7000+idx*1100);
+  });
+})();
+
+/* ══ SIGNAL BARS ══ */
+(function(){
+  const rb=document.getElementById('sig-bars');
+  for(let i=0;i<30;i++){const h=Math.floor(Math.random()*28)+4;const d=document.createElement('div');d.className='SB';d.style.cssText=`--rd:${(.2+Math.random()*.9).toFixed(2)}s;--rl:${(Math.random()*.5).toFixed(2)}s;--rh:${h}px;height:${h}px;`;rb.appendChild(d);}
+  const msgs=['SIGNAL ACQUIRED · SECTOR ALPHA','CROSS-SOURCE LOCK · 44 FEEDS','GCC TRACKER SYNC · HADAL v1.0','THAAD GAP CONFIRMED · 5 NODES','▓▒░ SIGNAL INTERRUPTED ░▒▓','IRAN BALLISTIC SIGNATURE'];
+  const freqs=['4.625 kHz','8.291 kHz','12.290 kHz','16.420 kHz'];let ri=0;
+  setInterval(()=>{ri=(ri+1)%msgs.length;document.getElementById('radio-msg').textContent=msgs[ri];if(ri%2===0)document.getElementById('freq-lbl').textContent='FREQ: '+freqs[Math.floor(Math.random()*freqs.length)];},4000);
+  setInterval(()=>{const v=78+Math.floor(Math.random()*18);document.getElementById('sig-fill').style.width=v+'%';document.getElementById('sig-val').textContent=v+'/100';},2500);
+})();
+
+/* ══ GCC ══ */
+const gcc=[{f:'UAE',n:'165',p:1,t:'BALLISTIC +541 DRONES'},{f:'KUWAIT',n:'97',p:.59,t:'BALLISTIC +283 DRONES'},{f:'QATAR',n:'18',p:.11,t:'MISSILES + DRONES'},{f:'BAHRAIN',n:'45',p:.27,t:'MISSILES +9 DRONES'}];
+document.getElementById('gcc-rows').innerHTML=gcc.map(r=>`<div class="GCC-ROW"><span class="GCF">${r.f}</span><span class="GCN">${r.n}</span><div class="GC-BC"><div class="BAR-S"><div class="BAR-SF" style="width:${r.p*100}%"></div></div><div class="GC-TP">${r.t}</div></div></div>`).join('');
+
+/* ══ THREAT FEED ══ */
+let filt='ALL';
+const feedData=[
+  {id:'TH-0048',region:'IRAN',type:'IRGC: DEPLOYING 1-TONNE WARHEAD MISSILES · MORE THAN BEFORE',sev:'CRITICAL',src:'IRGC',conf:95,tags:['IRAN']},
+  {id:'TH-0047',region:'GULF',type:'HEGSETH: TUESDAY MOST INTENSE STRIKE DAY — DAY 10 OP. EPIC FURY',sev:'CRITICAL',src:'DoD',conf:99,tags:['GULF']},
+  {id:'TH-0046',region:'GULF',type:'TRUMP: HIT IRAN 20X HARDER IF HORMUZ BLOCKED — DIRECT THREAT',sev:'CRITICAL',src:'WH',conf:99,tags:['GULF']},
+  {id:'TH-0045',region:'IRAN',type:'CENTCOM: IRAN BALLISTIC ATTACKS -90% LAST 24HRS',sev:'HIGH',src:'CENTCOM',conf:94,tags:['IRAN']},
+  {id:'TH-0044',region:'IRAN',type:'MOJTABA KHAMENEI NAMED SUPREME LEADER · IRGC HARDLINER',sev:'HIGH',src:'IRNA',conf:92,tags:['IRAN']},
+  {id:'TH-0043',region:'BAHRAIN',type:'AMAZON AWS BAHRAIN DATA CENTER OFFLINE · DRONE STRIKE',sev:'HIGH',src:'AWS',conf:96,tags:['GULF']},
+  {id:'TH-0042',region:'UAE',type:'BALLISTIC SALVO · TEHRAN ORIGIN · MULTI-WARHEAD',sev:'CRITICAL',src:'MoD',conf:94,tags:['UAE']},
+  {id:'TH-0041',region:'JORDAN',type:'THAAD BATTERY DESTROYED · MUWAFFAQ SALTI AB',sev:'CRITICAL',src:'SAT',conf:92,tags:['GULF']},
+  {id:'TH-0040',region:'QATAR',type:'UEWR RADAR $1.1B DESTROYED · UMM DAHAL',sev:'CRITICAL',src:'CNN',conf:90,tags:['GULF']},
+  {id:'TH-0039',region:'BAHRAIN',type:'5TH FLEET HQ PARTIAL IMPACT · NSA BAHRAIN',sev:'CRITICAL',src:'AP',conf:87,tags:['GULF']},
+  {id:'TH-0038',region:'KUWAIT',type:'6 US SOLDIERS KIA · PORT SHUAIBA DRONE ATTACK MAR 1',sev:'CRITICAL',src:'DoD',conf:99,tags:['GULF']},
+  {id:'TH-0037',region:'IRAN',type:'IRGC BALLISTIC LAUNCH SIGNATURE · KHORRAMSHAR',sev:'CRITICAL',src:'SAT',conf:91,tags:['IRAN']},
+  {id:'TH-0036',region:'RED SEA',type:'HOUTHI DRONE SWARM · COMMERCIAL SHIPPING · HORMUZ CLOSED',sev:'HIGH',src:'UKMO',conf:83,tags:['RED SEA']},
+  {id:'TH-0035',region:'ISRAEL',type:'IRON DOME INTERCEPT · CLUSTER WARHEADS CONFIRMED · NORTH',sev:'HIGH',src:'IDF',conf:89,tags:['ISRAEL']},
+];
+function renderFeed(){
+  const d=filt==='ALL'?feedData:feedData.filter(r=>r.tags.includes(filt));
+  document.getElementById('feed-count').textContent=d.length+' ACTIVE';
+  document.getElementById('feed').innerHTML=d.map(r=>`<div class="feed-row"><span class="feed-id">${r.id}</span><span class="feed-region">${r.region}</span><span class="feed-type">${r.type}</span><span class="sev-chip sev-${r.sev}">${r.sev}</span><span class="feed-src">${r.src}</span><span class="feed-conf">${r.conf}</span></div>`).join('');
+}
+window.fr=(el,r)=>{document.querySelectorAll('.TABS .TAB').forEach(t=>t.classList.remove('on'));el.classList.add('on');filt=r;renderFeed();};
+renderFeed();
+
+/* ══ ROBINHOOD CHARTS ══ */
+const gulfData=[
+  {n:'BRENT CRUDE',v:'$107.40',chg:'+23.1%',up:true,pts:[71,73,70,75,78,82,86,92,99,104,106,107]},
+  {n:'GCC GDP INDEX',v:'$1.84T',chg:'+4.1%',up:true,pts:[60,62,65,64,68,70,72,71,75,78,80,85]},
+  {n:'ARAMCO',v:'$8.94',chg:'+14.3%',up:true,pts:[78,80,79,82,84,86,88,87,90,91,89,89]},
+  {n:'UAE NON-OIL',v:'+4.3%',chg:'+0.5%',up:true,pts:[50,54,56,60,62,65,64,68,70,72,76,80]},
+];
+function rhChart(pts,up,W,H){
+  const mn=Math.min(...pts)-2,mx=Math.max(...pts)+2,rng=mx-mn;
+  const xs=pts.map((p,i)=>i*(W/(pts.length-1))),ys=pts.map(p=>H-2-((p-mn)/rng)*(H-8));
+  let d=`M${xs[0]},${ys[0]}`;
+  for(let i=1;i<xs.length;i++){const cpx=(xs[i-1]+xs[i])/2;d+=` C${cpx},${ys[i-1]} ${cpx},${ys[i]} ${xs[i]},${ys[i]}`;}
+  const col=up?'rgba(255,160,30,.85)':'rgba(255,90,20,.8)';
+  const fillCol=up?'rgba(255,160,30,':'rgba(255,90,20,';
+  const areaD=d+` L${xs[xs.length-1]},${H} L${xs[0]},${H} Z`;
+  const gradId='g'+Math.random().toString(36).slice(2);
+  return`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${fillCol}.15)"/><stop offset="100%" stop-color="${fillCol}0)"/></linearGradient></defs><path d="${areaD}" fill="url(#${gradId})"/><path d="${d}" fill="none" stroke="${col}" stroke-width="1.5"/></svg>`;
+}
+document.getElementById('gulf-charts').innerHTML=gulfData.map(g=>`<div class="rh-card"><div class="rh-name">${g.n}</div><div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="rh-val" style="color:${g.up?'rgba(255,160,30,.9)':'rgba(255,100,30,.9)'};">${g.v}</span><span class="rh-chg ${g.up?'UP':'DN'}">${g.chg}</span></div>${rhChart(g.pts,g.up,110,32)}</div>`).join('');
+
+const dreData=[{area:'DOWNTOWN DXB',v:'+8.2%',chg:'+0.4%',up:true},{area:'MARINA',v:'+6.7%',chg:'+0.2%',up:true},{area:'PALM',v:'+5.1%',chg:'-0.1%',up:false},{area:'JVC',v:'+3.9%',chg:'+0.3%',up:true}];
+document.getElementById('dre-grid').innerHTML=dreData.map(d=>`<div class="dre-cell"><div class="dre-area">${d.area}</div><div class="dre-v" style="color:${d.up?'rgba(255,160,30,.9)':'rgba(255,100,30,.9)'};">${d.v}</div><div class="dre-chg ${d.up?'UP':'DN'}">${d.chg} 7D</div></div>`).join('');
+
+/* ══ ECO NOISE ══ */
+(function(){
+  const C=document.getElementById('ecoNoise');if(!C)return;
+  function sz(){const p=C.parentElement;C.width=p.offsetWidth;C.height=p.offsetHeight||600;}
+  sz();
+  const x=C.getContext('2d');
+  function frame(){
+    const W=C.width,H=C.height,id=x.createImageData(W,H),d=id.data;
+    for(let i=0;i<d.length;i+=4){
+      if(Math.random()>.62){const r=140+Math.floor(Math.random()*115);const g=50+Math.floor(Math.random()*60);d[i]=r;d[i+1]=g;d[i+2]=0;d[i+3]=60+Math.floor(Math.random()*120);}else{d[i+3]=0;}
+    }
+    x.putImageData(id,0,0);
+    for(let i=0;i<3;i++){if(Math.random()>.7){const y=Math.floor(Math.random()*H);x.fillStyle=`rgba(255,140,0,${Math.random()*.22})`;x.fillRect(0,y,W,1+Math.floor(Math.random()*2));}}
+  }
+  setInterval(frame,70);frame();
+})();
+
+/* ══ STANDARD NOISE — grayscale, saved pattern ══ */
+function spawnNoise(C,interval){
+  if(!C)return;
+  const p=C.parentElement;
+  function resize(){C.width=p.offsetWidth||260;C.height=p.offsetHeight||400;}
+  resize();
+  const x=C.getContext('2d');
+  function f(){
+    const W=C.width,H=C.height,id=x.createImageData(W,H),d=id.data;
+    for(let i=0;i<d.length;i+=4){
+      if(Math.random()>.44){const v=Math.floor(Math.random()*100+30);d[i]=v;d[i+1]=v;d[i+2]=v;d[i+3]=Math.floor(18+Math.random()*38);}else{d[i+3]=0;}
+    }
+    x.putImageData(id,0,0);
+  }
+  setInterval(f,interval||90);f();
+  window.addEventListener('resize',()=>{resize();f();});
+}
+spawnNoise(document.getElementById('lc-noise'),95);
+spawnNoise(document.getElementById('rc-noise'),95);
+spawnNoise(document.getElementById('feed-noise'),80);
+
+/* ══ PIZZA 3D SLICE — canvas perspective render ══ */
+(function(){
+  const C=document.getElementById('pizzaSlice');
+  if(!C)return;
+  const x=C.getContext('2d');
+  const W=110,H=90,cx=55,cy=50;
+  const R=38,T=6,ANGLE=Math.PI/2.8,N=10;
+  const FOC=240;
+  const TX=-0.42; /* X tilt — we see the top */
+  let rot=0;
+
+  function proj(px,py,pz){
+    /* rotY */
+    const rx=px*Math.cos(rot)+pz*Math.sin(rot);
+    const ry=py;
+    const rz=-px*Math.sin(rot)+pz*Math.cos(rot);
+    /* rotX */
+    const ry2=ry*Math.cos(TX)-rz*Math.sin(TX);
+    const rz2=ry*Math.sin(TX)+rz*Math.cos(TX);
+    const sc=FOC/(FOC+rz2+50);
+    return{x:cx+rx*sc,y:cy+ry2*sc,z:rz2};
+  }
+
+  function arc(y){
+    const a=[];
+    for(let i=0;i<=N;i++){const ang=-ANGLE/2+(i/N)*ANGLE;a.push([R*Math.sin(ang),y,R*Math.cos(ang)]);}
+    return a;
+  }
+
+  function faceZ(pts){const s=pts.map(p=>proj(p[0],p[1],p[2]));return s.reduce((a,b)=>a+b.z,0)/s.length;}
+
+  function fillFace(pts3,fill,stroke,lw){
+    const p=pts3.map(v=>proj(v[0],v[1],v[2]));
+    x.beginPath();x.moveTo(p[0].x,p[0].y);
+    for(let i=1;i<p.length;i++)x.lineTo(p[i].x,p[i].y);
+    x.closePath();
+    if(fill){x.fillStyle=fill;x.fill();}
+    if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}
+  }
+
+  function frame(){
+    x.clearRect(0,0,W,H);
+    const aT=arc(T),aB=arc(-T);
+    const apT=[0,T,0],apB=[0,-T,0];
+
+    const faces=[
+      {pts:[apB,...aB.slice().reverse()],fill:'rgba(2,6,1,.97)',stroke:'rgba(196,255,44,.2)',lw:.7},
+      {pts:[apT,aT[0],aB[0],apB],fill:'rgba(4,11,2,.92)',stroke:'rgba(196,255,44,.45)',lw:.8},
+      {pts:[apT,apB,aB[N],aT[N]],fill:'rgba(4,11,2,.92)',stroke:'rgba(196,255,44,.45)',lw:.8},
+      {pts:[...aT,...aB.slice().reverse()],fill:'rgba(8,18,3,.95)',stroke:'rgba(196,255,44,.85)',lw:1.4},
+      {pts:[apT,...aT],fill:'rgba(5,14,2,.92)',stroke:'rgba(196,255,44,.7)',lw:1},
+    ];
+    faces.sort((a,b)=>faceZ(a.pts)-faceZ(b.pts));
+    faces.forEach(f=>fillFace(f.pts,f.fill,f.stroke,f.lw));
+
+    /* toppings — only draw on top face when facing us */
+    const n1=proj(0,T+1,0),n2=proj(0,T-1,0);
+    if(n1.z<n2.z){
+      /* sauce outline ring */
+      const sauceRing=[];
+      for(let i=0;i<=12;i++){const a=-ANGLE/2+(i/12)*ANGLE;sauceRing.push([R*.55*Math.sin(a),T+.2,R*.55*Math.cos(a)]);}
+      const sr=sauceRing.map(v=>proj(v[0],v[1],v[2]));
+      x.beginPath();sr.forEach((p,i)=>i===0?x.moveTo(p.x,p.y):x.lineTo(p.x,p.y));
+      x.strokeStyle='rgba(196,255,44,.2)';x.lineWidth=.8;x.stroke();
+
+      /* topping squares */
+      const tops=[[16,T+.3,24],[-16,T+.3,24],[0,T+.3,30],[10,T+.3,16],[-10,T+.3,16],[0,T+.3,18]];
+      tops.forEach(([tx,ty,tz])=>{
+        const p=proj(tx,ty,tz);
+        /* small square marker */
+        x.save();x.translate(p.x,p.y);
+        x.fillStyle='rgba(196,255,44,.0)';
+        x.strokeStyle='rgba(196,255,44,.75)';x.lineWidth=.9;
+        x.strokeRect(-2.2,-2.2,4.4,4.4);
+        x.restore();
+      });
+
+      /* pepperoni circles */
+      [[0,T+.3,26],[14,T+.3,20],[-14,T+.3,20]].forEach(([tx,ty,tz])=>{
+        const p=proj(tx,ty,tz);
+        x.beginPath();x.arc(p.x,p.y,3,0,Math.PI*2);
+        x.strokeStyle='rgba(196,255,44,.5)';x.lineWidth=.8;x.stroke();
+      });
+    }
+
+    rot+=.011;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ══ PIZZA INDEX TICKER ══ */
+(function(){
+  const base=18.40;
+  const el=document.getElementById('pizza-val');
+  const tel=document.getElementById('pizza-time');
+  function tick(){
+    const jitter=(Math.random()-.5)*.18;
+    if(el)el.textContent='$'+(base+jitter).toFixed(2);
+    if(tel)tel.textContent=new Date().toISOString().slice(11,19)+' UTC';
+  }
+  tick();setInterval(tick,8000);
+})();
+
+/* ══════════════════════════════════════════════════════
+   IRANWARLIVE MAP — full clone in HADAL colors
+══════════════════════════════════════════════════════ */
+(function(){
+  if(typeof L==='undefined')return;
+
+  // ── Layer groups ──
+  const lyrGroups={};
+
+  const map=L.map('iwl-map',{
+    center:[28,46],zoom:5,zoomControl:true,attributionControl:false,minZoom:3,maxZoom:12
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    subdomains:'abcd',maxZoom:19
+  }).addTo(map);
+
+  // Register all layer groups
+  ['missile','airstrike','ground','intercept','combatants','diplomatic','airspace-lyr'].forEach(n=>{
+    lyrGroups[n]=L.layerGroup().addTo(map);
+  });
+
+  // Inject animation CSS
+  const sty=document.createElement('style');
+  sty.textContent=`
+    @keyframes iwl-pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+    @keyframes iwl-ripple{0%{transform:scale(1);opacity:.7}100%{transform:scale(4);opacity:0}}
+    @keyframes iwl-ripple2{0%{transform:scale(1);opacity:.4}100%{transform:scale(2.5);opacity:0}}
+    .iwl-ripple-ring{position:absolute;border-radius:50%;border:1px solid;animation:iwl-ripple 2.2s ease-out infinite;}
+    .iwl-ripple-ring2{position:absolute;border-radius:50%;border:1px solid;animation:iwl-ripple2 2.2s ease-out infinite .9s;}
+  `;
+  document.head.appendChild(sty);
+
+  // ── Popup factory ──
+  function mkPopup(title,type,lat,lon,conf,src,time,detail){
+    const typeColors={missile:'rgba(255,140,0,.9)',airstrike:'rgba(255,130,0,.9)',ground:'rgba(196,255,44,.65)',intercept:'rgba(196,255,44,.9)',combatants:'rgba(196,255,44,.9)',diplomatic:'rgba(180,120,255,.9)',launch:'rgba(255,140,0,.9)'};
+    const col=typeColors[type]||'rgba(196,255,44,.8)';
+    return `<div class="iwl-popup">
+      <div class="iwl-popup-head">
+        <div class="iwl-popup-dot" style="background:${col};box-shadow:0 0 6px ${col};"></div>
+        <span class="iwl-popup-title">${title}</span>
+      </div>
+      <div class="iwl-popup-grid">
+        <span class="iwl-popup-k">TYPE</span><span class="iwl-popup-v">${type.toUpperCase()}</span>
+        <span class="iwl-popup-k">COORDS</span><span class="iwl-popup-v">${lat.toFixed(4)}°N ${lon.toFixed(4)}°E</span>
+        <span class="iwl-popup-k">CONFIDENCE</span><span class="iwl-popup-v">${conf}%</span>
+        <span class="iwl-popup-k">SOURCE</span><span class="iwl-popup-v">${src}</span>
+        <span class="iwl-popup-k">TIME</span><span class="iwl-popup-v">${time}</span>
+      </div>
+      ${detail?`<div class="iwl-popup-detail">${detail}</div>`:''}
+    </div>`;
+  }
+
+  // ── Marker: Missile Strike — orange burst with double ripple ──
+  function mkMissile(lat,lon,title,detail,conf,src,time){
+    const d=(Math.random()*2).toFixed(2);
+    const html=`<div style="position:relative;width:20px;height:20px;cursor:pointer;">
+      <div class="iwl-ripple-ring" style="inset:-4px;border-color:rgba(255,140,0,.6);animation-delay:${d}s;"></div>
+      <div class="iwl-ripple-ring2" style="inset:-1px;border-color:rgba(255,100,0,.5);animation-delay:${parseFloat(d)+.6}s;"></div>
+      <svg width="20" height="20" viewBox="0 0 20 20" style="position:absolute;inset:0;">
+        <circle cx="10" cy="10" r="5" fill="rgba(255,140,0,.15)" stroke="rgba(255,140,0,.9)" stroke-width="1.5"/>
+        <line x1="10" y1="2" x2="10" y2="8" stroke="rgba(255,140,0,.9)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="10" y1="12" x2="10" y2="18" stroke="rgba(255,140,0,.9)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="2" y1="10" x2="8" y2="10" stroke="rgba(255,140,0,.9)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="12" y1="10" x2="18" y2="10" stroke="rgba(255,140,0,.9)" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="10" cy="10" r="2" fill="rgba(255,140,0,1)"/>
+      </svg>
+    </div>`;
+    const icon=L.divIcon({html,className:'',iconSize:[20,20],iconAnchor:[10,10]});
+    L.marker([lat,lon],{icon}).addTo(lyrGroups['missile'])
+      .bindPopup(mkPopup(title,'missile',lat,lon,conf,src,time,detail),{maxWidth:280,className:''})
+      .bindTooltip(`<b style="color:rgba(255,140,0,.9)">⚠ ${title}</b>`,{direction:'top',offset:[0,-10]});
+    addIwlFeed(title,'missile',detail,conf,time,'rgba(255,140,0,.9)');
+  }
+
+  // ── Marker: Air Strike — orange triangle ──
+  function mkAirstrike(lat,lon,title,detail,conf,src,time){
+    const d=(Math.random()*2).toFixed(2);
+    const html=`<div style="position:relative;width:18px;height:18px;cursor:pointer;animation:iwl-pulse 2s infinite ${d}s;">
+      <svg width="18" height="18" viewBox="0 0 18 18">
+        <polygon points="9,1 17,16 1,16" fill="rgba(255,120,0,.2)" stroke="rgba(255,140,0,.9)" stroke-width="1.5"/>
+        <line x1="9" y1="6" x2="9" y2="12" stroke="rgba(255,140,0,.9)" stroke-width="1.2"/>
+        <circle cx="9" cy="14" r="1" fill="rgba(255,140,0,.9)"/>
+      </svg>
+    </div>`;
+    const icon=L.divIcon({html,className:'',iconSize:[18,18],iconAnchor:[9,16]});
+    L.marker([lat,lon],{icon}).addTo(lyrGroups['airstrike'])
+      .bindPopup(mkPopup(title,'airstrike',lat,lon,conf,src,time,detail),{maxWidth:280})
+      .bindTooltip(`<b style="color:rgba(255,140,0,.9)">▲ ${title}</b>`,{direction:'top',offset:[0,-16]});
+    addIwlFeed(title,'airstrike',detail,conf,time,'rgba(255,140,0,.9)');
+  }
+
+  // ── Marker: Interception — green diamond X ──
+  function mkIntercept(lat,lon,title,detail,conf,src,time){
+    const html=`<div style="position:relative;width:16px;height:16px;cursor:pointer;">
+      <div class="iwl-ripple-ring" style="inset:-5px;border-color:rgba(196,255,44,.35);"></div>
+      <svg width="16" height="16" viewBox="0 0 16 16">
+        <polygon points="8,1 15,8 8,15 1,8" fill="rgba(196,255,44,.12)" stroke="rgba(196,255,44,.85)" stroke-width="1.5"/>
+        <line x1="5" y1="5" x2="11" y2="11" stroke="rgba(196,255,44,.9)" stroke-width="1.2"/>
+        <line x1="11" y1="5" x2="5" y2="11" stroke="rgba(196,255,44,.9)" stroke-width="1.2"/>
+      </svg>
+    </div>`;
+    const icon=L.divIcon({html,className:'',iconSize:[16,16],iconAnchor:[8,8]});
+    L.marker([lat,lon],{icon}).addTo(lyrGroups['intercept'])
+      .bindPopup(mkPopup(title,'intercept',lat,lon,conf,src,time,detail),{maxWidth:280})
+      .bindTooltip(`<b style="color:rgba(196,255,44,.9)">✓ ${title}</b>`,{direction:'top',offset:[0,-8]});
+    addIwlFeed(title,'intercept',detail,conf,time,'rgba(196,255,44,.9)');
+  }
+
+  // ── Marker: Ground Forces — khaki square ──
+  function mkGround(lat,lon,title,detail){
+    const html=`<svg width="14" height="14" viewBox="0 0 14 14" style="cursor:pointer;">
+      <rect x="1" y="1" width="12" height="12" fill="rgba(196,255,44,.06)" stroke="rgba(196,255,44,.5)" stroke-width="1.5"/>
+      <line x1="4" y1="7" x2="10" y2="7" stroke="rgba(196,255,44,.55)" stroke-width="1.2"/>
+      <line x1="7" y1="4" x2="7" y2="10" stroke="rgba(196,255,44,.55)" stroke-width="1.2"/>
+    </svg>`;
+    const icon=L.divIcon({html,className:'',iconSize:[14,14],iconAnchor:[7,7]});
+    L.marker([lat,lon],{icon}).addTo(lyrGroups['ground'])
+      .bindTooltip(`<span style="color:rgba(196,255,44,.65)">${title}</span>`);
+  }
+
+  // ── Marker: Combatant (navy/unit) — blue diamond ──
+  function mkCombatant(lat,lon,title,detail){
+    const html=`<svg width="16" height="16" viewBox="0 0 16 16" style="cursor:pointer;animation:iwl-pulse 3s infinite;">
+      <polygon points="8,1 15,8 8,15 1,8" fill="rgba(196,255,44,.15)" stroke="rgba(196,255,44,.8)" stroke-width="1.5"/>
+    </svg>`;
+    const icon=L.divIcon({html,className:'',iconSize:[16,16],iconAnchor:[8,8]});
+    L.marker([lat,lon],{icon}).addTo(lyrGroups['combatants'])
+      .bindPopup(mkPopup(title,'combatants',lat,lon,95,'CENTCOM','LIVE',detail),{maxWidth:280})
+      .bindTooltip(`<b style="color:rgba(196,255,44,.9)">⬧ ${title}</b>`);
+  }
+
+  // ── Marker: Diplomatic — purple pentagon ──
+  function mkDiplomatic(lat,lon,title,detail){
+    const html=`<svg width="14" height="14" viewBox="0 0 14 14" style="cursor:pointer;">
+      <polygon points="7,1 13,5 11,13 3,13 1,5" fill="rgba(180,120,255,.1)" stroke="rgba(180,120,255,.6)" stroke-width="1.2"/>
+    </svg>`;
+    const icon=L.divIcon({html,className:'',iconSize:[14,14],iconAnchor:[7,7]});
+    L.marker([lat,lon],{icon}).addTo(lyrGroups['diplomatic'])
+      .bindTooltip(`<span style="color:rgba(180,120,255,.8)">${title}</span>`);
+  }
+
+  // ── Airspace closure polygons ──
+  const airspaceZones=[
+    {poly:[[38,44],[40,56],[36,60],[30,58],[28,44],[32,42]],country:'IRAN',closed:true},
+    {poly:[[37,38],[37,46],[30,46],[29,38],[33,36]],country:'IRAQ',closed:true},
+    {poly:[[20,42],[18,48],[14,48],[12,44],[16,40]],country:'YEMEN',closed:true},
+    {poly:[[32,35],[34,39],[30,40],[28,38],[30,34]],country:'JORDAN',closed:false},
+    {poly:[[26,52],[28,57],[24,59],[22,55],[22,51]],country:'UAE',closed:false},
+    {poly:[[29,35],[32,38],[31,45],[27,47],[25,42],[27,36]],country:'SAUDI ARABIA',closed:false},
+  ];
+  airspaceZones.forEach(z=>{
+    L.polygon(z.poly,{
+      color:z.closed?'rgba(255,140,0,.35)':'rgba(255,140,0,.25)',weight:1,
+      fillColor:z.closed?'rgba(255,20,20,.06)':'rgba(255,140,0,.04)',fillOpacity:1,
+      dashArray:'3 5'
+    }).addTo(lyrGroups['airspace-lyr'])
+      .bindTooltip(`<b>${z.country}</b> · ${z.closed?'AIRSPACE CLOSED':'RESTRICTED'}`,{sticky:true});
+  });
+
+  // ── Trajectory arcs ──
+  function arc(o,t,steps,bulge){
+    const pts=[];
+    for(let i=0;i<=steps;i++){
+      const r=i/steps;
+      pts.push([o[0]+(t[0]-o[0])*r+Math.sin(r*Math.PI)*bulge*.3,o[1]+(t[1]-o[1])*r]);
+    }
+    return pts;
+  }
+  const trajs=[
+    {o:[32.4,48.8],t:[25.2,55.3],type:'ballistic',label:'IRGC BALLISTIC → UAE',conf:91},
+    {o:[32.4,48.8],t:[29.3,47.5],type:'ballistic',label:'IRGC BALLISTIC → KUWAIT',conf:88},
+    {o:[36.3,59.6],t:[32.6,38.0],type:'ballistic',label:'NE IRAN → JORDAN THAAD',conf:85},
+    {o:[32.4,48.8],t:[25.1,51.3],type:'ballistic',label:'IRGC → QATAR THAAD',conf:87},
+    {o:[32.4,48.8],t:[26.1,50.6],type:'ballistic',label:'IRGC → BAHRAIN 5TH FLEET',conf:84},
+    {o:[15.5,44.3],t:[24.7,46.7],type:'drone',label:'HOUTHI → RIYADH SECTOR',conf:79},
+    {o:[15.5,44.3],t:[25.2,55.3],type:'drone',label:'HOUTHI DRONE → UAE',conf:76},
+    {o:[33.3,44.4],t:[32.6,38.0],type:'drone',label:'IRAQ PMF → JORDAN',conf:72},
+  ];
+  trajs.forEach(tr=>{
+    const isBallistic=tr.type==='ballistic';
+    const col=isBallistic?'rgba(255,140,0,.5)':'rgba(255,130,0,.5)';
+    const pts=arc(tr.o,tr.t,50,isBallistic?4:1.5);
+    L.polyline(pts,{color:col,weight:isBallistic?2:1.4,dashArray:isBallistic?'none':'5 4',opacity:.8})
+      .addTo(lyrGroups['missile'])
+      .bindTooltip(`<span style="font-size:8px;">${tr.label} · CONF ${tr.conf}%</span>`);
+  });
+
+  // ── THAAD range rings (add to missile layer) ──
+  const thaadSites=[
+    {lat:32.56,lon:37.97,label:'JORDAN MUWAFFAQ',status:'DESTROYED'},
+    {lat:24.09,lon:52.73,label:'UAE RUWAIS',status:'HIT'},
+    {lat:24.25,lon:54.55,label:'UAE AL SADER',status:'HIT'},
+    {lat:24.06,lon:47.58,label:'SAUDI PRINCE SULTAN',status:'SMOKE'},
+    {lat:25.12,lon:51.31,label:'QATAR UMM DAHAL',status:'DESTROYED'},
+  ];
+  thaadSites.forEach(s=>{
+    const dead=['DESTROYED','HIT'].includes(s.status);
+    L.circle([s.lat,s.lon],{
+      radius:150000,
+      color:dead?'rgba(255,140,0,.35)':'rgba(196,255,44,.25)',weight:1,
+      fillColor:dead?'rgba(255,140,0,.04)':'rgba(196,255,44,.03)',fillOpacity:1,
+      dashArray:dead?'4 6':''
+    }).addTo(lyrGroups['missile'])
+      .bindTooltip(`THAAD · ${s.label} · ${s.status}`,{sticky:true});
+  });
+
+  // ── Real strike/intercept data ──
+  /* ── Mar 10 live events (IranWarLive OSINT seed) ── */
+  addIwlFeed('IRGC: 1-TONNE WARHEAD MISSILES · MORE VECTORS DEPLOYING','missile','IRGC rejects US missile programme destroyed claim',95,'07:44');
+  addIwlFeed('HEGSETH: TODAY MOST INTENSE STRIKE DAY — DAY 10 OP. EPIC FURY','airstrike','US SecDef announces peak escalation',99,'06:15');
+  addIwlFeed('TRUMP: HIT 20X HARDER IF HORMUZ BLOCKED · WAR ENDS SOON','diplomatic','Direct presidential threat on Strait of Hormuz',99,'05:30');
+  addIwlFeed('CENTCOM: IRAN BALLISTIC ATTACKS -90% LAST 24HRS','intercept','Adm. Cooper confirms significant IRGC degradation',94,'04:55');
+  addIwlFeed('MOJTABA KHAMENEI NAMED SUPREME LEADER · IRGC HARDLINER','diplomatic','Confirmed new Supreme Leader — IRGC loyalist',92,'03:22');
+  addIwlFeed('AMAZON AWS BAHRAIN + 2 UAE FACILITIES OFFLINE · DRONE STRIKES','airstrike','AWS health dashboard: all facilities remain down',96,'Mar 9 22:10');
+  addIwlFeed('IRAN: 1,100+ CIVILIAN DEATHS CONFIRMED · HIGHER POSSIBLE','missile','US-based human rights group · IRNA: 1,230+',88,'Mar 9');
+  addIwlFeed('40 KILLED IN TEHRAN · CONTINUED US-ISRAEL STRIKES TODAY','airstrike','Al Jazeera live blog Mar 10 confirmed',91,'Mar 10 04:12');
+  addIwlFeed('STRAIT OF HORMUZ EFFECTIVELY CLOSED · TANKER RATES +94%','missile','VLCC benchmark $423,736/day — record high',97,'Mar 8');
+  addIwlFeed('BRENT CRUDE: $107+ PER BARREL · FIRST TIME IN 4 YEARS','diplomatic','Chicago CME · +16.5% from Friday close $92',85,'Mar 8');
+  addIwlFeed('RUSSIA FEEDING IRAN INTEL ON US WARSHIP POSITIONS','diplomatic','Defence News / Def.Asia sources confirmed',82,'Mar 9');
+  addIwlFeed('OP. EPIC FURY · DAY 10 · WAR COST EST. $155M/DAY','airstrike','Brown Univ / NPP cost model · sustained ops phase',80,'Mar 10');
+  mkMissile(25.2048,55.2708,'UAE · DUBAI THEATRE','165 ballistic · 2 cruise · 541 drones · 35 territory impacts',91,'UAE MoD','Feb 28 – Mar 10');
+  mkMissile(29.3117,47.4818,'KUWAIT · MAIN THEATRE','97 ballistic + 283 drones intercepted',88,'KWT MoD','Feb 28 – Mar 10');
+  mkMissile(25.2854,51.1337,'QATAR · UMM DAHAL','UEWR radar $1.1B destroyed Mar 3 · 18 engaged',90,'QTR MoD','Mar 3');
+  mkMissile(26.0667,50.5577,'BAHRAIN · 5TH FLEET HQ','5th Fleet HQ partially hit · 45 ballistic + 9 drones',85,'CENTCOM','Mar 4–7');
+  mkMissile(32.5568,37.9653,'JORDAN · MUWAFFAQ SALTI','THAAD battery DESTROYED · SAT confirmed',92,'SAT','Mar 2');
+  mkMissile(24.0895,52.6177,'UAE · RUWAIS THAAD','THAAD node hit — radar coverage degraded',87,'SAT','Mar 1');
+
+  mkIntercept(24.4539,54.3773,'UAE · ABU DHABI PATRIOT','PAC-3 engagement · 94% intercept rate',94,'UAE MoD','Mar 8','Patriot PAC-3 battery, full operational');
+  mkIntercept(25.0657,55.1713,'UAE · DUBAI CORRIDOR','Integrated AD engagement · 180+ rounds',91,'UAE MoD','Mar 5–9','SHORAD + Patriot combined engagement');
+  mkIntercept(29.3679,47.9808,'KUWAIT · PATRIOT','Complete intercept · 0 ground impacts',96,'KWT MoD','Mar 7','97 ballistic rounds intercepted, 0 leaked');
+
+  mkAirstrike(32.4,48.8,'IRGC · KHORRAMSHAR LAUNCH','Shahab-3 / Fattah-2 confirmed launch site',91,'SAT','–2h');
+  mkAirstrike(36.28,59.6,'NE IRAN · KHORASAN COMPLEX','3 ballistic salvos confirmed from NE complex',88,'SAT','–4h');
+  mkAirstrike(15.35,44.2,'HOUTHI · SANAA SECTOR','Drone + anti-ship missile staging active',83,'UKMO','–1h');
+  mkAirstrike(33.3,44.4,'IRAQ · PMF CORRIDOR','Proxy drone staging confirmed · western Iraq',79,'OSINT','–3h');
+  mkAirstrike(23.6,38.5,'RED SEA · COMMERCIAL SHIPPING','Houthi anti-ship missile attack corridor',80,'UKMO','–5h');
+  mkAirstrike(31.5,34.8,'ISRAEL · IRON DOME','Multi-axis drone + missile intercept',89,'IDF','Mar 9');
+
+  mkGround(24.43,54.65,'AL DHAFRA AB · UAE · F-35 + B-52','USAF fwd operating, active CAP');
+  mkGround(25.12,55.37,'AL MINHAD AB · UAE · F-16','UAE + US joint CAP missions');
+  mkGround(25.12,51.31,'AL UDEID · QATAR · CENTCOM FWD','E-8 JSTARS active, CENTCOM HQ operations');
+  mkGround(24.06,47.58,'PRINCE SULTAN AB · KSA','THAAD + F-15, smoke reported Mar 7');
+  mkGround(31.34,36.14,'AL ASRAK AB · JORDAN · RJAF','USAF + RJAF, active CAP post-THAAD loss');
+  mkGround(26.19,50.59,'NSA BAHRAIN · 5TH FLEET','Degraded post-strike, fwd operational');
+  mkGround(22.8,57.5,'MASIRAH AB · OMAN','Logistics + ISR support base');
+  mkGround(29.54,34.95,'AQABA SECTOR · RED SEA','Naval approach corridor, CSG9 staging');
+  mkGround(30.0,31.2,'EGYPT · SUEZ APPROACH','Egyptian AD elevated posture');
+  mkGround(38.6,34.8,'TURKEY · INCIRLIK AB','NATO ISR elevated alert');
+  mkGround(32.8,35.0,'ISRAEL · NEVATIM AB','IDF strategic bomber alert');
+  mkGround(25.7,32.2,'EGYPT · CAIRO WEST','Egyptian AF elevated readiness');
+  mkGround(24.2,23.4,'EGYPT · SOUTH','Egyptian ground forces southwestern sector');
+  mkGround(15.3,44.2,'YEMEN · HOUTHI TERRITORY','IRGC proxy force confirmed active');
+
+  mkCombatant(24.5,57.5,'USS CVN-71 THEODORE ROOSEVELT','CSG9 · F/A-18 armed · Arabian Sea · active CAP');
+  mkCombatant(26.19,50.59,'NAVCENT / 5TH FLEET HQ','NSA Bahrain · partially operational · degraded post-strike');
+  mkCombatant(23.5,60.2,'USS BATAAN (ARG)','Amphibious Ready Group · Gulf of Oman');
+  mkCombatant(32.0,34.5,'IDF NAVAL · MEDITERRANEAN','Israeli Navy elevated posture');
+  mkCombatant(38.0,20.0,'HMS QUEEN ELIZABETH','Royal Navy CSG · Eastern Mediterranean');
+  mkCombatant(36.5,2.5,'USS HARRY S TRUMAN','CSG8 · Western Mediterranean / transit');
+  mkCombatant(43.5,12.0,'USS MOUNT WHITNEY','6th Fleet command ship');
+
+  mkDiplomatic(51.5,-0.1,'UK — LONDON HQ','FCDO crisis meeting · diplomatic deconfliction active');
+  mkDiplomatic(2.35,48.85,'FRANCE — PARIS','Elysée crisis cell active · ME envoy deployed');
+  mkDiplomatic(-77.0,38.9,'USA — WASHINGTON DC','NSC emergency session · DEFCON watch elevated');
+  mkDiplomatic(37.6,55.75,'RUSSIA — MOSCOW','MFA briefing UNSC members · opposing sanctions');
+
+  // ── Live IranWarLive feed attempt ──
+  const dot=document.getElementById('iwl-dot');
+  const syncLbl=document.getElementById('iwl-sync-lbl');
+  const datalinkEl=document.getElementById('iwl-datalink-t');
+  const statusDot=document.getElementById('iwl-status-dot');
+
+  fetch('https://iranwarlive.com/feed.json')
+    .then(r=>r.ok?r.json():Promise.reject('cors'))
+    .then(data=>{
+      syncLbl.textContent='LIVE · IRANWARLIVE.COM';
+      datalinkEl.textContent='SECURE DATALINK ESTABLISHED · IRANWARLIVE.COM · LIVE';
+      dot.style.background='#C4FF2C';
+      if(statusDot)statusDot.className='sys-dot on';
+      if(Array.isArray(data)){
+        data.slice(0,60).forEach(e=>{
+          if(!e.lat||!e.lon)return;
+          const tp=(e.type||'').toLowerCase();
+          if(tp.includes('intercept'))mkIntercept(+e.lat,+e.lon,e.title||'INTERCEPT',e.description||'',e.confidence||75,'IRANWARLIVE',e.time||'LIVE');
+          else if(tp.includes('air'))mkAirstrike(+e.lat,+e.lon,e.title||'AIR STRIKE',e.description||'',e.confidence||75,'IRANWARLIVE',e.time||'LIVE');
+          else mkMissile(+e.lat,+e.lon,e.title||'MISSILE STRIKE',e.description||'',e.confidence||75,'IRANWARLIVE',e.time||'LIVE');
+        });
+      }
+    })
+    .catch(()=>{
+      syncLbl.textContent='STATIC · OSINT DATABASE';
+      datalinkEl.textContent='STATIC DATALINK · OSINT DATABASE · '+new Date().toISOString().slice(0,10);
+      dot.style.background='rgba(255,140,0,.9)';
+      dot.style.boxShadow='0 0 6px rgba(255,140,0,.9)';
+    });
+
+  // ── IWL Tab logic ──
+  window.iwlTab=function(el,tab){
+    document.querySelectorAll('.iwl-tab').forEach(t=>t.classList.remove('on'));
+    el.classList.add('on');
+    document.querySelectorAll('.iwl-tabcontent').forEach(t=>t.classList.remove('active'));
+    const left=document.querySelector('.iwl-left');
+    const right=document.querySelector('.iwl-right');
+    if(tab==='map'){
+      if(left)left.style.display='flex';
+      if(right)right.style.display='flex';
+    }else{
+      if(left)left.style.display='none';
+      if(right)right.style.display='none';
+      const tc=document.getElementById('tab-'+tab);
+      if(tc)tc.classList.add('active');
+    }
+  };
+
+  // ── IWL Layer toggle ──
+  window.iwlToggle=function(row){
+    const lyrName=row.getAttribute('data-layer');
+    const lyr=lyrGroups[lyrName];
+    const tog=row.querySelector('.iwl-toggle');
+    if(!lyr||!tog)return;
+    if(map.hasLayer(lyr)){
+      map.removeLayer(lyr);
+      tog.classList.add('off');
+      row.style.opacity='.45';
+    }else{
+      map.addLayer(lyr);
+      tog.classList.remove('off');
+      row.style.opacity='1';
+    }
+  };
+
+  // ── Layer panel collapse ──
+  window.togglePanel=function(hdr){
+    const body=hdr.parentElement.querySelector('.iwl-layer-body');
+    const arrow=hdr.querySelector('.iwl-ph-arrow');
+    if(!body)return;
+    const isOpen=body.style.display!=='none';
+    body.style.display=isOpen?'none':'block';
+    if(arrow)arrow.classList.toggle('open',!isOpen);
+  };
+
+  // ── Intel feed ──
+  let iwlEvents=[],iwlId=0,iwlFeedFilter='mil';
+  function addIwlFeed(title,type,detail,conf,time,col){
+    const isMil=['missile','airstrike','intercept','ground'].includes(type);
+    iwlEvents.unshift({id:++iwlId,title,type,detail,conf,time,col,isMil});
+    if(iwlEvents.length>50)iwlEvents.pop();
+    renderIwlFeed();
+  }
+  function renderIwlFeed(){
+    const f=document.getElementById('iwl-feed');if(!f)return;
+    const ct=document.getElementById('iwl-feed-ct');
+    const visible=iwlFeedFilter==='mil'?iwlEvents.filter(e=>e.isMil):iwlEvents;
+    if(ct)ct.textContent=visible.length;
+    const typeTag={missile:'iwl-tag-strike',airstrike:'iwl-tag-launch',intercept:'iwl-tag-intercept',launch:'iwl-tag-launch',ground:'iwl-tag-conf',combatants:'iwl-tag-conf',diplomatic:'iwl-tag-conf'};
+    f.innerHTML=visible.map(e=>`
+      <div class="iwl-evt">
+        <div class="iwl-evt-top">
+          <div class="iwl-evt-dot" style="background:${e.col};box-shadow:0 0 4px ${e.col};"></div>
+          <span class="iwl-evt-id">EVT-${String(e.id).padStart(4,'0')}</span>
+          <span class="iwl-evt-time">${e.time||new Date().toISOString().slice(11,16)}</span>
+        </div>
+        <div class="iwl-evt-title">${e.title}</div>
+        <div class="iwl-evt-tags">
+          <span class="iwl-tag ${typeTag[e.type]||'iwl-tag-conf'}">${e.type.toUpperCase()}</span>
+          <span class="iwl-tag iwl-tag-conf">CONF ${e.conf}%</span>
+          ${e.detail?`<span class="iwl-tag iwl-tag-conf">${e.detail.slice(0,30)}…</span>`:''}
+        </div>
+      </div>
+    `).join('');
+    // Last strike time
+    if(visible.length>0){const ls=document.getElementById('last-strike');if(ls)ls.textContent=visible[0].time||'NOW';}
+  }
+  window.iwlFtab=function(el,tab){
+    document.querySelectorAll('.iwl-ftab').forEach(t=>t.classList.remove('on'));
+    el.classList.add('on');
+    iwlFeedFilter=tab;
+    renderIwlFeed();
+  };
+
+  // ── CALC threat ──
+  window.calcThreat=function(){
+    const score=Math.floor(Math.random()*8+88);
+    alert(`HADAL THREAT CALC\n\nTHEATRE THREAT INDEX: ${score}/100\nCLASSIFICATION: CRITICAL\n\nAIR DEFENCE COVER: 61%\nACTIVE VECTORS: 8\nTHAAD NODES DEGRADED: 5/5\nINTERCEPTIONS CONFIRMED: 1,160\n\nSOURCE: OSINT / HADAL ANALYTICS`);
+  };
+
+  // ── SITREP export ──
+  window.exportSitrep=function(){
+    const t=new Date().toISOString();
+    const lines=[
+      '═══════════════════════════════════════════════',
+      'HADAL THREAT INTELLIGENCE TERMINAL',
+      'TACTICAL SITREP · '+t,
+      '═══════════════════════════════════════════════',
+      'THEATRE: GULF / MIDDLE EAST',
+      'CLASSIFICATION: OSINT UNCLASSIFIED',
+      'GENERATED BY: HADAL v1.0 / MASTERBLOX CAPITAL',
+      '',
+      '■ THEATRE STATUS: CRITICAL — ACTIVE CONFLICT',
+      '■ INTERCEPTIONS CONFIRMED: 1,160',
+      '■ THAAD NODES DEGRADED: 5 of 5',
+      '■ AIR DEFENCE COVERAGE: 61% (DEGRADED)',
+      '■ AIRSPACE CLOSED: IRN / IRQ / YEM',
+      '■ NAVAL ASSETS: CSG9 + 5TH FLEET + ARG BATAAN',
+      '',
+      '■ STRIKE DATA:',
+      '  UAE: 165 BALLISTIC + 2 CRUISE + 541 DRONES · 35 IMPACTS',
+      '  KUWAIT: 97 BALLISTIC + 283 DRONES INTERCEPTED',
+      '  QATAR: 18 ENGAGED · UEWR RADAR DESTROYED ($1.1B)',
+      '  BAHRAIN: 45 MISSILES + 9 DRONES · 5TH FLEET HQ HIT',
+      '  JORDAN: MUWAFFAQ THAAD DESTROYED (SAT MAR 2)',
+      '',
+      '■ INTEL FEED EVENTS (LAST 10):',
+      ...iwlEvents.slice(0,10).map(e=>`  [${e.type.toUpperCase()}] ${e.title} · CONF ${e.conf}%`),
+      '',
+      'DATA SOURCE: IRANWARLIVE.COM / OSINT / MoD VERIFIED',
+      '═══════════════════════════════════════════════',
+    ].join('\n');
+    const blob=new Blob([lines],{type:'text/plain'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='HADAL_SITREP_'+t.slice(0,10)+'.txt';a.click();
+  };
+
+  // ── Posturing panel ──
+  const postures=[
+    {e:'USA',l:'COALITION',p:'HEGSETH: "MOST INTENSE DAY" · DAY 10',col:'rgba(255,140,0,.9)'},
+    {e:'IRAN',l:'AXIS',p:'IRGC: 1-TONNE WARHEADS DEPLOYING · MORE MISSILES',col:'rgba(255,140,0,.9)'},
+    {e:'TRUMP',l:'COALITION',p:'"HIT 20X HARDER" RE: HORMUZ · WAR ENDS SOON',col:'rgba(255,140,0,.8)'},
+    {e:'CENTCOM',l:'COALITION',p:'IRAN MISSILES -90% LAST 24HRS · CONFIRMED',col:'rgba(196,255,44,.7)'},
+    {e:'MOJTABA K.',l:'AXIS',p:'NEW SUPREME LEADER · IRGC LOYALIST',col:'rgba(255,140,0,.7)'},
+    {e:'HORMUZ',l:'AXIS',p:'STRAIT EFFECTIVELY CLOSED · TANKER RATES +94%',col:'rgba(255,140,0,.8)'},
+    {e:'HOUTHI',l:'AXIS',p:'DRONE OFFENSIVE ACTIVE · RED SEA',col:'rgba(255,140,0,.7)'},
+    {e:'UK',l:'COALITION',p:'DIPLOMATIC DECONFLICT · AKROTIRI STRUCK',col:'rgba(196,255,44,.5)'},
+  ];
+  const pEl=document.getElementById('posturing-list');
+  if(pEl)pEl.innerHTML=postures.map(p=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(196,255,44,.04);"><span style="font-family:var(--HEAD);font-weight:700;font-size:8px;letter-spacing:.08em;color:var(--g5);">${p.e} <span style="color:rgba(196,255,44,.3);font-size:6.5px;">(${p.l})</span></span><span style="font-family:var(--MONO);font-size:7.5px;color:${p.col};">${p.p}</span></div>`).join('');
+
+  const dipl=[
+    {actor:'IRAN IRGC',action:'Rejects US ceasefire offer — deploying more warheads',status:'HOSTILE'},
+    {actor:'US SENATE',action:'War powers resolution FAILED — Trump continues strikes',status:'ESCALATING'},
+    {actor:'AMAZON AWS',action:'Bahrain + 2 UAE data centers offline — drone hit',status:'INCIDENT'},
+    {actor:'IRAN FM',action:'Targeting US assets, not neighbors — claims',status:'ACTIVE'},
+    {actor:'TURKEY',action:'NATO deconfliction — Article 4 discussion after missile',status:'ACTIVE'},
+    {actor:'QATAR MEDIATION',action:'Back-channel talks IRN/US stalled',status:'STALLED'},
+    {actor:'RUSSIA',action:'UNSC veto threatened · feeding Iran warship intel',status:'HOSTILE'},
+    {actor:'MOJTABA K.',action:'Named Supreme Leader — IRGC hard-liner confirmed',status:'NEW'},
+  ];
+  const dEl=document.getElementById('diplomatic-list');
+  if(dEl)dEl.innerHTML=dipl.map(d=>`<div style="padding:5px 0;border-bottom:1px solid rgba(196,255,44,.04);"><div style="font-family:var(--HEAD);font-weight:700;font-size:8px;color:var(--g5);">${d.actor}</div><div style="font-family:var(--MONO);font-size:7.5px;color:var(--g3);margin-top:2px;">${d.action}</div><div style="font-family:var(--HEAD);font-size:6.5px;color:${d.status==='ACTIVE'?'var(--g)':d.status==='BLOCKING'?'rgba(255,140,0,.8)':'rgba(196,255,44,.4)'};margin-top:1px;letter-spacing:.1em;">${d.status}</div></div>`).join('');
+
+  // ── Coord display ──
+  map.on('mousemove',e=>{
+    // Could update a status bar if needed
+  });
+
+  // ── Periodic sync label update ──
+  setInterval(()=>{
+    const lbl=document.getElementById('iwl-sync-lbl');
+    if(lbl&&lbl.textContent.includes('STATIC'))lbl.textContent='STATIC · '+new Date().toISOString().slice(11,19)+' UTC';
+  },10000);
+
+  // Init all toggles to "on"
+  document.querySelectorAll('.iwl-toggle').forEach(t=>t.classList.remove('off'));
+
+  // ── Casualty counter animation ──
+  function animateCounter(id,target){
+    const el=document.getElementById(id);if(!el)return;
+    let cur=0;const step=()=>{cur=Math.min(cur+Math.ceil(target/60),target);el.textContent=cur.toLocaleString();if(cur<target)requestAnimationFrame(step);};
+    step();
+  }
+  setTimeout(()=>{animateCounter('cas-mil',1847);animateCounter('cas-civ',423);animateCounter('cas-ent',11);},800);
+
+})();
+
+/* ══ CLOCK + PRESSURE ══ */
+function tick(){
+  const t=new Date().toISOString().replace('T',' ').slice(0,19)+' UTC';
+  document.getElementById('clock').textContent=t;
+}
+tick();setInterval(tick,1000);
+let pv=10924;setInterval(()=>{pv+=Math.floor(Math.random()*3-1);document.getElementById('pressure').textContent=pv.toLocaleString()+' BAR';},2200);
+
+/* ══ DATALINK BLINK TEXT ══ */
+const dlmsgs=['ESTABLISHING SECURE DATALINK...','SYNCING OSINT FEEDS · 44 SOURCES...','THEATRE LOCK CONFIRMED · GULF ACTIVE...','CROSS-REFERENCING SAT + MoD DATA...','HADAL ANALYTICS ENGINE · ONLINE...'];
+let dli=0;
+setInterval(()=>{
+  const el=document.getElementById('iwl-datalink-t');
+  if(el&&el.textContent.includes('STATIC')||!el)return;
+  if(el&&el.textContent.includes('ESTABLISHED'))return;
+  dli=(dli+1)%dlmsgs.length;
+  el.textContent=dlmsgs[dli];
+},3200);
+</script>
+</body>
+</html>

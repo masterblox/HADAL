@@ -8,7 +8,24 @@
 
 **Coming soon:** HADAL is the next architecture pass for this project, intended to evolve the current stack into a stricter threat-intelligence terminal with clearer module boundaries and better separation between ingestion, scoring, and UI delivery.
 
-Blueprint and architecture guidelines live in [HADAL_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/HADAL_BLUEPRINT.md).
+## Repo Map
+
+- Active frontend shell: [src](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/src)
+- Standalone HADAL prototype: [hadal.html](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/hadal.html)
+- Data pipeline: [scripts](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/scripts)
+- Public data artifacts: [public](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/public)
+- Archived Gulf Watch frontend: [legacy](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/legacy)
+- Project docs index: [docs/README.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/README.md)
+- Handoff map: [docs/handoff/REPO_MAP.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/REPO_MAP.md)
+
+## Key Docs
+
+- Architecture blueprint: [docs/architecture/HADAL_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_BLUEPRINT.md)
+- Repurposing blueprint: [docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md)
+- Extraction plan: [docs/architecture/HADAL_EXTRACTION_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_EXTRACTION_PLAN.md)
+- Design reference: [docs/reference/DESIGN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/DESIGN.md)
+- Circuit breaker reference: [docs/reference/CIRCUIT_BREAKER.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/CIRCUIT_BREAKER.md)
+- Security reference: [docs/reference/SECURITY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/SECURITY.md)
 
 ---
 

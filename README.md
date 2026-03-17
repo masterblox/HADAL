@@ -4,6 +4,12 @@
 
 🌐 **Live Demo**: https://gulfwatch-testing.vercel.app
 
+## HADAL
+
+**Coming soon:** HADAL is the next architecture pass for this project, intended to evolve the current stack into a stricter threat-intelligence terminal with clearer module boundaries and better separation between ingestion, scoring, and UI delivery.
+
+Blueprint and architecture guidelines live in [HADAL_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/HADAL_BLUEPRINT.md).
+
 ---
 
 ## 🎯 What is Gulf Watch?

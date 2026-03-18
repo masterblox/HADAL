@@ -37,7 +37,7 @@ export function PosturingTab({ sandbox }: PosturingTabProps) {
                 <div key={d.actor} className="iwl-data-entry">
                   <div className="iwl-data-entry-name">{d.actor}</div>
                   <div className="iwl-data-entry-desc">{d.action}</div>
-                  <div className="iwl-data-entry-status" style={{color:d.status==='ACTIVE'?'var(--g)':'rgba(196,255,44,.4)'}}>{d.status}</div>
+                  <div className="iwl-data-entry-status" style={{color:d.status==='ACTIVE'?'var(--g)':'rgba(218,255,74,.4)'}}>{d.status}</div>
                 </div>
               ))}
             </div>

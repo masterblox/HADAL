@@ -285,7 +285,7 @@ export function EconomicSection({ prices, sandbox }: EconomicSectionProps) {
                               {card.series.map(point => (
                                 <Cell
                                   key={`${card.symbol}-${point.idx}`}
-                                  fill={point.value >= card.series[Math.max(point.idx - 1, 0)].value ? 'rgba(196,255,44,.68)' : 'rgba(255,90,20,.72)'}
+                                  fill={point.value >= card.series[Math.max(point.idx - 1, 0)].value ? 'rgba(218,255,74,.68)' : 'rgba(255,90,20,.72)'}
                                 />
                               ))}
                             </Bar>

@@ -50,16 +50,16 @@ export function useSonar(objects?: TrackedObject[]) {
       // Rings
       ;[R * .25, R * .5, R * .75, R].forEach((r, i) => {
         x.beginPath(); x.arc(cx, cy, r, 0, Math.PI * 2)
-        x.strokeStyle = `rgba(196,255,44,${i === 3 ? .22 : .1})`; x.lineWidth = i === 3 ? 1 : .6; x.stroke()
+        x.strokeStyle = `rgba(218,255,74,${i === 3 ? .22 : .1})`; x.lineWidth = i === 3 ? 1 : .6; x.stroke()
       })
 
       // Crosshairs
       x.beginPath(); x.moveTo(cx - R, cy); x.lineTo(cx + R, cy)
-      x.strokeStyle = 'rgba(196,255,44,.07)'; x.lineWidth = .6; x.stroke()
+      x.strokeStyle = 'rgba(218,255,74,.07)'; x.lineWidth = .6; x.stroke()
       x.beginPath(); x.moveTo(cx, cy - R); x.lineTo(cx, cy + R); x.stroke()
       x.setLineDash([3, 6])
       x.beginPath(); x.moveTo(cx - R * .7, cy - R * .7); x.lineTo(cx + R * .7, cy + R * .7)
-      x.strokeStyle = 'rgba(196,255,44,.04)'; x.stroke()
+      x.strokeStyle = 'rgba(218,255,74,.04)'; x.stroke()
       x.beginPath(); x.moveTo(cx + R * .7, cy - R * .7); x.lineTo(cx - R * .7, cy + R * .7); x.stroke()
       x.setLineDash([])
 
@@ -68,14 +68,14 @@ export function useSonar(objects?: TrackedObject[]) {
       for (let i = 0; i < 22; i++) {
         const fa = a - i * .06
         x.beginPath(); x.moveTo(0, 0); x.arc(0, 0, R, fa, fa + .1); x.closePath()
-        x.fillStyle = `rgba(196,255,44,${(.28 - i * .012).toFixed(3)})`; x.fill()
+        x.fillStyle = `rgba(218,255,74,${(.28 - i * .012).toFixed(3)})`; x.fill()
       }
       x.restore()
 
       // Sweep line
       x.save(); x.translate(cx, cy)
       x.beginPath(); x.moveTo(0, 0); x.lineTo(R * Math.cos(a), R * Math.sin(a))
-      x.strokeStyle = 'rgba(196,255,44,.55)'; x.lineWidth = 1.2; x.stroke()
+      x.strokeStyle = 'rgba(218,255,74,.55)'; x.lineWidth = 1.2; x.stroke()
       x.restore()
 
       // Plot tracked objects
@@ -101,7 +101,7 @@ export function useSonar(objects?: TrackedObject[]) {
 
       // Center dot
       x.beginPath(); x.arc(cx, cy, 2, 0, Math.PI * 2)
-      x.fillStyle = 'rgba(196,255,44,.6)'; x.fill()
+      x.fillStyle = 'rgba(218,255,74,.6)'; x.fill()
 
       a += .012
       raf = requestAnimationFrame(f)

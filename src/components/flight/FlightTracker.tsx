@@ -6,7 +6,7 @@ import { useOpenSky, type OpenSkyStatus } from '@/hooks/useOpenSky'
 
 /* ── colour by type ── */
 const TYPE_COL: Record<DemoFlight['type'], string> = {
-  commercial:   'rgba(196,255,44,.8)',
+  commercial:   'rgba(218,255,74,.8)',
   military:     'rgba(255,140,0,.9)',
   cargo:        'rgba(120,200,255,.7)',
   surveillance: 'rgba(255,60,60,.85)',

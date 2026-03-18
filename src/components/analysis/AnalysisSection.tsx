@@ -12,7 +12,7 @@ import { demoIncidents } from '@/data/demo-incidents'
 const TICK = {
   fontFamily: 'var(--MONO)',
   fontSize: 8,
-  fill: 'rgba(196,255,44,.4)',
+  fill: 'rgba(218,255,74,.4)',
   letterSpacing: '.06em',
 }
 
@@ -41,7 +41,7 @@ function SourceTip({ active, payload, label }: any) {
     <div className="analysis-tooltip">
       <div className="analysis-tooltip-label">{label}</div>
       <div className="analysis-tooltip-row">
-        <span className="analysis-tooltip-dot" style={{ background: '#C4FF2C', color: '#C4FF2C' }} />
+        <span className="analysis-tooltip-dot" style={{ background: '#DAFF4A', color: '#DAFF4A' }} />
         <span>Events</span>
         <span style={{ color: 'var(--g)', fontWeight: 700 }}>{d?.count}</span>
       </div>
@@ -191,20 +191,20 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
                 <AreaChart data={timeline} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
                   <defs>
                     <linearGradient id="hadal-area-g" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#C4FF2C" stopOpacity={0.35} />
-                      <stop offset="100%" stopColor="#C4FF2C" stopOpacity={0.02} />
+                      <stop offset="0%" stopColor="#DAFF4A" stopOpacity={0.35} />
+                      <stop offset="100%" stopColor="#DAFF4A" stopOpacity={0.02} />
                     </linearGradient>
                     <linearGradient id="hadal-area-w" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="rgba(255,140,0,1)" stopOpacity={0.3} />
                       <stop offset="100%" stopColor="rgba(255,140,0,1)" stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="2 6" stroke="rgba(196,255,44,.07)" />
+                  <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" />
                   <XAxis
                     dataKey="date"
                     tick={TICK}
                     tickFormatter={(v: string) => v.slice(5)}
-                    axisLine={{ stroke: 'rgba(196,255,44,.15)' }}
+                    axisLine={{ stroke: 'rgba(218,255,74,.15)' }}
                     tickLine={false}
                   />
                   <YAxis tick={TICK} axisLine={false} tickLine={false} allowDecimals={false} />
@@ -213,11 +213,11 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
                     type="monotone"
                     dataKey="events"
                     name="All Events"
-                    stroke="#C4FF2C"
+                    stroke="#DAFF4A"
                     strokeWidth={1.5}
                     fill="url(#hadal-area-g)"
                     dot={false}
-                    activeDot={{ r: 3, fill: '#C4FF2C', strokeWidth: 0 }}
+                    activeDot={{ r: 3, fill: '#DAFF4A', strokeWidth: 0 }}
                   />
                   <Area
                     type="monotone"
@@ -250,11 +250,11 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
                   layout="vertical"
                   margin={{ top: 4, right: 12, bottom: 4, left: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="2 6" stroke="rgba(196,255,44,.07)" horizontal={false} />
+                  <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" horizontal={false} />
                   <XAxis
                     type="number"
                     tick={TICK}
-                    axisLine={{ stroke: 'rgba(196,255,44,.15)' }}
+                    axisLine={{ stroke: 'rgba(218,255,74,.15)' }}
                     tickLine={false}
                     allowDecimals={false}
                   />
@@ -270,7 +270,7 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
                   <Bar
                     dataKey="count"
                     name="Events"
-                    fill="rgba(196,255,44,.55)"
+                    fill="rgba(218,255,74,.55)"
                     radius={[0, 2, 2, 0]}
                     maxBarSize={18}
                   />
@@ -295,17 +295,17 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
             <div className="analysis-chart-stage radar">
               <ResponsiveContainer width="100%" height={280}>
                 <RadarChart data={typeData} cx="50%" cy="50%" outerRadius="72%">
-                  <PolarGrid stroke="rgba(196,255,44,.12)" />
+                  <PolarGrid stroke="rgba(218,255,74,.12)" />
                   <PolarAngleAxis dataKey="type" tick={{ ...TICK, fontSize: 7 }} />
                   <Tooltip content={<Tip />} />
                   <Radar
                     name="Count"
                     dataKey="count"
-                    stroke="#C4FF2C"
+                    stroke="#DAFF4A"
                     strokeWidth={1.5}
-                    fill="rgba(196,255,44,.18)"
+                    fill="rgba(218,255,74,.18)"
                     fillOpacity={1}
-                    dot={{ r: 2.5, fill: '#C4FF2C', strokeWidth: 0 }}
+                    dot={{ r: 2.5, fill: '#DAFF4A', strokeWidth: 0 }}
                   />
                 </RadarChart>
               </ResponsiveContainer>
@@ -328,11 +328,11 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
                   layout="vertical"
                   margin={{ top: 4, right: 12, bottom: 4, left: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="2 6" stroke="rgba(196,255,44,.07)" horizontal={false} />
+                  <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" horizontal={false} />
                   <XAxis
                     type="number"
                     tick={TICK}
-                    axisLine={{ stroke: 'rgba(196,255,44,.15)' }}
+                    axisLine={{ stroke: 'rgba(218,255,74,.15)' }}
                     tickLine={false}
                     allowDecimals={false}
                   />
@@ -348,7 +348,7 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
                   <Bar
                     dataKey="count"
                     name="Events"
-                    fill="rgba(196,255,44,.55)"
+                    fill="rgba(218,255,74,.55)"
                     radius={[0, 2, 2, 0]}
                     maxBarSize={18}
                   />

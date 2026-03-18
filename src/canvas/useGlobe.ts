@@ -21,7 +21,7 @@ export function useGlobe() {
     const hatch = document.createElement('canvas')
     hatch.width = 6; hatch.height = 6
     const hx = hatch.getContext('2d')!
-    hx.strokeStyle = 'rgba(196,255,44,.9)'; hx.lineWidth = .6
+    hx.strokeStyle = 'rgba(218,255,74,.9)'; hx.lineWidth = .6
     hx.beginPath(); hx.moveTo(0, 6); hx.lineTo(6, 0); hx.stroke()
     hx.beginPath(); hx.moveTo(-1, 6); hx.lineTo(6, -1); hx.stroke()
     hx.beginPath(); hx.moveTo(1, 7); hx.lineTo(7, 1); hx.stroke()
@@ -132,10 +132,10 @@ export function useGlobe() {
       pts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
       x.closePath()
       if (doHatch) {
-        x.fillStyle = `rgba(196,255,44,${fillAlpha})`; x.fill()
+        x.fillStyle = `rgba(218,255,74,${fillAlpha})`; x.fill()
         x.save(); x.clip(); x.globalAlpha = hatchAlpha; x.fillStyle = hPat; x.fillRect(0, 0, W, H); x.restore(); x.globalAlpha = 1
       } else {
-        x.fillStyle = `rgba(196,255,44,${fillAlpha})`; x.fill()
+        x.fillStyle = `rgba(218,255,74,${fillAlpha})`; x.fill()
       }
       x.strokeStyle = strokeCol; x.lineWidth = strokeW; x.stroke()
     }
@@ -159,7 +159,7 @@ export function useGlobe() {
         // Flicker
         const flicker = .7 + .3 * Math.sin(time * 2.5 + p.phase)
         const alpha = p.opacity * flicker
-        x.fillStyle = `rgba(196,255,44,${alpha})`
+        x.fillStyle = `rgba(218,255,74,${alpha})`
         x.fillRect(p.x, p.y, p.size, p.size)
       }
     }
@@ -180,11 +180,11 @@ export function useGlobe() {
 
       // Atmosphere
       const atmo = x.createRadialGradient(cx, cy, R * .92, cx, cy, R * 1.15)
-      atmo.addColorStop(0, 'rgba(196,255,44,.14)')
-      atmo.addColorStop(.35, 'rgba(196,255,44,.07)')
-      atmo.addColorStop(.7, 'rgba(196,255,44,.02)')
-      atmo.addColorStop(.85, 'rgba(196,255,44,.005)')
-      atmo.addColorStop(1, 'rgba(196,255,44,0)')
+      atmo.addColorStop(0, 'rgba(218,255,74,.14)')
+      atmo.addColorStop(.35, 'rgba(218,255,74,.07)')
+      atmo.addColorStop(.7, 'rgba(218,255,74,.02)')
+      atmo.addColorStop(.85, 'rgba(218,255,74,.005)')
+      atmo.addColorStop(1, 'rgba(218,255,74,0)')
       x.beginPath(); x.arc(cx, cy, R * 1.15, 0, PI * 2); x.fillStyle = atmo; x.fill()
 
       // Ocean
@@ -197,9 +197,9 @@ export function useGlobe() {
 
       // Specular
       const spec = x.createRadialGradient(cx - R * .3, cy - R * .25, 0, cx - R * .3, cy - R * .25, R * .6)
-      spec.addColorStop(0, 'rgba(196,255,44,.08)')
-      spec.addColorStop(.4, 'rgba(196,255,44,.025)')
-      spec.addColorStop(1, 'rgba(196,255,44,0)')
+      spec.addColorStop(0, 'rgba(218,255,74,.08)')
+      spec.addColorStop(.4, 'rgba(218,255,74,.025)')
+      spec.addColorStop(1, 'rgba(218,255,74,0)')
       x.fillStyle = spec; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       x.restore()
 
@@ -211,7 +211,7 @@ export function useGlobe() {
         for (let lo = -180; lo <= 180; lo += 4) { const p = proj(lo, ln); if (p) pts.push([p[0], p[1]]) }
         if (pts.length > 1) {
           x.beginPath(); pts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
-          x.strokeStyle = ln === 0 ? 'rgba(196,255,44,.18)' : 'rgba(196,255,44,.07)'; x.stroke()
+          x.strokeStyle = ln === 0 ? 'rgba(218,255,74,.18)' : 'rgba(218,255,74,.07)'; x.stroke()
         }
       }
       for (let lo = 0; lo < 360; lo += 20) {
@@ -219,7 +219,7 @@ export function useGlobe() {
         for (let ln = -80; ln <= 80; ln += 4) { const p = proj(lo, ln); if (p) pts.push([p[0], p[1]]) }
         if (pts.length > 1) {
           x.beginPath(); pts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
-          x.strokeStyle = 'rgba(196,255,44,.05)'; x.stroke()
+          x.strokeStyle = 'rgba(218,255,74,.05)'; x.stroke()
         }
       }
       x.setLineDash([])
@@ -230,7 +230,7 @@ export function useGlobe() {
       for (let lat = -90; lat <= 90; lat += 2) { const p = proj(TLon, lat); if (p) termPts.push([p[0], p[1]]) }
       if (termPts.length > 1) {
         x.beginPath(); termPts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
-        x.strokeStyle = 'rgba(196,255,44,.12)'; x.lineWidth = 1; x.stroke()
+        x.strokeStyle = 'rgba(218,255,74,.12)'; x.lineWidth = 1; x.stroke()
       }
 
       // Night side
@@ -246,15 +246,15 @@ export function useGlobe() {
       x.save(); x.beginPath(); x.arc(cx, cy, R, 0, PI * 2); x.clip()
       // General land
       for (let i = 0; i < landPolygons.length; i++) {
-        drawPoly(landPolygons[i], .04, 'rgba(196,255,44,.35)', .7, false, 0)
+        drawPoly(landPolygons[i], .04, 'rgba(218,255,74,.35)', .7, false, 0)
       }
       // Iraq
       for (let i = 0; i < iraqPolygons.length; i++) {
-        drawPoly(iraqPolygons[i], .04, 'rgba(196,255,44,.35)', .7, false, 0)
+        drawPoly(iraqPolygons[i], .04, 'rgba(218,255,74,.35)', .7, false, 0)
       }
       // Gulf hot zone (hatched)
       for (let i = 0; i < gulfPolygons.length; i++) {
-        drawPoly(gulfPolygons[i], .055, 'rgba(196,255,44,.7)', 1.4, true, .08)
+        drawPoly(gulfPolygons[i], .055, 'rgba(218,255,74,.7)', 1.4, true, .08)
       }
       // Iran (orange highlight)
       drawPoly(iranPolygon, .06, 'rgba(255,140,0,.6)', 1.2, false, 0)
@@ -268,7 +268,7 @@ export function useGlobe() {
       const gp = proj(52, 26)
       if (gp) {
         const gg = x.createRadialGradient(gp[0], gp[1], 0, gp[0], gp[1], 42)
-        gg.addColorStop(0, 'rgba(196,255,44,.2)'); gg.addColorStop(1, 'rgba(196,255,44,0)')
+        gg.addColorStop(0, 'rgba(218,255,74,.2)'); gg.addColorStop(1, 'rgba(218,255,74,0)')
         x.fillStyle = gg; x.beginPath(); x.arc(gp[0], gp[1], 42, 0, PI * 2); x.fill()
       }
       x.restore()
@@ -282,9 +282,9 @@ export function useGlobe() {
       rim.addColorStop(1, 'rgba(0,0,0,.72)')
       x.fillStyle = rim; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       const sh = x.createRadialGradient(cx - R * .32, cy - R * .28, 0, cx - R * .32, cy - R * .28, R * .38)
-      sh.addColorStop(0, 'rgba(196,255,44,.09)')
-      sh.addColorStop(.5, 'rgba(196,255,44,.03)')
-      sh.addColorStop(1, 'rgba(196,255,44,0)')
+      sh.addColorStop(0, 'rgba(218,255,74,.09)')
+      sh.addColorStop(.5, 'rgba(218,255,74,.03)')
+      sh.addColorStop(1, 'rgba(218,255,74,0)')
       x.fillStyle = sh; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       x.restore()
 
@@ -293,13 +293,13 @@ export function useGlobe() {
       const ringAlpha = .35 + pulse0 * .08
       // Main ring at R
       x.beginPath(); x.arc(cx, cy, R, 0, PI * 2)
-      x.strokeStyle = `rgba(196,255,44,${ringAlpha})`; x.lineWidth = 2.5; x.stroke()
+      x.strokeStyle = `rgba(218,255,74,${ringAlpha})`; x.lineWidth = 2.5; x.stroke()
       // Inner ring at R-6
       x.beginPath(); x.arc(cx, cy, R - 6, 0, PI * 2)
-      x.strokeStyle = `rgba(196,255,44,${ringAlpha * .3})`; x.lineWidth = 1; x.stroke()
+      x.strokeStyle = `rgba(218,255,74,${ringAlpha * .3})`; x.lineWidth = 1; x.stroke()
       // Outer ring at R+6
       x.beginPath(); x.arc(cx, cy, R + 6, 0, PI * 2)
-      x.strokeStyle = `rgba(196,255,44,${ringAlpha * .2})`; x.lineWidth = 1; x.stroke()
+      x.strokeStyle = `rgba(218,255,74,${ringAlpha * .2})`; x.lineWidth = 1; x.stroke()
 
       // Markers
       const t = t0
@@ -318,12 +318,12 @@ export function useGlobe() {
           x.strokeStyle = `rgba(255,100,0,${.35 * pulse})`; x.lineWidth = 1.2; x.stroke()
         } else {
           // Concentric halo
-          x.beginPath(); x.arc(px, py, 5, 0, PI * 2); x.fillStyle = 'rgba(196,255,44,.1)'; x.fill()
+          x.beginPath(); x.arc(px, py, 5, 0, PI * 2); x.fillStyle = 'rgba(218,255,74,.1)'; x.fill()
           // Core dot
-          x.beginPath(); x.arc(px, py, 3, 0, PI * 2); x.fillStyle = 'rgba(196,255,44,.95)'; x.fill()
+          x.beginPath(); x.arc(px, py, 3, 0, PI * 2); x.fillStyle = 'rgba(218,255,74,.95)'; x.fill()
           // Ping ring
           x.beginPath(); x.arc(px, py, 6 + pulse * 7, 0, PI * 2)
-          x.strokeStyle = `rgba(196,255,44,${.4 * pulse})`; x.lineWidth = 1; x.stroke()
+          x.strokeStyle = `rgba(218,255,74,${.4 * pulse})`; x.lineWidth = 1; x.stroke()
         }
       })
 
@@ -335,7 +335,7 @@ export function useGlobe() {
       }
       const dxb = proj(55.3, 25.2)
       if (dxb) {
-        x.fillStyle = 'rgba(196,255,44,.65)'; x.font = '700 7px "Rajdhani",sans-serif'
+        x.fillStyle = 'rgba(218,255,74,.65)'; x.font = '700 7px "Rajdhani",sans-serif'
         x.fillText('DUBAI', dxb[0] + 5, dxb[1] + 10)
       }
 

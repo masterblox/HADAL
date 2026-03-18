@@ -218,7 +218,7 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
             const flicker = 0.85 + 0.15 * Math.sin(el * 0.01 + p.phase)
             const a = Math.max(0, Math.min(1, alpha * flicker))
             if (a <= 0) continue
-            ctx.fillStyle = `rgba(196,255,44,${a})`
+            ctx.fillStyle = `rgba(218,255,74,${a})`
             ctx.fillRect(x, y, p.size, p.size)
           }
         }
@@ -249,13 +249,13 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
 
           const mainAlpha = Math.min(1, ra + pulse)
           ctx.beginPath(); ctx.arc(cx, cy, ringR, 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(196,255,44,${mainAlpha})`; ctx.lineWidth = 2.5; ctx.stroke()
+          ctx.strokeStyle = `rgba(218,255,74,${mainAlpha})`; ctx.lineWidth = 2.5; ctx.stroke()
 
           ctx.beginPath(); ctx.arc(cx, cy, ringR - 6, 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(196,255,44,${mainAlpha * 0.3})`; ctx.lineWidth = 1; ctx.stroke()
+          ctx.strokeStyle = `rgba(218,255,74,${mainAlpha * 0.3})`; ctx.lineWidth = 1; ctx.stroke()
 
           ctx.beginPath(); ctx.arc(cx, cy, ringR + 6, 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(196,255,44,${mainAlpha * 0.2})`; ctx.lineWidth = 1; ctx.stroke()
+          ctx.strokeStyle = `rgba(218,255,74,${mainAlpha * 0.2})`; ctx.lineWidth = 1; ctx.stroke()
 
           // During hold: add a soft radial glow inside the ring
           if (el >= P_HOLD && el < P_RING_OUT) {
@@ -266,9 +266,9 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
               glowAlpha = 0.06 * Math.max(0, 1 - (el - P_REVEAL) / T_REVEAL)
             }
             const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, ringR)
-            g.addColorStop(0, `rgba(196,255,44,${glowAlpha})`)
-            g.addColorStop(0.7, `rgba(196,255,44,${glowAlpha * 0.3})`)
-            g.addColorStop(1, 'rgba(196,255,44,0)')
+            g.addColorStop(0, `rgba(218,255,74,${glowAlpha})`)
+            g.addColorStop(0.7, `rgba(218,255,74,${glowAlpha * 0.3})`)
+            g.addColorStop(1, 'rgba(218,255,74,0)')
             ctx.fillStyle = g
             ctx.beginPath(); ctx.arc(cx, cy, ringR, 0, Math.PI * 2); ctx.fill()
           }
@@ -284,7 +284,7 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
           for (let a = 0; a < 3; a++) {
             const arcStart = globalRotation * 1.5 + (a * Math.PI * 2 / 3)
             ctx.beginPath(); ctx.arc(cx, cy, irisR, arcStart, arcStart + Math.PI * 0.4)
-            ctx.strokeStyle = `rgba(196,255,44,${aa})`; ctx.lineWidth = 3; ctx.stroke()
+            ctx.strokeStyle = `rgba(218,255,74,${aa})`; ctx.lineWidth = 3; ctx.stroke()
           }
         }
 
@@ -296,9 +296,9 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
           else ga = 0.12 * Math.max(0, 1 - (el - P_DISSOLVE) / (T_DISSOLVE * 0.5))
 
           const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.8)
-          g.addColorStop(0, `rgba(196,255,44,${ga})`)
-          g.addColorStop(0.5, `rgba(196,255,44,${ga * 0.3})`)
-          g.addColorStop(1, 'rgba(196,255,44,0)')
+          g.addColorStop(0, `rgba(218,255,74,${ga})`)
+          g.addColorStop(0.5, `rgba(218,255,74,${ga * 0.3})`)
+          g.addColorStop(1, 'rgba(218,255,74,0)')
           ctx.fillStyle = g
           ctx.beginPath(); ctx.arc(cx, cy, radius * 0.8, 0, Math.PI * 2); ctx.fill()
         }
@@ -354,9 +354,9 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
             fontWeight: 700,
             letterSpacing: '0.3em',
             color: 'transparent',
-            WebkitTextStroke: '1.2px #C4FF2C',
+            WebkitTextStroke: '1.2px #DAFF4A',
             lineHeight: 1,
-            textShadow: '0 0 30px rgba(196,255,44,.4)',
+            textShadow: '0 0 30px rgba(218,255,74,.4)',
           }}
         >
           HADAL
@@ -366,7 +366,7 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
             fontFamily: '"Share Tech Mono", monospace',
             fontSize: 9,
             letterSpacing: '0.35em',
-            color: 'rgba(196,255,44,.5)',
+            color: 'rgba(218,255,74,.5)',
           }}
         >
           THREAT INTELLIGENCE TERMINAL

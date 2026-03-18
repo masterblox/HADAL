@@ -8,8 +8,8 @@ import { airspaceZones } from '@/data/airspace-zones'
 import type { Incident } from '@/hooks/useDataPipeline'
 
 function mkPopup(title: string, type: string, lat: number, lon: number, conf: number, src: string, time: string, detail?: string) {
-  const typeColors: Record<string, string> = {missile:'rgba(255,140,0,.9)',airstrike:'rgba(255,130,0,.9)',ground:'rgba(196,255,44,.65)',intercept:'rgba(196,255,44,.9)',combatants:'rgba(196,255,44,.9)',diplomatic:'rgba(180,120,255,.9)'}
-  const col = typeColors[type] || 'rgba(196,255,44,.8)'
+  const typeColors: Record<string, string> = {missile:'rgba(255,140,0,.9)',airstrike:'rgba(255,130,0,.9)',ground:'rgba(218,255,74,.65)',intercept:'rgba(218,255,74,.9)',combatants:'rgba(218,255,74,.9)',diplomatic:'rgba(180,120,255,.9)'}
+  const col = typeColors[type] || 'rgba(218,255,74,.8)'
   return `<div class="iwl-popup"><div class="iwl-popup-head"><div class="iwl-popup-dot" style="background:${col};box-shadow:0 0 6px ${col};"></div><span class="iwl-popup-title">${title}</span></div><div class="iwl-popup-grid"><span class="iwl-popup-k">TYPE</span><span class="iwl-popup-v">${type.toUpperCase()}</span><span class="iwl-popup-k">COORDS</span><span class="iwl-popup-v">${lat.toFixed(4)}°N ${lon.toFixed(4)}°E</span><span class="iwl-popup-k">CONFIDENCE</span><span class="iwl-popup-v">${conf}%</span><span class="iwl-popup-k">SOURCE</span><span class="iwl-popup-v">${src}</span><span class="iwl-popup-k">TIME</span><span class="iwl-popup-v">${time}</span></div>${detail ? `<div class="iwl-popup-detail">${detail}</div>` : ''}</div>`
 }
 
@@ -60,7 +60,7 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
       const cred = inc.credibility ?? 50
       const isCritical = cred >= 90
       const isHigh = cred >= 70
-      const col = isCritical ? 'rgba(255,60,60,.9)' : isHigh ? 'rgba(255,140,0,.9)' : 'rgba(196,255,44,.8)'
+      const col = isCritical ? 'rgba(255,60,60,.9)' : isHigh ? 'rgba(255,140,0,.9)' : 'rgba(218,255,74,.8)'
       const d = (Math.random() * 2).toFixed(2)
       const html = `<div style="position:relative;width:16px;height:16px;cursor:pointer;"><div class="iwl-ripple-ring" style="inset:-4px;border-color:${col.replace('.9','.4').replace('.8','.3')};animation-delay:${d}s;"></div><svg width="16" height="16" viewBox="0 0 16 16" style="position:absolute;inset:0;"><circle cx="8" cy="8" r="4" fill="${col.replace('.9','.15').replace('.8','.1')}" stroke="${col}" stroke-width="1.5"/><circle cx="8" cy="8" r="1.5" fill="${col}"/></svg></div>`
       const icon = L.divIcon({ html, className: '', iconSize: [16, 16], iconAnchor: [8, 8] })
@@ -84,7 +84,7 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
 
     // Intercept markers
     interceptEvents.forEach(e => {
-      const html = `<div style="position:relative;width:16px;height:16px;cursor:pointer;"><div class="iwl-ripple-ring" style="inset:-5px;border-color:rgba(196,255,44,.35);"></div><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="8,1 15,8 8,15 1,8" fill="rgba(196,255,44,.12)" stroke="rgba(196,255,44,.85)" stroke-width="1.5"/><line x1="5" y1="5" x2="11" y2="11" stroke="rgba(196,255,44,.9)" stroke-width="1.2"/><line x1="11" y1="5" x2="5" y2="11" stroke="rgba(196,255,44,.9)" stroke-width="1.2"/></svg></div>`
+      const html = `<div style="position:relative;width:16px;height:16px;cursor:pointer;"><div class="iwl-ripple-ring" style="inset:-5px;border-color:rgba(218,255,74,.35);"></div><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="8,1 15,8 8,15 1,8" fill="rgba(218,255,74,.12)" stroke="rgba(218,255,74,.85)" stroke-width="1.5"/><line x1="5" y1="5" x2="11" y2="11" stroke="rgba(218,255,74,.9)" stroke-width="1.2"/><line x1="11" y1="5" x2="5" y2="11" stroke="rgba(218,255,74,.9)" stroke-width="1.2"/></svg></div>`
       const icon = L.divIcon({ html, className: '', iconSize: [16, 16], iconAnchor: [8, 8] })
       L.marker([e.lat, e.lon], { icon }).addTo(groups['intercept'])
         .bindPopup(mkPopup(e.title, 'intercept', e.lat, e.lon, e.conf!, e.src!, e.time!, e.detail), { maxWidth: 280 })
@@ -100,15 +100,15 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
 
     // Ground markers
     groundEvents.forEach(e => {
-      const html = `<svg width="14" height="14" viewBox="0 0 14 14" style="cursor:pointer;"><rect x="1" y="1" width="12" height="12" fill="rgba(196,255,44,.06)" stroke="rgba(196,255,44,.5)" stroke-width="1.5"/><line x1="4" y1="7" x2="10" y2="7" stroke="rgba(196,255,44,.55)" stroke-width="1.2"/><line x1="7" y1="4" x2="7" y2="10" stroke="rgba(196,255,44,.55)" stroke-width="1.2"/></svg>`
+      const html = `<svg width="14" height="14" viewBox="0 0 14 14" style="cursor:pointer;"><rect x="1" y="1" width="12" height="12" fill="rgba(218,255,74,.06)" stroke="rgba(218,255,74,.5)" stroke-width="1.5"/><line x1="4" y1="7" x2="10" y2="7" stroke="rgba(218,255,74,.55)" stroke-width="1.2"/><line x1="7" y1="4" x2="7" y2="10" stroke="rgba(218,255,74,.55)" stroke-width="1.2"/></svg>`
       const icon = L.divIcon({ html, className: '', iconSize: [14, 14], iconAnchor: [7, 7] })
       L.marker([e.lat, e.lon], { icon }).addTo(groups['ground'])
-        .bindTooltip(`<span style="color:rgba(196,255,44,.65)">${e.title}</span>`)
+        .bindTooltip(`<span style="color:rgba(218,255,74,.65)">${e.title}</span>`)
     })
 
     // Combatant markers
     combatantEvents.forEach(e => {
-      const html = `<svg width="16" height="16" viewBox="0 0 16 16" style="cursor:pointer;animation:iwl-pulse 3s infinite;"><polygon points="8,1 15,8 8,15 1,8" fill="rgba(196,255,44,.15)" stroke="rgba(196,255,44,.8)" stroke-width="1.5"/></svg>`
+      const html = `<svg width="16" height="16" viewBox="0 0 16 16" style="cursor:pointer;animation:iwl-pulse 3s infinite;"><polygon points="8,1 15,8 8,15 1,8" fill="rgba(218,255,74,.15)" stroke="rgba(218,255,74,.8)" stroke-width="1.5"/></svg>`
       const icon = L.divIcon({ html, className: '', iconSize: [16, 16], iconAnchor: [8, 8] })
       L.marker([e.lat, e.lon], { icon }).addTo(groups['combatants'])
         .bindPopup(mkPopup(e.title, 'combatants', e.lat, e.lon, 95, 'CENTCOM', 'LIVE', e.detail), { maxWidth: 280 })
@@ -145,8 +145,8 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
       const dead = ['DESTROYED', 'HIT'].includes(s.status)
       L.circle([s.lat, s.lon], {
         radius: 150000,
-        color: dead ? 'rgba(255,140,0,.35)' : 'rgba(196,255,44,.25)', weight: 1,
-        fillColor: dead ? 'rgba(255,140,0,.04)' : 'rgba(196,255,44,.03)', fillOpacity: 1,
+        color: dead ? 'rgba(255,140,0,.35)' : 'rgba(218,255,74,.25)', weight: 1,
+        fillColor: dead ? 'rgba(255,140,0,.04)' : 'rgba(218,255,74,.03)', fillOpacity: 1,
         dashArray: dead ? '4 6' : '',
       }).addTo(groups['missile'])
         .bindTooltip(`THAAD · ${s.label} · ${s.status}`, { sticky: true })

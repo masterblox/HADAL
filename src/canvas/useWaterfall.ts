@@ -74,7 +74,7 @@ export function useWaterfall() {
 
       // Band labels
       ctx.font = '7px Share Tech Mono'
-      ctx.fillStyle = 'rgba(196,255,44,.45)'
+      ctx.fillStyle = 'rgba(218,255,74,.45)'
       const labels = ['HF', 'VHF', 'UHF', 'SHF']
       for (let i = 0; i < BANDS; i++) {
         ctx.fillText(labels[i], 2, i * bandH + 9)

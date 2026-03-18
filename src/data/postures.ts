@@ -2,11 +2,11 @@ export const postures = [
   {e:'USA',l:'COALITION',p:'HEGSETH: "MOST INTENSE DAY" · DAY 10',col:'rgba(255,140,0,.9)'},
   {e:'IRAN',l:'AXIS',p:'IRGC: 1-TONNE WARHEADS DEPLOYING · MORE MISSILES',col:'rgba(255,140,0,.9)'},
   {e:'TRUMP',l:'COALITION',p:'"HIT 20X HARDER" RE: HORMUZ · WAR ENDS SOON',col:'rgba(255,140,0,.8)'},
-  {e:'CENTCOM',l:'COALITION',p:'IRAN MISSILES -90% LAST 24HRS · CONFIRMED',col:'rgba(196,255,44,.7)'},
+  {e:'CENTCOM',l:'COALITION',p:'IRAN MISSILES -90% LAST 24HRS · CONFIRMED',col:'rgba(218,255,74,.7)'},
   {e:'MOJTABA K.',l:'AXIS',p:'NEW SUPREME LEADER · IRGC LOYALIST',col:'rgba(255,140,0,.7)'},
   {e:'HORMUZ',l:'AXIS',p:'STRAIT EFFECTIVELY CLOSED · TANKER RATES +94%',col:'rgba(255,140,0,.8)'},
   {e:'HOUTHI',l:'AXIS',p:'DRONE OFFENSIVE ACTIVE · RED SEA',col:'rgba(255,140,0,.7)'},
-  {e:'UK',l:'COALITION',p:'DIPLOMATIC DECONFLICT · AKROTIRI STRUCK',col:'rgba(196,255,44,.5)'},
+  {e:'UK',l:'COALITION',p:'DIPLOMATIC DECONFLICT · AKROTIRI STRUCK',col:'rgba(218,255,74,.5)'},
 ]
 
 export const diplomaticSignals = [

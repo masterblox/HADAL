@@ -95,7 +95,7 @@ export function SonarParticles() {
       ))
       velocities.push(new THREE.Vector3(0, 0, 0))
       scales.push(0.4 + Math.random() * 1.2)
-      instancedMesh.setColorAt(i, color.setHex(0x00ff88))
+      instancedMesh.setColorAt(i, color.setHex(0xDAFF4A))
     }
 
     // ── Animation ──
@@ -154,7 +154,7 @@ export function SonarParticles() {
         const displacement = Math.sqrt(dispX * dispX + dispY * dispY + dispZ * dispZ)
         const lerpRate = displacement > 20 ? 0.008 : displacement > 8 ? 0.025 : 0.05
         positions[i].lerp(target, lerpRate)
-        color.setHex(0x00ff88)
+        color.setHex(0xDAFF4A)
 
         dummy.position.copy(positions[i])
         const s = scales[i]

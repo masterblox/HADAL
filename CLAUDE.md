@@ -24,8 +24,8 @@ public/                  — Static JSON endpoints (incidents.json, prices.json,
 
 | Token       | Value                        | Usage                  |
 |-------------|------------------------------|------------------------|
-| `--g`       | `#C4FF2C`                    | Primary lemon-green    |
-| `--warn`    | `rgba(255,140,0,.9)`         | Alerts, Iran highlight |
+| `--g`       | `#DAFF4A`                    | Primary lemon-green    |
+| `--warn`    | `rgba(255,152,20,.92)`       | Alerts, Iran highlight |
 | `--bg`      | `#060800`                    | Background             |
 | `--HEAD`    | `Rajdhani`                   | Headers/labels         |
 | `--C2`      | `Teko`                       | Large numbers          |

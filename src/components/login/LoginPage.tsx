@@ -36,15 +36,15 @@ export function LoginPage({ onAccess }: LoginPageProps) {
     c.width = 48; c.height = 48
     const cx = 24, cy = 24
     x.beginPath(); x.arc(cx, cy, 20, 0, Math.PI * 2)
-    x.strokeStyle = 'rgba(196,255,44,.3)'; x.lineWidth = 1; x.stroke()
+    x.strokeStyle = 'rgba(218,255,74,.3)'; x.lineWidth = 1; x.stroke()
     x.beginPath(); x.arc(cx, cy, 12, 0, Math.PI * 2)
-    x.strokeStyle = 'rgba(196,255,44,.15)'; x.lineWidth = 0.5; x.stroke()
+    x.strokeStyle = 'rgba(218,255,74,.15)'; x.lineWidth = 0.5; x.stroke()
     x.beginPath()
     x.moveTo(cx, cy - 22); x.lineTo(cx, cy + 22)
     x.moveTo(cx - 22, cy); x.lineTo(cx + 22, cy)
-    x.strokeStyle = 'rgba(196,255,44,.12)'; x.lineWidth = 0.5; x.stroke()
+    x.strokeStyle = 'rgba(218,255,74,.12)'; x.lineWidth = 0.5; x.stroke()
     x.beginPath(); x.arc(cx, cy, 2, 0, Math.PI * 2)
-    x.fillStyle = '#C4FF2C'; x.fill()
+    x.fillStyle = '#DAFF4A'; x.fill()
   }, [])
 
   const pressDigit = (d: string) => {

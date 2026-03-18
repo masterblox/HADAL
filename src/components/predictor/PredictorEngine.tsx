@@ -382,7 +382,7 @@ function TempoSpark({ data }: { data: { date: string; count: number }[] }) {
       ctx.clearRect(0, 0, w, h)
 
       // Background grid lines
-      ctx.strokeStyle = 'rgba(196,255,44,.06)'
+      ctx.strokeStyle = 'rgba(218,255,74,.06)'
       ctx.lineWidth = 0.5
       for (let y = 0; y < h; y += h / 4) {
         ctx.beginPath()
@@ -400,9 +400,9 @@ function TempoSpark({ data }: { data: { date: string; count: number }[] }) {
         if (d.count >= maxCount * 0.7) {
           ctx.fillStyle = 'rgba(255,140,0,.7)'
         } else if (d.count >= maxCount * 0.4) {
-          ctx.fillStyle = 'rgba(196,255,44,.5)'
+          ctx.fillStyle = 'rgba(218,255,74,.5)'
         } else {
-          ctx.fillStyle = 'rgba(196,255,44,.25)'
+          ctx.fillStyle = 'rgba(218,255,74,.25)'
         }
         ctx.fillRect(x, y, barW, barH)
       })
@@ -467,7 +467,7 @@ function CategoryRange({ type, cat }: {
           <div className="pe-cat-bar" style={{
             left: pct(cat.percentiles.p10),
             width: pct(cat.percentiles.p90 - cat.percentiles.p10),
-            background: cat.meanSeverity >= 70 ? 'rgba(255,140,0,.3)' : 'rgba(196,255,44,.15)',
+            background: cat.meanSeverity >= 70 ? 'rgba(255,140,0,.3)' : 'rgba(218,255,74,.15)',
           }} />
           <div className="pe-cat-median" style={{
             left: pct(cat.percentiles.p50),

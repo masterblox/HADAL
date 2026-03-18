@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { continents, iranPts } from './continents'
+import { landPolygons, gulfPolygons, iraqPolygons, iranPolygon } from './land-110m'
 import { globeMarkers } from './globe-markers'
 
 interface Particle {
@@ -179,12 +179,13 @@ export function useGlobe() {
       drawParticles(t0)
 
       // Atmosphere
-      const atmo = x.createRadialGradient(cx, cy, R * .88, cx, cy, R * 1.22)
-      atmo.addColorStop(0, 'rgba(196,255,44,.18)')
-      atmo.addColorStop(.45, 'rgba(196,255,44,.07)')
-      atmo.addColorStop(.8, 'rgba(196,255,44,.02)')
+      const atmo = x.createRadialGradient(cx, cy, R * .92, cx, cy, R * 1.15)
+      atmo.addColorStop(0, 'rgba(196,255,44,.14)')
+      atmo.addColorStop(.35, 'rgba(196,255,44,.07)')
+      atmo.addColorStop(.7, 'rgba(196,255,44,.02)')
+      atmo.addColorStop(.85, 'rgba(196,255,44,.005)')
       atmo.addColorStop(1, 'rgba(196,255,44,0)')
-      x.beginPath(); x.arc(cx, cy, R * 1.22, 0, PI * 2); x.fillStyle = atmo; x.fill()
+      x.beginPath(); x.arc(cx, cy, R * 1.15, 0, PI * 2); x.fillStyle = atmo; x.fill()
 
       // Ocean
       const ocean = x.createRadialGradient(cx - R * .28, cy - R * .22, R * .05, cx, cy, R)
@@ -196,8 +197,8 @@ export function useGlobe() {
 
       // Specular
       const spec = x.createRadialGradient(cx - R * .3, cy - R * .25, 0, cx - R * .3, cy - R * .25, R * .6)
-      spec.addColorStop(0, 'rgba(196,255,44,.055)')
-      spec.addColorStop(.4, 'rgba(196,255,44,.018)')
+      spec.addColorStop(0, 'rgba(196,255,44,.08)')
+      spec.addColorStop(.4, 'rgba(196,255,44,.025)')
       spec.addColorStop(1, 'rgba(196,255,44,0)')
       x.fillStyle = spec; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       x.restore()
@@ -241,14 +242,22 @@ export function useGlobe() {
       }
       x.restore()
 
-      // Continents
+      // Land — Natural Earth 110m
       x.save(); x.beginPath(); x.arc(cx, cy, R, 0, PI * 2); x.clip()
-      continents.forEach(c => {
-        if (c.hot) drawPoly(c.pts, .055, 'rgba(196,255,44,.7)', 1.4, true, .08)
-        else drawPoly(c.pts, .04, 'rgba(196,255,44,.35)', .7, false, 0)
-      })
-      // Iran
-      drawPoly(iranPts, .06, 'rgba(255,140,0,.6)', 1.2, false, 0)
+      // General land
+      for (let i = 0; i < landPolygons.length; i++) {
+        drawPoly(landPolygons[i], .04, 'rgba(196,255,44,.35)', .7, false, 0)
+      }
+      // Iraq
+      for (let i = 0; i < iraqPolygons.length; i++) {
+        drawPoly(iraqPolygons[i], .04, 'rgba(196,255,44,.35)', .7, false, 0)
+      }
+      // Gulf hot zone (hatched)
+      for (let i = 0; i < gulfPolygons.length; i++) {
+        drawPoly(gulfPolygons[i], .055, 'rgba(196,255,44,.7)', 1.4, true, .08)
+      }
+      // Iran (orange highlight)
+      drawPoly(iranPolygon, .06, 'rgba(255,140,0,.6)', 1.2, false, 0)
       const ip = proj(53, 32)
       if (ip) {
         const iranGlow = x.createRadialGradient(ip[0], ip[1], 0, ip[0], ip[1], 48)
@@ -279,17 +288,18 @@ export function useGlobe() {
       x.fillStyle = sh; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       x.restore()
 
-      // Animated outer glow ring
+      // Clean multi-stroke ring (matches portal ring geometry)
       const pulse0 = .5 + .5 * Math.sin(t0 * 1.6)
-      x.beginPath(); x.arc(cx, cy, R + 6, 0, PI * 2)
-      x.shadowColor = `rgba(196,255,44,${.15 + pulse0 * .2})`
-      x.shadowBlur = 18 + pulse0 * 14
-      x.strokeStyle = `rgba(196,255,44,${.06 + pulse0 * .08})`; x.lineWidth = 4; x.stroke()
-      x.shadowBlur = 0
+      const ringAlpha = .35 + pulse0 * .08
+      // Main ring at R
       x.beginPath(); x.arc(cx, cy, R, 0, PI * 2)
-      x.strokeStyle = `rgba(196,255,44,${.32 + pulse0 * .15})`; x.lineWidth = 1.4; x.stroke()
-      x.beginPath(); x.arc(cx, cy, R + 3, 0, PI * 2)
-      x.strokeStyle = `rgba(196,255,44,${.08 + pulse0 * .06})`; x.lineWidth = 2; x.stroke()
+      x.strokeStyle = `rgba(196,255,44,${ringAlpha})`; x.lineWidth = 2.5; x.stroke()
+      // Inner ring at R-6
+      x.beginPath(); x.arc(cx, cy, R - 6, 0, PI * 2)
+      x.strokeStyle = `rgba(196,255,44,${ringAlpha * .3})`; x.lineWidth = 1; x.stroke()
+      // Outer ring at R+6
+      x.beginPath(); x.arc(cx, cy, R + 6, 0, PI * 2)
+      x.strokeStyle = `rgba(196,255,44,${ringAlpha * .2})`; x.lineWidth = 1; x.stroke()
 
       // Markers
       const t = t0
@@ -299,13 +309,19 @@ export function useGlobe() {
         const [px, py] = p
         const pulse = .5 + .5 * Math.abs(Math.sin(t * 2.2 + m.lon * .3))
         if (m.t === 'l') {
-          x.beginPath(); x.arc(px, py, 3.5, 0, PI * 2); x.fillStyle = 'rgba(255,100,0,.95)'
-          x.shadowColor = 'rgba(255,80,0,1)'; x.shadowBlur = 12; x.fill(); x.shadowBlur = 0
+          // Concentric halo
+          x.beginPath(); x.arc(px, py, 6, 0, PI * 2); x.fillStyle = 'rgba(255,100,0,.12)'; x.fill()
+          // Core dot
+          x.beginPath(); x.arc(px, py, 3.5, 0, PI * 2); x.fillStyle = 'rgba(255,100,0,.95)'; x.fill()
+          // Ping ring
           x.beginPath(); x.arc(px, py, 7 + pulse * 8, 0, PI * 2)
           x.strokeStyle = `rgba(255,100,0,${.35 * pulse})`; x.lineWidth = 1.2; x.stroke()
         } else {
-          x.beginPath(); x.arc(px, py, 3, 0, PI * 2); x.fillStyle = 'rgba(196,255,44,.95)'
-          x.shadowColor = 'rgba(196,255,44,1)'; x.shadowBlur = 10; x.fill(); x.shadowBlur = 0
+          // Concentric halo
+          x.beginPath(); x.arc(px, py, 5, 0, PI * 2); x.fillStyle = 'rgba(196,255,44,.1)'; x.fill()
+          // Core dot
+          x.beginPath(); x.arc(px, py, 3, 0, PI * 2); x.fillStyle = 'rgba(196,255,44,.95)'; x.fill()
+          // Ping ring
           x.beginPath(); x.arc(px, py, 6 + pulse * 7, 0, PI * 2)
           x.strokeStyle = `rgba(196,255,44,${.4 * pulse})`; x.lineWidth = 1; x.stroke()
         }

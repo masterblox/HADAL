@@ -9,7 +9,7 @@ interface PlyData {
 
 let cached: PlyData | null = null
 
-export async function loadPly(url = 'docs/spark_of_life_points.ply'): Promise<PlyData> {
+export async function loadPly(url = '/data/spark_of_life_points.ply'): Promise<PlyData> {
   if (cached) return cached
 
   const res = await fetch(url)

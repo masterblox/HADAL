@@ -1,0 +1,12 @@
+<svg width="680" height="700" viewBox="0 0 680 700" xmlns="http://www.w3.org/2000/svg" style="background:#0d0d0d;">
+<g transform="translate(340,60)">
+  <text x="0" y="90" font-family="Impact,sans-serif" font-size="112" font-weight="900" fill="#C4FF2C" text-anchor="middle" letter-spacing="12">HADAL</text>
+  <text x="0" y="122" font-family="Georgia,serif" font-style="italic" font-size="13" fill="rgba(196,255,44,0.4)" text-anchor="middle" letter-spacing="3">only the truth survives.</text>
+  <line x1="0" y1="148" x2="0" y2="240" stroke="#C4FF2C" stroke-width="28" stroke-linecap="square"/>
+  <line x1="-150" y1="240" x2="125" y2="240" stroke="#C4FF2C" stroke-width="28" stroke-linecap="square"/>
+  <line x1="-105" y1="155" x2="105" y2="325" stroke="#C4FF2C" stroke-width="28" stroke-linecap="square"/>
+  <line x1="105" y1="155" x2="-105" y2="325" stroke="#C4FF2C" stroke-width="28" stroke-linecap="square"/>
+  <line x1="0" y1="240" x2="0" y2="335" stroke="#C4FF2C" stroke-width="28" stroke-linecap="square"/>
+  <rect x="-14" y="356" width="28" height="28" fill="#C4FF2C"/>
+</g>
+</svg>

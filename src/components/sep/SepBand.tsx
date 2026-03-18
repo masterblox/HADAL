@@ -50,7 +50,7 @@ export function SepBand({ incidents }: SepBandProps) {
           <div className="sep-txt">{hasLive ? 'GULF WATCH PIPELINE · LIVE' : 'NO LIVE DATA'}</div>
         </div>
       </div>
-      <div style={{position:'absolute',bottom:'7px',left:'50%',transform:'translateX(-50%)',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'var(--fs-small)',letterSpacing:'.22em',color:'rgba(196,255,44,.14)',whiteSpace:'nowrap',pointerEvents:'none',zIndex:2}}>
+      <div style={{position:'absolute',bottom:'7px',left:'50%',transform:'translateX(-50%)',fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',letterSpacing:'.22em',color:'rgba(196,255,44,.14)',whiteSpace:'nowrap',pointerEvents:'none',zIndex:2}}>
         Intelligence lives in the dark.
       </div>
     </div>

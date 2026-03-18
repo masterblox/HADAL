@@ -1,7 +1,35 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { SonarParticles } from './SonarParticles'
 
 const ACCESS_CODE = '0000'
+
+/* ── Gate sound effects (MIT assets) ── */
+const audioCache: Record<string, HTMLAudioElement> = {}
+
+function getAudio(src: string): HTMLAudioElement {
+  if (!audioCache[src]) {
+    audioCache[src] = new Audio(src)
+    audioCache[src].preload = 'auto'
+  }
+  return audioCache[src]
+}
+
+function useGateAudio() {
+  const playClick = useCallback(() => {
+    const el = getAudio('/audio/key-click.mp3')
+    el.currentTime = 0
+    el.play().catch(() => {})
+  }, [])
+
+  const playGrant = useCallback(() => {
+    getAudio('/audio/grant.mp3').play().catch(() => {})
+    setTimeout(() => {
+      getAudio('/audio/gate-open.mp3').play().catch(() => {})
+    }, 200)
+  }, [])
+
+  return { playClick, playGrant }
+}
 
 interface LoginPageProps {
   onAccess: () => void
@@ -12,6 +40,7 @@ export function LoginPage({ onAccess }: LoginPageProps) {
   const [error, setError] = useState(false)
   const [entering, setEntering] = useState(false)
   const markRef = useRef<HTMLCanvasElement>(null)
+  const { playClick, playGrant } = useGateAudio()
 
   // Draw HADAL mark — small, single color, per rule 005
   useEffect(() => {
@@ -35,6 +64,7 @@ export function LoginPage({ onAccess }: LoginPageProps) {
 
   const pressDigit = (d: string) => {
     if (entering || digits.length >= 4) return
+    playClick()
     const next = [...digits, d]
     setDigits(next)
     setError(false)
@@ -43,7 +73,7 @@ export function LoginPage({ onAccess }: LoginPageProps) {
       const code = next.join('')
       if (code === ACCESS_CODE) {
         setEntering(true)
-        // Card fades out, then notify parent to fade overlay
+        playGrant()
         setTimeout(onAccess, 500)
       } else {
         setError(true)

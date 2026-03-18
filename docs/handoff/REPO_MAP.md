@@ -44,6 +44,9 @@
 - [docs/handoff/ENGINEERING_JOURNAL.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/ENGINEERING_JOURNAL.md)
   Running log of environment failures, repo issues, and recovery notes.
 
+- [docs/architecture/HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)
+  Macro platform architecture: product lanes, data contracts, frontend module ownership, operational resilience, governance tiers, and 7-phase implementation sequence.
+
 ## Working Rules
 
 - Add new non-runtime documents under `docs/`, not the repo root.

@@ -28,9 +28,11 @@ Canonical system model:
 
 - System boundaries: [docs/architecture/SYSTEM_BOUNDARIES.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/SYSTEM_BOUNDARIES.md)
 - Page architecture: [docs/architecture/HADAL_PAGE_ARCHITECTURE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PAGE_ARCHITECTURE.md)
+- Macro plan: [docs/architecture/HADAL_MACRO_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_MACRO_PLAN.md)
 - Architecture blueprint: [docs/architecture/HADAL_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_BLUEPRINT.md)
 - Repurposing blueprint: [docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md)
 - Extraction plan: [docs/architecture/HADAL_EXTRACTION_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_EXTRACTION_PLAN.md)
+- **Platform plan: [docs/architecture/HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)**
 - Design reference: [docs/reference/DESIGN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/DESIGN.md)
 - Circuit breaker reference: [docs/reference/CIRCUIT_BREAKER.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/CIRCUIT_BREAKER.md)
 - Security reference: [docs/reference/SECURITY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/SECURITY.md)

@@ -54,4 +54,21 @@ dist/
 .env
 .env.local
 .vercel
-Hadal _inspiration/
+_local/
+hadal_inspiration/
+test-results/
+_review_*.png
+_shot_*.png
+_screenshot.mjs
+_audit_*.png
+_mobile_*.png
+_eco_*.png
+_predictor_*.png
+_mobile_*.cjs
+_eco_*.cjs
+_predictor_*.cjs
+jp-preview.html
+sphere.html
+globe-preview.html
+package-lock 2.json
+*.tgz

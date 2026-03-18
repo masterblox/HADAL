@@ -2,6 +2,7 @@
 
 **Status:** Active — execution mapping document
 **Created:** 2026-03-18
+**Last synced:** 2026-03-18 (v0.5.0, commit `e05a8ba`)
 **Grounded in:** Commit `fbe42f1` (reference hierarchy) and commit `15535cc` (platform plan)
 **Reads with:** [HADAL_PLATFORM_PLAN.md](HADAL_PLATFORM_PLAN.md), [HADAL_REFERENCE_HIERARCHY.md](HADAL_REFERENCE_HIERARCHY.md), [HADAL_PAGE_ARCHITECTURE.md](HADAL_PAGE_ARCHITECTURE.md)
 
@@ -39,7 +40,7 @@ The core problem: **the majority of the app's visual authority comes from hardco
 
 | Component | Current Role | Data Source | Real or Fake | Reference Source | Action | Target Page | Priority | Notes |
 |-----------|-------------|-------------|:---:|--------|--------|-------------|:---:|-------|
-| `App.tsx` | Single-scroll orchestrator | Composition | Real (structure) | Gulf Watch | **Adapt** | Shell | P0 | Must become router shell per HADAL_PAGE_ARCHITECTURE. Currently renders all sections linearly. |
+| `App.tsx` | 3-lane router shell | Composition + hash routing | Real (structure) | Gulf Watch | **Done** | Shell | — | Router shell with lane-routing, lazy-loaded Operations/Analysis. Login gate → NucleusTransition → terminal reveal. |
 | `LoginPage.tsx` | Decorative keypad gate | Hardcoded (code='0000') | Fake | — | **Keep temp** | Shell | P3 | Decorative auth. Real auth is Phase 6 per platform plan. Keep as atmospheric gate until then. |
 | `SonarParticles.tsx` | Three.js login background | Procedural | Aesthetic | — | **Keep** | Shell | — | Pure atmosphere. No data claims. |
 | `Topbar.tsx` | Top nav bar | Computed (clock, pressure) | Mixed | Ground Station | **Adapt** | Shell (global) | P1 | Clock is real (UTC). Pressure gauge is aesthetic. "OP. EPIC FURY" is hardcoded. Stats (DEPTH: 10,924M) are cosplay. See §3.1. |
@@ -140,6 +141,7 @@ The core problem: **the majority of the app's visual authority comes from hardco
 | `useTracking.ts` | Simulated aircraft/sat/maritime | **Procedural** | **Label** | Generates 17 fake tracked objects. Used by sonar and signal monitor. No real tracking data. See §3.6. |
 | `useSignalMonitor.ts` | Random signal frequency | **Procedural** | **Label** | Displays fake kHz/dB readings. Cycles through useTracking objects. See §3.6. |
 | `usePrediction.ts` | Prediction wrapper | Computed (real math) | **Keep** | Runs real local prediction engine on real incidents. MIT math applied to Gulf Watch data. Correct pattern. |
+| `useOpenSky.ts` | Live aircraft tracking | **Live** (OpenSky proxy) | **Keep** | Added in v0.5.0. Consumes upstream OpenSky proxy for real Gulf airspace aircraft data. Replaces the need for procedural `useTracking` in FlightTracker. |
 
 ### 2.13 Canvas Hooks
 
@@ -151,7 +153,7 @@ The core problem: **the majority of the app's visual authority comes from hardco
 | `useWaterfall.ts` | Spectrogram | Procedural | **Label** | Looks like real signal analysis. Is random noise. See §3.6. |
 | `useSepStatic.ts` | Separator noise | Procedural | **Keep** | Pure aesthetic. |
 | `useDrawMark.ts` | HADAL reticle | Animation | **Keep** | Brand element. |
-| `usePizzaSlice.ts` | 3D pizza slice | Procedural | **Remove** | Unused novelty. Not referenced by any component. |
+| `usePizzaSlice.ts` | ~~3D pizza slice~~ | ~~Procedural~~ | **Removed** | Deleted in v0.4.0 (3-lane shell extraction). |
 
 ### 2.14 Lib / Utils
 
@@ -330,13 +332,12 @@ Gulf Watch is not a static reference. Nikola ships meaningful human commits upst
 **Adaptation type:** Parameter/logic port. Not a rewrite — evaluate upstream changes to `sequenceModel` and `impactProfiler` equivalents, port improved thresholds and trend calculations.
 **Risk if skipped:** HADAL's prediction engine stagnates on initial extraction while upstream prediction quality improves.
 
-#### Aircraft/OpenSky Proxy Hardening
+#### Aircraft/OpenSky Proxy Hardening — PARTIALLY DONE
 **Upstream:** Auth handling, response caching, rate-limit management, error recovery
 **Lane:** Operations
-**HADAL target:** `FlightTracker.tsx` + potential new `useOpenSky.ts` hook
-**Priority:** High — Gulf Watch's original OpenSky integration was lost in the React migration. `useTracking.ts` currently generates 17 fake aircraft. Nikola's upstream proxy fixes make real aircraft data viable again.
-**Adaptation type:** Reconnection. HADAL needs a new data hook that hits the same OpenSky proxy endpoint Gulf Watch uses, consuming the auth/cache improvements upstream already built.
-**Risk if skipped:** FlightTracker remains permanently simulated. The Operations lane's most visible fake-authority surface stays fake.
+**HADAL target:** `FlightTracker.tsx` + `useOpenSky.ts` hook
+**Status:** `useOpenSky.ts` hook created in v0.5.0. FlightTracker component updated. The hook and component exist but need verification against the live upstream proxy endpoint.
+**Remaining:** Confirm the proxy endpoint is reachable from HADAL's deployment, verify auth token handling, test rate-limit behavior under real load.
 **Note:** The upstream proxy runs as a serverless function. HADAL can consume it directly or deploy its own instance.
 
 #### Mobile Country/Severity Filtering
@@ -354,6 +355,18 @@ Gulf Watch is not a static reference. Nikola ships meaningful human commits upst
 3. **Classify** every human feature commit by lane before deciding to adapt.
 4. **Port logic, not code.** Gulf Watch is vanilla JS. HADAL is React + TypeScript. Extract the algorithm or parameter change, implement in HADAL's stack.
 5. **Do not delay HADAL's own roadmap** for upstream adaptation. Queue items slot into existing phases — they do not create new phases.
+
+### Upstream Watch — Next Audit Ready
+
+**Target repo:** `nKOxxx/gulfwatch-testing`
+**Last checked:** 2026-03-18 (data refresh commits only — no human logic changes since last audit)
+**Next audit scope:** Look for human commits after 2026-03-18 that touch:
+- `scripts/` (prediction, scoring, data model changes)
+- `api/` (proxy endpoints, auth handling)
+- `public/index.html` or main app logic (filter UX, mobile behavior)
+- Any new data contract changes (JSON schema evolution in incidents/prices/airspace)
+
+**Do not audit:** automated data refresh commits, dependency bumps, CI config.
 
 ---
 
@@ -389,14 +402,14 @@ These should be gated behind the sandbox toggle or moved to a `_fixtures/` direc
 | Component/File | Reason | Recommended Action |
 |----------------|--------|-------------------|
 | `KillChainTracker.tsx` | Fully fabricated engagement records. Not imported in App.tsx (already dormant). | Move to `_fixtures/` or gate behind sandbox. Reintroduce when real engagement data exists. |
-| `usePizzaSlice.ts` | Unused 3D pizza slice. Not referenced anywhere. | Delete. |
+| ~~`usePizzaSlice.ts`~~ | ~~Unused 3D pizza slice.~~ | **Deleted** in v0.4.0. |
 | `gcc-data.ts` | Duplicates MissileDefenseStrip hardcoded data. | Consolidate into MissileDefenseStrip or replace both with incident-derived data. |
 
 ---
 
-## 7. Recommended Next 5 Implementation Moves
+## 7. Recommended Next Implementation Moves
 
-Ordered by impact and dependency. Each move is self-contained and committable.
+Ordered by impact and dependency. Each move is self-contained and committable. Move 4 (router shell) was completed in v0.4.0.
 
 ### Move 1: Wire Threat Level to Prediction Engine
 
@@ -422,13 +435,10 @@ Ordered by impact and dependency. Each move is self-contained and committable.
 **Effort:** Medium (3-4 hours).
 **Anti-pattern fixed:** Fake intelligence density (§7.5).
 
-### Move 4: Add Router Shell (3-Lane Pages)
+### Move 4: Add Router Shell (3-Lane Pages) — DONE (v0.4.0)
 
-**What:** Introduce React Router (or simple state-based routing) with three lanes: Overview, Operations, Analysis. Move `IntelWireSection` to Operations, `PredictorEngine` + `AnalysisSection` + `EconomicSection` to Analysis. Keep hero + missile strip + condensed feed on Overview.
-**Why:** Required by HADAL_PAGE_ARCHITECTURE and HADAL_MACRO_PLAN. Currently blocked by the single-scroll layout.
-**Files:** `App.tsx` (major refactor), potentially new route components.
-**Effort:** Large (6-8 hours). Must preserve all existing component behavior.
-**Dependency:** None, but Moves 1-3 should land first so the pages have real data when they separate.
+**Completed** in commit `6a439eb`. Hash-based routing via `src/lib/lane-routing.ts` with `useSyncExternalStore`. Three page files: `OverviewPage.tsx`, `OperationsPage.tsx` (lazy, 200KB), `AnalysisPage.tsx` (lazy, 28KB). Initial bundle reduced from 1084KB to 857KB.
+**Files changed:** `App.tsx`, `src/pages/OverviewPage.tsx`, `src/pages/OperationsPage.tsx`, `src/pages/AnalysisPage.tsx`, `src/lib/lane-routing.ts`.
 
 ### Move 5: Label or Gate Simulated Surfaces
 

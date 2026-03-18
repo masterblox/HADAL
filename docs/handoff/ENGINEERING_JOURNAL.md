@@ -71,6 +71,38 @@ Add new entries with:
 
 Keep entries short and factual.
 
+### Entry 002a — iCloud Drive / NFS mmap risk
+
+Issue:
+
+- The HADAL repo lives on iCloud Drive (`~/Library/Mobile Documents/com~apple~CloudDocs/HADAL`).
+- Git operations that touch many objects — `git rebase`, `git reset --hard`, `git checkout -f`, `git clone --local` — frequently fail with `fatal: mmap failed: Operation timed out` or `fatal: mmap failed: Stale NFS file handle`.
+- iCloud's NFS-like filesystem cannot serve memory-mapped reads at the speed git expects for pack files and loose objects.
+
+Observed during release-prep (2026-03-18):
+
+- A 9-commit rebase failed at step 3/9 — partial apply corrupted the commit (7 of ~20 expected files landed).
+- `git reset --hard` failed repeatedly.
+- `git checkout -f` failed repeatedly.
+- Even `cp -R .git /tmp/` failed on individual loose objects.
+- Recovery required: manual removal of `.git/rebase-merge`, `git symbolic-ref HEAD`, `git read-tree --reset HEAD`.
+
+Workaround that succeeded:
+
+- `git merge origin/main` completed in one atomic operation where rebase (9 sequential operations) could not.
+
+Implication:
+
+- Multi-step git operations (rebase, interactive rebase, cherry-pick sequences) are unreliable on this iCloud-backed path.
+- Single-step operations (merge, commit, single checkout) are more resilient.
+
+Recommended practice:
+
+- For risky reconciliation (rebase, multi-commit cherry-pick), clone to a local-disk temp directory first, do the git work there, then push from local.
+- For normal development (commit, merge, push), the iCloud path works fine.
+- If mmap errors start appearing, warming the pack cache (`cat .git/objects/pack/*.pack > /dev/null`) can help temporarily.
+- Keep pack files small — run `git gc` periodically to consolidate loose objects.
+
 ## 2026-03-18
 
 ### Entry 003

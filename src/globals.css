@@ -1788,6 +1788,15 @@ canvas.eco-noise { display: none; }
   .feed-type { width: 100%; order: 5; }
   .feed-conf { width: auto; margin-left: auto; }
 
+  .iwl-nav { height: auto; flex-wrap: wrap; padding: 4px 6px; gap: 4px; }
+  .iwl-logo { display: none !important; }
+  .iwl-nav > div[style] { display: none !important; }
+  .iwl-tabs { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 0; flex-shrink: 0; }
+  .iwl-tab { padding: 0 8px; font-size: 7px; min-height: 30px; letter-spacing: .06em; flex-shrink: 0; }
+  .iwl-nav-r { width: 100%; justify-content: flex-start; padding: 0; gap: 6px; }
+  .iwl-nav-r .iwl-sync { font-size: 7px; }
+  .iwl-btn { font-size: 7px; padding: 4px 8px; }
+
   .iwl-wrap { min-height: var(--iwl-height); max-height: none; }
   .iwl-map-area { min-height: 320px; }
   .iwl-resizable-overlay { position: relative; }

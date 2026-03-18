@@ -6,39 +6,49 @@
 
 ## HADAL
 
-**Coming soon:** HADAL is the next architecture pass for this project, intended to evolve the current stack into a stricter threat-intelligence terminal with clearer module boundaries and better separation between ingestion, scoring, and UI delivery.
+HADAL is the active frontend shell — a 3-lane threat-intelligence terminal built on React 19 + TypeScript + Vite + Tailwind 4 + Canvas 2D + Leaflet. Current version: **v0.5.0**.
 
 Canonical system model:
 
-- Gulf Watch = original source system and inherited capability
+- Gulf Watch = source capability (data pipeline, upstream features)
 - HADAL = target product UX and frontend shell
 - MIT = selective pattern donor only
 
+### Current state (v0.5.0)
+
+- 3-lane shell: Overview / Operations / Analysis (hash-routed, lazy-loaded)
+- Login gate with NucleusTransition portal-to-globe reveal
+- Prediction engine (4-stage pipeline, MIT math on Gulf Watch data)
+- OpenSky hook for live aircraft tracking
+- Gulf Watch pipeline: incidents, prices, airspace, regional stats (60s refresh)
+
+### Stack
+
+- Frontend: React 19 + TypeScript + Vite
+- Styling: Tailwind 4 + CSS custom properties (globals.css)
+- Visualizations: Canvas 2D hooks
+- Maps: Leaflet + CARTO dark tiles
+- Hosting: Vercel
+
 ## Repo Map
 
-- Active frontend shell: [src](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/src)
-- Standalone HADAL prototype: [hadal.html](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/hadal.html)
-- Data pipeline: [scripts](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/scripts)
-- Public data artifacts: [public](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/public)
-- Archived Gulf Watch frontend: [legacy](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/legacy)
-- Project docs index: [docs/README.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/README.md)
-- Handoff map: [docs/handoff/REPO_MAP.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/REPO_MAP.md)
+- Active frontend: `src/`
+- Pages: `src/pages/` (OverviewPage, OperationsPage, AnalysisPage)
+- Serverless: `api/`
+- Data tooling: `scripts/`
+- Public data: `public/` (incidents.json, prices.json, airspace.json, regional_stats.json)
+- Legacy archive: `legacy/`
+- Docs index: `docs/README.md`
+- Handoff: `docs/handoff/REPO_MAP.md`
 
 ## Key Docs
 
-- System boundaries: [docs/architecture/SYSTEM_BOUNDARIES.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/SYSTEM_BOUNDARIES.md)
-- Page architecture: [docs/architecture/HADAL_PAGE_ARCHITECTURE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PAGE_ARCHITECTURE.md)
-- Macro plan: [docs/architecture/HADAL_MACRO_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_MACRO_PLAN.md)
-- Architecture blueprint: [docs/architecture/HADAL_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_BLUEPRINT.md)
-- Repurposing blueprint: [docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md)
-- Extraction plan: [docs/architecture/HADAL_EXTRACTION_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_EXTRACTION_PLAN.md)
-- **Platform plan: [docs/architecture/HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)**
-- **Reference hierarchy: [docs/architecture/HADAL_REFERENCE_HIERARCHY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REFERENCE_HIERARCHY.md)**
-- **Implementation matrix: [docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md)**
-- Design reference: [docs/reference/DESIGN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/DESIGN.md)
-- Circuit breaker reference: [docs/reference/CIRCUIT_BREAKER.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/CIRCUIT_BREAKER.md)
-- Security reference: [docs/reference/SECURITY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/SECURITY.md)
-- Version lineage: [docs/handoff/VERSION_LINEAGE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/VERSION_LINEAGE.md)
+- **[Implementation matrix](docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md)** — what exists, what's real vs fake, what to do next
+- **[Platform plan](docs/architecture/HADAL_PLATFORM_PLAN.md)** — macro architecture and 7-phase sequence
+- **[Reference hierarchy](docs/architecture/HADAL_REFERENCE_HIERARCHY.md)** — source system rules
+- [Page architecture](docs/architecture/HADAL_PAGE_ARCHITECTURE.md) — 3-lane structure (implemented)
+- [Version lineage](docs/handoff/VERSION_LINEAGE.md) — maturity checkpoints
+- [Engineering journal](docs/handoff/ENGINEERING_JOURNAL.md) — environment issues and recovery notes
 
 ---
 

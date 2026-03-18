@@ -27,7 +27,7 @@ export function AnalysisPage({ incidents, airspace, prices, sandbox }: AnalysisP
           </div>
         </div>
         <p className="page-copy">
-          Prediction, economics, regional rollups, exports.
+          Incident analytics, prediction engine, regional intelligence, market monitors.
         </p>
       </section>
       <AnalysisSection incidents={incidents} />

@@ -38,12 +38,14 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
         isMil: ['missile', 'airstrike', 'drone', 'ground'].some(t => (inc.type || '').toLowerCase().includes(t)),
       }))
       if (feedTab === 'mil') return mapped.filter(e => e.isMil)
+      if (feedTab === 'ent') return mapped.filter(e => !e.isMil)
       return mapped
     }
     // Static fallback
     const isMilType = (t: string) => ['missile', 'airstrike', 'intercept', 'ground'].includes(t)
     const all = iwlFeedSeed.map((e, i) => ({ ...e, id: i + 1, isMil: isMilType(e.type) }))
     if (feedTab === 'mil') return all.filter(e => e.isMil)
+    if (feedTab === 'ent') return all.filter(e => !e.isMil)
     return all
   }, [feedTab, incidents, hasLive])
 
@@ -89,7 +91,7 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
           {feedEvents.map(e => (
             <div key={e.id} className="iwl-evt">
               <div className="iwl-evt-top">
-                <div className="iwl-evt-dot" style={{background:typeCol[e.type]||'rgba(196,255,44,.9)',boxShadow:`0 0 4px ${typeCol[e.type]||'rgba(196,255,44,.9)'}`}} />
+                <div className="iwl-evt-dot" style={{background:typeCol[e.type]||'rgba(196,255,44,.9)'}} />
                 <span className="iwl-evt-id">EVT-{String(e.id).padStart(4,'0')}</span>
                 <span className="iwl-evt-time">{e.time}</span>
               </div>

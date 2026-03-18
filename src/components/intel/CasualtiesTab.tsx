@@ -35,7 +35,7 @@ export function CasualtiesTab({ sandbox, incidents }: CasualtiesTabProps) {
   return (
     <div className="iwl-tabcontent active">
       <div className="iwl-section-h">PARTICIPANTS &amp; CASUALTIES</div>
-      <p style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-small)',color:'var(--g3)',marginBottom:'14px'}}>
+      <p className="iwl-section-intro">
         {hasLive
           ? `Live pipeline: ${liveStats.total} incidents tracked. Table below is scenario reference data.`
           : 'No live pipeline data. Table below is scenario reference data — not live intelligence.'}
@@ -71,7 +71,7 @@ export function CasualtiesTab({ sandbox, incidents }: CasualtiesTabProps) {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
-      <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-micro)',letterSpacing:'.18em',color:'var(--g3)',margin:'14px 0 6px',display:'flex',alignItems:'center',gap:'8px'}}>
+      <div className="iwl-sub-h" style={{marginTop:'14px'}}>
         SCENARIO REFERENCE TABLE <span className="prov-badge">STATIC</span>
       </div>
       <table className="iwl-table">

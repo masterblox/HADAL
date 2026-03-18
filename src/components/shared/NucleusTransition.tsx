@@ -88,23 +88,19 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
     let globalRotation = 0
 
     function startAnimation(ctx: CanvasRenderingContext2D, cvs: HTMLCanvasElement) {
-      const globe = document.querySelector('.globe-canvas') as HTMLElement | null
-      let cx: number, cy: number, radius: number, canvasW: number, canvasH: number
+      const canvasW = window.innerWidth
+      const canvasH = window.innerHeight
 
-      if (globe) {
-        const gr = globe.getBoundingClientRect()
-        canvasW = window.innerWidth
-        canvasH = window.innerHeight
-        cx = gr.left + gr.width / 2
-        cy = gr.top + gr.height / 2
-        radius = Math.min(gr.width, gr.height) / 2
-      } else {
-        canvasW = window.innerWidth
-        canvasH = window.innerHeight
-        cx = canvasW / 2
-        cy = canvasH / 2
-        radius = 196
-      }
+      // Start centered — globe isn't mounted yet
+      let cx = canvasW / 2
+      let cy = canvasH / 2
+      let radius = 196
+
+      // Target coords — will be read from globe once it mounts
+      let targetCx = cx
+      let targetCy = cy
+      let targetRadius = radius
+      let globeFound = false
 
       setLogoPos({ x: cx, y: cy })
 
@@ -134,6 +130,26 @@ export function NucleusTransition({ onComplete, onReveal }: Props) {
         if (!revealFired && el >= P_REVEAL - 100) {
           revealFired = true
           onReveal?.()
+        }
+
+        // ── Once terminal mounts, track globe position every frame ──
+        if (revealFired) {
+          const globe = document.querySelector('.globe-canvas') as HTMLElement | null
+          if (globe) {
+            const gr = globe.getBoundingClientRect()
+            if (gr.width > 0) {
+              globeFound = true
+              targetCx = gr.left + gr.width / 2
+              targetCy = gr.top + gr.height / 2
+              targetRadius = Math.min(gr.width, gr.height) / 2
+            }
+          }
+        }
+        if (globeFound) {
+          const lerpF = 0.14
+          cx += (targetCx - cx) * lerpF
+          cy += (targetCy - cy) * lerpF
+          radius += (targetRadius - radius) * lerpF
         }
 
         // ── Background fade — stays BLACK through dissolve+hold, fades during REVEAL ──

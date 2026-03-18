@@ -25,7 +25,7 @@ export function OperationsPage({ incidents, airspace, sandbox }: OperationsPageP
           </div>
         </div>
         <p className="page-copy">
-          Map, layers, airspace, casualties, posturing.
+          Tactical map, airspace status, participant tracking, global posturing.
         </p>
       </section>
       <IntelWireSection incidents={incidents} airspace={airspace} sandbox={sandbox} />

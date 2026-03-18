@@ -363,48 +363,56 @@ function TempoSpark({ data }: { data: { date: string; count: number }[] }) {
   useEffect(() => {
     const cvs = canvasRef.current
     if (!cvs || data.length === 0) return
-    const ctx = cvs.getContext('2d')
-    if (!ctx) return
 
-    const dpr = window.devicePixelRatio || 1
-    const w = cvs.clientWidth
-    const h = cvs.clientHeight
-    cvs.width = w * dpr
-    cvs.height = h * dpr
-    ctx.scale(dpr, dpr)
+    function draw() {
+      const ctx = cvs!.getContext('2d')
+      if (!ctx) return
 
-    const maxCount = Math.max(...data.map(d => d.count), 1)
-    const barW = Math.max(2, (w - data.length) / data.length)
-    const gap = 1
+      const dpr = window.devicePixelRatio || 1
+      const w = cvs!.clientWidth
+      const h = cvs!.clientHeight
+      cvs!.width = w * dpr
+      cvs!.height = h * dpr
+      ctx.scale(dpr, dpr)
 
-    ctx.clearRect(0, 0, w, h)
+      const maxCount = Math.max(...data.map(d => d.count), 1)
+      const barW = Math.max(2, (w - data.length) / data.length)
+      const gap = 1
 
-    // Background grid lines
-    ctx.strokeStyle = 'rgba(196,255,44,.06)'
-    ctx.lineWidth = 0.5
-    for (let y = 0; y < h; y += h / 4) {
-      ctx.beginPath()
-      ctx.moveTo(0, y)
-      ctx.lineTo(w, y)
-      ctx.stroke()
+      ctx.clearRect(0, 0, w, h)
+
+      // Background grid lines
+      ctx.strokeStyle = 'rgba(196,255,44,.06)'
+      ctx.lineWidth = 0.5
+      for (let y = 0; y < h; y += h / 4) {
+        ctx.beginPath()
+        ctx.moveTo(0, y)
+        ctx.lineTo(w, y)
+        ctx.stroke()
+      }
+
+      // Bars
+      data.forEach((d, i) => {
+        const x = i * (barW + gap)
+        const barH = (d.count / maxCount) * (h - 4)
+        const y = h - barH - 2
+
+        if (d.count >= maxCount * 0.7) {
+          ctx.fillStyle = 'rgba(255,140,0,.7)'
+        } else if (d.count >= maxCount * 0.4) {
+          ctx.fillStyle = 'rgba(196,255,44,.5)'
+        } else {
+          ctx.fillStyle = 'rgba(196,255,44,.25)'
+        }
+        ctx.fillRect(x, y, barW, barH)
+      })
     }
 
-    // Bars
-    data.forEach((d, i) => {
-      const x = i * (barW + gap)
-      const barH = (d.count / maxCount) * (h - 4)
-      const y = h - barH - 2
+    draw()
 
-      // Color by intensity
-      if (d.count >= maxCount * 0.7) {
-        ctx.fillStyle = 'rgba(255,140,0,.7)'
-      } else if (d.count >= maxCount * 0.4) {
-        ctx.fillStyle = 'rgba(196,255,44,.5)'
-      } else {
-        ctx.fillStyle = 'rgba(196,255,44,.25)'
-      }
-      ctx.fillRect(x, y, barW, barH)
-    })
+    const ro = new ResizeObserver(draw)
+    ro.observe(cvs)
+    return () => ro.disconnect()
   }, [data])
 
   return (

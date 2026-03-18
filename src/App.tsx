@@ -21,15 +21,6 @@ const LANE_TITLES: Record<Lane, string> = {
   analysis: 'Analysis',
 }
 
-/* ── Transition audio — cached, played at phase boundaries ── */
-const transitionAudio: Record<string, HTMLAudioElement> = {}
-function playTransitionAudio(src: string) {
-  if (!transitionAudio[src]) { transitionAudio[src] = new Audio(src); transitionAudio[src].preload = 'auto' }
-  const el = transitionAudio[src]
-  el.currentTime = 0
-  el.play().catch(() => {})
-}
-
 /* ── App ── */
 export function App() {
   const skipLogin = new URLSearchParams(window.location.search).has('bypass')
@@ -58,9 +49,8 @@ export function App() {
 
   useEffect(() => {
     if (phase === 'unlocked') {
-      // Wait for login card's CSS exit animation, then start nucleus + grant audio
+      // Wait for login card's CSS exit animation, then start nucleus
       const t = setTimeout(() => {
-        playTransitionAudio('/audio/grant.mp3')
         setPhase('nucleus')
       }, 300)
       return () => clearTimeout(t)
@@ -70,7 +60,6 @@ export function App() {
   // Nucleus reveal callback — mount terminal when it is about to be visible
   const handleNucleusReveal = useCallback(() => {
     setTerminalVisible(true)
-    playTransitionAudio('/audio/gate-open.mp3')
   }, [])
 
   const handleNucleusComplete = useCallback(() => {

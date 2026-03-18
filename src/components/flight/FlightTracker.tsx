@@ -19,7 +19,7 @@ const TYPE_LABEL: Record<DemoFlight['type'], string> = {
 /* ── aircraft chevron SVG ── */
 function chevronSvg(heading: number, col: string) {
   return `<div style="transform:rotate(${heading}deg);width:20px;height:20px;display:flex;align-items:center;justify-content:center;">
-    <svg width="18" height="18" viewBox="0 0 18 18" style="filter:drop-shadow(0 0 3px ${col});">
+    <svg width="18" height="18" viewBox="0 0 18 18">
       <path d="M9 2 L15 14 L9 10 L3 14 Z" fill="${col.replace(/[\d.]+\)$/, '.25)')}" stroke="${col}" stroke-width="1.2" stroke-linejoin="round"/>
     </svg>
   </div>`
@@ -34,75 +34,6 @@ function trailPts(lat: number, lng: number, heading: number, len: number): [numb
     pts.push([lat + d * Math.cos(rad), lng + d * Math.sin(rad) / Math.cos(lat * Math.PI / 180)])
   }
   return pts
-}
-
-/* ── CRT noise overlay canvas ── */
-function useCrtOverlay() {
-  const ref = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const c = ref.current
-    if (!c) return
-    const ctx = c.getContext('2d')
-    if (!ctx) return
-
-    let raf: number
-    let frame = 0
-
-    function draw() {
-      if (!ctx || !c) return
-      const w = c.width, h = c.height
-      ctx.clearRect(0, 0, w, h)
-
-      // phosphor noise — sparse green dots
-      const imgData = ctx.createImageData(w, h)
-      const d = imgData.data
-      for (let i = 0; i < d.length; i += 4) {
-        if (Math.random() < 0.015) {
-          const brightness = Math.floor(Math.random() * 40)
-          d[i] = brightness          // r
-          d[i + 1] = brightness + Math.floor(Math.random() * 20)  // g (slightly greener)
-          d[i + 2] = 0               // b
-          d[i + 3] = Math.floor(Math.random() * 60) + 10
-        }
-      }
-      ctx.putImageData(imgData, 0, 0)
-
-      // horizontal interference lines (occasional)
-      if (frame % 3 === 0) {
-        const numLines = Math.floor(Math.random() * 3) + 1
-        for (let l = 0; l < numLines; l++) {
-          const y = Math.random() * h
-          ctx.fillStyle = `rgba(196,255,44,${(Math.random() * 0.04 + 0.01).toFixed(3)})`
-          ctx.fillRect(0, y, w, 1)
-        }
-      }
-
-      // phosphor burn / vignette
-      const grad = ctx.createRadialGradient(w / 2, h / 2, w * 0.2, w / 2, h / 2, w * 0.7)
-      grad.addColorStop(0, 'transparent')
-      grad.addColorStop(1, 'rgba(0,0,0,0.35)')
-      ctx.fillStyle = grad
-      ctx.fillRect(0, 0, w, h)
-
-      frame++
-      raf = requestAnimationFrame(draw)
-    }
-
-    const resizeObs = new ResizeObserver(([entry]) => {
-      c.width = Math.floor(entry.contentRect.width)
-      c.height = Math.floor(entry.contentRect.height)
-    })
-    resizeObs.observe(c.parentElement!)
-    draw()
-
-    return () => {
-      cancelAnimationFrame(raf)
-      resizeObs.disconnect()
-    }
-  }, [])
-
-  return ref
 }
 
 /* ── flight ticker strip ── */
@@ -144,7 +75,7 @@ export function FlightTracker() {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<L.Map | null>(null)
   const markersRef = useRef<L.Marker[]>([])
-  const crtRef = useCrtOverlay()
+
 
   // Live data from OpenSky proxy (falls back to demo with drift)
   const openSky = useOpenSky()
@@ -253,19 +184,6 @@ export function FlightTracker() {
 
       <div className="ft-body">
         <div ref={mapRef} className="ft-map" />
-        <canvas ref={crtRef} className="ft-crt-overlay" />
-
-        {/* Scanlines */}
-        <div className="ft-scanlines" />
-
-        {/* Corner brackets — Pip-Boy frame */}
-        <div className="ft-corner ft-corner-tl" />
-        <div className="ft-corner ft-corner-tr" />
-        <div className="ft-corner ft-corner-bl" />
-        <div className="ft-corner ft-corner-br" />
-
-        {/* Phosphor glow edge */}
-        <div className="ft-phosphor-edge" />
       </div>
 
       <FlightTicker flights={flights} />

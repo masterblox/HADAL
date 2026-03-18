@@ -2,6 +2,10 @@ import { useEffect, useRef } from 'react'
 import { continents, iranPts } from './continents'
 import { globeMarkers } from './globe-markers'
 
+interface Particle {
+  x: number; y: number; vx: number; vy: number; size: number; opacity: number; phase: number
+}
+
 export function useGlobe() {
   const ref = useRef<HTMLCanvasElement>(null)
 
@@ -11,6 +15,7 @@ export function useGlobe() {
     const x = C.getContext('2d')
     if (!x) return
     const W = 420, H = 420, cx = W / 2, cy = H / 2, R = 196, PI = Math.PI
+
     const Lx = -.55, Ly = -.65, Lz = .52
 
     const hatch = document.createElement('canvas')
@@ -22,15 +27,101 @@ export function useGlobe() {
     hx.beginPath(); hx.moveTo(1, 7); hx.lineTo(7, 1); hx.stroke()
     const hPat = x.createPattern(hatch, 'repeat')!
 
-    let rot = 40
+    let rotY = 40
+    let rotX = 0
     let raf: number
 
+    // Mouse drag rotation
+    let dragging = false
+    let dragStartX = 0
+    let dragStartY = 0
+    let rotYAtDragStart = 0
+    let rotXAtDragStart = 0
+    let velocityY = 0
+    let velocityX = 0
+    let lastDragX = 0
+    let lastDragY = 0
+    let lastDragTime = 0
+    let idleTimer = 0
+    const AUTO_SPEED = .048
+    const FRICTION = .92
+    const IDLE_RESUME_MS = 2000
+
+    // Particles
+    const PARTICLE_COUNT = 100
+    const particles: Particle[] = []
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - .5) * .6,
+        vy: (Math.random() - .5) * .6,
+        size: .8 + Math.random() * 1.2,
+        opacity: .05 + Math.random() * .15,
+        phase: Math.random() * PI * 2,
+      })
+    }
+
+    // Cached trig values — set once per frame in drawGlobe
+    let cosRY = 0, sinRY = 0, cosRX = 0, sinRX = 0
+
+    const onPointerDown = (e: PointerEvent) => {
+      dragging = true
+      dragStartX = e.clientX
+      dragStartY = e.clientY
+      lastDragX = e.clientX
+      lastDragY = e.clientY
+      lastDragTime = Date.now()
+      rotYAtDragStart = rotY
+      rotXAtDragStart = rotX
+      velocityY = 0
+      velocityX = 0
+      idleTimer = 0
+      C.setPointerCapture(e.pointerId)
+    }
+    const onPointerMove = (e: PointerEvent) => {
+      if (!dragging) return
+      const now = Date.now()
+      const dx = e.clientX - lastDragX
+      const dy = e.clientY - lastDragY
+      const dt = Math.max(1, now - lastDragTime)
+      velocityY = (dx / dt) * 16 * .3
+      velocityX = (dy / dt) * 16 * -.3
+      lastDragX = e.clientX
+      lastDragY = e.clientY
+      lastDragTime = now
+      rotY = rotYAtDragStart + (e.clientX - dragStartX) * .3
+      rotX = rotXAtDragStart + (e.clientY - dragStartY) * -.3
+      rotX = Math.max(-85, Math.min(85, rotX))
+    }
+    const onPointerUp = (e: PointerEvent) => {
+      dragging = false
+      idleTimer = Date.now()
+      C.releasePointerCapture(e.pointerId)
+    }
+    C.addEventListener('pointerdown', onPointerDown)
+    C.addEventListener('pointermove', onPointerMove)
+    C.addEventListener('pointerup', onPointerUp)
+    C.addEventListener('pointercancel', onPointerUp)
+    C.style.cursor = 'grab'
+    C.style.touchAction = 'none'
+
     function proj(lon: number, lat: number): [number, number, number, number] | null {
-      const th = (lon + rot) * PI / 180, ph = (90 - lat) * PI / 180
-      const X = Math.sin(ph) * Math.cos(th), Y = Math.cos(ph), Z = Math.sin(ph) * Math.sin(th)
-      if (Z < 0) return null
-      const diff = Math.max(0, X * Lx + Y * (-Ly) + Z * Lz)
-      return [cx + R * X, cy - R * Y, Z, diff]
+      const th = lon * PI / 180, ph = (90 - lat) * PI / 180
+      // Spherical → Cartesian
+      const sph = Math.sin(ph)
+      const X0 = sph * Math.cos(th), Y0 = Math.cos(ph), Z0 = sph * Math.sin(th)
+      // Y-rotation by rotY
+      const X1 = X0 * cosRY + Z0 * sinRY
+      const Z1 = -X0 * sinRY + Z0 * cosRY
+      // X-rotation by rotX
+      const Y2 = Y0 * cosRX - Z1 * sinRX
+      const Z2 = Y0 * sinRX + Z1 * cosRX
+      // Back-face cull
+      if (Z2 < 0) return null
+      // Lighting against fixed light direction
+      const diff = Math.max(0, X1 * Lx + Y2 * (-Ly) + Z2 * Lz)
+      return [cx + R * X1, cy - R * Y2, Z2, diff]
     }
 
     function drawPoly(ptsArr: number[][], fillAlpha: number, strokeCol: string, strokeW: number, doHatch: boolean, hatchAlpha: number) {
@@ -49,9 +140,43 @@ export function useGlobe() {
       x.strokeStyle = strokeCol; x.lineWidth = strokeW; x.stroke()
     }
 
+    function drawParticles(time: number) {
+      if (!x) return
+      const R2 = (R + 8) * (R + 8) // slightly larger than globe disc to avoid edge flicker
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const p = particles[i]
+        // Update position
+        p.x += p.vx
+        p.y += p.vy
+        // Wrap at edges
+        if (p.x < 0) p.x += W
+        else if (p.x > W) p.x -= W
+        if (p.y < 0) p.y += H
+        else if (p.y > H) p.y -= H
+        // Skip if inside globe disc
+        const dx = p.x - cx, dy = p.y - cy
+        if (dx * dx + dy * dy < R2) continue
+        // Flicker
+        const flicker = .7 + .3 * Math.sin(time * 2.5 + p.phase)
+        const alpha = p.opacity * flicker
+        x.fillStyle = `rgba(196,255,44,${alpha})`
+        x.fillRect(p.x, p.y, p.size, p.size)
+      }
+    }
+
     function drawGlobe() {
       if (!x) return
       x.clearRect(0, 0, W, H)
+
+      // Cache trig for this frame
+      const ryRad = rotY * PI / 180, rxRad = rotX * PI / 180
+      cosRY = Math.cos(ryRad); sinRY = Math.sin(ryRad)
+      cosRX = Math.cos(rxRad); sinRX = Math.sin(rxRad)
+
+      const t0 = Date.now() / 1e3
+
+      // Particles (behind globe)
+      drawParticles(t0)
 
       // Atmosphere
       const atmo = x.createRadialGradient(cx, cy, R * .88, cx, cy, R * 1.22)
@@ -99,7 +224,7 @@ export function useGlobe() {
       x.setLineDash([])
 
       // Terminator
-      const TLon = 30 + rot
+      const TLon = 30 + rotY
       const termPts: [number, number][] = []
       for (let lat = -90; lat <= 90; lat += 2) { const p = proj(TLon, lat); if (p) termPts.push([p[0], p[1]]) }
       if (termPts.length > 1) {
@@ -155,23 +280,19 @@ export function useGlobe() {
       x.restore()
 
       // Animated outer glow ring
-      const t0 = Date.now() / 1e3
       const pulse0 = .5 + .5 * Math.sin(t0 * 1.6)
-      // Outer glow halo (pulsing)
       x.beginPath(); x.arc(cx, cy, R + 6, 0, PI * 2)
       x.shadowColor = `rgba(196,255,44,${.15 + pulse0 * .2})`
       x.shadowBlur = 18 + pulse0 * 14
       x.strokeStyle = `rgba(196,255,44,${.06 + pulse0 * .08})`; x.lineWidth = 4; x.stroke()
       x.shadowBlur = 0
-      // Bright inner border
       x.beginPath(); x.arc(cx, cy, R, 0, PI * 2)
       x.strokeStyle = `rgba(196,255,44,${.32 + pulse0 * .15})`; x.lineWidth = 1.4; x.stroke()
-      // Secondary ring
       x.beginPath(); x.arc(cx, cy, R + 3, 0, PI * 2)
       x.strokeStyle = `rgba(196,255,44,${.08 + pulse0 * .06})`; x.lineWidth = 2; x.stroke()
 
       // Markers
-      const t = Date.now() / 1e3
+      const t = t0
       globeMarkers.forEach(m => {
         const p = proj(m.lon, m.lat)
         if (!p) return
@@ -202,11 +323,33 @@ export function useGlobe() {
         x.fillText('DUBAI', dxb[0] + 5, dxb[1] + 10)
       }
 
-      rot += .048
+      // Momentum & auto-rotation
+      if (!dragging) {
+        if (Math.abs(velocityY) > .01) {
+          rotY += velocityY
+          velocityY *= FRICTION
+        } else if (idleTimer && Date.now() - idleTimer > IDLE_RESUME_MS) {
+          rotY += AUTO_SPEED
+        } else if (!idleTimer) {
+          rotY += AUTO_SPEED
+        }
+
+        if (Math.abs(velocityX) > .01) {
+          rotX += velocityX
+          velocityX *= FRICTION
+          rotX = Math.max(-85, Math.min(85, rotX))
+        }
+      }
       raf = requestAnimationFrame(drawGlobe)
     }
     drawGlobe()
-    return () => cancelAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(raf)
+      C.removeEventListener('pointerdown', onPointerDown)
+      C.removeEventListener('pointermove', onPointerMove)
+      C.removeEventListener('pointerup', onPointerUp)
+      C.removeEventListener('pointercancel', onPointerUp)
+    }
   }, [])
 
   return ref

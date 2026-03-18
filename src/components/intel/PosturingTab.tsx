@@ -9,12 +9,16 @@ export function PosturingTab({ sandbox }: PosturingTabProps) {
   return (
     <div className="iwl-tabcontent active">
       <div className="iwl-section-h">GLOBAL POSTURING DASHBOARD</div>
-      <p style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-small)',color:'var(--g3)',marginBottom:'14px'}}>Automated parsing of diplomatic and military statements.</p>
+      <p style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-small)',color:'var(--g3)',marginBottom:'14px'}}>
+        Analyst-curated scenario assessment. Postures and signals are editorial judgements based on OSINT reporting, not live telemetry.
+      </p>
       <div className="posturing-grid">
         <ResizablePanelGroup orientation="horizontal">
           <ResizablePanel id="posture-left" defaultSize="50%" minSize="30%">
             <div style={{paddingRight:'7px'}}>
-              <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-micro)',letterSpacing:'.18em',color:'var(--g3)',marginBottom:'8px',paddingBottom:'6px',borderBottom:'1px solid rgba(196,255,44,.1)'}}>ESCALATION POSTURES</div>
+              <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-micro)',letterSpacing:'.18em',color:'var(--g3)',marginBottom:'8px',paddingBottom:'6px',borderBottom:'1px solid rgba(196,255,44,.1)',display:'flex',alignItems:'center',gap:'8px'}}>
+                ESCALATION POSTURES <span className="prov-badge">SCENARIO</span>
+              </div>
               {postures.map(p => (
                 <div key={p.e} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'5px 0',borderBottom:'1px solid rgba(196,255,44,.04)'}}>
                   <span style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-small)',letterSpacing:'.08em',color:'var(--g5)'}}>{p.e} <span style={{color:'rgba(196,255,44,.3)',fontSize:'var(--fs-micro)'}}>({p.l})</span></span>
@@ -26,7 +30,9 @@ export function PosturingTab({ sandbox }: PosturingTabProps) {
           <ResizableHandle disabled={!sandbox} />
           <ResizablePanel id="posture-right" defaultSize="50%" minSize="30%">
             <div style={{paddingLeft:'7px'}}>
-              <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-micro)',letterSpacing:'.18em',color:'var(--g3)',marginBottom:'8px',paddingBottom:'6px',borderBottom:'1px solid rgba(196,255,44,.1)'}}>DIPLOMATIC SIGNALS</div>
+              <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-micro)',letterSpacing:'.18em',color:'var(--g3)',marginBottom:'8px',paddingBottom:'6px',borderBottom:'1px solid rgba(196,255,44,.1)',display:'flex',alignItems:'center',gap:'8px'}}>
+                DIPLOMATIC SIGNALS <span className="prov-badge">SCENARIO</span>
+              </div>
               {diplomaticSignals.map(d => (
                 <div key={d.actor} style={{padding:'5px 0',borderBottom:'1px solid rgba(196,255,44,.04)'}}>
                   <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-small)',color:'var(--g5)'}}>{d.actor}</div>

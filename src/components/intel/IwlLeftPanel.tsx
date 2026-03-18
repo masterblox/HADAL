@@ -1,23 +1,31 @@
 import { useState } from 'react'
+import { missileEvents, interceptEvents, airstrikeEvents, groundEvents, combatantEvents, diplomaticEvents } from '@/data/map-events'
+import { airspaceZones } from '@/data/airspace-zones'
 
 interface IwlLeftPanelProps {
   layerVisibility: Record<string, boolean>
   onToggle: (name: string) => void
+  liveIncidentCount: number
 }
 
-const layers = [
-  {id:'satellite',label:'Satellite Terrain',icon:'grid'},
-  {id:'missile',label:'Missile Strike',ct:'10',icon:'missile'},
-  {id:'airstrike',label:'Air Strike',ct:'6',icon:'triangle'},
-  {id:'ground',label:'Ground Forces',ct:'14',icon:'tank'},
-  {id:'intercept',label:'Interception',ct:'1160',icon:'diamond'},
-  {id:'combatants',label:'Active Combatants',ct:'7',icon:'person'},
-  {id:'diplomatic',label:'Diplomatic Actors',ct:'4',icon:'pentagon',special:true},
-  {id:'airspace-lyr',label:'Airspace Closed',ct:'6',icon:'airspace'},
-]
+/** Derive layer counts from actual static data arrays + live pipeline count */
+function buildLayers(liveCount: number) {
+  return [
+    {id:'satellite',label:'Satellite Terrain',icon:'grid'},
+    {id:'missile',label:'Missile Strike',ct:String(missileEvents.length),icon:'missile'},
+    {id:'airstrike',label:'Air Strike',ct:String(airstrikeEvents.length),icon:'triangle'},
+    {id:'ground',label:'Ground Forces',ct:String(groundEvents.length),icon:'tank'},
+    {id:'intercept',label:'Interception',ct:String(interceptEvents.length),icon:'diamond'},
+    {id:'combatants',label:'Active Combatants',ct:String(combatantEvents.length),icon:'person'},
+    {id:'diplomatic',label:'Diplomatic Actors',ct:String(diplomaticEvents.length),icon:'pentagon',special:true},
+    {id:'airspace-lyr',label:'Airspace Zones',ct:String(airspaceZones.length),icon:'airspace'},
+    ...(liveCount > 0 ? [{id:'live-incidents',label:'Live Incidents',ct:String(liveCount),icon:'live'}] : []),
+  ]
+}
 
-export function IwlLeftPanel({ layerVisibility, onToggle }: IwlLeftPanelProps) {
+export function IwlLeftPanel({ layerVisibility, onToggle, liveIncidentCount }: IwlLeftPanelProps) {
   const [open, setOpen] = useState(true)
+  const layers = buildLayers(liveIncidentCount)
 
   return (
     <div className="iwl-left-inner">
@@ -33,7 +41,7 @@ export function IwlLeftPanel({ layerVisibility, onToggle }: IwlLeftPanelProps) {
                 key={l.id}
                 className={`iwl-lyr${l.special ? ' iwl-lyr-diplomatic' : ''}`}
                 style={{
-                  opacity: layerVisibility[l.id] ? 1 : .45,
+                  opacity: layerVisibility[l.id] !== false ? 1 : .45,
                   ...(l.special ? {borderTop:'1px solid rgba(180,100,255,.12)',background:'rgba(140,60,220,.04)'} : {}),
                 }}
                 onClick={() => onToggle(l.id)}
@@ -43,7 +51,7 @@ export function IwlLeftPanel({ layerVisibility, onToggle }: IwlLeftPanelProps) {
                   {l.label}
                 </span>
                 {l.ct && <span className="iwl-lyr-ct" style={{color: l.special ? 'rgba(210,140,255,.95)' : 'rgba(180,200,180,.65)'}}>{l.ct}</span>}
-                <div className={`iwl-toggle${layerVisibility[l.id] ? '' : ' off'}`} />
+                <div className={`iwl-toggle${layerVisibility[l.id] !== false ? '' : ' off'}`} />
               </div>
             ))}
           </div>

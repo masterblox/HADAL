@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { MapDepthLayer } from '@/components/shared/MapDepthLayer'
 import { LeafletMap } from './LeafletMap'
 import { IwlNav } from './IwlNav'
 import { IwlLeftPanel } from './IwlLeftPanel'
@@ -21,6 +22,7 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
   const [layerVisibility, setLayerVisibility] = useState<Record<string, boolean>>({
     satellite: true, missile: true, airstrike: true, ground: true,
     intercept: true, combatants: true, diplomatic: true, 'airspace-lyr': true,
+    'live-incidents': true,
   })
   const [syncStatus, setSyncStatus] = useState('SYNCING...')
   const [datalinkText, setDatalinkText] = useState('ESTABLISHING SECURE DATALINK...')
@@ -30,14 +32,30 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
   }, [])
 
   const handleCalc = useCallback(() => {
-    const score = Math.floor(Math.random() * 8 + 88)
-    alert(`HADAL THREAT CALC\n\nTHEATRE THREAT INDEX: ${score}/100\nCLASSIFICATION: CRITICAL\n\nAIR DEFENCE COVER: 61%\nACTIVE VECTORS: 8\nTHAAD NODES DEGRADED: 5/5\nINTERCEPTIONS CONFIRMED: 1,160\n\nSOURCE: OSINT / HADAL ANALYTICS`)
-  }, [])
+    const kinetic = incidents.filter(i => {
+      const t = (i.type || i.title || '').toLowerCase()
+      return t.includes('missile') || t.includes('airstrike') || t.includes('drone') || t.includes('ballistic')
+    }).length
+    const sources = new Set(incidents.map(i => i.source).filter(Boolean)).size
+    const countries = new Set(incidents.map(i => i.location?.country).filter(Boolean)).size
+
+    alert(
+      `HADAL THREAT SUMMARY\n\n` +
+      `TRACKED INCIDENTS: ${incidents.length}\n` +
+      `KINETIC EVENTS: ${kinetic}\n` +
+      `COUNTRIES AFFECTED: ${countries}\n` +
+      `SOURCES: ${sources}\n\n` +
+      (incidents.length > 0
+        ? `SOURCE: GULF WATCH PIPELINE · LIVE`
+        : `SOURCE: NO LIVE DATA · PIPELINE OFFLINE`)
+    )
+  }, [incidents])
 
   return (
     <div className="iwl-wrap">
       <IwlNav activeTab={activeTab} onTabChange={setActiveTab} syncStatus={syncStatus} onCalc={handleCalc} />
-      <div className="iwl-map-area">
+      <div className="iwl-map-area" style={{ position: 'relative' }}>
+        <MapDepthLayer />
         <LeafletMap
           layerVisibility={layerVisibility}
           incidents={incidents}
@@ -45,13 +63,13 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
           onDatalinkUpdate={setDatalinkText}
         />
         {activeTab === 'airspace' && <AirspaceTab airspace={airspace} />}
-        {activeTab === 'casualties' && <CasualtiesTab sandbox={sandbox} />}
+        {activeTab === 'casualties' && <CasualtiesTab sandbox={sandbox} incidents={incidents} />}
         {activeTab === 'posturing' && <PosturingTab sandbox={sandbox} />}
         {activeTab === 'map' && (
           <div className="iwl-resizable-overlay">
             <ResizablePanelGroup orientation="horizontal">
               <ResizablePanel id="iwl-left" defaultSize="12%" minSize="8%" maxSize="20%">
-                <IwlLeftPanel layerVisibility={layerVisibility} onToggle={toggleLayer} />
+                <IwlLeftPanel layerVisibility={layerVisibility} onToggle={toggleLayer} liveIncidentCount={incidents.length} />
               </ResizablePanel>
               <ResizableHandle disabled={!sandbox} />
               <ResizablePanel id="iwl-center" defaultSize="72%" className="iwl-map-passthrough">

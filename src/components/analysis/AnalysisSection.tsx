@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import type { Incident } from '../../hooks/useDataPipeline'
+import { demoIncidents } from '@/data/demo-incidents'
 
 /* ── types ── */
 interface DayBucket { date: string; count: number }
@@ -12,6 +13,7 @@ type Tab = typeof TABS[number]
 
 export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
   const [tab, setTab] = useState<Tab>('TIMELINE')
+  const effectiveIncidents = incidents.length === 0 ? demoIncidents : incidents
 
   // 14-day timeline
   const [now] = useState(Date.now)
@@ -21,18 +23,18 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
       const date = new Date(now - d * 86400000).toISOString().slice(0, 10)
       map[date] = 0
     }
-    incidents.forEach(inc => {
+    effectiveIncidents.forEach(inc => {
       if (!inc.published) return
       const day = new Date(inc.published).toISOString().slice(0, 10)
       if (day in map) map[day]++
     })
     return Object.entries(map).map(([date, count]) => ({ date, count }))
-  }, [incidents, now])
+  }, [effectiveIncidents, now])
 
   // Country heatmap
   const countryData = useMemo<CountryBucket[]>(() => {
     const map: Record<string, number> = {}
-    incidents.forEach(inc => {
+    effectiveIncidents.forEach(inc => {
       const c = inc.location?.country || 'Unknown'
       map[c] = (map[c] || 0) + 1
     })
@@ -40,31 +42,31 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
       .map(([country, count]) => ({ country, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 12)
-  }, [incidents])
+  }, [effectiveIncidents])
 
   // Type breakdown
   const typeData = useMemo<TypeBucket[]>(() => {
     const map: Record<string, number> = {}
-    incidents.forEach(inc => { const t = inc.type || 'unknown'; map[t] = (map[t] || 0) + 1 })
+    effectiveIncidents.forEach(inc => { const t = inc.type || 'unknown'; map[t] = (map[t] || 0) + 1 })
     return Object.entries(map)
       .map(([type, count]) => ({ type, count }))
       .sort((a, b) => b.count - a.count)
-  }, [incidents])
+  }, [effectiveIncidents])
 
   // Sources
   const sourceData = useMemo(() => {
     const map: Record<string, number> = {}
-    incidents.forEach(inc => { const s = inc.source || 'unknown'; map[s] = (map[s] || 0) + 1 })
+    effectiveIncidents.forEach(inc => { const s = inc.source || 'unknown'; map[s] = (map[s] || 0) + 1 })
     return Object.entries(map)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
-  }, [incidents])
+  }, [effectiveIncidents])
 
   const maxTimeline = Math.max(...timeline.map(d => d.count), 1)
   const maxCountry = countryData[0]?.count || 1
 
   return (
-    <section className="analysis-section jp-panel">
+    <section className="analysis-section jp-panel sev-nominal">
       <div className="analysis-header jp-panel-header">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ marginRight: 8 }}>
           <rect x="1" y="8" width="2" height="5" fill="var(--g3)" />
@@ -72,7 +74,7 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
           <rect x="9" y="2" width="2" height="11" fill="var(--g)" />
         </svg>
         <span className="analysis-title">INCIDENT ANALYTICS</span>
-        <span className="analysis-count">{incidents.length} EVENTS</span>
+        <span className="analysis-count">{effectiveIncidents.length} EVENTS{incidents.length === 0 ? ' · DEMO' : ''}</span>
       </div>
 
       {/* Tabs */}
@@ -87,7 +89,10 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
       {/* Content */}
       <div className="analysis-body">
         {tab === 'TIMELINE' && (
-          <div className="chart-timeline">
+          <div className="chart-timeline" style={{position:'relative'}}>
+            <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',justifyContent:'space-between',paddingBottom:'24px',pointerEvents:'none'}}>
+              {[0,1,2,3].map(i => <div key={i} style={{height:'1px',background:'var(--g07)'}} />)}
+            </div>
             <div className="chart-bars">
               {timeline.map(d => (
                 <div key={d.date} className="bar-col">
@@ -103,28 +108,32 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
         )}
 
         {tab === 'HEATMAP' && (
-          <div className="chart-heatmap">
-            {countryData.map(c => (
-              <div key={c.country} className="heatmap-row">
-                <span className="hm-country">{c.country}</span>
-                <div className="hm-bar-bg">
-                  <div className="hm-bar-fill" style={{ width: `${(c.count / maxCountry) * 100}%` }} />
+          <div className="chart-heatmap heatmap-grid">
+            {countryData.map(c => {
+              const intensity = c.count / maxCountry
+              const bg = intensity >= 0.7 ? 'rgba(255,140,0,.12)' : intensity >= 0.4 ? 'rgba(196,255,44,.08)' : 'rgba(196,255,44,.03)'
+              return (
+                <div key={c.country} className="heatmap-row" style={{background: bg, border:'1px solid var(--g07)', padding:'6px 10px'}}>
+                  <span className="hm-country">{c.country}</span>
+                  <div className="hm-bar-bg">
+                    <div className="hm-bar-fill" style={{ width: `${(c.count / maxCountry) * 100}%`, background: intensity >= 0.7 ? 'var(--warn)' : 'var(--g3)' }} />
+                  </div>
+                  <span className="hm-count" style={{color: intensity >= 0.7 ? 'var(--warn)' : 'var(--g)'}}>{c.count}</span>
                 </div>
-                <span className="hm-count">{c.count}</span>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
 
         {tab === 'INTENSITY' && (
           <div className="chart-intensity">
             <div className="intensity-summary">
-              <div className="intensity-number">{incidents.length}</div>
+              <div className="intensity-number">{effectiveIncidents.length}</div>
               <div className="intensity-label">TOTAL EVENTS (14D)</div>
             </div>
             <div className="intensity-breakdown">
               {typeData.map(t => {
-                const pct = Math.round((t.count / incidents.length) * 100)
+                const pct = Math.round((t.count / effectiveIncidents.length) * 100)
                 return (
                   <div key={t.type} className="intensity-row">
                     <span className="int-type">{t.type.toUpperCase()}</span>
@@ -142,15 +151,21 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
 
         {tab === 'SOURCES' && (
           <div className="chart-sources">
-            {sourceData.map(([name, count]) => (
-              <div key={name} className="source-row">
-                <span className="src-name">{name}</span>
-                <div className="src-bar-bg">
-                  <div className="src-bar-fill" style={{ width: `${(count / (sourceData[0]?.[1] || 1)) * 100}%` }} />
+            {sourceData.map(([name, count]) => {
+              const conf = Math.min(5, Math.ceil((count / (sourceData[0]?.[1] || 1)) * 5))
+              return (
+                <div key={name} className="source-row" style={{border:'1px solid var(--g07)',padding:'6px 10px',background:'var(--bg1)'}}>
+                  <span className="src-name">{name}</span>
+                  <span style={{display:'flex',gap:'3px',marginRight:'8px',alignItems:'center'}}>
+                    {[0,1,2,3,4].map(d => <span key={d} style={{width:'5px',height:'5px',borderRadius:'50%',background: d < conf ? 'var(--g)' : 'var(--g07)'}} />)}
+                  </span>
+                  <div className="src-bar-bg">
+                    <div className="src-bar-fill" style={{ width: `${(count / (sourceData[0]?.[1] || 1)) * 100}%` }} />
+                  </div>
+                  <span className="src-count">{count}</span>
                 </div>
-                <span className="src-count">{count}</span>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

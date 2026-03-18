@@ -19,6 +19,7 @@ interface ThreatFeedProps {
 
 export function ThreatFeed({ incidents }: ThreatFeedProps) {
   const [filt, setFilt] = useState('ALL')
+  const [expanded, setExpanded] = useState(false)
 
   const allData = useMemo(() => {
     const live: FeedItem[] = incidents.slice(0, 30).map((inc, i) => {
@@ -41,7 +42,7 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
   const filtered = filt === 'ALL' ? allData : allData.filter(r => r.tags.includes(filt))
 
   return (
-    <div className="jp-panel">
+    <div className="jp-panel sev-critical sev-critical-pulse">
       <div className="TABS">
         {regions.map(r => (
           <div key={r} className={`TAB${filt === r ? ' on' : ''}`} onClick={() => setFilt(r)}>{r}</div>
@@ -59,9 +60,10 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
         <span style={{width:'80px',flexShrink:0}}>SEVERITY</span>
         <span style={{width:'36px',flexShrink:0}}>SRC</span>
         <span style={{width:'46px',textAlign:'right'}}>CONF</span>
+        <span style={{width:'48px',textAlign:'center',flexShrink:0}}>FRESH</span>
       </div>
-      <div className="feed-scroll">
-        {filtered.map(r => (
+      <div className={`feed-scroll${expanded ? ' feed-expanded' : ''}`}>
+        {filtered.slice(0, expanded ? filtered.length : 6).map(r => (
           <div key={r.id} className="feed-row">
             <span className="feed-id">{r.id}</span>
             <span className="feed-region">{r.region}</span>
@@ -69,9 +71,15 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
             <span className={`sev-chip sev-${r.sev}`}>{r.sev}</span>
             <span className="feed-src">{r.src}</span>
             <span className="feed-conf">{r.conf}</span>
+            <span className={`freshness-chip ${r.live ? 'fresh-new' : 'fresh-stale'}`}>{r.live ? 'NEW' : 'STALE'}</span>
           </div>
         ))}
       </div>
+      {filtered.length > 6 && (
+        <div className="feed-toggle" onClick={() => setExpanded(!expanded)}>
+          {expanded ? 'COLLAPSE ▲' : `EXPAND FEED ▼ (${filtered.length - 6} MORE)`}
+        </div>
+      )}
     </div>
   )
 }

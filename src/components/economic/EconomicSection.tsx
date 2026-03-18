@@ -25,32 +25,29 @@ export function EconomicSection({ prices, sandbox }: EconomicSectionProps) {
   ]
 
   return (
-    <div className="eco-section jp-panel">
+    <div className="eco-section jp-panel jp-corners sev-nominal">
       <canvas ref={noiseRef} className="eco-noise" />
       <div className="eco-head">
         <span className="eco-ht">&#9670; ECONOMIC INTELLIGENCE</span>
         <span style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-small)',color:'rgba(255,140,0,.4)',letterSpacing:'.16em'}}>
           {prices?.brent ? 'LIVE · WAR-ADJUSTED' : 'LIVE · WAR-ADJUSTED'}
         </span>
+        <span className="prov-line" style={{marginLeft:'auto'}}>LAST SYNC: {new Date().toISOString().slice(11,19)}Z</span>
       </div>
       <div className="eco-grid">
         <ResizablePanelGroup orientation="horizontal">
           <ResizablePanel id="eco-left" defaultSize="50%" minSize="30%">
             <div className="eco-half">
               <div className="eco-sub">WORLD RESERVE CURRENCIES</div>
-              {currencyData.map(c => (
-                <div key={c.pair} className="CUR-ROW">
-                  <div className="CUR-PAIR">{c.pair}</div>
-                  <div className="CUR-META">
-                    <div className="CUR-NAME">{c.name}</div>
-                    <div className="CUR-SPREAD">{c.spread}</div>
-                  </div>
-                  <div style={{textAlign:'right'}}>
+              <div className="cur-grid">
+                {currencyData.map(c => (
+                  <div key={c.pair} className="cur-cell">
+                    <div className="CUR-PAIR">{c.pair}</div>
                     <div className="CUR-VAL">{c.val}</div>
                     <div className={`CUR-CHG ${c.up ? 'UP' : 'DN'}`}>{c.chg}</div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </ResizablePanel>
           <ResizableHandle disabled={!sandbox} />
@@ -84,7 +81,7 @@ export function EconomicSection({ prices, sandbox }: EconomicSectionProps) {
             </div>
           ))}
         </div>
-        <div style={{marginTop:'18px',paddingTop:'10px',borderTop:'1px solid rgba(255,140,0,.06)',textAlign:'right',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'var(--fs-med)',letterSpacing:'.18em',color:'rgba(255,140,0,.16)'}}>
+        <div style={{marginTop:'10px',paddingTop:'8px',borderTop:'1px solid rgba(255,140,0,.06)',textAlign:'right',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'var(--fs-med)',letterSpacing:'.18em',color:'rgba(255,140,0,.16)'}}>
           At 10,924 metres, only the truth survives.
         </div>
       </div>

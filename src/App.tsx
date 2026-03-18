@@ -1,67 +1,133 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore, lazy, Suspense, useCallback } from 'react'
 import { LoginPage } from './components/login/LoginPage'
 import { Topbar } from './components/topbar/Topbar'
-import { HeroGrid } from './components/hero/HeroGrid'
-import { MissileDefenseStrip } from './components/missile/MissileDefenseStrip'
-import { SepBand } from './components/sep/SepBand'
-import { ThreatFeed } from './components/feed/ThreatFeed'
-import { IntelWireSection } from './components/intel/IntelWireSection'
-import { EconomicSection } from './components/economic/EconomicSection'
-import { PredictorEngine } from './components/predictor/PredictorEngine'
-import { AnalysisSection } from './components/analysis/AnalysisSection'
-import { RegionalPanel } from './components/regional/RegionalPanel'
+import { OverviewPage } from './pages/OverviewPage'
+import { BootSequence } from './components/shared/BootSequence'
 import { useDataPipeline } from './hooks/useDataPipeline'
-import { usePressureGauge } from './hooks/usePressureGauge'
+import { usePrediction } from './hooks/usePrediction'
+import { parseLane, subscribeHash, type Lane, navigateTo } from './lib/lane-routing'
 
+/* Lane-level code splitting — Operations and Analysis load on demand */
+const OperationsPage = lazy(() => import('./pages/OperationsPage').then(m => ({ default: m.OperationsPage })))
+const AnalysisPage = lazy(() => import('./pages/AnalysisPage').then(m => ({ default: m.AnalysisPage })))
+
+function useHashRoute(): Lane {
+  return useSyncExternalStore(subscribeHash, parseLane)
+}
+
+const LANE_TITLES: Record<Lane, string> = {
+  overview: 'Overview',
+  operations: 'Operations',
+  analysis: 'Analysis',
+}
+
+/* ── App ── */
 export function App() {
   const skipLogin = new URLSearchParams(window.location.search).has('bypass')
   const [phase, setPhase] = useState<'login' | 'exploding' | 'terminal'>(skipLogin ? 'terminal' : 'login')
   const [terminalVisible, setTerminalVisible] = useState(skipLogin)
+  const [bootDone, setBootDone] = useState(
+    !!sessionStorage.getItem('hadal-boot-played') || skipLogin
+  )
+  const onBootComplete = useCallback(() => setBootDone(true), [])
   const { prices, incidents, airspace } = useDataPipeline()
-  const pressure = usePressureGauge(incidents.length)
+  const prediction = usePrediction(incidents, airspace, prices)
+  const threatLevel = prediction?.theatreThreatLevel ?? null
   const [sandbox, setSandbox] = useState(false)
+  const activeLane = useHashRoute()
+
+  // Set default hash if none present
+  useEffect(() => {
+    if (!window.location.hash) {
+      window.location.hash = 'overview'
+    }
+  }, [])
+
+  useEffect(() => {
+    document.title = `HADAL · ${LANE_TITLES[activeLane]}`
+  }, [activeLane])
 
   const handleAccess = () => {
-    // Login card already faded — now fade overlay and reveal terminal
     setPhase('exploding')
     setTerminalVisible(true)
   }
 
   useEffect(() => {
     if (phase === 'exploding') {
-      // Remove login overlay after fade completes
       const t = setTimeout(() => setPhase('terminal'), 1000)
       return () => clearTimeout(t)
     }
   }, [phase])
 
+  const pipelineStatus = {
+    incidents: incidents.length > 0,
+    prices: prices !== null,
+    airspace: airspace !== null,
+  }
+
   return (
     <>
-      {/* Terminal always renders once exploding starts (fades in underneath) */}
       {phase !== 'login' && (
         <div className={`terminal-root ${terminalVisible ? 'terminal-visible' : 'terminal-hidden'}`}>
           <div className="scanlines" />
-          <Topbar pressure={pressure} sandbox={sandbox} onSandboxToggle={() => setSandbox(s => !s)} />
+          <div className="class-banner">
+            <span className="class-banner-text">// TOP SECRET // SCI // NOFORN // HADAL-GULF-THEATRE // TS/SCI //</span>
+            <div className="class-banner-gauge">
+              <span className="class-banner-gauge-label">THREAT LEVEL</span>
+              <div className="class-banner-gauge-track">
+                <div className="class-banner-gauge-fill" style={{ width: `${threatLevel ?? 0}%` }} />
+              </div>
+              <span className="class-banner-gauge-val">{threatLevel ?? '—'}</span>
+            </div>
+          </div>
+          <Topbar
+            threatLevel={threatLevel}
+            incidentCount={incidents.length}
+            sandbox={sandbox}
+            onSandboxToggle={() => setSandbox(s => !s)}
+            activeLane={activeLane}
+            onNavigate={navigateTo}
+          />
           <div className="terminal">
-            <HeroGrid sandbox={sandbox} />
-            <MissileDefenseStrip sandbox={sandbox} />
-            <SepBand />
-            <ThreatFeed incidents={incidents} />
-            <IntelWireSection incidents={incidents} airspace={airspace} sandbox={sandbox} />
-            <RegionalPanel />
-            <PredictorEngine incidents={incidents} airspace={airspace} prices={prices} />
-            <AnalysisSection incidents={incidents} />
-            <EconomicSection prices={prices} sandbox={sandbox} />
+            {activeLane === 'overview' && (
+              <OverviewPage
+                sandbox={sandbox}
+                threatLevel={threatLevel}
+                pipelineStatus={pipelineStatus}
+                prediction={prediction}
+                incidents={incidents}
+                airspace={airspace}
+                prices={prices}
+              />
+            )}
+            <Suspense fallback={null}>
+              {activeLane === 'operations' && (
+                <OperationsPage
+                  incidents={incidents}
+                  airspace={airspace}
+                  sandbox={sandbox}
+                />
+              )}
+              {activeLane === 'analysis' && (
+                <AnalysisPage
+                  incidents={incidents}
+                  airspace={airspace}
+                  prices={prices}
+                  sandbox={sandbox}
+                />
+              )}
+            </Suspense>
           </div>
         </div>
       )}
 
-      {/* Login overlay — sits on top, fades out during explosion */}
-      {phase !== 'terminal' && (
+      {phase !== 'terminal' && bootDone && (
         <div className={`login-overlay ${phase === 'exploding' ? 'login-fading' : ''}`}>
           <LoginPage onAccess={handleAccess} />
         </div>
       )}
+
+      {!bootDone && <BootSequence onComplete={onBootComplete} />}
     </>
   )
 }

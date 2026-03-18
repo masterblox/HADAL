@@ -1,12 +1,25 @@
+import { useMemo } from 'react'
 import { useSepStatic } from '@/canvas/useSepStatic'
+import type { Incident } from '@/hooks/useDataPipeline'
 
-export function SepBand() {
+interface SepBandProps {
+  incidents: Incident[]
+}
+
+export function SepBand({ incidents }: SepBandProps) {
   const staticRef = useSepStatic()
 
+  const stats = useMemo(() => {
+    const intercepts = incidents.filter(i => (i.title || '').toLowerCase().includes('intercept')).length
+    const countries = new Set(incidents.map(i => i.location?.country).filter(Boolean)).size
+    return { intercepts, countries }
+  }, [incidents])
+
+  const hasLive = incidents.length > 0
+
   return (
-    <div className="sep-band">
+    <div className="sep-band sep-threat-pulse">
       <canvas ref={staticRef} />
-      {/* JP Depth Track — ocean depth visualization */}
       <div className="jp-depth" style={{position:'absolute',left:0,right:0,bottom:0,height:'100%',zIndex:1,opacity:.35}}>
         <div className="jp-depth-surface" style={{position:'absolute',top:0,left:0,right:0,height:'40%'}} />
         <div className="jp-depth-line" style={{top:'40%'}} />
@@ -28,13 +41,13 @@ export function SepBand() {
         </svg>
         <div className="sep-vtx" />
         <div className="sep-msg-block">
-          <div className="sep-icon-wrap">THAAD DEGRADED</div>
-          <div className="sep-txt">5 NODES LOST · AIR DEFENCE AT 61%</div>
+          <div className="sep-icon-wrap">{hasLive ? `${stats.intercepts} INTERCEPT EVENTS` : 'AWAITING FEED'}</div>
+          <div className="sep-txt">{hasLive ? `FROM ${incidents.length} INCIDENTS · ${stats.countries} COUNTRIES` : 'PIPELINE NOT LOADED'}</div>
         </div>
         <div className="sep-vtx" />
         <div className="sep-msg-block">
-          <div className="sep-icon-wrap">1,160 INTERCEPTIONS</div>
-          <div className="sep-txt">ACTIVE SINCE FEB 28 · 5 GCC STATES</div>
+          <div className="sep-icon-wrap">{incidents.length} TRACKED EVENTS</div>
+          <div className="sep-txt">{hasLive ? 'GULF WATCH PIPELINE · LIVE' : 'NO LIVE DATA'}</div>
         </div>
       </div>
       <div style={{position:'absolute',bottom:'7px',left:'50%',transform:'translateX(-50%)',fontFamily:"'Cormorant Garamond',serif",fontStyle:'italic',fontWeight:300,fontSize:'var(--fs-small)',letterSpacing:'.22em',color:'rgba(196,255,44,.14)',whiteSpace:'nowrap',pointerEvents:'none',zIndex:2}}>

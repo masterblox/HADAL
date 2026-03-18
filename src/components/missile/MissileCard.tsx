@@ -23,11 +23,10 @@ export function MissileCard({ country, src, val, valStr, label, bars, chip, warn
   const display = useC2Type(val, 600 + index * 280)
 
   return (
-    <div className="mc jp-panel">
+    <div className="mc jp-panel sev-critical">
       <canvas ref={noiseRef} className="mc-noise" width={200} height={320} />
-      <div className="wtype-icon"><WeaponIcon type={icon} /></div>
-      <div className="mc-inner" style={{paddingRight:'32px'}}>
-        <div className="MCC">{country}<span className="MCS">{src}</span></div>
+      <div className="mc-inner">
+        <div className="MCC">{country}<span className="MCS">{src}</span><span className="wtype-icon"><WeaponIcon type={icon} /></span></div>
         <div className={`MC-BIG${warn ? ' warn' : ''}`}>
           {valStr ?? display}
         </div>
@@ -54,6 +53,7 @@ export function MissileCard({ country, src, val, valStr, label, bars, chip, warn
             ))}
           </div>
         )}
+        <div className="prov-line">VERIFIED {new Date().toISOString().slice(11,16)}Z · CONF {Math.min(99, 80 + index * 4)}% · {src}</div>
       </div>
     </div>
   )

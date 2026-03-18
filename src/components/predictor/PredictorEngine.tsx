@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import type { Incident, AirspaceData, PriceData } from '../../hooks/useDataPipeline'
 import { usePrediction } from '../../hooks/usePrediction'
+import { demoIncidents } from '@/data/demo-incidents'
 
 /* ── static options (from Gulf Watch) ── */
 const ACTORS = [
@@ -81,7 +82,9 @@ interface Props {
 export function PredictorEngine({ incidents, airspace, prices }: Props) {
   const [scenario, setScenario] = useState<Scenario>({ actor: 'houthi', action: 'missile', target: 'oil_facility', country: 'uae' })
   const [showScenarios, setShowScenarios] = useState(false)
-  const prediction = usePrediction(incidents, airspace, prices)
+  const effectiveIncidents = incidents.length >= 5 ? incidents : demoIncidents
+  const prediction = usePrediction(effectiveIncidents, airspace, prices)
+  const isDemo = incidents.length < 5
 
   // Filter scenario predictions by selected actor
   const filteredScenarios = useMemo(() => {
@@ -95,7 +98,7 @@ export function PredictorEngine({ incidents, airspace, prices }: Props) {
   if (!prediction) return null
 
   return (
-    <section className="predictor-section jp-panel jp-corners">
+    <section className="predictor-section jp-panel jp-corners sev-nominal">
       {/* Header */}
       <div className="predictor-header jp-panel-header">
         <div className="predictor-title-row">
@@ -104,7 +107,7 @@ export function PredictorEngine({ incidents, airspace, prices }: Props) {
             <path d="M8 3v5l3 3" stroke="var(--g)" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
           <span className="predictor-title">PREDICTION ENGINE</span>
-          <span className="predictor-subtitle">BOOTSTRAP · {prediction.sufficient ? 'ACTIVE' : 'INSUFFICIENT DATA'}</span>
+          <span className="predictor-subtitle">BOOTSTRAP · {isDemo ? 'DEMO MODE' : prediction.sufficient ? 'ACTIVE' : 'INSUFFICIENT DATA'}</span>
         </div>
         <div className="predictor-trend">
           <span>THREAT: {prediction.theatreThreatLevel}</span>
@@ -125,6 +128,12 @@ export function PredictorEngine({ incidents, airspace, prices }: Props) {
             <ProfileCard label="PROB SEVERE" value={prediction.global?.probSevere ?? 0} max={100} warn={(prediction.global?.probSevere ?? 0) >= 40} unit="%" />
             <ProfileCard label="CONTAGION" value={prediction.cascadeRisk.contagionScore} max={100} warn={prediction.cascadeRisk.contagionScore >= 50} />
             <ProfileCard label="AIRSPACE" value={prediction.airspacePressure} max={100} warn={prediction.airspacePressure >= 40} />
+          </div>
+
+          {/* Severity Depth Strip */}
+          <div className="jp-depth" style={{height:'6px',margin:'0 0 16px',border:'none'}}>
+            <div className="jp-depth-surface" style={{width:'40%',height:'100%',display:'inline-block'}} />
+            <div className="jp-depth-sub" style={{width:'60%',height:'100%',display:'inline-block'}} />
           </div>
 
           {/* Time Windows */}
@@ -154,6 +163,9 @@ export function PredictorEngine({ incidents, airspace, prices }: Props) {
                     }} />
                   </div>
                   <span className="jp-bval">{cat.count}</span>
+                  <span className="pred-sev-dots" style={{display:'flex',gap:'2px',marginLeft:'4px'}}>
+                    {[0,1,2].map(d => <span key={d} style={{width:'4px',height:'4px',borderRadius:'50%',background: d < (cat.meanSeverity >= 70 ? 3 : cat.meanSeverity >= 40 ? 2 : 1) ? (cat.meanSeverity >= 70 ? 'var(--warn)' : 'var(--g)') : 'var(--g07)'}} />)}
+                  </span>
                   <span className="pred-trend-icon" style={{ color: trendColor(cat.trend) }}>{trendIcon(cat.trend)}</span>
                 </div>
               ))}

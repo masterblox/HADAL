@@ -45,10 +45,32 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
     }).addTo(map)
 
     const groups: Record<string, L.LayerGroup> = {}
-    ;['missile','airstrike','ground','intercept','combatants','diplomatic','airspace-lyr'].forEach(n => {
+    ;['missile','airstrike','ground','intercept','combatants','diplomatic','airspace-lyr','live-incidents'].forEach(n => {
       groups[n] = L.layerGroup().addTo(map)
     })
     layerGroups.current = groups
+
+    // ── LIVE INCIDENT MARKERS (Gulf Watch pipeline) ──
+    incidents.forEach(inc => {
+      const lat = inc.location?.lat
+      const lng = inc.location?.lng
+      if (lat == null || lng == null) return
+
+      const title = inc.title || 'Unknown event'
+      const cred = inc.credibility ?? 50
+      const isCritical = cred >= 90
+      const isHigh = cred >= 70
+      const col = isCritical ? 'rgba(255,60,60,.9)' : isHigh ? 'rgba(255,140,0,.9)' : 'rgba(196,255,44,.8)'
+      const d = (Math.random() * 2).toFixed(2)
+      const html = `<div style="position:relative;width:16px;height:16px;cursor:pointer;"><div class="iwl-ripple-ring" style="inset:-4px;border-color:${col.replace('.9','.4').replace('.8','.3')};animation-delay:${d}s;"></div><svg width="16" height="16" viewBox="0 0 16 16" style="position:absolute;inset:0;"><circle cx="8" cy="8" r="4" fill="${col.replace('.9','.15').replace('.8','.1')}" stroke="${col}" stroke-width="1.5"/><circle cx="8" cy="8" r="1.5" fill="${col}"/></svg></div>`
+      const icon = L.divIcon({ html, className: '', iconSize: [16, 16], iconAnchor: [8, 8] })
+      const source = inc.source || 'OSINT'
+      const time = inc.published ? new Date(inc.published).toISOString().slice(0, 16).replace('T', ' ') : '—'
+      const country = inc.location?.country || '—'
+      L.marker([lat, lng], { icon }).addTo(groups['live-incidents'])
+        .bindPopup(mkPopup(title, inc.type || 'event', lat, lng, cred, source, time, `Country: ${country}`), { maxWidth: 280 })
+        .bindTooltip(`<b style="color:${col}">${title.slice(0, 60)}</b>`, { direction: 'top', offset: [0, -10] })
+    })
 
     // Missile markers
     missileEvents.forEach(e => {

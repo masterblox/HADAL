@@ -1,6 +1,6 @@
 # HADAL — Claude Code Instructions
 
-> Military-grade threat intelligence terminal. "Green Fallout" aesthetic: lemon-green on black, CRT feel.
+> Military-grade threat intelligence terminal. Green-on-black identity, zero decorative animation.
 > Stack: React 19 + TypeScript + Vite + Tailwind 4 + Canvas 2D + Leaflet
 
 ---
@@ -11,7 +11,7 @@
 src/
 ├── App.tsx              — Main orchestrator (Topbar → Hero → Missile → Sep → Feed → Intel → Economic)
 ├── main.tsx             — React entry
-├── globals.css          — Full design system (Green Fallout tokens, CRT effects, all layout)
+├── globals.css          — Full design system (surface tokens, text hierarchy, structural layout)
 ├── components/          — Domain-grouped UI (hero/, missile/, feed/, intel/, economic/, sep/, topbar/, ui/)
 ├── canvas/              — Custom Canvas 2D hooks (useGlobe, useSonar, useNoiseCanvas, useSepStatic, useDrawMark)
 ├── data/                — Static data (feed-data, gcc-data, gulf-economic, airspace-zones, thaad-sites, trajectories)
@@ -30,18 +30,17 @@ public/                  — Static JSON endpoints (incidents.json, prices.json,
 | `--HEAD`    | `Rajdhani`                   | Headers/labels         |
 | `--C2`      | `Teko`                       | Large numbers          |
 | `--MONO`    | `Share Tech Mono`            | Code/data              |
-| `--tagline` | `Cormorant Garamond`         | Serif accents          |
 
-All border-radius: 0px. All effects: grain overlay, CRT vignette, scanlines.
+All border-radius: 0px. Zero decorative animation. Zero glows/box-shadows. No CRT effects.
 
 ---
 
 ## Agent Behavior
 
 ### 1. Respect the Aesthetic
-- Every UI element must reinforce the Green Fallout CRT terminal look
-- No rounded corners, no soft shadows, no pastel colors
-- When in doubt: sharp edges, lemon-green text, black background, military typography
+- Every UI element must reinforce the green-on-black HADAL identity
+- No rounded corners, no glows, no decorative animations, no CRT effects
+- When in doubt: sharp edges, structural borders, static indicators (no blink/pulse)
 
 ### 2. Canvas First for Visualizations
 - Custom visualizations use Canvas 2D API (not SVG, not charting libraries)
@@ -63,7 +62,9 @@ All border-radius: 0px. All effects: grain overlay, CRT vignette, scanlines.
 - All styling lives in `globals.css` — no CSS modules, no styled-components
 - Use CSS custom properties (`--g`, `--bg`, `--MONO`, etc.) for theming
 - Tailwind 4 utilities are available but project leans on custom CSS classes
-- CRT effects (scanlines, grain, vignette) are global overlays — do not duplicate
+- No CRT effects (scanlines, grain, vignette have been removed)
+- No box-shadow glows, no text-shadow, no decorative keyframe animations
+- Status indicators are static colored dots — no blink/pulse animations
 
 ### 6. Autonomous Bug Fixing
 - When a build or runtime error is encountered, attempt to fix it before reporting

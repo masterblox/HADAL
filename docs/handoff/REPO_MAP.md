@@ -17,6 +17,9 @@
 - [public](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/public)
   Runtime data artifacts and public assets used by the deployed app.
 
+- [public/data](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/public/data)
+  Runtime data subdirectory for app-served artifacts and supporting assets. Keep app-loaded data/assets here, not under `docs/`.
+
 ## Archive Areas
 
 - [legacy](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/legacy)
@@ -44,6 +47,9 @@
 - [docs/handoff/ENGINEERING_JOURNAL.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/ENGINEERING_JOURNAL.md)
   Running log of environment failures, repo issues, and recovery notes.
 
+- [docs/handoff/VERSION_LINEAGE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/VERSION_LINEAGE.md)
+  Timestamped HADAL maturity markers and checkpoint history. Current product state is tracked there as `v0.4.2`.
+
 - [docs/architecture/HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)
   Macro platform architecture: product lanes, data contracts, frontend module ownership, operational resilience, governance tiers, and 7-phase implementation sequence.
 
@@ -59,3 +65,4 @@
 - Keep runtime code in `src/`, `api/`, `scripts/`, and `public/`.
 - Keep old frontend work in `legacy/`; do not mix it back into the active app.
 - Treat `hadal.html` as a prototype and extraction source unless there is an explicit decision to deploy it directly.
+- Keep machine-local review artifacts, screenshots, scratch HTML, and helper scripts under `_local/`, not the repo root.

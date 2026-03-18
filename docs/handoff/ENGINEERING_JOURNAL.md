@@ -70,3 +70,28 @@ Add new entries with:
 - recommended next step
 
 Keep entries short and factual.
+
+## 2026-03-18
+
+### Entry 003
+
+Issue:
+
+- Repo root and docs area were still collecting local review spill and one runtime-loaded asset was stored under `docs/`.
+
+Observed state:
+
+- fresh screenshots and `_screenshot.mjs` reappeared at repo root
+- runtime PLY asset was loaded from `docs/spark_of_life_points.ply`
+
+Implication:
+
+- local review clutter can keep leaking into meaningful diffs
+- app/runtime assets become harder to locate if they live under documentation paths
+
+Recovery:
+
+1. Moved fresh root review artifacts back under `_local/review/`.
+2. Moved the PLY asset into `public/data/spark_of_life_points.ply`.
+3. Updated the runtime loader to fetch from `/data/spark_of_life_points.ply`.
+4. Tightened `.gitignore` so root screenshots, scratch HTML, and helper scripts stop recurring in the repo root.

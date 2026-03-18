@@ -38,6 +38,7 @@ Canonical system model:
 - Design reference: [docs/reference/DESIGN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/DESIGN.md)
 - Circuit breaker reference: [docs/reference/CIRCUIT_BREAKER.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/CIRCUIT_BREAKER.md)
 - Security reference: [docs/reference/SECURITY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/SECURITY.md)
+- Version lineage: [docs/handoff/VERSION_LINEAGE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/VERSION_LINEAGE.md)
 
 ---
 

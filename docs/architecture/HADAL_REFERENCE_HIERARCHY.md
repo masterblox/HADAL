@@ -78,14 +78,39 @@ Gulf Watch is the source system. HADAL is an evolution of Gulf Watch, not a repl
 - Prediction concepts — Gulf Watch had rule-based scenario modeling. HADAL should formalize this into a typed, inspectable prediction module with artifact contracts.
 - Map integration — Gulf Watch used Leaflet with basic markers. HADAL should add density, layering, and spatial intelligence patterns (informed by Shadowbroker benchmark).
 
+**Gulf Watch as a Live Upstream:**
+
+Gulf Watch is not a frozen codebase that HADAL forked and left behind. Nikola continues to ship meaningful human feature commits upstream. These must be tracked, classified, and adapted into HADAL — not ignored because "we already extracted what we need."
+
+Recent upstream human commits include:
+- **Prediction engine enhancements** — 14-day focus window, trend analysis, escalation alerts
+- **Aircraft/OpenSky proxy hardening** — auth, caching, rate-limit handling, reliability fixes
+- **Mobile filtering improvements** — country/severity filtering UX on mobile viewports
+
+These are not data-refresh churn. They are logic and feature improvements that directly affect HADAL's Operations and Analysis lanes.
+
+**Upstream commit classification rule:**
+
+| Commit Type | Example | HADAL Action |
+|-------------|---------|-------------|
+| **Automated data refresh** | Pipeline cron updating `incidents.json` | No adaptation needed — HADAL consumes the output, not the commit |
+| **Human logic/feature** | New prediction parameters, proxy auth fixes, filter UX | Evaluate for HADAL adaptation — classify by lane |
+| **Human infrastructure** | CI/CD changes, deploy config, environment setup | Ignore — HADAL has its own deploy stack |
+| **Human data-model change** | New fields in `incidents.json`, new artifact types | Mandatory adaptation — these are contract changes |
+
 **What to avoid:**
 
 - Treating Gulf Watch as a legacy system to be discarded. It is the live capability.
+- Treating Gulf Watch as a static foundation that stopped evolving. It has an active human maintainer shipping real features.
 - Rewriting working pipeline scripts for aesthetic reasons. If `circuit_breaker.py` works, it stays until there is a functional reason to change it.
 - Discarding Gulf Watch's source taxonomy in favor of a new one without migration.
+- Ignoring upstream human commits because "HADAL already extracted what it needs." The extraction is ongoing.
 
 **Risk if overused:**
 HADAL becomes a prettier Gulf Watch clone with no structural improvement. The product stays as one dense scroll with better CSS.
+
+**Risk if under-tracked:**
+Gulf Watch evolves meaningful capabilities upstream (better prediction, better tracking, better filtering) while HADAL's versions of those same features stagnate on the initial extraction. The fork diverges silently.
 
 ---
 
@@ -396,6 +421,9 @@ The rules that prevent cloning:
 | WorldMonitor | Information hierarchy benchmark | Reference — "what matters now" should be answerable in seconds |
 | Ground Station | Topbar instrument patterns, system health indicators | Shell-level patterns for pressure gauge, clock, alert strip |
 
+**Upstream adaptation targets:**
+- Mobile filtering improvements (country/severity) from upstream should inform how Overview's condensed feed handles filtering on small viewports. This is UX discipline, not cosmetics — filtering determines what a mobile user sees first.
+
 **Implementation rule:** Every panel on Overview must render Gulf Watch data. MIT and Ground Station patterns style the presentation. WorldMonitor validates the information hierarchy.
 
 ### 6.2 Operations Lane
@@ -408,6 +436,10 @@ The rules that prevent cloning:
 | Ground Station | Workspace panel engineering, status boards | Console patterns for multi-panel workspace |
 | LiveUAmap | Event-to-map correlation speed, category-color mapping | Benchmark — not architecture |
 
+**Upstream adaptation targets:**
+- Aircraft/OpenSky proxy hardening (auth, caching, rate-limiting) from upstream directly enables HADAL's FlightTracker component. The original Gulf Watch had working OpenSky integration — it was lost in the React migration. Nikola's upstream fixes make reconnection viable. This is the highest-priority upstream adaptation for Operations.
+- Layer count accuracy: upstream incident data improvements mean HADAL's IwlLeftPanel layer counts can be derived from live data instead of hardcoded values.
+
 **Implementation rule:** The Operations map workspace should meet Shadowbroker's spatial quality bar using Gulf Watch's data. MIT and Ground Station inform panel engineering. LiveUAmap benchmarks correlation speed.
 
 ### 6.3 Analysis Lane
@@ -419,6 +451,10 @@ The rules that prevent cloning:
 | SOCRadar | Risk score presentation, alert management patterns | UX reference for future alert rules and risk dashboards |
 | GDELT | Event taxonomy completeness, historical depth | Future enrichment for trend analysis |
 | Ground Station | Telemetry trend display, metric readout engineering | Patterns for prediction output display |
+
+**Upstream adaptation targets:**
+- Prediction engine enhancements (14-day focus, trend analysis, escalation alerts) from upstream are the highest-priority Analysis adaptation. HADAL's PredictorEngine already runs MIT-adapted local math on Gulf Watch data — Nikola's upstream improvements to the prediction parameters, trend windows, and alert thresholds should be evaluated and ported. These are logic improvements, not cosmetic changes.
+- Escalation alert logic from upstream could inform HADAL's future Alert Rules surface (Operations lane, Phase 5+).
 
 **Implementation rule:** Analysis surfaces present Gulf Watch data through MIT-informed analytical patterns. SOCRadar and GDELT inform future surfaces (Alert Rules, Historical Archive) but do not shape the current build.
 

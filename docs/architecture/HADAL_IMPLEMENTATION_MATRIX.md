@@ -252,8 +252,10 @@ These four files create the illusion of real-time surveillance:
 
 None of this is connected to any data source. The original Gulf Watch did attempt OpenSky API for aircraft tracking (visible in README: "OpenSky API authenticated, 30s update"). That capability was lost in the React migration.
 
+**Upstream update (2026-03):** Nikola has since hardened the OpenSky proxy with auth handling, response caching, and rate-limit management. This makes reconnection more viable than when the original Gulf Watch integration was attempted. See §4A (Active Upstream Adaptation Queue) for the full adaptation plan.
+
 **Fix:** Either:
-1. **Reconnect** to OpenSky API (Gulf Watch's original approach) — real aircraft in Gulf airspace
+1. **Reconnect** to OpenSky API via upstream's hardened proxy — real aircraft in Gulf airspace (preferred path, see §4A)
 2. **Label** the entire cluster as "SIMULATED — DEMO MODE"
 3. **Gate** behind sandbox toggle
 
@@ -302,6 +304,56 @@ Several surfaces display aggregate numbers that should be computed from incident
 **Target:** Derive from `airspace.json` NOTAMs — map NOTAM regions to zone polygons.
 **Effort:** Medium — need a NOTAM-to-polygon lookup.
 **Blocker:** Pipeline produces NOTAMs but not polygon geometries. May need a static lookup table (country → polygon) combined with live NOTAM status.
+
+---
+
+## 4A. Active Upstream Adaptation Queue
+
+Gulf Watch is not a static reference. Nikola ships meaningful human commits upstream that HADAL must track and selectively adapt. Automated data-refresh commits (pipeline cron runs) are consumed automatically via `incidents.json` — they require no adaptation. Human logic/feature commits require explicit evaluation.
+
+### Classification
+
+| Commit Type | HADAL Response |
+|-------------|---------------|
+| Automated data refresh | No action — HADAL consumes the JSON output |
+| Human logic/feature | Evaluate → classify by lane → add to adaptation queue |
+| Human infrastructure | Ignore — HADAL has its own deploy/CI stack |
+| Human data-model change | Mandatory — contract changes break the frontend |
+
+### Current Queue (as of 2026-03-18)
+
+#### Prediction Engine Enhancements
+**Upstream:** 14-day focus window, trend analysis, escalation alert parameters
+**Lane:** Analysis
+**HADAL target:** `src/lib/prediction/` (4-stage pipeline) + `PredictorEngine.tsx`
+**Priority:** High — HADAL already has working prediction math. Upstream improvements to focus windows and trend parameters are direct upgrades to existing local logic.
+**Adaptation type:** Parameter/logic port. Not a rewrite — evaluate upstream changes to `sequenceModel` and `impactProfiler` equivalents, port improved thresholds and trend calculations.
+**Risk if skipped:** HADAL's prediction engine stagnates on initial extraction while upstream prediction quality improves.
+
+#### Aircraft/OpenSky Proxy Hardening
+**Upstream:** Auth handling, response caching, rate-limit management, error recovery
+**Lane:** Operations
+**HADAL target:** `FlightTracker.tsx` + potential new `useOpenSky.ts` hook
+**Priority:** High — Gulf Watch's original OpenSky integration was lost in the React migration. `useTracking.ts` currently generates 17 fake aircraft. Nikola's upstream proxy fixes make real aircraft data viable again.
+**Adaptation type:** Reconnection. HADAL needs a new data hook that hits the same OpenSky proxy endpoint Gulf Watch uses, consuming the auth/cache improvements upstream already built.
+**Risk if skipped:** FlightTracker remains permanently simulated. The Operations lane's most visible fake-authority surface stays fake.
+**Note:** The upstream proxy runs as a serverless function. HADAL can consume it directly or deploy its own instance.
+
+#### Mobile Country/Severity Filtering
+**Upstream:** Improved country and severity filter UX on mobile viewports
+**Lane:** Overview (condensed feed) + Operations (full feed)
+**HADAL target:** `ThreatFeed.tsx` mobile breakpoints + filter interaction
+**Priority:** Medium — HADAL already has region tabs on ThreatFeed. Upstream improvements are UX discipline refinements (filter accessibility, touch targets, filter persistence) rather than new capability.
+**Adaptation type:** UX pattern port. Evaluate upstream filter behavior on small viewports, adapt into HADAL's existing feed filtering with Green Fallout styling.
+**Risk if skipped:** HADAL's mobile feed experience falls behind upstream on a surface that matters for field analysts.
+
+### Queue Maintenance Rules
+
+1. **Check upstream monthly** for new human commits that affect prediction, tracking, filtering, or data models.
+2. **Ignore** automated commits (pipeline runs, data refreshes, dependency bumps).
+3. **Classify** every human feature commit by lane before deciding to adapt.
+4. **Port logic, not code.** Gulf Watch is vanilla JS. HADAL is React + TypeScript. Extract the algorithm or parameter change, implement in HADAL's stack.
+5. **Do not delay HADAL's own roadmap** for upstream adaptation. Queue items slot into existing phases — they do not create new phases.
 
 ---
 
@@ -385,6 +437,19 @@ Ordered by impact and dependency. Each move is self-contained and committable.
 **Files:** `RightRail.tsx`, `useSonar.ts`, `useSignalMonitor.ts`, `useWaterfall.ts`.
 **Effort:** Small (1-2 hours).
 **Anti-pattern fixed:** Satellite-console cosplay (§7.4), Fake intelligence density (§7.5).
+
+### Upstream Adaptation Moves (post-Move 5)
+
+These are not sequenced as Moves 6-8 because they slot into the existing phase plan rather than preceding it. They should be evaluated after the core 5 moves above.
+
+**A. Port Upstream Prediction Enhancements → Analysis Lane**
+Evaluate Nikola's 14-day focus window, trend analysis, and escalation alert parameters. Port improved thresholds into `src/lib/prediction/`. This upgrades existing working prediction math — it is not new capability.
+
+**B. Reconnect FlightTracker via Upstream OpenSky Proxy → Operations Lane**
+Replace `useTracking.ts` procedural simulation with a real OpenSky data hook that consumes the upstream proxy (now hardened with auth/cache/rate-limiting). This is the single highest-value fake-to-real conversion remaining.
+
+**C. Adapt Upstream Mobile Filtering → Overview + Operations**
+Port upstream country/severity filter UX improvements into `ThreatFeed.tsx` mobile breakpoints. Focus on filter accessibility and touch targets, not visual restyling.
 
 ---
 

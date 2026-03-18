@@ -50,6 +50,9 @@
 - [docs/architecture/HADAL_REFERENCE_HIERARCHY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REFERENCE_HIERARCHY.md)
   Reference hierarchy: what HADAL takes from each source system (Gulf Watch, MIT, Shadowbroker, Ground Station) and external stack (LiveUAmap, GDELT, WorldMonitor, SOCRadar, Pizzint). Classification, anti-patterns, and per-lane implementation guidance.
 
+- [docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md)
+  Implementation matrix: maps every runtime file against architecture. Classifies real vs fake data, identifies connect-to-pipeline targets, and defines the next 5 implementation moves.
+
 ## Working Rules
 
 - Add new non-runtime documents under `docs/`, not the repo root.

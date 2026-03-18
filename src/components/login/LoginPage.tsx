@@ -3,32 +3,17 @@ import { SonarParticles } from './SonarParticles'
 
 const ACCESS_CODE = '0000'
 
-/* ── Gate sound effects (MIT assets) ── */
-const audioCache: Record<string, HTMLAudioElement> = {}
+/* ── Keypad click sound — grant/gate-open audio moved to App.tsx phase boundaries ── */
+const clickAudioCache: Record<string, HTMLAudioElement> = {}
 
-function getAudio(src: string): HTMLAudioElement {
-  if (!audioCache[src]) {
-    audioCache[src] = new Audio(src)
-    audioCache[src].preload = 'auto'
-  }
-  return audioCache[src]
-}
-
-function useGateAudio() {
-  const playClick = useCallback(() => {
-    const el = getAudio('/audio/key-click.mp3')
+function useKeyClick() {
+  return useCallback(() => {
+    const src = '/audio/key-click.mp3'
+    if (!clickAudioCache[src]) { clickAudioCache[src] = new Audio(src); clickAudioCache[src].preload = 'auto' }
+    const el = clickAudioCache[src]
     el.currentTime = 0
     el.play().catch(() => {})
   }, [])
-
-  const playGrant = useCallback(() => {
-    getAudio('/audio/grant.mp3').play().catch(() => {})
-    setTimeout(() => {
-      getAudio('/audio/gate-open.mp3').play().catch(() => {})
-    }, 200)
-  }, [])
-
-  return { playClick, playGrant }
 }
 
 interface LoginPageProps {
@@ -40,7 +25,7 @@ export function LoginPage({ onAccess }: LoginPageProps) {
   const [error, setError] = useState(false)
   const [entering, setEntering] = useState(false)
   const markRef = useRef<HTMLCanvasElement>(null)
-  const { playClick, playGrant } = useGateAudio()
+  const playClick = useKeyClick()
 
   // Draw HADAL mark — small, single color, per rule 005
   useEffect(() => {
@@ -73,8 +58,7 @@ export function LoginPage({ onAccess }: LoginPageProps) {
       const code = next.join('')
       if (code === ACCESS_CODE) {
         setEntering(true)
-        playGrant()
-        setTimeout(onAccess, 500)
+        setTimeout(onAccess, 350)
       } else {
         setError(true)
         setTimeout(() => { setDigits([]); setError(false) }, 800)

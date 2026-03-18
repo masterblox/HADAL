@@ -1,11 +1,8 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
-const COUNT = 8000
+const COUNT = 2000
 const SPHERE_RADIUS = 30
 
 export function SonarParticles() {
@@ -35,21 +32,9 @@ export function SonarParticles() {
     controls.enableZoom = false
     controls.enablePan = false
 
-    // ── Post Processing (Bloom) ──
-    const composer = new EffectComposer(renderer)
-    composer.addPass(new RenderPass(scene, camera))
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(window.innerWidth, window.innerHeight),
-      1.5, 0.4, 0.85
-    )
-    bloomPass.strength = 1.5
-    bloomPass.radius = 0.3
-    bloomPass.threshold = 0.1
-    composer.addPass(bloomPass)
-
-    // ── Instanced Mesh (tetrahedrons) ──
+    // ── Instanced Mesh (tetrahedrons) — no bloom, direct render ──
     const geometry = new THREE.TetrahedronGeometry(0.25)
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff })
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff88 })
     const instancedMesh = new THREE.InstancedMesh(geometry, material, COUNT)
     instancedMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
     scene.add(instancedMesh)
@@ -97,7 +82,7 @@ export function SonarParticles() {
       instancedMesh.instanceMatrix.needsUpdate = true
       if (instancedMesh.instanceColor) instancedMesh.instanceColor.needsUpdate = true
 
-      composer.render()
+      renderer.render(scene, camera)
     }
 
     animate()
@@ -107,7 +92,6 @@ export function SonarParticles() {
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
       renderer.setSize(window.innerWidth, window.innerHeight)
-      composer.setSize(window.innerWidth, window.innerHeight)
     }
     window.addEventListener('resize', onResize)
 

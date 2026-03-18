@@ -14,13 +14,13 @@ import { useEffect, useRef, useState } from 'react'
 
 const N = 400
 
-// Timing (ms)
-const T_FORM     = 600   // particles coalesce
-const T_SPIN     = 900   // ring orbits, logo visible
-const T_DISSOLVE = 400   // particles scatter, logo hides
-const T_HOLD     = 1000  // ring glows alone on black — the beat
-const T_REVEAL   = 600   // black bg fades, globe appears inside ring
-const T_RING_OUT = 500   // ring fades into globe outline
+// Timing (ms) — compressed to ~2.3s total
+const T_FORM     = 500   // particles coalesce
+const T_SPIN     = 500   // ring orbits, logo visible
+const T_DISSOLVE = 300   // particles scatter, logo hides
+const T_HOLD     = 200   // ring glows alone on black — short beat
+const T_REVEAL   = 450   // black bg fades, globe appears inside ring
+const T_RING_OUT = 350   // ring fades into globe outline
 const T_TOTAL    = T_FORM + T_SPIN + T_DISSOLVE + T_HOLD + T_REVEAL + T_RING_OUT
 
 // Phase boundaries (cumulative)
@@ -59,9 +59,9 @@ function seed(r: number): P[] {
 function easeOut(t: number) { return 1 - Math.pow(1 - t, 3) }
 function easeInOut(t: number) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2 }
 
-interface Props { onComplete: () => void }
+interface Props { onComplete: () => void; onReveal?: () => void }
 
-export function NucleusTransition({ onComplete }: Props) {
+export function NucleusTransition({ onComplete, onReveal }: Props) {
   const cRef = useRef<HTMLCanvasElement>(null)
   const oRef = useRef<HTMLDivElement>(null)
   const bgRef = useRef<HTMLDivElement>(null)
@@ -84,6 +84,7 @@ export function NucleusTransition({ onComplete }: Props) {
     let done = false
     let logoShown = false
     let logoHidden = false
+    let revealFired = false
     let globalRotation = 0
 
     function startAnimation(ctx: CanvasRenderingContext2D, cvs: HTMLCanvasElement) {
@@ -128,6 +129,12 @@ export function NucleusTransition({ onComplete }: Props) {
         }
 
         ctx.clearRect(0, 0, canvasW, canvasH)
+
+        // ── Fire onReveal once — terminal should mount behind the fading bg ──
+        if (!revealFired && el >= P_REVEAL - 100) {
+          revealFired = true
+          onReveal?.()
+        }
 
         // ── Background fade — stays BLACK through dissolve+hold, fades during REVEAL ──
         if (bgRef.current) {
@@ -291,7 +298,7 @@ export function NucleusTransition({ onComplete }: Props) {
       cancelAnimationFrame(raf)
       cancelAnimationFrame(setupRaf1)
     }
-  }, [onComplete])
+  }, [onComplete, onReveal])
 
   return (
     <div

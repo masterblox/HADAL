@@ -21,16 +21,24 @@ const LANE_TITLES: Record<Lane, string> = {
   analysis: 'Analysis',
 }
 
+/* ── Transition audio — cached, played at phase boundaries ── */
+const transitionAudio: Record<string, HTMLAudioElement> = {}
+function playTransitionAudio(src: string) {
+  if (!transitionAudio[src]) { transitionAudio[src] = new Audio(src); transitionAudio[src].preload = 'auto' }
+  const el = transitionAudio[src]
+  el.currentTime = 0
+  el.play().catch(() => {})
+}
+
 /* ── App ── */
 export function App() {
   const skipLogin = new URLSearchParams(window.location.search).has('bypass')
-  const [phase, setPhase] = useState<'login' | 'unlocked' | 'nucleus' | 'glow' | 'terminal'>(skipLogin ? 'terminal' : 'login')
+  const [phase, setPhase] = useState<'login' | 'unlocked' | 'nucleus' | 'terminal'>(skipLogin ? 'terminal' : 'login')
   const [terminalVisible, setTerminalVisible] = useState(skipLogin)
   const { prices, incidents, airspace } = useDataPipeline()
   const prediction = usePrediction(incidents, airspace, prices)
   const threatLevel = prediction?.theatreThreatLevel ?? null
   const [sandbox, setSandbox] = useState(false)
-  const [afterglow, setAfterglow] = useState(false)
   const activeLane = useHashRoute()
 
   // Set default hash if none present
@@ -45,43 +53,29 @@ export function App() {
   }, [activeLane])
 
   const handleAccess = () => {
-    // Login card does its fast CSS animation, then we transition to nucleus
     setPhase('unlocked')
   }
 
   useEffect(() => {
     if (phase === 'unlocked') {
-      // Wait for login card's CSS exit animation (~500ms), then show nucleus
+      // Wait for login card's CSS exit animation, then start nucleus + grant audio
       const t = setTimeout(() => {
-        setTerminalVisible(true) // render terminal behind nucleus overlay
+        playTransitionAudio('/audio/grant.mp3')
         setPhase('nucleus')
-      }, 500)
+      }, 300)
       return () => clearTimeout(t)
     }
   }, [phase])
 
-  const handleNucleusComplete = useCallback(() => {
-    setPhase('glow')
+  // Nucleus reveal callback — mount terminal when it is about to be visible
+  const handleNucleusReveal = useCallback(() => {
+    setTerminalVisible(true)
+    playTransitionAudio('/audio/gate-open.mp3')
   }, [])
 
-  // Globe glow phase — pulsating glow before full terminal reveals
-  useEffect(() => {
-    if (phase === 'glow') {
-      const t = setTimeout(() => {
-        setAfterglow(true) // keep pulsing after reveal
-        setPhase('terminal')
-      }, 1400)
-      return () => clearTimeout(t)
-    }
-  }, [phase])
-
-  // Afterglow — globe keeps pulsing for 2s after terminal reveals
-  useEffect(() => {
-    if (afterglow) {
-      const t = setTimeout(() => setAfterglow(false), 2000)
-      return () => clearTimeout(t)
-    }
-  }, [afterglow])
+  const handleNucleusComplete = useCallback(() => {
+    setPhase('terminal')
+  }, [])
 
   const pipelineStatus = {
     incidents: incidents.length > 0,
@@ -91,8 +85,8 @@ export function App() {
 
   return (
     <>
-      {(phase === 'nucleus' || phase === 'glow' || phase === 'terminal') && (
-        <div className={`terminal-root ${terminalVisible ? 'terminal-visible' : 'terminal-hidden'} ${phase === 'glow' ? 'globe-glow-phase' : ''} ${afterglow ? 'globe-afterglow' : ''}`}>
+      {terminalVisible && (
+        <div className="terminal-root terminal-visible">
           <div className="scanlines" />
           <div className="class-banner">
             <span className="class-banner-text">// TOP SECRET // SCI // NOFORN // HADAL-GULF-THEATRE // TS/SCI //</span>
@@ -152,7 +146,7 @@ export function App() {
       )}
 
       {phase === 'nucleus' && (
-        <NucleusTransition onComplete={handleNucleusComplete} />
+        <NucleusTransition onComplete={handleNucleusComplete} onReveal={handleNucleusReveal} />
       )}
     </>
   )

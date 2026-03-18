@@ -40,40 +40,32 @@ export function OverviewPage({
           </div>
         </div>
         <p className="page-copy">
-          First-stop operating picture: theatre posture, kinetic summary, and the live feed slice.
+          Theatre posture, kinetic summary, live feed.
         </p>
       </section>
 
       <HeroGrid sandbox={sandbox} threatLevel={threatLevel} pipelineStatus={pipelineStatus} prediction={prediction} />
       <section className="lane-cta-grid">
         <article className="lane-cta jp-panel">
-          <div className="lane-cta-kicker">Operations</div>
-          <h2 className="lane-cta-title">Open the map workspace</h2>
-          <p className="lane-cta-copy">
-            Move from the at-a-glance lane into the full operational surface for map, layers, airspace, casualties, and posturing.
-          </p>
+          <div className="lane-cta-kicker">Lane 2</div>
+          <h2 className="lane-cta-title">Operations</h2>
           <div className="lane-cta-meta">
-            <span>Map-first workspace</span>
-            <span>{airspace?.airports_tracked ?? 0} airports tracked</span>
-            <span>{incidents.length} live events</span>
+            <span>{airspace?.airports_tracked ?? 0} airports</span>
+            <span>{incidents.length} events</span>
           </div>
           <button type="button" className="lane-cta-btn" onClick={() => navigateTo('operations')}>
-            OPEN OPERATIONS
+            OPEN →
           </button>
         </article>
         <article className="lane-cta jp-panel">
-          <div className="lane-cta-kicker">Analysis</div>
-          <h2 className="lane-cta-title">Open prediction and reporting</h2>
-          <p className="lane-cta-copy">
-            Use the analysis lane for model output, economic context, regional rollups, and future report/export workflows.
-          </p>
+          <div className="lane-cta-kicker">Lane 3</div>
+          <h2 className="lane-cta-title">Analysis</h2>
           <div className="lane-cta-meta">
             <span>{prediction?.scenarios.length ?? 0} scenarios</span>
-            <span>{prediction?.cascadeRisk.contagionScore ?? '—'} cascade</span>
-            <span>{prices ? 'Market feed live' : 'Market feed offline'}</span>
+            <span>{prices ? 'Markets live' : 'Markets offline'}</span>
           </div>
           <button type="button" className="lane-cta-btn" onClick={() => navigateTo('analysis')}>
-            OPEN ANALYSIS
+            OPEN →
           </button>
         </article>
       </section>

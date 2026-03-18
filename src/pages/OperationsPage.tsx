@@ -25,20 +25,17 @@ export function OperationsPage({ incidents, airspace, sandbox }: OperationsPageP
           </div>
         </div>
         <p className="page-copy">
-          Dedicated intelligence workspace for map, layers, live feed context, airspace status, casualties, and posturing.
+          Map, layers, airspace, casualties, posturing.
         </p>
       </section>
       <IntelWireSection incidents={incidents} airspace={airspace} sandbox={sandbox} />
       <FlightTracker />
       <section className="lane-footer-grid">
         <article className="lane-footer-card jp-panel">
-          <div className="lane-cta-kicker">Next Lane</div>
-          <h2 className="lane-cta-title">Move to Analysis when the map loop is closed</h2>
-          <p className="lane-cta-copy">
-            Prediction, economics, structured rollups, and future exports live there instead of returning to the homepage.
-          </p>
+          <div className="lane-cta-kicker">Lane 3</div>
+          <h2 className="lane-cta-title">Analysis</h2>
           <button type="button" className="lane-cta-btn" onClick={() => navigateTo('analysis')}>
-            OPEN ANALYSIS
+            OPEN →
           </button>
         </article>
       </section>

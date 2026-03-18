@@ -27,27 +27,11 @@ export function AnalysisPage({ incidents, airspace, prices, sandbox }: AnalysisP
           </div>
         </div>
         <p className="page-copy">
-          This lane owns prediction, regional interpretation, economic context, and future report/export workflows.
+          Prediction, economics, regional rollups, exports.
         </p>
       </section>
-      <section className="analysis-launchpad">
-        <article className="launch-card jp-panel">
-          <div className="lane-cta-kicker">Placeholder</div>
-          <h2 className="lane-cta-title">Report Builder</h2>
-          <p className="lane-cta-copy">
-            SITREP generation and export belong here once artifact contracts and delivery workflows are finalized.
-          </p>
-        </article>
-        <article className="launch-card jp-panel">
-          <div className="lane-cta-kicker">Placeholder</div>
-          <h2 className="lane-cta-title">Narrative Engine</h2>
-          <p className="lane-cta-copy">
-            Future ICEBERG-style reasoning and narrative integrity modules should land here, not back on the homepage.
-          </p>
-        </article>
-      </section>
-      <PredictorEngine incidents={incidents} airspace={airspace} prices={prices} />
       <AnalysisSection incidents={incidents} />
+      <PredictorEngine incidents={incidents} airspace={airspace} prices={prices} />
       <RegionalPanel />
       <EconomicSection prices={prices} sandbox={sandbox} />
     </>

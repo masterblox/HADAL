@@ -7,7 +7,7 @@
 
 import type { AirspaceData, PriceData } from '../../hooks/useDataPipeline'
 import type { NormalizedEvent, PredictionResult } from './types'
-import { profileGlobal, profileByCategory, profileByTimeWindow, analyzeCascadeRisk, analyzeResponseImpact } from './impactProfiler'
+import { profileGlobal, profileByCategory, profileByTimeWindow, analyzeCascadeRisk, analyzeResponseImpact, analyzeTrends, buildTrendSummary } from './impactProfiler'
 import { predictSequences } from './sequenceModel'
 
 const MIN_EVENTS = 5
@@ -71,6 +71,8 @@ export function buildPrediction(
       cascadeRisk: { clusterCount: 0, maxClusterSize: 0, contagionScore: 0 },
       reactionWindow: null,
       scenarios: [],
+      trendAnalysis: null,
+      trendSummary: null,
       dominantScenario: 'INSUFFICIENT DATA',
       theatreThreatLevel: 0,
       airspacePressure: 0,
@@ -83,6 +85,10 @@ export function buildPrediction(
   const timeWindows = profileByTimeWindow(events)
   const cascadeRisk = analyzeCascadeRisk(events)
   const reactionWindow = analyzeResponseImpact(events)
+
+  // Stage 2b: Trend analysis (ported from Gulf Watch upstream)
+  const trendAnalysis = analyzeTrends(events)
+  const trendSummary = trendAnalysis ? buildTrendSummary(events, trendAnalysis) : null
 
   // Stage 3: Sequence predictions
   const scenarios = predictSequences(events)
@@ -104,6 +110,8 @@ export function buildPrediction(
     cascadeRisk,
     reactionWindow,
     scenarios,
+    trendAnalysis,
+    trendSummary,
     dominantScenario: dominant,
     theatreThreatLevel: threatLevel,
     airspacePressure: ap,

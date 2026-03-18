@@ -64,6 +64,21 @@ export interface ReactionWindow {
   slowResponseImpact: number
 }
 
+// ── Trend analysis (ported from Gulf Watch upstream) ──
+
+export interface TrendAnalysis {
+  mostActiveActor: string
+  mostTargetedCountry: string
+  dominantEventType: string
+  dailyFrequency: { date: string; count: number }[]
+  escalationRate: number
+}
+
+export interface TrendSummary {
+  summary: string
+  dailyAvg: string
+}
+
 // ── Scenario predictions ──
 
 export interface ScenarioPrediction {
@@ -73,6 +88,7 @@ export interface ScenarioPrediction {
   timeframe: Timeframe
   severity: SeverityLabel
   actors: string[]
+  confidence: string        // basis for the prediction
 }
 
 // ── Final output ──
@@ -102,6 +118,9 @@ export interface PredictionResult {
   reactionWindow: ReactionWindow | null
 
   scenarios: ScenarioPrediction[]
+
+  trendAnalysis: TrendAnalysis | null
+  trendSummary: TrendSummary | null
 
   dominantScenario: string
   theatreThreatLevel: number  // 0-100

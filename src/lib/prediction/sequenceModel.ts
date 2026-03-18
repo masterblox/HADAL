@@ -107,12 +107,18 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
     predictions.push({
       category: 'ESCALATION ALERT',
       outcome: `Activity up ${escalation}% in last 3 days vs prior 3`,
-      probability: Math.min(50 + escalation, 90),
+      probability: Math.min(40 + escalation, 75),
       timeframe: '72H',
-      severity: severityLabel(Math.min(50 + escalation, 90)),
+      severity: severityLabel(Math.min(40 + escalation, 75)),
       actors: topActorList,
+      confidence: `Based on ${events.length} recent incidents`,
     })
   }
+
+  // Base rates: how often each type appears overall (for lift calculation)
+  const totalEvents = events.length
+  const typeFreq: Record<string, number> = {}
+  for (const e of events) typeFreq[e.type] = (typeFreq[e.type] || 0) + 1
 
   // Type-based follow-on predictions from outcome patterns
   for (const [key, data] of Object.entries(outcomes)) {
@@ -124,8 +130,21 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
         .slice(0, 2)
 
       for (const [followType, count] of followUps) {
-        const prob = Math.round((count / data.total) * 100)
-        if (prob < 15) continue
+        const rawProb = count / data.total
+        // Base-rate discount: only meaningful if observed rate exceeds what
+        // you'd expect from the overall type frequency. This prevents dense
+        // data from trivially producing 95% on everything.
+        const baseRate = (typeFreq[followType] || 1) / totalEvents
+        const lift = rawProb / Math.max(baseRate, 0.01)
+        if (lift < 1.3) continue // follow-on rate must be 30%+ above base rate
+
+        // Density discount: with dense data, raw count/total trivially → 1.0.
+        // Scale down by inverse-sqrt of total AND by timeframe length.
+        const density = Math.min(1, 3 / Math.sqrt(data.total))
+        // Longer windows are less meaningful (7D follow-on is nearly guaranteed)
+        const tfDiscount = tf.label === '7D' ? 0.5 : tf.label === '72H' ? 0.7 : 1.0
+        const prob = Math.round(rawProb * density * tfDiscount * 100)
+        if (prob < 10) continue
 
         const dedup = `${followType}_${key}_${tf.label}`
         if (seen.has(dedup)) continue
@@ -138,48 +157,155 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
           .filter((v, i, a) => a.indexOf(v) === i)
           .slice(0, 3)
 
+        const cappedProb = Math.min(prob, 75)
         predictions.push({
           category: 'FOLLOW-ON EVENT',
           outcome: `${formatType(followType)} activity in ${(country || 'REGION').toUpperCase()} after ${formatType(srcType)}`,
-          probability: Math.min(prob, 95),
+          probability: cappedProb,
           timeframe: tf.label,
-          severity: severityLabel(prob),
+          severity: severityLabel(cappedProb),
           actors: relevantActors.length ? relevantActors : topActorList,
+          confidence: `${count}/${data.total} events · lift ${lift.toFixed(1)}x`,
         })
       }
     }
   }
 
-  // Default military doctrine predictions based on dominant event types
+  // Default doctrine predictions based on dominant event types (enriched from Gulf Watch upstream)
   const typeCounts: Record<string, number> = {}
   for (const e of events) typeCounts[e.type] = (typeCounts[e.type] || 0) + 1
   const dominantType = Object.entries(typeCounts).sort((a, b) => b[1] - a[1])[0]?.[0]
 
-  if (dominantType && ['missile', 'drone', 'airstrike'].includes(dominantType)) {
+  const kineticCount = (typeCounts['missile'] || 0) + (typeCounts['drone'] || 0) + (typeCounts['airstrike'] || 0)
+  if (kineticCount >= 3) {
     if (!seen.has('MILITARY_RESPONSE')) {
       predictions.push({
         category: 'MILITARY RESPONSE',
         outcome: 'Retaliatory strikes or defense activation',
-        probability: 75,
+        probability: 65,
         timeframe: '72H',
         severity: 'HIGH',
         actors: topActorList,
+        confidence: 'Standard military doctrine',
       })
     }
     if (!seen.has('MARKET_IMPACT')) {
       predictions.push({
         category: 'MARKET IMPACT',
         outcome: 'Oil price volatility (+2-5%)',
-        probability: 60,
+        probability: 45,
         timeframe: '24H',
         severity: 'MEDIUM',
         actors: [],
+        confidence: 'Historical commodity response',
+      })
+    }
+    if (!seen.has('DIPLOMATIC_RESPONSE')) {
+      predictions.push({
+        category: 'DIPLOMATIC RESPONSE',
+        outcome: 'Emergency consultations or condemnations',
+        probability: 30,
+        timeframe: '72H',
+        severity: 'LOW',
+        actors: [],
+        confidence: 'Standard diplomatic protocol',
       })
     }
   }
 
-  // Sort by probability, limit to 8
-  return predictions.sort((a, b) => b.probability - a.probability).slice(0, 8)
+  // Naval action patterns (from Gulf Watch upstream)
+  if (dominantType === 'naval') {
+    if (!seen.has('MARITIME_SECURITY')) {
+      predictions.push({
+        category: 'MARITIME SECURITY',
+        outcome: 'Increased naval patrols in region',
+        probability: 55,
+        timeframe: '72H',
+        severity: 'MEDIUM',
+        actors: topActorList,
+        confidence: 'Standard naval response',
+      })
+    }
+    if (!seen.has('SHIPPING_IMPACT')) {
+      predictions.push({
+        category: 'SHIPPING IMPACT',
+        outcome: 'Insurance premiums rise, route changes',
+        probability: 55,
+        timeframe: '7D',
+        severity: 'MEDIUM',
+        actors: [],
+        confidence: 'Market response pattern',
+      })
+    }
+  }
+
+  // Intercept patterns (from Gulf Watch upstream)
+  const interceptCount = typeCounts['missile'] || 0
+  const hasIntercepts = events.some(e => e.type === 'missile' && e.target.toLowerCase().includes('intercept'))
+  if (hasIntercepts || (interceptCount >= 3 && dominantType === 'missile')) {
+    if (!seen.has('ESCALATION_RISK')) {
+      predictions.push({
+        category: 'ESCALATION RISK',
+        outcome: 'Attacker may attempt follow-up strikes',
+        probability: 55,
+        timeframe: '24H',
+        severity: 'MEDIUM',
+        actors: topActorList,
+        confidence: 'Post-interception patterns',
+      })
+    }
+    if (!seen.has('DEFENSE_POSTURE')) {
+      predictions.push({
+        category: 'DEFENSE POSTURE',
+        outcome: 'Heightened alert status maintained',
+        probability: 60,
+        timeframe: '7D',
+        severity: 'HIGH',
+        actors: [],
+        confidence: 'Standard defense protocol',
+      })
+    }
+  }
+
+  // Regional response prediction from actor-action patterns (from Gulf Watch upstream)
+  const actorCountryMap: Record<string, Record<string, number>> = {}
+  for (const e of events) {
+    if (e.actor === 'unknown') continue
+    const key = `${e.actor}_${e.type}`
+    if (!actorCountryMap[key]) actorCountryMap[key] = {}
+    actorCountryMap[key][e.country] = (actorCountryMap[key][e.country] || 0) + 1
+  }
+  for (const [patternKey, countries] of Object.entries(actorCountryMap)) {
+    const sorted = Object.entries(countries).sort((a, b) => b[1] - a[1]).slice(0, 3)
+    if (sorted.length === 0 || sorted[0][1] < 2) continue
+    const dedupKey = `REGIONAL_${patternKey}`
+    if (seen.has(dedupKey)) continue
+    seen.add(dedupKey)
+    const [actor] = patternKey.split('_')
+    const prob = Math.min(25 + sorted[0][1] * 3, 55)
+    predictions.push({
+      category: 'REGIONAL RESPONSE',
+      outcome: `Escalation likely in ${sorted.map(c => c[0].toUpperCase()).join(', ')}`,
+      probability: prob,
+      timeframe: '72H',
+      severity: severityLabel(prob),
+      actors: [actor],
+      confidence: 'Based on historical patterns',
+    })
+  }
+
+  // Balanced output: up to 4 follow-on + remaining from other categories
+  // This prevents dense data from flooding the ledger with identical follow-ons.
+  const followOns = predictions
+    .filter(p => p.category === 'FOLLOW-ON EVENT')
+    .sort((a, b) => b.probability - a.probability)
+    .slice(0, 4)
+  const others = predictions
+    .filter(p => p.category !== 'FOLLOW-ON EVENT')
+    .sort((a, b) => b.probability - a.probability)
+  return [...others, ...followOns]
+    .sort((a, b) => b.probability - a.probability)
+    .slice(0, 8)
 }
 
 function formatType(type: string): string {

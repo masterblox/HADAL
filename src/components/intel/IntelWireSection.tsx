@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react'
-import { MapDepthLayer } from '@/components/shared/MapDepthLayer'
 import { LeafletMap } from './LeafletMap'
 import { IwlNav } from './IwlNav'
 import { IwlLeftPanel } from './IwlLeftPanel'
@@ -55,7 +54,6 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
     <div className="iwl-wrap">
       <IwlNav activeTab={activeTab} onTabChange={setActiveTab} syncStatus={syncStatus} onCalc={handleCalc} />
       <div className="iwl-map-area" style={{ position: 'relative' }}>
-        <MapDepthLayer />
         <LeafletMap
           layerVisibility={layerVisibility}
           incidents={incidents}

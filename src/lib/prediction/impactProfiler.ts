@@ -4,7 +4,7 @@
    No parametric Monte Carlo. Empirical distributions only.
    ══════════════════════════════════════════════════════════ */
 
-import type { NormalizedEvent, Percentiles, CategoryProfile, TimeWindowProfile, CascadeRisk, ReactionWindow, Trend } from './types'
+import type { NormalizedEvent, Percentiles, CategoryProfile, TimeWindowProfile, CascadeRisk, ReactionWindow, Trend, TrendAnalysis, TrendSummary } from './types'
 
 const ITERATIONS = 5000
 const MIN_EVENTS = 5
@@ -189,6 +189,62 @@ export function analyzeCascadeRisk(events: NormalizedEvent[]): CascadeRisk {
   ))
 
   return { clusterCount, maxClusterSize, contagionScore }
+}
+
+// ── Trend analysis (ported from Gulf Watch upstream) ──
+
+export function analyzeTrends(events: NormalizedEvent[]): TrendAnalysis | null {
+  if (events.length === 0) return null
+
+  const byDay: Record<string, number> = {}
+  const byActor: Record<string, number> = {}
+  const byCountry: Record<string, number> = {}
+  const byType: Record<string, number> = {}
+
+  for (const e of events) {
+    const day = new Date(e.timestamp).toISOString().slice(0, 10)
+    byDay[day] = (byDay[day] || 0) + 1
+    if (e.actor !== 'unknown') byActor[e.actor] = (byActor[e.actor] || 0) + 1
+    byCountry[e.country] = (byCountry[e.country] || 0) + 1
+    byType[e.type] = (byType[e.type] || 0) + 1
+  }
+
+  const topEntry = (map: Record<string, number>) =>
+    Object.entries(map).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Unknown'
+
+  const dailyFrequency = Object.entries(byDay)
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  // Escalation rate: last 3 days vs first 3 days
+  let escalationRate = 0
+  if (dailyFrequency.length >= 6) {
+    const earlyCount = dailyFrequency.slice(0, 3).reduce((s, d) => s + d.count, 0)
+    const lateCount = dailyFrequency.slice(-3).reduce((s, d) => s + d.count, 0)
+    escalationRate = earlyCount > 0 ? +((lateCount - earlyCount) / earlyCount * 100).toFixed(1) : 0
+  }
+
+  return {
+    mostActiveActor: topEntry(byActor),
+    mostTargetedCountry: topEntry(byCountry),
+    dominantEventType: topEntry(byType),
+    dailyFrequency,
+    escalationRate,
+  }
+}
+
+export function buildTrendSummary(events: NormalizedEvent[], trends: TrendAnalysis): TrendSummary {
+  const total = events.length
+  const actor = trends.mostActiveActor
+  const esc = trends.escalationRate
+
+  const actorPart = actor !== 'Unknown' ? `${actor.toUpperCase()} most active` : 'No clear actor pattern'
+  const escPart = esc > 0 ? `${esc}% escalation trend` : 'Stable activity'
+
+  return {
+    summary: `Last 14 days: ${total} incidents. ${actorPart}. ${escPart}.`,
+    dailyAvg: (total / 14).toFixed(1),
+  }
 }
 
 // ── Response impact analysis (adapted from MIT) ──

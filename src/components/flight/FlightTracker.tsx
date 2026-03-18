@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { demoFlights, type DemoFlight } from '@/data/demo-flights'
+import { type DemoFlight } from '@/data/demo-flights'
+import { useOpenSky, type OpenSkyStatus } from '@/hooks/useOpenSky'
 
 /* ── colour by type ── */
 const TYPE_COL: Record<DemoFlight['type'], string> = {
@@ -130,6 +131,14 @@ function FlightTicker({ flights }: { flights: DemoFlight[] }) {
   )
 }
 
+/* ── status badge colour ── */
+const STATUS_COL: Record<OpenSkyStatus, string> = {
+  LIVE: 'var(--g)',
+  STALE: 'var(--warn)',
+  OFFLINE: 'rgba(255,60,60,.85)',
+  SIMULATED: 'var(--g3)',
+}
+
 /* ── MAIN ── */
 export function FlightTracker() {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -137,25 +146,9 @@ export function FlightTracker() {
   const markersRef = useRef<L.Marker[]>([])
   const crtRef = useCrtOverlay()
 
-  // Animate flights — drift positions every 2s
-  const [flights, setFlights] = useState(demoFlights)
-  useEffect(() => {
-    const id = setInterval(() => {
-      setFlights(prev => prev.map(f => {
-        const rad = f.heading * Math.PI / 180
-        const drift = 0.012 + Math.random() * 0.008
-        return {
-          ...f,
-          lat: f.lat + drift * Math.cos(rad),
-          lng: f.lng + drift * Math.sin(rad) / Math.cos(f.lat * Math.PI / 180),
-          heading: f.heading + (Math.random() - 0.5) * 3,
-          speed: f.speed + Math.floor((Math.random() - 0.5) * 6),
-          alt: f.alt + Math.floor((Math.random() - 0.5) * 4),
-        }
-      }))
-    }, 2000)
-    return () => clearInterval(id)
-  }, [])
+  // Live data from OpenSky proxy (falls back to demo with drift)
+  const openSky = useOpenSky()
+  const flights = openSky.flights
 
   // Stable tooltip builder
   const buildTooltip = useCallback((f: DemoFlight) => {
@@ -244,7 +237,9 @@ export function FlightTracker() {
   return (
     <div className="ft-section sev-nominal">
       <div className="ft-header jp-panel-header">
-        <div className="HDR-DOT jp-status-dot active" />
+        <div className="HDR-DOT jp-status-dot active" style={{
+          background: openSky.status === 'LIVE' ? 'var(--g)' : openSky.status === 'STALE' ? 'var(--warn)' : 'var(--g3)',
+        }} />
         <span className="ft-title">AIRSPACE TRACKER</span>
         <span className="ft-count">{counts.total} TRACKS</span>
         <div className="ft-legend">
@@ -253,7 +248,7 @@ export function FlightTracker() {
           <span className="ft-leg-item" style={{ color: TYPE_COL.cargo }}>● CGO {counts.cgo}</span>
           <span className="ft-leg-item" style={{ color: TYPE_COL.surveillance }}>● ISR {counts.isr}</span>
         </div>
-        <span className="prov-badge" style={{ marginLeft: 'auto' }}>SIMULATED</span>
+        <span className="prov-badge" style={{ marginLeft: 'auto', color: STATUS_COL[openSky.status] }}>{openSky.status}</span>
       </div>
 
       <div className="ft-body">

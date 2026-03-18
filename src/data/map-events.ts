@@ -69,7 +69,7 @@ export const diplomaticEvents: MapEvent[] = [
 
 export const iwlFeedSeed = [
   {title:'IRGC: 1-TONNE WARHEAD MISSILES · MORE VECTORS DEPLOYING',type:'missile',detail:'IRGC rejects US missile programme destroyed claim',conf:95,time:'07:44'},
-  {title:'HEGSETH: TODAY MOST INTENSE STRIKE DAY — DAY 10 OP. EPIC FURY',type:'airstrike',detail:'US SecDef announces peak escalation',conf:99,time:'06:15'},
+  {title:'HEGSETH: TODAY MOST INTENSE STRIKE DAY — GULF THEATRE',type:'airstrike',detail:'US SecDef announces peak escalation',conf:99,time:'06:15'},
   {title:'TRUMP: HIT 20X HARDER IF HORMUZ BLOCKED · WAR ENDS SOON',type:'diplomatic',detail:'Direct presidential threat on Strait of Hormuz',conf:99,time:'05:30'},
   {title:'CENTCOM: IRAN BALLISTIC ATTACKS -90% LAST 24HRS',type:'intercept',detail:'Adm. Cooper confirms significant IRGC degradation',conf:94,time:'04:55'},
   {title:'MOJTABA KHAMENEI NAMED SUPREME LEADER · IRGC HARDLINER',type:'diplomatic',detail:'Confirmed new Supreme Leader — IRGC loyalist',conf:92,time:'03:22'},
@@ -79,5 +79,5 @@ export const iwlFeedSeed = [
   {title:'STRAIT OF HORMUZ EFFECTIVELY CLOSED · TANKER RATES +94%',type:'missile',detail:'VLCC benchmark $423,736/day — record high',conf:97,time:'Mar 8'},
   {title:'BRENT CRUDE: $107+ PER BARREL · FIRST TIME IN 4 YEARS',type:'diplomatic',detail:'Chicago CME · +16.5% from Friday close $92',conf:85,time:'Mar 8'},
   {title:'RUSSIA FEEDING IRAN INTEL ON US WARSHIP POSITIONS',type:'diplomatic',detail:'Defence News / Def.Asia sources confirmed',conf:82,time:'Mar 9'},
-  {title:'OP. EPIC FURY · DAY 10 · WAR COST EST. $155M/DAY',type:'airstrike',detail:'Brown Univ / NPP cost model · sustained ops phase',conf:80,time:'Mar 10'},
+  {title:'GULF THEATRE · DAY 10 · COST EST. $155M/DAY',type:'airstrike',detail:'Brown Univ / NPP cost model · sustained ops phase',conf:80,time:'Mar 10'},
 ]

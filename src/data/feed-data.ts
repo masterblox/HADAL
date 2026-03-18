@@ -14,7 +14,7 @@ export interface FeedItem {
 
 export const feedData: FeedItem[] = [
   {id:'TH-0048',region:'IRAN',type:'IRGC: DEPLOYING 1-TONNE WARHEAD MISSILES · MORE THAN BEFORE',sev:'CRITICAL',src:'IRGC',conf:95,tags:['IRAN']},
-  {id:'TH-0047',region:'GULF',type:'HEGSETH: TUESDAY MOST INTENSE STRIKE DAY — DAY 10 OP. EPIC FURY',sev:'CRITICAL',src:'DoD',conf:99,tags:['GULF']},
+  {id:'TH-0047',region:'GULF',type:'HEGSETH: TUESDAY MOST INTENSE STRIKE DAY — GULF THEATRE',sev:'CRITICAL',src:'DoD',conf:99,tags:['GULF']},
   {id:'TH-0046',region:'GULF',type:'TRUMP: HIT IRAN 20X HARDER IF HORMUZ BLOCKED — DIRECT THREAT',sev:'CRITICAL',src:'WH',conf:99,tags:['GULF']},
   {id:'TH-0045',region:'IRAN',type:'CENTCOM: IRAN BALLISTIC ATTACKS -90% LAST 24HRS',sev:'HIGH',src:'CENTCOM',conf:94,tags:['IRAN']},
   {id:'TH-0044',region:'IRAN',type:'MOJTABA KHAMENEI NAMED SUPREME LEADER · IRGC HARDLINER',sev:'HIGH',src:'IRNA',conf:92,tags:['IRAN']},

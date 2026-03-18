@@ -68,10 +68,10 @@ export function BootSequence({ onComplete }: { onComplete: () => void }) {
         })
       }
 
-      if (disposed) return
+      if (disposed || !el) return
       const THREE = window.THREE
       const data = await loadPly()
-      if (disposed) return
+      if (disposed || !el) return
 
       const w = window.innerWidth
       const h = window.innerHeight

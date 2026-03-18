@@ -33,6 +33,7 @@ Canonical system model:
 - Repurposing blueprint: [docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md)
 - Extraction plan: [docs/architecture/HADAL_EXTRACTION_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_EXTRACTION_PLAN.md)
 - **Platform plan: [docs/architecture/HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)**
+- **Reference hierarchy: [docs/architecture/HADAL_REFERENCE_HIERARCHY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REFERENCE_HIERARCHY.md)**
 - Design reference: [docs/reference/DESIGN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/DESIGN.md)
 - Circuit breaker reference: [docs/reference/CIRCUIT_BREAKER.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/CIRCUIT_BREAKER.md)
 - Security reference: [docs/reference/SECURITY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/SECURITY.md)

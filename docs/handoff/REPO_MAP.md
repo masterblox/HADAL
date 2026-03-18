@@ -47,6 +47,9 @@
 - [docs/architecture/HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)
   Macro platform architecture: product lanes, data contracts, frontend module ownership, operational resilience, governance tiers, and 7-phase implementation sequence.
 
+- [docs/architecture/HADAL_REFERENCE_HIERARCHY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REFERENCE_HIERARCHY.md)
+  Reference hierarchy: what HADAL takes from each source system (Gulf Watch, MIT, Shadowbroker, Ground Station) and external stack (LiveUAmap, GDELT, WorldMonitor, SOCRadar, Pizzint). Classification, anti-patterns, and per-lane implementation guidance.
+
 ## Working Rules
 
 - Add new non-runtime documents under `docs/`, not the repo root.

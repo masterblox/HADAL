@@ -48,18 +48,21 @@ const TYPE_LABELS: Record<string, string> = {
 export function RegionalPanel() {
   const [selected, setSelected] = useState('all')
   const [data, setData] = useState<RegionalData | null>(null)
+  const [loadFailed, setLoadFailed] = useState(false)
 
   useEffect(() => {
+    let timedOut = false
+    const timeout = setTimeout(() => { timedOut = true; setLoadFailed(true) }, 5000)
     const load = () => {
       fetch(`/data/regional_stats.json?t=${Date.now()}`)
         .catch(() => fetch(`public/data/regional_stats.json?t=${Date.now()}`))
         .then(r => r.json())
-        .then(setData)
-        .catch(() => {})
+        .then(d => { clearTimeout(timeout); setData(d); setLoadFailed(false) })
+        .catch(() => { if (!timedOut) return; setLoadFailed(true) })
     }
     load()
     const iv = setInterval(load, 300000) // 5min
-    return () => clearInterval(iv)
+    return () => { clearInterval(iv); clearTimeout(timeout) }
   }, [])
 
   const country = selected !== 'all' && data ? data.countries[selected] : null
@@ -138,7 +141,7 @@ export function RegionalPanel() {
       )}
 
       {!data && (
-        <div className="regional-loading">LOADING REGIONAL DATA...</div>
+        <div className="regional-loading">{loadFailed ? 'REGIONAL DATA UNAVAILABLE · PIPELINE OFFLINE' : 'LOADING REGIONAL DATA...'}</div>
       )}
     </section>
   )

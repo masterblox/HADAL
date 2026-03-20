@@ -14,17 +14,13 @@ Canonical system model:
 - HADAL = target product UX and frontend shell
 - MIT = selective pattern donor only
 
-### Current state (v0.5.2)
+### Current state (v0.5.0)
 
 - 3-lane shell: Overview / Operations / Analysis (hash-routed, lazy-loaded)
-- Login gate → NucleusTransition (~2.3s) → terminal reveal
-- Prediction engine: graphical forecasting workbench (fan charts, horizon bars, tempo spark)
-- Economic section: FX/Reserve Board, cross-asset monitors, Dubai RE
+- Login gate with NucleusTransition portal-to-globe reveal
+- Prediction engine (4-stage pipeline, MIT math on Gulf Watch data)
 - OpenSky hook for live aircraft tracking
 - Gulf Watch pipeline: incidents, prices, airspace, regional stats (60s refresh)
-- Mobile-hardened at 430/390/375/360/768/1024px
-- Cross-lane consistent: unified `--g` token system, shared CSS classes
-- Visual posture: institutional decision-support (no CRT, no glows, no decorative animation)
 
 ### Stack
 
@@ -347,12 +343,11 @@ API & UI (Vercel + GitHub Actions)
 ```
 
 **Tech Stack:**
-- Frontend: React 19 + TypeScript + Vite
-- Styling: Tailwind 4 + CSS custom properties (globals.css)
-- Visualizations: Canvas 2D hooks
-- Maps: Leaflet + CARTO dark tiles
-- Data: Static JSON (GitHub Actions, 60s frontend refresh)
-- Hosting: Vercel
+- Frontend: Vanilla HTML/CSS/JS
+- Maps: Leaflet.js + CARTO Dark Matter
+- Charts: Custom CSS/SVG
+- Data: Static JSON (GitHub Actions)
+- Hosting: Vercel (CDN)
 
 ---
 
@@ -360,16 +355,15 @@ API & UI (Vercel + GitHub Actions)
 
 | Metric | Value |
 |--------|-------|
-| Total Incidents | 300+ (live pipeline) |
+| Total Incidents | 212 |
 | Sources | 48+ |
 | Countries Covered | 15 |
 | Cities in DB | 50+ |
 | API Endpoints | 3 (including /api/aircraft) |
-| Lanes | 3 (Overview, Operations, Analysis) |
-| Charts | 6 (analysis) + 4 (economic cross-asset) |
-| Tracking Layers | 3 (aircraft, satellite, maritime) |
+| Charts | 6 |
+| Tracking Layers | 3 |
 | Prediction Training Window | 14 days |
-| Mobile Breakpoints | 430, 390, 375, 360, 768, 1024px |
+| Pattern Recognition | Actor→Action→Target chains |
 
 ---
 
@@ -378,16 +372,12 @@ API & UI (Vercel + GitHub Actions)
 ```bash
 # Clone
 git clone https://github.com/nKOxxx/gulfwatch-testing.git
-cd gulfwatch-testing
+cd gulfwatch-testing/public
 
-# Install
-npm install
+# Serve locally
+python -m http.server 8000
 
-# Dev server
-npm run dev
-
-# Build
-npm run build
+# Open http://localhost:8000
 ```
 
 ---
@@ -407,4 +397,4 @@ MIT
 ---
 
 Built with ⚔️ by Ares for Nikola
-Last Updated: 2026-03-18
+Last Updated: 2026-03-16

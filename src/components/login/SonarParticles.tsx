@@ -5,8 +5,11 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 
-const COUNT = 8000
-const SPHERE_RADIUS = 30
+const COUNT = 14000
+const SPHERE_RADIUS = 42
+const CURSOR_RADIUS = 30
+const CURSOR_FORCE = 38.0
+const DAMPING = 0.82
 
 export function SonarParticles() {
   const mountRef = useRef<HTMLDivElement>(null)
@@ -31,7 +34,7 @@ export function SonarParticles() {
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
     controls.autoRotate = true
-    controls.autoRotateSpeed = 2.0
+    controls.autoRotateSpeed = 1.2
     controls.enableZoom = false
     controls.enablePan = false
 
@@ -58,15 +61,41 @@ export function SonarParticles() {
     const dummy = new THREE.Object3D()
     const color = new THREE.Color()
     const target = new THREE.Vector3()
+    const camDir = new THREE.Vector3()
+    const pushDir = new THREE.Vector3()
+    const swirlDir = new THREE.Vector3()
     const positions: THREE.Vector3[] = []
+    const velocities: THREE.Vector3[] = []
+    const scales: number[] = []
+
+    // ── Cursor tracking ──
+    const mouse3D = new THREE.Vector3(9999, 9999, 0)
+    const raycaster = new THREE.Raycaster()
+    const cursorPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)
+    const ndcMouse = new THREE.Vector2()
+    const intersectPt = new THREE.Vector3()
+
+    const onMouseMove = (e: MouseEvent) => {
+      ndcMouse.x = (e.clientX / window.innerWidth) * 2 - 1
+      ndcMouse.y = -(e.clientY / window.innerHeight) * 2 + 1
+      raycaster.setFromCamera(ndcMouse, camera)
+      if (raycaster.ray.intersectPlane(cursorPlane, intersectPt)) {
+        mouse3D.copy(intersectPt)
+      }
+    }
+    const onMouseLeave = () => { mouse3D.set(9999, 9999, 0) }
+    container.addEventListener('mousemove', onMouseMove)
+    container.addEventListener('mouseleave', onMouseLeave)
 
     for (let i = 0; i < COUNT; i++) {
       positions.push(new THREE.Vector3(
-        (Math.random() - 0.5) * 100,
-        (Math.random() - 0.5) * 100,
-        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 180,
+        (Math.random() - 0.5) * 180,
+        (Math.random() - 0.5) * 180,
       ))
-      instancedMesh.setColorAt(i, color.setHex(0x00ff88))
+      velocities.push(new THREE.Vector3(0, 0, 0))
+      scales.push(0.4 + Math.random() * 1.2)
+      instancedMesh.setColorAt(i, color.setHex(0xDAFF4A))
     }
 
     // ── Animation ──
@@ -75,6 +104,9 @@ export function SonarParticles() {
     function animate() {
       raf = requestAnimationFrame(animate)
       controls.update()
+
+      camera.getWorldDirection(camDir)
+      cursorPlane.normal.copy(camDir)
 
       for (let i = 0; i < COUNT; i++) {
         // Fibonacci sphere — ambient orbit
@@ -85,10 +117,48 @@ export function SonarParticles() {
           SPHERE_RADIUS * Math.sin(theta) * Math.sin(phi),
           SPHERE_RADIUS * Math.cos(phi),
         )
-        positions[i].lerp(target, 0.1)
-        color.setHex(0x00ff88)
+
+        // Cursor repulsion — inverse-square magnetic field
+        const v = velocities[i]
+        const dx = positions[i].x - mouse3D.x
+        const dy = positions[i].y - mouse3D.y
+        const dz = positions[i].z - mouse3D.z
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz)
+        if (dist < CURSOR_RADIUS && dist > 0.1) {
+          const inv = 1 / dist
+          const t = dist / CURSOR_RADIUS
+          const smoothT = t * t * (3 - 2 * t)
+          const force = (1 - smoothT) * CURSOR_FORCE
+
+          const radialF = inv * force * 0.45
+
+          pushDir.set(dx * inv, dy * inv, dz * inv)
+          swirlDir.crossVectors(pushDir, camDir)
+          const swirlF = force * 0.1
+
+          v.x += dx * radialF + swirlDir.x * swirlF
+          v.y += dy * radialF + swirlDir.y * swirlF
+          v.z += dz * radialF + swirlDir.z * swirlF
+        }
+
+        // Apply velocity then damp
+        positions[i].x += v.x
+        positions[i].y += v.y
+        positions[i].z += v.z
+        v.multiplyScalar(DAMPING)
+
+        // Lerp back to target — scattered particles return slowly
+        const dispX = positions[i].x - target.x
+        const dispY = positions[i].y - target.y
+        const dispZ = positions[i].z - target.z
+        const displacement = Math.sqrt(dispX * dispX + dispY * dispY + dispZ * dispZ)
+        const lerpRate = displacement > 20 ? 0.008 : displacement > 8 ? 0.025 : 0.05
+        positions[i].lerp(target, lerpRate)
+        color.setHex(0xDAFF4A)
 
         dummy.position.copy(positions[i])
+        const s = scales[i]
+        dummy.scale.set(s, s, s)
         dummy.updateMatrix()
         instancedMesh.setMatrixAt(i, dummy.matrix)
         instancedMesh.setColorAt(i, color)
@@ -114,6 +184,8 @@ export function SonarParticles() {
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', onResize)
+      container.removeEventListener('mousemove', onMouseMove)
+      container.removeEventListener('mouseleave', onMouseLeave)
       controls.dispose()
       renderer.dispose()
       geometry.dispose()

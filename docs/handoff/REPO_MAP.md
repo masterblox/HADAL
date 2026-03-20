@@ -2,67 +2,56 @@
 
 ## Runtime Areas
 
-- [src](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/src)
-  React/Vite application shell and future modular HADAL frontend.
+- `src/` — React 19 + TypeScript + Vite application. 3-lane shell (Overview / Operations / Analysis) with hash-based routing.
 
-- [hadal.html](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/hadal.html)
-  Standalone visual and interaction prototype. Use as design reference, not final architecture.
+- `src/pages/` — Lane page components: `OverviewPage.tsx`, `OperationsPage.tsx` (lazy), `AnalysisPage.tsx` (lazy).
 
-- [api](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/api)
-  Serverless endpoints and proxies.
+- `src/components/` — Domain-grouped UI: `hero/`, `missile/`, `feed/`, `intel/`, `economic/`, `sep/`, `topbar/`, `login/`, `predictor/`, `analysis/`, `flight/`, `shared/`.
 
-- [scripts](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/scripts)
-  Data ingestion, enrichment, scoring, and export generation.
+- `src/canvas/` — Custom Canvas 2D hooks: `useGlobe`, `useSonar`, `useNoiseCanvas`, `useSepStatic`, `useDrawMark`, `useWaterfall`.
 
-- [public](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/public)
-  Runtime data artifacts and public assets used by the deployed app.
+- `src/hooks/` — Logic hooks: `useDataPipeline`, `usePrediction`, `useUtcClock`, `useOpenSky`, `useTracking`, `useSignalMonitor`, `usePressureGauge`.
 
-- [public/data](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/public/data)
-  Runtime data subdirectory for app-served artifacts and supporting assets. Keep app-loaded data/assets here, not under `docs/`.
+- `src/lib/` — Utilities + prediction engine (4-stage pipeline) + lane routing.
+
+- `src/data/` — Static data: feed fallback, demo incidents, GCC data, gulf economics, THAAD sites, map events, postures, globe markers.
+
+- `api/` — Serverless endpoints and proxies (aircraft.js).
+
+- `scripts/` — Data generation tooling (generate-land.mjs).
+
+- `public/` — Runtime data artifacts (incidents.json, prices.json, airspace.json, regional_stats.json) and static assets (audio, logo).
 
 ## Archive Areas
 
-- [legacy](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/legacy)
-  Archived Gulf Watch frontend. Use as a behavioral reference while rebuilding modules in React.
+- `legacy/` — Archived Gulf Watch vanilla JS frontend. Behavioral reference only.
+
+- `hadal.html` — Standalone visual prototype. Design reference, not active architecture.
 
 ## Project Entry Files
 
-- [README.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/README.md)
-  Project overview and quick navigation.
-
-- [package.json](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/package.json)
-  Frontend scripts and dependencies.
-
-- [index.html](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/index.html)
-  Vite app entry.
-
-- [vercel.json](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/vercel.json)
-  Deployment headers and hosting config.
+- `README.md` — Project overview.
+- `package.json` — Frontend scripts and dependencies.
+- `index.html` — Vite app entry.
+- `vercel.json` — Deployment headers and hosting config.
+- `CLAUDE.md` — Agent behavior instructions and design system tokens.
 
 ## Documentation
 
-- [docs](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs)
-  Architecture, references, prompts, and handoff docs.
-
-- [docs/handoff/ENGINEERING_JOURNAL.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/ENGINEERING_JOURNAL.md)
-  Running log of environment failures, repo issues, and recovery notes.
-
-- [docs/handoff/VERSION_LINEAGE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/VERSION_LINEAGE.md)
-  Timestamped HADAL maturity markers and checkpoint history. Current product state is tracked there as `v0.4.2`.
-
-- [docs/architecture/HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)
-  Macro platform architecture: product lanes, data contracts, frontend module ownership, operational resilience, governance tiers, and 7-phase implementation sequence.
-
-- [docs/architecture/HADAL_REFERENCE_HIERARCHY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REFERENCE_HIERARCHY.md)
-  Reference hierarchy: what HADAL takes from each source system (Gulf Watch, MIT, Shadowbroker, Ground Station) and external stack (LiveUAmap, GDELT, WorldMonitor, SOCRadar, Pizzint). Classification, anti-patterns, and per-lane implementation guidance.
-
-- [docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md)
-  Implementation matrix: maps every runtime file against architecture. Classifies real vs fake data, identifies connect-to-pipeline targets, and defines the next 5 implementation moves.
+- `docs/` — Architecture, references, prompts, and handoff docs.
+- `docs/handoff/ENGINEERING_JOURNAL.md` — Environment failures, repo issues, recovery notes.
+- `docs/handoff/VERSION_LINEAGE.md` — Maturity markers and checkpoint history. Current: `v0.5.0`.
+- `docs/architecture/HADAL_PLATFORM_PLAN.md` — Macro platform architecture and 7-phase sequence.
+- `docs/architecture/HADAL_REFERENCE_HIERARCHY.md` — Source hierarchy (Gulf Watch, MIT, Shadowbroker, Ground Station).
+- `docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md` — Runtime file mapping against architecture. Real vs fake, connect targets, next moves.
+- `docs/architecture/HADAL_PAGE_ARCHITECTURE.md` — 3-lane page structure (implemented).
+- `docs/architecture/HADAL_MACRO_PLAN.md` — Delivery sequence.
+- `docs/architecture/SYSTEM_BOUNDARIES.md` — System ownership boundaries.
 
 ## Working Rules
 
 - Add new non-runtime documents under `docs/`, not the repo root.
 - Keep runtime code in `src/`, `api/`, `scripts/`, and `public/`.
 - Keep old frontend work in `legacy/`; do not mix it back into the active app.
-- Treat `hadal.html` as a prototype and extraction source unless there is an explicit decision to deploy it directly.
 - Keep machine-local review artifacts, screenshots, scratch HTML, and helper scripts under `_local/`, not the repo root.
+- Do not commit `.env` files, credentials, or API keys.

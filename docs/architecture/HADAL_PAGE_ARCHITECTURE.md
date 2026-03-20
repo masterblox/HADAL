@@ -1,24 +1,22 @@
 # HADAL Page Architecture
 
-**Status:** Implemented and hardened (v0.5.2) — 3-lane shell is live, mobile-responsive, cross-lane consistent.
+**Status:** Implemented (v0.5.0) — 3-lane shell is live with hash-based routing.
 
-This document defines the page and tab architecture for HADAL. The single-scroll layout is no longer active.
+This document defines the page and tab architecture for HADAL. The 3-lane extraction described here was completed in `6a439eb` and refined through `f414b51`. The single-scroll layout is no longer active.
 
 ---
 
 ## Implementation Status
 
-The 3-lane shell is fully implemented and has been through mobile hardening, visual de-theatricalization, and cross-lane consistency passes:
+The previous single-scroll layout (Topbar → HeroGrid → MissileDefenseStrip → SepBand → ThreatFeed → IntelWireSection → EconomicSection) has been replaced with a 3-lane shell:
 
-- **Overview** (`#overview`) — `src/pages/OverviewPage.tsx` — HeroGrid, lane CTAs, MissileDefenseStrip, SepBand, ThreatFeed
-- **Operations** (`#operations`) — `src/pages/OperationsPage.tsx` — lazy-loaded (~199KB), IntelWireSection (map + 4 tabs), FlightTracker, lane CTA
-- **Analysis** (`#analysis`) — `src/pages/AnalysisPage.tsx` — lazy-loaded (~453KB), AnalysisSection, PredictorEngine, RegionalPanel, EconomicSection
+- **Overview** (`#overview`) — `src/pages/OverviewPage.tsx` — hero, missile strip, condensed feed
+- **Operations** (`#operations`) — `src/pages/OperationsPage.tsx` — lazy-loaded (200KB), intel workspace
+- **Analysis** (`#analysis`) — `src/pages/AnalysisPage.tsx` — lazy-loaded (28KB), prediction + economic
 
 Routing: hash-based via `src/lib/lane-routing.ts` + `useSyncExternalStore`. Nav with active state in Topbar.
 
-Entry flow: LoginPage → NucleusTransition (~2.3s) → terminal reveal → Overview.
-
-Phase machine: `login → unlocked (300ms) → nucleus → terminal`. No glow phase.
+Entry flow: LoginPage → NucleusTransition → globe glow → terminal reveal → Overview.
 
 ---
 
@@ -244,18 +242,11 @@ All three steps from the original plan have been executed:
 
 ---
 
-## Completed Post-Extraction Work (v0.5.1–v0.5.2)
+## Next Steps (post-extraction)
 
-1. **Mobile hardening** — all 3 lanes responsive at 430/390/375/360/768/1024px
-2. **Visual de-theatricalization** — CRT effects, glows, decorative animations removed
-3. **Cross-lane consistency** — unified `--g` token system, shared CSS classes, no off-system colors
-4. **Dead interaction cleanup** — removed non-functional buttons (CALC, EXPORT SITREP, SHARE MAP)
-5. **Operations mobile internals** — PosturingTab/CasualtiesTab stack on mobile, touch targets fixed
-6. **Login transition** — compressed from ~6s to ~2.3s, glow phase removed
+The 3-lane structure is in place. Remaining work is:
 
-## Remaining Work
-
-1. **Connect remaining static surfaces** to Gulf Watch data (MissileDefenseStrip, map events, LeftRail threat index)
-2. **Label or gate simulated surfaces** (sonar, waterfall, signal monitor in RightRail)
-3. **Stabilize routing** — hash routing works but is not production-grade (consider React Router later)
-4. **Clean dead code** — `useSepStatic.ts`, `continents.ts` can be deleted
+1. **Page-level UX tightening** — mobile breakpoints, intro/CTA layout, lane transitions
+2. **Connect remaining fake-authority surfaces** to Gulf Watch data (per Implementation Matrix §4)
+3. **Label or gate simulated surfaces** (sonar, waterfall, signal monitor)
+4. **Stabilize routing** — hash routing works but is not production-grade (consider React Router later)

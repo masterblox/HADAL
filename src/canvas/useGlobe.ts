@@ -2,11 +2,7 @@ import { useEffect, useRef } from 'react'
 import { landPolygons, gulfPolygons, iraqPolygons, iranPolygon } from './land-110m'
 import { globeMarkers } from './globe-markers'
 
-interface Particle {
-  x: number; y: number; vx: number; vy: number; size: number; opacity: number; phase: number
-}
-
-// Point-in-polygon (ray casting)
+/* ── Point-in-polygon (ray casting) ── */
 function pip(px: number, py: number, poly: number[][]) {
   let inside = false
   for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
@@ -18,16 +14,14 @@ function pip(px: number, py: number, poly: number[][]) {
   return inside
 }
 
-// 0 = general land, 1 = iraq, 2 = gulf, 3 = iran
-interface LandDot { lon: number; lat: number; type: number }
+/* ── Pre-compute land dots at mount time ── */
+interface LandDot { lon: number; lat: number; type: number } // 0=land, 1=iraq, 2=gulf, 3=iran
 
 function buildLandDots(): LandDot[] {
   const dots: LandDot[] = []
-  const STEP = 1.4 // degrees — ~6,000 land dots
-
+  const STEP = 1.4
   for (let lat = -58; lat <= 78; lat += STEP) {
     for (let lon = -180; lon <= 180; lon += STEP) {
-      // Check regions in priority order (most specific first)
       if (pip(lon, lat, iranPolygon)) {
         dots.push({ lon, lat, type: 3 })
       } else if (gulfPolygons.some(p => pip(lon, lat, p))) {
@@ -42,6 +36,27 @@ function buildLandDots(): LandDot[] {
   return dots
 }
 
+/* ── City / region labels ── */
+const LABELS: { lon: number; lat: number; text: string; color: string }[] = [
+  { lon: 51.4, lat: 35.7, text: 'TEHRAN', color: 'rgba(255,140,0,.85)' },
+  { lon: 59.6, lat: 36.3, text: 'MASHHAD', color: 'rgba(255,140,0,.6)' },
+  { lon: 51.7, lat: 32.7, text: 'ISFAHAN', color: 'rgba(255,140,0,.55)' },
+  { lon: 55.3, lat: 25.2, text: 'DUBAI', color: 'rgba(218,255,74,.75)' },
+  { lon: 54.4, lat: 24.4, text: 'ABU DHABI', color: 'rgba(218,255,74,.65)' },
+  { lon: 46.7, lat: 24.6, text: 'RIYADH', color: 'rgba(218,255,74,.55)' },
+  { lon: 47.9, lat: 29.4, text: 'KUWAIT', color: 'rgba(218,255,74,.65)' },
+  { lon: 51.5, lat: 25.3, text: 'DOHA', color: 'rgba(218,255,74,.6)' },
+  { lon: 50.6, lat: 26.2, text: 'BAHRAIN', color: 'rgba(218,255,74,.55)' },
+  { lon: 58.4, lat: 23.6, text: 'MUSCAT', color: 'rgba(218,255,74,.55)' },
+  { lon: 44.4, lat: 33.3, text: 'BAGHDAD', color: 'rgba(218,255,74,.6)' },
+  { lon: 44.2, lat: 15.4, text: 'SANAA', color: 'rgba(218,255,74,.5)' },
+  { lon: 56.3, lat: 27.0, text: 'HORMUZ', color: 'rgba(255,140,0,.7)' },
+  { lon: 43.3, lat: 12.6, text: 'BAB AL-MANDAB', color: 'rgba(255,140,0,.6)' },
+  { lon: 35.5, lat: 33.9, text: 'BEIRUT', color: 'rgba(218,255,74,.5)' },
+  { lon: 35.2, lat: 31.8, text: 'JERUSALEM', color: 'rgba(218,255,74,.5)' },
+  { lon: 36.3, lat: 33.5, text: 'DAMASCUS', color: 'rgba(218,255,74,.5)' },
+]
+
 export function useGlobe() {
   const ref = useRef<HTMLCanvasElement>(null)
 
@@ -54,7 +69,7 @@ export function useGlobe() {
 
     const Lx = -.55, Ly = -.65, Lz = .52
 
-    // Pre-compute land dots (runs once)
+    /* Pre-compute land dots (runs once) */
     const landDots = buildLandDots()
 
     let rotY = 40
@@ -77,22 +92,7 @@ export function useGlobe() {
     const FRICTION = .92
     const IDLE_RESUME_MS = 2000
 
-    // Particles
-    const PARTICLE_COUNT = 100
-    const particles: Particle[] = []
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        vx: (Math.random() - .5) * .6,
-        vy: (Math.random() - .5) * .6,
-        size: .8 + Math.random() * 1.2,
-        opacity: .05 + Math.random() * .15,
-        phase: Math.random() * PI * 2,
-      })
-    }
-
-    // Cached trig values — set once per frame in drawGlobe
+    // Cached trig values
     let cosRY = 0, sinRY = 0, cosRX = 0, sinRX = 0
 
     const onPointerDown = (e: PointerEvent) => {
@@ -149,35 +149,19 @@ export function useGlobe() {
       return [cx + R * X1, cy - R * Y2, Z2, diff]
     }
 
-    // Thin border outlines for political boundaries
-    function drawBorder(ptsArr: number[][], strokeCol: string, strokeW: number) {
+    /* ── Draw thin dashed political borders ── */
+    function drawBorder(ptsArr: number[][], color: string, width: number) {
       if (!x) return
       const pts = ptsArr.map(([lo, la]) => proj(lo, la)).filter(Boolean) as [number, number, number, number][]
       if (pts.length < 3) return
       x.beginPath()
       pts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
       x.closePath()
-      x.strokeStyle = strokeCol; x.lineWidth = strokeW; x.stroke()
-    }
-
-    function drawParticles(time: number) {
-      if (!x) return
-      const R2 = (R + 8) * (R + 8)
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const p = particles[i]
-        p.x += p.vx
-        p.y += p.vy
-        if (p.x < 0) p.x += W
-        else if (p.x > W) p.x -= W
-        if (p.y < 0) p.y += H
-        else if (p.y > H) p.y -= H
-        const dx = p.x - cx, dy = p.y - cy
-        if (dx * dx + dy * dy < R2) continue
-        const flicker = .7 + .3 * Math.sin(time * 2.5 + p.phase)
-        const alpha = p.opacity * flicker
-        x.fillStyle = `rgba(196,255,44,${alpha})`
-        x.fillRect(p.x, p.y, p.size, p.size)
-      }
+      x.setLineDash([3, 6])
+      x.strokeStyle = color
+      x.lineWidth = width
+      x.stroke()
+      x.setLineDash([])
     }
 
     function drawGlobe() {
@@ -188,20 +172,7 @@ export function useGlobe() {
       cosRY = Math.cos(ryRad); sinRY = Math.sin(ryRad)
       cosRX = Math.cos(rxRad); sinRX = Math.sin(rxRad)
 
-      const t0 = Date.now() / 1e3
-
-      // Particles (behind globe)
-      drawParticles(t0)
-
-      // Atmosphere
-      const atmo = x.createRadialGradient(cx, cy, R * .88, cx, cy, R * 1.22)
-      atmo.addColorStop(0, 'rgba(196,255,44,.12)')
-      atmo.addColorStop(.45, 'rgba(196,255,44,.05)')
-      atmo.addColorStop(.8, 'rgba(196,255,44,.015)')
-      atmo.addColorStop(1, 'rgba(196,255,44,0)')
-      x.beginPath(); x.arc(cx, cy, R * 1.22, 0, PI * 2); x.fillStyle = atmo; x.fill()
-
-      // Ocean
+      // Ocean base
       const ocean = x.createRadialGradient(cx - R * .28, cy - R * .22, R * .05, cx, cy, R)
       ocean.addColorStop(0, 'rgba(6,18,8,1)')
       ocean.addColorStop(.5, 'rgba(2,10,4,.98)')
@@ -209,23 +180,23 @@ export function useGlobe() {
       x.save(); x.beginPath(); x.arc(cx, cy, R, 0, PI * 2); x.clip()
       x.fillStyle = ocean; x.fillRect(cx - R, cy - R, R * 2, R * 2)
 
-      // Specular
+      // Specular highlight
       const spec = x.createRadialGradient(cx - R * .3, cy - R * .25, 0, cx - R * .3, cy - R * .25, R * .6)
-      spec.addColorStop(0, 'rgba(196,255,44,.04)')
-      spec.addColorStop(.4, 'rgba(196,255,44,.012)')
-      spec.addColorStop(1, 'rgba(196,255,44,0)')
+      spec.addColorStop(0, 'rgba(218,255,74,.06)')
+      spec.addColorStop(.4, 'rgba(218,255,74,.02)')
+      spec.addColorStop(1, 'rgba(218,255,74,0)')
       x.fillStyle = spec; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       x.restore()
 
-      // Grid
+      // Grid lines
       x.save(); x.beginPath(); x.arc(cx, cy, R, 0, PI * 2); x.clip()
-      x.setLineDash([2, 10]); x.lineWidth = .3
+      x.setLineDash([2, 8]); x.lineWidth = .35
       for (let ln = -80; ln <= 80; ln += 20) {
         const pts: [number, number][] = []
         for (let lo = -180; lo <= 180; lo += 4) { const p = proj(lo, ln); if (p) pts.push([p[0], p[1]]) }
         if (pts.length > 1) {
           x.beginPath(); pts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
-          x.strokeStyle = ln === 0 ? 'rgba(196,255,44,.18)' : 'rgba(196,255,44,.08)'; x.stroke()
+          x.strokeStyle = ln === 0 ? 'rgba(218,255,74,.14)' : 'rgba(218,255,74,.05)'; x.stroke()
         }
       }
       for (let lo = 0; lo < 360; lo += 20) {
@@ -233,85 +204,45 @@ export function useGlobe() {
         for (let ln = -80; ln <= 80; ln += 4) { const p = proj(lo, ln); if (p) pts.push([p[0], p[1]]) }
         if (pts.length > 1) {
           x.beginPath(); pts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
-          x.strokeStyle = 'rgba(196,255,44,.06)'; x.stroke()
+          x.strokeStyle = 'rgba(218,255,74,.04)'; x.stroke()
         }
       }
       x.setLineDash([])
-
-      // Terminator
-      const TLon = 30 + rotY
-      const termPts: [number, number][] = []
-      for (let lat = -90; lat <= 90; lat += 2) { const p = proj(TLon, lat); if (p) termPts.push([p[0], p[1]]) }
-      if (termPts.length > 1) {
-        x.beginPath(); termPts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
-        x.strokeStyle = 'rgba(196,255,44,.1)'; x.lineWidth = .8; x.stroke()
-      }
-
-      // Night side
-      const termX = proj(TLon, 0)
-      if (termX) {
-        const ng = x.createRadialGradient(termX[0] + 60, termX[1], 0, termX[0] + 60, termX[1], R * 1.4)
-        ng.addColorStop(0, 'rgba(0,0,0,.3)'); ng.addColorStop(1, 'rgba(0,0,0,0)')
-        x.fillStyle = ng; x.fillRect(cx - R, cy - R, R * 2, R * 2)
-      }
       x.restore()
 
-      // ═══ DOT-BASED LAND RENDERING ═══
+      /* ── Dot-based land rendering ── */
       x.save(); x.beginPath(); x.arc(cx, cy, R, 0, PI * 2); x.clip()
-
       for (let i = 0; i < landDots.length; i++) {
         const d = landDots[i]
         const p = proj(d.lon, d.lat)
         if (!p) continue
         const [px, py, , diff] = p
-        // Lighting factor: brighter on sun side
         const lit = .25 + diff * .6
 
         switch (d.type) {
-          case 0: // General land — subtle green dots
-            x.fillStyle = `rgba(196,255,44,${(.12 + lit * .18).toFixed(3)})`
+          case 0: // General land
+            x.fillStyle = `rgba(218,255,74,${(.1 + lit * .18).toFixed(3)})`
             x.fillRect(px - .7, py - .7, 1.4, 1.4)
             break
-          case 1: // Iraq — slightly brighter
-            x.fillStyle = `rgba(196,255,44,${(.18 + lit * .25).toFixed(3)})`
+          case 1: // Iraq
+            x.fillStyle = `rgba(218,255,74,${(.16 + lit * .25).toFixed(3)})`
             x.fillRect(px - .8, py - .8, 1.6, 1.6)
             break
-          case 2: // Gulf states — brightest green
-            x.fillStyle = `rgba(196,255,44,${(.28 + lit * .4).toFixed(3)})`
+          case 2: // Gulf states
+            x.fillStyle = `rgba(218,255,74,${(.25 + lit * .4).toFixed(3)})`
             x.fillRect(px - .9, py - .9, 1.8, 1.8)
             break
-          case 3: // Iran — orange dots
-            x.fillStyle = `rgba(255,140,0,${(.22 + lit * .4).toFixed(3)})`
+          case 3: // Iran (orange)
+            x.fillStyle = `rgba(255,140,0,${(.2 + lit * .4).toFixed(3)})`
             x.fillRect(px - .9, py - .9, 1.8, 1.8)
             break
         }
       }
 
-      // Thin political borders (outlines only, no fill)
-      x.setLineDash([3, 4])
-      for (let i = 0; i < gulfPolygons.length; i++) {
-        drawBorder(gulfPolygons[i], 'rgba(196,255,44,.3)', .8)
-      }
-      drawBorder(iranPolygon, 'rgba(255,140,0,.35)', .8)
-      for (let i = 0; i < iraqPolygons.length; i++) {
-        drawBorder(iraqPolygons[i], 'rgba(196,255,44,.2)', .6)
-      }
-      x.setLineDash([])
-
-      // Iran glow
-      const ip = proj(53, 32)
-      if (ip) {
-        const iranGlow = x.createRadialGradient(ip[0], ip[1], 0, ip[0], ip[1], 40)
-        iranGlow.addColorStop(0, 'rgba(255,140,0,.12)'); iranGlow.addColorStop(1, 'rgba(255,140,0,0)')
-        x.fillStyle = iranGlow; x.beginPath(); x.arc(ip[0], ip[1], 40, 0, PI * 2); x.fill()
-      }
-      // Gulf glow
-      const gp = proj(52, 26)
-      if (gp) {
-        const gg = x.createRadialGradient(gp[0], gp[1], 0, gp[0], gp[1], 36)
-        gg.addColorStop(0, 'rgba(196,255,44,.12)'); gg.addColorStop(1, 'rgba(196,255,44,0)')
-        x.fillStyle = gg; x.beginPath(); x.arc(gp[0], gp[1], 36, 0, PI * 2); x.fill()
-      }
+      /* ── Political borders (thin dashed lines) ── */
+      for (let i = 0; i < gulfPolygons.length; i++) drawBorder(gulfPolygons[i], 'rgba(218,255,74,.3)', .6)
+      for (let i = 0; i < iraqPolygons.length; i++) drawBorder(iraqPolygons[i], 'rgba(218,255,74,.2)', .5)
+      drawBorder(iranPolygon, 'rgba(255,140,0,.35)', .6)
       x.restore()
 
       // Rim darkening
@@ -319,74 +250,40 @@ export function useGlobe() {
       const rim = x.createRadialGradient(cx - R * .25, cy - R * .2, R * .28, cx, cy, R)
       rim.addColorStop(0, 'rgba(0,0,0,0)')
       rim.addColorStop(.62, 'rgba(0,0,0,0)')
-      rim.addColorStop(.82, 'rgba(0,0,0,.28)')
-      rim.addColorStop(1, 'rgba(0,0,0,.65)')
+      rim.addColorStop(.82, 'rgba(0,0,0,.32)')
+      rim.addColorStop(1, 'rgba(0,0,0,.72)')
       x.fillStyle = rim; x.fillRect(cx - R, cy - R, R * 2, R * 2)
-      const sh = x.createRadialGradient(cx - R * .32, cy - R * .28, 0, cx - R * .32, cy - R * .28, R * .38)
-      sh.addColorStop(0, 'rgba(196,255,44,.06)')
-      sh.addColorStop(.5, 'rgba(196,255,44,.02)')
-      sh.addColorStop(1, 'rgba(196,255,44,0)')
-      x.fillStyle = sh; x.fillRect(cx - R, cy - R, R * 2, R * 2)
       x.restore()
 
-      // Globe rim — clean, no pulsing glow
+      // Clean static rim
       x.beginPath(); x.arc(cx, cy, R, 0, PI * 2)
-      x.strokeStyle = 'rgba(196,255,44,.25)'; x.lineWidth = 1; x.stroke()
-      x.beginPath(); x.arc(cx, cy, R + 2, 0, PI * 2)
-      x.strokeStyle = 'rgba(196,255,44,.06)'; x.lineWidth = 1.5; x.stroke()
+      x.strokeStyle = 'rgba(218,255,74,.35)'; x.lineWidth = 1.5; x.stroke()
 
       // Markers
-      const t = t0
       globeMarkers.forEach(m => {
         const p = proj(m.lon, m.lat)
         if (!p) return
         const [px, py] = p
-        const pulse = .5 + .5 * Math.abs(Math.sin(t * 2.2 + m.lon * .3))
         if (m.t === 'l') {
-          x.beginPath(); x.arc(px, py, 2.5, 0, PI * 2); x.fillStyle = 'rgba(255,100,0,.9)'
-          x.fill()
-          x.beginPath(); x.arc(px, py, 5 + pulse * 6, 0, PI * 2)
-          x.strokeStyle = `rgba(255,100,0,${.3 * pulse})`; x.lineWidth = .8; x.stroke()
+          x.beginPath(); x.arc(px, py, 3.5, 0, PI * 2); x.fillStyle = 'rgba(255,100,0,.9)'; x.fill()
+          x.beginPath(); x.arc(px, py, 5, 0, PI * 2)
+          x.strokeStyle = 'rgba(255,100,0,.3)'; x.lineWidth = 1; x.stroke()
         } else {
-          x.beginPath(); x.arc(px, py, 2, 0, PI * 2); x.fillStyle = 'rgba(196,255,44,.9)'
-          x.fill()
-          x.beginPath(); x.arc(px, py, 4 + pulse * 5, 0, PI * 2)
-          x.strokeStyle = `rgba(196,255,44,${.35 * pulse})`; x.lineWidth = .8; x.stroke()
+          x.beginPath(); x.arc(px, py, 2.5, 0, PI * 2); x.fillStyle = 'rgba(218,255,74,.9)'; x.fill()
+          x.beginPath(); x.arc(px, py, 4.5, 0, PI * 2)
+          x.strokeStyle = 'rgba(218,255,74,.25)'; x.lineWidth = 1; x.stroke()
         }
       })
 
-      // Labels
-      x.font = '400 10px "Share Tech Mono",monospace'
-      x.textBaseline = 'middle'
-
-      const labels: Array<{ lon: number; lat: number; name: string; color: string; ox: number; oy: number }> = [
-        { lon: 51.4, lat: 35.6, name: 'TEHRAN', color: 'rgba(255,140,0,.9)', ox: 7, oy: -5 },
-        { lon: 59.6, lat: 36.3, name: 'MASHHAD', color: 'rgba(255,140,0,.6)', ox: 6, oy: -5 },
-        { lon: 51.7, lat: 32.7, name: 'ISFAHAN', color: 'rgba(255,140,0,.55)', ox: 6, oy: 0 },
-        { lon: 55.3, lat: 25.2, name: 'DUBAI', color: 'rgba(196,255,44,.85)', ox: 6, oy: 10 },
-        { lon: 54.4, lat: 24.5, name: 'ABU DHABI', color: 'rgba(196,255,44,.65)', ox: 6, oy: 8 },
-        { lon: 46.7, lat: 24.6, name: 'RIYADH', color: 'rgba(196,255,44,.65)', ox: 6, oy: 0 },
-        { lon: 47.0, lat: 29.4, name: 'KUWAIT', color: 'rgba(196,255,44,.65)', ox: 6, oy: -5 },
-        { lon: 51.5, lat: 25.3, name: 'DOHA', color: 'rgba(196,255,44,.65)', ox: 6, oy: 0 },
-        { lon: 50.6, lat: 26.2, name: 'BAHRAIN', color: 'rgba(196,255,44,.55)', ox: 6, oy: -5 },
-        { lon: 58.5, lat: 23.6, name: 'MUSCAT', color: 'rgba(196,255,44,.55)', ox: 6, oy: 0 },
-        { lon: 44.4, lat: 33.3, name: 'BAGHDAD', color: 'rgba(196,255,44,.65)', ox: 6, oy: -5 },
-        { lon: 44.2, lat: 15.4, name: 'SANAA', color: 'rgba(255,140,0,.65)', ox: 6, oy: 0 },
-        { lon: 56.3, lat: 26.6, name: 'HORMUZ', color: 'rgba(255,140,0,.7)', ox: 6, oy: 0 },
-        { lon: 43.3, lat: 12.6, name: 'BAB AL-MANDAB', color: 'rgba(255,140,0,.6)', ox: 6, oy: 8 },
-        { lon: 35.5, lat: 33.9, name: 'BEIRUT', color: 'rgba(196,255,44,.5)', ox: -52, oy: 0 },
-        { lon: 35.2, lat: 31.8, name: 'JERUSALEM', color: 'rgba(196,255,44,.5)', ox: -68, oy: 0 },
-        { lon: 36.3, lat: 33.5, name: 'DAMASCUS', color: 'rgba(196,255,44,.45)', ox: 6, oy: -5 },
-      ]
-
-      for (const lbl of labels) {
-        const p = proj(lbl.lon, lbl.lat)
+      // City labels
+      x.font = '10px "Share Tech Mono", monospace'
+      for (const lb of LABELS) {
+        const p = proj(lb.lon, lb.lat)
         if (!p) continue
-        x.fillStyle = lbl.color
-        x.fillRect(p[0] - 1, p[1] - 1, 2, 2)
-        x.fillText(lbl.name, p[0] + lbl.ox, p[1] + lbl.oy)
+        const [px, py] = p
+        x.fillStyle = lb.color
+        x.fillText(lb.text, px + 6, py - 4)
       }
-      x.textBaseline = 'alphabetic'
 
       // Momentum & auto-rotation
       if (!dragging) {
@@ -408,7 +305,7 @@ export function useGlobe() {
       raf = requestAnimationFrame(drawGlobe)
     }
 
-    // Visibility-based idle: pause RAF when tab is hidden
+    // Visibility-based idle
     let paused = false
     const onVisChange = () => {
       if (document.hidden) {

@@ -22,7 +22,7 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
   const hasLive = incidents.length > 0
 
   const typeTag: Record<string, string> = {missile:'iwl-tag-strike',airstrike:'iwl-tag-launch',intercept:'iwl-tag-intercept',diplomatic:'iwl-tag-conf'}
-  const typeCol: Record<string, string> = {missile:'rgba(255,140,0,.9)',airstrike:'rgba(255,140,0,.9)',intercept:'rgba(196,255,44,.9)',diplomatic:'rgba(180,120,255,.9)'}
+  const typeCol: Record<string, string> = {missile:'rgba(255,140,0,.9)',airstrike:'rgba(255,140,0,.9)',intercept:'rgba(218,255,74,.9)',diplomatic:'rgba(180,120,255,.9)'}
 
   // Use live incidents for feed when available, fall back to static seed
   const feedEvents = useMemo(() => {
@@ -36,12 +36,14 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
         isMil: ['missile', 'airstrike', 'drone', 'ground'].some(t => new RegExp(`\\b${t}\\b`, 'i').test(inc.type || '')),
       }))
       if (feedTab === 'mil') return mapped.filter(e => e.isMil)
+      if (feedTab === 'ent') return mapped.filter(e => !e.isMil)
       return mapped
     }
     // Static fallback
     const isMilType = (t: string) => ['missile', 'airstrike', 'intercept', 'ground'].includes(t)
     const all = iwlFeedSeed.map((e, i) => ({ ...e, id: i + 1, isMil: isMilType(e.type) }))
     if (feedTab === 'mil') return all.filter(e => e.isMil)
+    if (feedTab === 'ent') return all.filter(e => !e.isMil)
     return all
   }, [feedTab, incidents, hasLive])
 
@@ -85,7 +87,7 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
           {feedEvents.map(e => (
             <div key={e.id} className="iwl-evt">
               <div className="iwl-evt-top">
-                <div className="iwl-evt-dot" style={{background:typeCol[e.type]||'rgba(196,255,44,.9)'}} />
+                <div className="iwl-evt-dot" style={{background:typeCol[e.type]||'rgba(218,255,74,.9)'}} />
                 <span className="iwl-evt-id">EVT-{String(e.id).padStart(4,'0')}</span>
                 <span className="iwl-evt-time">{e.time}</span>
               </div>

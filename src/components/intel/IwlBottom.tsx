@@ -7,6 +7,7 @@ export function IwlBottom({ datalinkText, onExportSitrep }: IwlBottomProps) {
   return (
     <div className="iwl-bottom">
       <div className="iwl-datalink">
+        <span className="iwl-datalink-indicator">&#9608;</span>
         <span>{datalinkText || 'PIPELINE STATUS UNKNOWN'}</span>
       </div>
       <div className="iwl-bot-div" />

@@ -1,7 +1,20 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { SonarParticles } from './SonarParticles'
 
 const ACCESS_CODE = '0000'
+
+/* ── Keypad click sound — grant/gate-open audio moved to App.tsx phase boundaries ── */
+const clickAudioCache: Record<string, HTMLAudioElement> = {}
+
+function useKeyClick() {
+  return useCallback(() => {
+    const src = '/audio/key-click.mp3'
+    if (!clickAudioCache[src]) { clickAudioCache[src] = new Audio(src); clickAudioCache[src].preload = 'auto' }
+    const el = clickAudioCache[src]
+    el.currentTime = 0
+    el.play().catch(() => {})
+  }, [])
+}
 
 interface LoginPageProps {
   onAccess: () => void
@@ -12,17 +25,7 @@ export function LoginPage({ onAccess }: LoginPageProps) {
   const [error, setError] = useState(false)
   const [entering, setEntering] = useState(false)
   const markRef = useRef<HTMLCanvasElement>(null)
-  const keyAudioRef = useRef<HTMLAudioElement | null>(null)
-  const grantAudioRef = useRef<HTMLAudioElement | null>(null)
-  const openAudioRef = useRef<HTMLAudioElement | null>(null)
-
-  const playSfx = (ref: { current: HTMLAudioElement | null }, volume: number) => {
-    const audio = ref.current
-    if (!audio) return
-    audio.volume = volume
-    audio.currentTime = 0
-    void audio.play().catch(() => {})
-  }
+  const playClick = useKeyClick()
 
   // Draw HADAL mark — small, single color, per rule 005
   useEffect(() => {
@@ -33,34 +36,20 @@ export function LoginPage({ onAccess }: LoginPageProps) {
     c.width = 48; c.height = 48
     const cx = 24, cy = 24
     x.beginPath(); x.arc(cx, cy, 20, 0, Math.PI * 2)
-    x.strokeStyle = 'rgba(196,255,44,.3)'; x.lineWidth = 1; x.stroke()
+    x.strokeStyle = 'rgba(218,255,74,.3)'; x.lineWidth = 1; x.stroke()
     x.beginPath(); x.arc(cx, cy, 12, 0, Math.PI * 2)
-    x.strokeStyle = 'rgba(196,255,44,.15)'; x.lineWidth = 0.5; x.stroke()
+    x.strokeStyle = 'rgba(218,255,74,.15)'; x.lineWidth = 0.5; x.stroke()
     x.beginPath()
     x.moveTo(cx, cy - 22); x.lineTo(cx, cy + 22)
     x.moveTo(cx - 22, cy); x.lineTo(cx + 22, cy)
-    x.strokeStyle = 'rgba(196,255,44,.12)'; x.lineWidth = 0.5; x.stroke()
+    x.strokeStyle = 'rgba(218,255,74,.12)'; x.lineWidth = 0.5; x.stroke()
     x.beginPath(); x.arc(cx, cy, 2, 0, Math.PI * 2)
-    x.fillStyle = '#C4FF2C'; x.fill()
-  }, [])
-
-  useEffect(() => {
-    keyAudioRef.current = new Audio('/audio/key-click.mp3')
-    grantAudioRef.current = new Audio('/audio/grant.mp3')
-    openAudioRef.current = new Audio('/audio/gate-open.mp3')
-
-    return () => {
-      ;[keyAudioRef.current, grantAudioRef.current, openAudioRef.current].forEach(audio => {
-        if (!audio) return
-        audio.pause()
-        audio.src = ''
-      })
-    }
+    x.fillStyle = '#DAFF4A'; x.fill()
   }, [])
 
   const pressDigit = (d: string) => {
     if (entering || digits.length >= 4) return
-    playSfx(keyAudioRef, 0.45)
+    playClick()
     const next = [...digits, d]
     setDigits(next)
     setError(false)
@@ -69,10 +58,7 @@ export function LoginPage({ onAccess }: LoginPageProps) {
       const code = next.join('')
       if (code === ACCESS_CODE) {
         setEntering(true)
-        playSfx(grantAudioRef, 0.82)
-        playSfx(openAudioRef, 0.9)
-        // Card fades out, then notify parent to fade overlay
-        setTimeout(onAccess, 500)
+        setTimeout(onAccess, 350)
       } else {
         setError(true)
         setTimeout(() => { setDigits([]); setError(false) }, 800)

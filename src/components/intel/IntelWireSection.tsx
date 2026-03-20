@@ -33,29 +33,9 @@ export function IntelWireSection({ incidents, airspace, prices, sandbox }: Intel
     setLayerVisibility(prev => ({ ...prev, [name]: !prev[name] }))
   }, [])
 
-  const handleCalc = useCallback(() => {
-    const kinetic = incidents.filter(i => {
-      const t = (i.type || i.title || '').toLowerCase()
-      return t.includes('missile') || t.includes('airstrike') || t.includes('drone') || t.includes('ballistic')
-    }).length
-    const sources = new Set(incidents.map(i => i.source).filter(Boolean)).size
-    const countries = new Set(incidents.map(i => i.location?.country).filter(Boolean)).size
-
-    alert(
-      `HADAL THREAT SUMMARY\n\n` +
-      `TRACKED INCIDENTS: ${incidents.length}\n` +
-      `KINETIC EVENTS: ${kinetic}\n` +
-      `COUNTRIES AFFECTED: ${countries}\n` +
-      `SOURCES: ${sources}\n\n` +
-      (incidents.length > 0
-        ? `SOURCE: GULF WATCH PIPELINE · LIVE`
-        : `SOURCE: NO LIVE DATA · PIPELINE OFFLINE`)
-    )
-  }, [incidents])
-
   return (
-    <div className="iwl-wrap" style={{ position: 'relative' }}>
-      <IwlNav activeTab={activeTab} onTabChange={setActiveTab} syncStatus={syncStatus} onCalc={handleCalc} />
+    <div className="iwl-wrap">
+      <IwlNav activeTab={activeTab} onTabChange={setActiveTab} syncStatus={syncStatus} />
       <div className="iwl-map-area" style={{ position: 'relative' }}>
         <MapDepthLayer />
         <LeafletMap

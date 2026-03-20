@@ -41,8 +41,8 @@ export function CasualtiesTab({ incidents }: CasualtiesTabProps) {
 
   return (
     <div className="iwl-tabcontent active">
-      <h2 className="section-title" style={{ marginBottom: 14 }}>Participants &amp; Casualties</h2>
-      <p style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-small)',color:'var(--g3)',marginBottom:'14px'}}>
+      <div className="iwl-section-h">PARTICIPANTS &amp; CASUALTIES</div>
+      <p className="iwl-section-intro">
         {hasLive
           ? `Pipeline: ${liveStats.total} incidents · ${liveStats.verifiedCount} verified · ${liveStats.likelyCount} likely · Confidence: ${liveStats.confLevel} · Casualties are unverified OSINT estimates.`
           : 'No live pipeline data. Table below is scenario reference data — not live intelligence.'}
@@ -65,8 +65,8 @@ export function CasualtiesTab({ incidents }: CasualtiesTabProps) {
           <div className="iwl-sb-l">TRACKED EVENTS</div>
         </div>
       </div>
-      <div style={{fontFamily:'var(--MONO)',fontWeight:400,fontSize:'var(--fs-micro)',letterSpacing:'.02em',color:'var(--g3)',margin:'14px 0 6px'}}>
-        SCENARIO REFERENCE TABLE
+      <div className="iwl-sub-h" style={{marginTop:'14px'}}>
+        SCENARIO REFERENCE TABLE <span className="prov-badge">STATIC</span>
       </div>
       <table className="iwl-table">
         <thead><tr><th>ENTITY</th><th>ALLIANCE</th><th>EST. TROOPS</th><th>EST. AIRCRAFT</th><th>ARMOR</th><th>MIL CASUALTIES</th><th>CIV CASUALTIES</th><th>STATUS</th></tr></thead>

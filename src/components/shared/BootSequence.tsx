@@ -277,7 +277,7 @@ export function BootSequence({ onComplete }: { onComplete: () => void }) {
             fontWeight: 700,
             letterSpacing: '0.3em',
             color: 'transparent',
-            WebkitTextStroke: '1.5px #C4FF2C',
+            WebkitTextStroke: '1.5px #DAFF4A',
             opacity: wordmarkVisible ? 1 : 0,
             transition: 'opacity 0.8s ease',
             margin: 0,
@@ -291,7 +291,7 @@ export function BootSequence({ onComplete }: { onComplete: () => void }) {
             fontFamily: '"Share Tech Mono", monospace',
             fontSize: 11,
             letterSpacing: '0.35em',
-            color: '#C4FF2C',
+            color: '#DAFF4A',
             opacity: subtitleVisible ? 0.6 : 0,
             transition: 'opacity 0.8s ease',
           }}

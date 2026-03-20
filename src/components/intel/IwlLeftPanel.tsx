@@ -11,15 +11,15 @@ interface IwlLeftPanelProps {
 /** Derive layer counts from actual static data arrays + live pipeline count */
 function buildLayers(liveCount: number) {
   return [
-    {id:'satellite',label:'Satellite Terrain',icon:'grid'},
-    {id:'missile',label:'Missile Strike',ct:String(missileEvents.length),icon:'missile'},
-    {id:'airstrike',label:'Air Strike',ct:String(airstrikeEvents.length),icon:'triangle'},
-    {id:'ground',label:'Ground Forces',ct:String(groundEvents.length),icon:'tank'},
-    {id:'intercept',label:'Interception',ct:String(interceptEvents.length),icon:'diamond'},
-    {id:'combatants',label:'Active Combatants',ct:String(combatantEvents.length),icon:'person'},
-    {id:'diplomatic',label:'Diplomatic Actors',ct:String(diplomaticEvents.length),icon:'pentagon',special:true},
-    {id:'airspace-lyr',label:'Airspace Zones',ct:String(airspaceZones.length),icon:'airspace'},
-    ...(liveCount > 0 ? [{id:'live-incidents',label:'Live Incidents',ct:String(liveCount),icon:'live'}] : []),
+    {id:'satellite',label:'Satellite Terrain'},
+    {id:'missile',label:'Missile Strike',ct:String(missileEvents.length)},
+    {id:'airstrike',label:'Air Strike',ct:String(airstrikeEvents.length)},
+    {id:'ground',label:'Ground Forces',ct:String(groundEvents.length)},
+    {id:'intercept',label:'Interception',ct:String(interceptEvents.length)},
+    {id:'combatants',label:'Active Combatants',ct:String(combatantEvents.length)},
+    {id:'diplomatic',label:'Diplomatic Actors',ct:String(diplomaticEvents.length),special:true},
+    {id:'airspace-lyr',label:'Airspace Zones',ct:String(airspaceZones.length)},
+    ...(liveCount > 0 ? [{id:'live-incidents',label:'Live Incidents',ct:String(liveCount)}] : []),
   ]
 }
 
@@ -46,11 +46,10 @@ export function IwlLeftPanel({ layerVisibility, onToggle, liveIncidentCount }: I
                 }}
                 onClick={() => onToggle(l.id)}
               >
-                <div className="iwl-lyr-icon" />
                 <span className="iwl-lyr-t" style={l.special ? {color:'rgba(200,130,255,.8)',letterSpacing:'.12em'} : {}}>
                   {l.label}
                 </span>
-                {l.ct && <span className="iwl-lyr-ct" style={{color: l.special ? 'rgba(210,140,255,.95)' : 'rgba(180,200,180,.65)'}}>{l.ct}</span>}
+                {l.ct && <span className="iwl-lyr-ct" style={{color: l.special ? 'rgba(210,140,255,.95)' : 'var(--g5)'}}>{l.ct}</span>}
                 <div className={`iwl-toggle${layerVisibility[l.id] !== false ? '' : ' off'}`} />
               </div>
             ))}

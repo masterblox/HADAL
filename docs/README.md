@@ -4,30 +4,30 @@ This directory holds the non-runtime project documents for HADAL.
 
 ## Architecture
 
-- [SYSTEM_BOUNDARIES.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/SYSTEM_BOUNDARIES.md)
-- [HADAL_PAGE_ARCHITECTURE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PAGE_ARCHITECTURE.md)
-- [HADAL_MACRO_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_MACRO_PLAN.md)
-- [HADAL_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_BLUEPRINT.md)
-- [HADAL_REPURPOSING_BLUEPRINT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REPURPOSING_BLUEPRINT.md)
-- [HADAL_EXTRACTION_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_EXTRACTION_PLAN.md)
-- [HADAL_PLATFORM_PLAN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_PLATFORM_PLAN.md)
-- [HADAL_REFERENCE_HIERARCHY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_REFERENCE_HIERARCHY.md)
-- [HADAL_IMPLEMENTATION_MATRIX.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/architecture/HADAL_IMPLEMENTATION_MATRIX.md)
+- [SYSTEM_BOUNDARIES.md](architecture/SYSTEM_BOUNDARIES.md) — system ownership boundaries
+- [HADAL_PAGE_ARCHITECTURE.md](architecture/HADAL_PAGE_ARCHITECTURE.md) — 3-lane page structure (implemented)
+- [HADAL_MACRO_PLAN.md](architecture/HADAL_MACRO_PLAN.md) — delivery sequence
+- [HADAL_PLATFORM_PLAN.md](architecture/HADAL_PLATFORM_PLAN.md) — macro platform architecture
+- [HADAL_REFERENCE_HIERARCHY.md](architecture/HADAL_REFERENCE_HIERARCHY.md) — source hierarchy
+- [HADAL_IMPLEMENTATION_MATRIX.md](architecture/HADAL_IMPLEMENTATION_MATRIX.md) — runtime file mapping against architecture
+- [HADAL_BLUEPRINT.md](architecture/HADAL_BLUEPRINT.md) — 7-layer pipeline stack
+- [HADAL_REPURPOSING_BLUEPRINT.md](architecture/HADAL_REPURPOSING_BLUEPRINT.md) — repurposing plan
+- [HADAL_EXTRACTION_PLAN.md](architecture/HADAL_EXTRACTION_PLAN.md) — extraction plan
 
 ## Reference
 
-- [DESIGN.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/DESIGN.md)
-- [CIRCUIT_BREAKER.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/CIRCUIT_BREAKER.md)
-- [SECURITY.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/SECURITY.md)
-- [UPGRADE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/reference/UPGRADE.md)
+- [DESIGN.md](reference/DESIGN.md)
+- [CIRCUIT_BREAKER.md](reference/CIRCUIT_BREAKER.md)
+- [SECURITY.md](reference/SECURITY.md)
+- [UPGRADE.md](reference/UPGRADE.md)
 
 ## Prompts
 
-- [WINDOW1_HADAL_PROMPT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/prompts/WINDOW1_HADAL_PROMPT.md)
-- [WINDOW2_MIT_PROMPT.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/prompts/WINDOW2_MIT_PROMPT.md)
+- [WINDOW1_HADAL_PROMPT.md](prompts/WINDOW1_HADAL_PROMPT.md)
+- [WINDOW2_MIT_PROMPT.md](prompts/WINDOW2_MIT_PROMPT.md)
 
 ## Handoff
 
-- [REPO_MAP.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/REPO_MAP.md)
-- [ENGINEERING_JOURNAL.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/ENGINEERING_JOURNAL.md)
-- [VERSION_LINEAGE.md](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/docs/handoff/VERSION_LINEAGE.md)
+- [REPO_MAP.md](handoff/REPO_MAP.md) — repo structure and working rules
+- [ENGINEERING_JOURNAL.md](handoff/ENGINEERING_JOURNAL.md) — environment failures, repo issues, recovery notes
+- [VERSION_LINEAGE.md](handoff/VERSION_LINEAGE.md) — maturity markers (current: `v0.5.0`)

@@ -14,13 +14,13 @@ import { useEffect, useRef, useState } from 'react'
 
 const N = 400
 
-// Timing (ms)
-const T_FORM     = 600   // particles coalesce
-const T_SPIN     = 900   // ring orbits, logo visible
-const T_DISSOLVE = 400   // particles scatter, logo hides
-const T_HOLD     = 1000  // ring glows alone on black — the beat
-const T_REVEAL   = 600   // black bg fades, globe appears inside ring
-const T_RING_OUT = 500   // ring fades into globe outline
+// Timing (ms) — compressed to ~2.3s total
+const T_FORM     = 500   // particles coalesce
+const T_SPIN     = 500   // ring orbits, logo visible
+const T_DISSOLVE = 300   // particles scatter, logo hides
+const T_HOLD     = 200   // ring glows alone on black — short beat
+const T_REVEAL   = 450   // black bg fades, globe appears inside ring
+const T_RING_OUT = 350   // ring fades into globe outline
 const T_TOTAL    = T_FORM + T_SPIN + T_DISSOLVE + T_HOLD + T_REVEAL + T_RING_OUT
 
 // Phase boundaries (cumulative)
@@ -59,9 +59,9 @@ function seed(r: number): P[] {
 function easeOut(t: number) { return 1 - Math.pow(1 - t, 3) }
 function easeInOut(t: number) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2 }
 
-interface Props { onComplete: () => void }
+interface Props { onComplete: () => void; onReveal?: () => void }
 
-export function NucleusTransition({ onComplete }: Props) {
+export function NucleusTransition({ onComplete, onReveal }: Props) {
   const cRef = useRef<HTMLCanvasElement>(null)
   const oRef = useRef<HTMLDivElement>(null)
   const bgRef = useRef<HTMLDivElement>(null)
@@ -84,26 +84,23 @@ export function NucleusTransition({ onComplete }: Props) {
     let done = false
     let logoShown = false
     let logoHidden = false
+    let revealFired = false
     let globalRotation = 0
 
     function startAnimation(ctx: CanvasRenderingContext2D, cvs: HTMLCanvasElement) {
-      const globe = document.querySelector('.globe-canvas') as HTMLElement | null
-      let cx: number, cy: number, radius: number, canvasW: number, canvasH: number
+      const canvasW = window.innerWidth
+      const canvasH = window.innerHeight
 
-      if (globe) {
-        const gr = globe.getBoundingClientRect()
-        canvasW = window.innerWidth
-        canvasH = window.innerHeight
-        cx = gr.left + gr.width / 2
-        cy = gr.top + gr.height / 2
-        radius = Math.min(gr.width, gr.height) / 2
-      } else {
-        canvasW = window.innerWidth
-        canvasH = window.innerHeight
-        cx = canvasW / 2
-        cy = canvasH / 2
-        radius = 196
-      }
+      // Start centered — globe isn't mounted yet
+      let cx = canvasW / 2
+      let cy = canvasH / 2
+      let radius = 196
+
+      // Target coords — will be read from globe once it mounts
+      let targetCx = cx
+      let targetCy = cy
+      let targetRadius = radius
+      let globeFound = false
 
       setLogoPos({ x: cx, y: cy })
 
@@ -128,6 +125,32 @@ export function NucleusTransition({ onComplete }: Props) {
         }
 
         ctx.clearRect(0, 0, canvasW, canvasH)
+
+        // ── Fire onReveal once — terminal should mount behind the fading bg ──
+        if (!revealFired && el >= P_REVEAL - 100) {
+          revealFired = true
+          onReveal?.()
+        }
+
+        // ── Once terminal mounts, track globe position every frame ──
+        if (revealFired) {
+          const globe = document.querySelector('.globe-canvas') as HTMLElement | null
+          if (globe) {
+            const gr = globe.getBoundingClientRect()
+            if (gr.width > 0) {
+              globeFound = true
+              targetCx = gr.left + gr.width / 2
+              targetCy = gr.top + gr.height / 2
+              targetRadius = Math.min(gr.width, gr.height) / 2
+            }
+          }
+        }
+        if (globeFound) {
+          const lerpF = 0.14
+          cx += (targetCx - cx) * lerpF
+          cy += (targetCy - cy) * lerpF
+          radius += (targetRadius - radius) * lerpF
+        }
 
         // ── Background fade — stays BLACK through dissolve+hold, fades during REVEAL ──
         if (bgRef.current) {
@@ -195,7 +218,7 @@ export function NucleusTransition({ onComplete }: Props) {
             const flicker = 0.85 + 0.15 * Math.sin(el * 0.01 + p.phase)
             const a = Math.max(0, Math.min(1, alpha * flicker))
             if (a <= 0) continue
-            ctx.fillStyle = `rgba(196,255,44,${a})`
+            ctx.fillStyle = `rgba(218,255,74,${a})`
             ctx.fillRect(x, y, p.size, p.size)
           }
         }
@@ -226,13 +249,13 @@ export function NucleusTransition({ onComplete }: Props) {
 
           const mainAlpha = Math.min(1, ra + pulse)
           ctx.beginPath(); ctx.arc(cx, cy, ringR, 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(196,255,44,${mainAlpha})`; ctx.lineWidth = 2.5; ctx.stroke()
+          ctx.strokeStyle = `rgba(218,255,74,${mainAlpha})`; ctx.lineWidth = 2.5; ctx.stroke()
 
           ctx.beginPath(); ctx.arc(cx, cy, ringR - 6, 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(196,255,44,${mainAlpha * 0.3})`; ctx.lineWidth = 1; ctx.stroke()
+          ctx.strokeStyle = `rgba(218,255,74,${mainAlpha * 0.3})`; ctx.lineWidth = 1; ctx.stroke()
 
           ctx.beginPath(); ctx.arc(cx, cy, ringR + 6, 0, Math.PI * 2)
-          ctx.strokeStyle = `rgba(196,255,44,${mainAlpha * 0.2})`; ctx.lineWidth = 1; ctx.stroke()
+          ctx.strokeStyle = `rgba(218,255,74,${mainAlpha * 0.2})`; ctx.lineWidth = 1; ctx.stroke()
 
           // During hold: add a soft radial glow inside the ring
           if (el >= P_HOLD && el < P_RING_OUT) {
@@ -243,9 +266,9 @@ export function NucleusTransition({ onComplete }: Props) {
               glowAlpha = 0.06 * Math.max(0, 1 - (el - P_REVEAL) / T_REVEAL)
             }
             const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, ringR)
-            g.addColorStop(0, `rgba(196,255,44,${glowAlpha})`)
-            g.addColorStop(0.7, `rgba(196,255,44,${glowAlpha * 0.3})`)
-            g.addColorStop(1, 'rgba(196,255,44,0)')
+            g.addColorStop(0, `rgba(218,255,74,${glowAlpha})`)
+            g.addColorStop(0.7, `rgba(218,255,74,${glowAlpha * 0.3})`)
+            g.addColorStop(1, 'rgba(218,255,74,0)')
             ctx.fillStyle = g
             ctx.beginPath(); ctx.arc(cx, cy, ringR, 0, Math.PI * 2); ctx.fill()
           }
@@ -261,7 +284,7 @@ export function NucleusTransition({ onComplete }: Props) {
           for (let a = 0; a < 3; a++) {
             const arcStart = globalRotation * 1.5 + (a * Math.PI * 2 / 3)
             ctx.beginPath(); ctx.arc(cx, cy, irisR, arcStart, arcStart + Math.PI * 0.4)
-            ctx.strokeStyle = `rgba(196,255,44,${aa})`; ctx.lineWidth = 3; ctx.stroke()
+            ctx.strokeStyle = `rgba(218,255,74,${aa})`; ctx.lineWidth = 3; ctx.stroke()
           }
         }
 
@@ -273,9 +296,9 @@ export function NucleusTransition({ onComplete }: Props) {
           else ga = 0.12 * Math.max(0, 1 - (el - P_DISSOLVE) / (T_DISSOLVE * 0.5))
 
           const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius * 0.8)
-          g.addColorStop(0, `rgba(196,255,44,${ga})`)
-          g.addColorStop(0.5, `rgba(196,255,44,${ga * 0.3})`)
-          g.addColorStop(1, 'rgba(196,255,44,0)')
+          g.addColorStop(0, `rgba(218,255,74,${ga})`)
+          g.addColorStop(0.5, `rgba(218,255,74,${ga * 0.3})`)
+          g.addColorStop(1, 'rgba(218,255,74,0)')
           ctx.fillStyle = g
           ctx.beginPath(); ctx.arc(cx, cy, radius * 0.8, 0, Math.PI * 2); ctx.fill()
         }
@@ -291,7 +314,7 @@ export function NucleusTransition({ onComplete }: Props) {
       cancelAnimationFrame(raf)
       cancelAnimationFrame(setupRaf1)
     }
-  }, [onComplete])
+  }, [onComplete, onReveal])
 
   return (
     <div
@@ -331,9 +354,9 @@ export function NucleusTransition({ onComplete }: Props) {
             fontWeight: 700,
             letterSpacing: '0.3em',
             color: 'transparent',
-            WebkitTextStroke: '1.2px #C4FF2C',
+            WebkitTextStroke: '1.2px #DAFF4A',
             lineHeight: 1,
-            textShadow: '0 0 30px rgba(196,255,44,.4)',
+            textShadow: '0 0 30px rgba(218,255,74,.4)',
           }}
         >
           HADAL
@@ -343,7 +366,7 @@ export function NucleusTransition({ onComplete }: Props) {
             fontFamily: '"Share Tech Mono", monospace',
             fontSize: 9,
             letterSpacing: '0.35em',
-            color: 'rgba(196,255,44,.5)',
+            color: 'rgba(218,255,74,.5)',
           }}
         >
           THREAT INTELLIGENCE TERMINAL

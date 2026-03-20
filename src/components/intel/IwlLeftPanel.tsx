@@ -47,7 +47,7 @@ export function IwlLeftPanel({ layerVisibility, onToggle, liveIncidentCount }: I
                 onClick={() => onToggle(l.id)}
               >
                 <div className="iwl-lyr-icon" />
-                <span className="iwl-lyr-t" style={l.special ? {color:'rgba(200,130,255,.8)',textShadow:'0 0 8px rgba(200,100,255,.35)',letterSpacing:'.12em'} : {}}>
+                <span className="iwl-lyr-t" style={l.special ? {color:'rgba(200,130,255,.8)',letterSpacing:'.12em'} : {}}>
                   {l.label}
                 </span>
                 {l.ct && <span className="iwl-lyr-ct" style={{color: l.special ? 'rgba(210,140,255,.95)' : 'rgba(180,200,180,.65)'}}>{l.ct}</span>}

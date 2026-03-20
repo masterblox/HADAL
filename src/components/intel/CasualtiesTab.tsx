@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
 import type { Incident } from '@/hooks/useDataPipeline'
 
 interface CasualtiesTabProps {
@@ -7,7 +6,6 @@ interface CasualtiesTabProps {
   incidents: Incident[]
 }
 
-/** Scenario reference data — hardcoded analyst estimates, NOT live intelligence */
 const SCENARIO_PARTICIPANTS = [
   {entity:'IRAN (IRGC)',alliance:'AXIS',troops:'190,000',aircraft:'340',armor:'1,650',milCas:'580+ (EST)',civCas:'1,100+',status:'OFFENSIVE',statusCol:'var(--warn)'},
   {entity:'USA (CENTCOM)',alliance:'COALITION',troops:'45,000',aircraft:'280',armor:'420',milCas:'24 (KIA)',civCas:'0',status:'ACTIVE OPS',statusCol:'var(--g5)'},
@@ -18,61 +16,57 @@ const SCENARIO_PARTICIPANTS = [
   {entity:'HEZBOLLAH',alliance:'AXIS',troops:'100,000',aircraft:'0',armor:'0',milCas:'612',civCas:'—',status:'DEGRADED',statusCol:'rgba(255,140,0,.9)'},
 ]
 
-export function CasualtiesTab({ sandbox, incidents }: CasualtiesTabProps) {
-  // Derive what we can from live pipeline
+export function CasualtiesTab({ incidents }: CasualtiesTabProps) {
   const liveStats = useMemo(() => {
     let mil = 0, civ = 0, intercepts = 0
+    let highCredCount = 0
+    let verifiedCount = 0, likelyCount = 0
+    const interceptRe = /\bintercept\b/i
     for (const inc of incidents) {
       mil += inc.casualties?.military ?? 0
       civ += inc.casualties?.civilian ?? 0
-      if ((inc.title || '').toLowerCase().includes('intercept')) intercepts++
+      if (interceptRe.test(inc.title || '')) intercepts++
+      if ((inc.credibility ?? 0) >= 80) highCredCount++
+      if (inc.verificationBadge === 'VERIFIED') verifiedCount++
+      else if (inc.verificationBadge === 'LIKELY') likelyCount++
     }
-    return { mil, civ, intercepts, total: incidents.length }
+    const confLevel = incidents.length === 0 ? 'NONE'
+      : highCredCount / incidents.length >= 0.7 ? 'HIGH'
+      : highCredCount / incidents.length >= 0.4 ? 'MODERATE'
+      : 'LOW'
+    return { mil, civ, intercepts, total: incidents.length, confLevel, verifiedCount, likelyCount }
   }, [incidents])
 
   const hasLive = incidents.length > 0
 
   return (
     <div className="iwl-tabcontent active">
-      <div className="iwl-section-h">PARTICIPANTS &amp; CASUALTIES</div>
+      <h2 className="section-title" style={{ marginBottom: 14 }}>Participants &amp; Casualties</h2>
       <p style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-small)',color:'var(--g3)',marginBottom:'14px'}}>
         {hasLive
-          ? `Live pipeline: ${liveStats.total} incidents tracked. Table below is scenario reference data.`
+          ? `Pipeline: ${liveStats.total} incidents · ${liveStats.verifiedCount} verified · ${liveStats.likelyCount} likely · Confidence: ${liveStats.confLevel} · Casualties are unverified OSINT estimates.`
           : 'No live pipeline data. Table below is scenario reference data — not live intelligence.'}
       </p>
-      <div className="iwl-stat-grid">
-        <ResizablePanelGroup orientation="horizontal">
-          <ResizablePanel id="cas-1" defaultSize="25%" minSize="15%">
-            <div className="iwl-stat-box">
-              <div className="iwl-sb-v" style={{color:'rgba(255,140,0,.9)'}}>{hasLive ? liveStats.mil.toLocaleString() : '—'}</div>
-              <div className="iwl-sb-l">MILITARY KIA {hasLive ? <span className="prov-badge">PIPELINE</span> : <span className="prov-badge">NO DATA</span>}</div>
-            </div>
-          </ResizablePanel>
-          <ResizableHandle disabled={!sandbox} />
-          <ResizablePanel id="cas-2" defaultSize="25%" minSize="15%">
-            <div className="iwl-stat-box">
-              <div className="iwl-sb-v" style={{color:'var(--warn)'}}>{hasLive ? liveStats.civ.toLocaleString() : '—'}</div>
-              <div className="iwl-sb-l">CIVILIAN KIA {hasLive ? <span className="prov-badge">PIPELINE</span> : <span className="prov-badge">NO DATA</span>}</div>
-            </div>
-          </ResizablePanel>
-          <ResizableHandle disabled={!sandbox} />
-          <ResizablePanel id="cas-3" defaultSize="25%" minSize="15%">
-            <div className="iwl-stat-box">
-              <div className="iwl-sb-v" style={{color:'var(--g)'}}>{hasLive ? liveStats.intercepts : '—'}</div>
-              <div className="iwl-sb-l">INTERCEPT EVENTS {hasLive ? <span className="prov-badge">PIPELINE</span> : <span className="prov-badge">NO DATA</span>}</div>
-            </div>
-          </ResizablePanel>
-          <ResizableHandle disabled={!sandbox} />
-          <ResizablePanel id="cas-4" defaultSize="25%" minSize="15%">
-            <div className="iwl-stat-box">
-              <div className="iwl-sb-v" style={{color:'var(--g5)'}}>{hasLive ? `${liveStats.total} EVENTS` : '—'}</div>
-              <div className="iwl-sb-l">TRACKED {hasLive ? <span className="prov-badge">LIVE</span> : <span className="prov-badge">OFFLINE</span>}</div>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, marginBottom: 14 }}>
+        <div className="iwl-stat-box">
+          <div className="iwl-sb-v" style={{color:'rgba(255,140,0,.9)'}}>{hasLive ? liveStats.mil.toLocaleString() : '—'}</div>
+          <div className="iwl-sb-l">MILITARY KIA</div>
+        </div>
+        <div className="iwl-stat-box">
+          <div className="iwl-sb-v" style={{color:'var(--warn)'}}>{hasLive ? liveStats.civ.toLocaleString() : '—'}</div>
+          <div className="iwl-sb-l">CIVILIAN KIA</div>
+        </div>
+        <div className="iwl-stat-box">
+          <div className="iwl-sb-v" style={{color:'var(--g)'}}>{hasLive ? liveStats.intercepts : '—'}</div>
+          <div className="iwl-sb-l">INTERCEPT EVENTS</div>
+        </div>
+        <div className="iwl-stat-box">
+          <div className="iwl-sb-v" style={{color:'var(--g5)'}}>{hasLive ? `${liveStats.total}` : '—'}</div>
+          <div className="iwl-sb-l">TRACKED EVENTS</div>
+        </div>
       </div>
-      <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-micro)',letterSpacing:'.18em',color:'var(--g3)',margin:'14px 0 6px',display:'flex',alignItems:'center',gap:'8px'}}>
-        SCENARIO REFERENCE TABLE <span className="prov-badge">STATIC</span>
+      <div style={{fontFamily:'var(--MONO)',fontWeight:400,fontSize:'var(--fs-micro)',letterSpacing:'.02em',color:'var(--g3)',margin:'14px 0 6px'}}>
+        SCENARIO REFERENCE TABLE
       </div>
       <table className="iwl-table">
         <thead><tr><th>ENTITY</th><th>ALLIANCE</th><th>EST. TROOPS</th><th>EST. AIRCRAFT</th><th>ARMOR</th><th>MIL CASUALTIES</th><th>CIV CASUALTIES</th><th>STATUS</th></tr></thead>

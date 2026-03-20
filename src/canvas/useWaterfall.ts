@@ -92,10 +92,17 @@ export function useWaterfall() {
       }, 200)
     }
 
+    const onVisChange = () => {
+      if (document.hidden) { running = false; cancelAnimationFrame(id) }
+      else if (!running) { running = true; id = requestAnimationFrame(tick) }
+    }
+    document.addEventListener('visibilitychange', onVisChange)
+
     id = requestAnimationFrame(tick)
     return () => {
       running = false
       cancelAnimationFrame(id)
+      document.removeEventListener('visibilitychange', onVisChange)
     }
   }, [])
 

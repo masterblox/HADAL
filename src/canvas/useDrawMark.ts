@@ -47,9 +47,16 @@ export function useDrawMark(size: number) {
       t += .011
       raf = requestAnimationFrame(frame)
     }
+    let paused = false
+    const onVisChange = () => {
+      if (document.hidden) { paused = true; cancelAnimationFrame(raf) }
+      else if (paused) { paused = false; frame() }
+    }
+    document.addEventListener('visibilitychange', onVisChange)
+
     frame()
 
-    return () => cancelAnimationFrame(raf)
+    return () => { cancelAnimationFrame(raf); document.removeEventListener('visibilitychange', onVisChange) }
   }, [size])
 
   return ref

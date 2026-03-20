@@ -1,15 +1,16 @@
 import { IntelWireSection } from '@/components/intel/IntelWireSection'
 import { FlightTracker } from '@/components/flight/FlightTracker'
-import type { Incident, AirspaceData } from '@/hooks/useDataPipeline'
+import type { Incident, AirspaceData, PriceData } from '@/hooks/useDataPipeline'
 import { navigateTo } from '@/lib/lane-routing'
 
 interface OperationsPageProps {
   incidents: Incident[]
   airspace: AirspaceData | null
+  prices?: PriceData | null
   sandbox: boolean
 }
 
-export function OperationsPage({ incidents, airspace, sandbox }: OperationsPageProps) {
+export function OperationsPage({ incidents, airspace, prices, sandbox }: OperationsPageProps) {
   return (
     <>
       <section className="page-intro jp-panel">
@@ -28,7 +29,7 @@ export function OperationsPage({ incidents, airspace, sandbox }: OperationsPageP
           Map, layers, airspace, casualties, posturing.
         </p>
       </section>
-      <IntelWireSection incidents={incidents} airspace={airspace} sandbox={sandbox} />
+      <IntelWireSection incidents={incidents} airspace={airspace} prices={prices} sandbox={sandbox} />
       <FlightTracker />
       <section className="lane-footer-grid">
         <article className="lane-footer-card jp-panel">

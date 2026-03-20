@@ -31,7 +31,7 @@ export function SonarParticles() {
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
     controls.autoRotate = true
-    controls.autoRotateSpeed = 1.2
+    controls.autoRotateSpeed = 2.0
     controls.enableZoom = false
     controls.enablePan = false
 
@@ -62,9 +62,9 @@ export function SonarParticles() {
 
     for (let i = 0; i < COUNT; i++) {
       positions.push(new THREE.Vector3(
-        (Math.random() - 0.5) * 180,
-        (Math.random() - 0.5) * 180,
-        (Math.random() - 0.5) * 180,
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 100,
       ))
       instancedMesh.setColorAt(i, color.setHex(0x00ff88))
     }
@@ -85,7 +85,7 @@ export function SonarParticles() {
           SPHERE_RADIUS * Math.sin(theta) * Math.sin(phi),
           SPHERE_RADIUS * Math.cos(phi),
         )
-        positions[i].lerp(target, 0.05)
+        positions[i].lerp(target, 0.1)
         color.setHex(0x00ff88)
 
         dummy.position.copy(positions[i])

@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useSatellitePositions } from '@/hooks/useSatellitePositions'
+import type { SatellitePosition } from '@/lib/satellite-sgp4'
 
 export interface TrackedObject {
   id: string
@@ -17,10 +19,11 @@ interface TrackingState {
   counts: { aircraft: number; satellite: number; maritime: number }
   lastUpdate: number
   status: 'ONLINE' | 'DEGRADED' | 'OFFLINE'
+  totalTracked: number
 }
 
-// Simulated tracking data — replace with real endpoints when available
-// GulfWatch used: /aircraft.json, /satellites.json, /maritime.json
+// Simulated tracking data for aircraft/maritime — replace with real endpoints when available
+// GulfWatch used: /aircraft.json, /maritime.json
 
 const GULF_CENTER = { lat: 25, lng: 54 }
 const SPREAD = 8
@@ -33,12 +36,11 @@ function randomInGulf(): { lat: number; lng: number } {
 }
 
 const CALLSIGNS_AIR = ['UAE721', 'QTR44', 'BAW116', 'EK412', 'SVA306', 'KAC513', 'GFA210', 'OMA652', 'RJ182', 'ETH707', 'THY803', 'ACA091']
-const CALLSIGNS_SAT = ['NROL-82', 'COSMO-4', 'SAR-LUP3', 'WGS-10', 'GSSAP-6', 'SBIRS-5', 'MUSIS-1', 'CSO-3']
 const CALLSIGNS_MAR = ['STENA-IMP', 'MSC-ELMA', 'EVER-ACE', 'AL-MARJAN', 'HAFNIA-PHX', 'NISSOS-KOS', 'TORM-LOKE', 'CRUDE-SKY']
 
 function generateSeed(): TrackedObject[] {
   const objs: TrackedObject[] = []
-  // Aircraft
+  // Aircraft (simulated)
   for (let i = 0; i < 8; i++) {
     const pos = randomInGulf()
     objs.push({
@@ -52,21 +54,7 @@ function generateSeed(): TrackedObject[] {
       lastSeen: Date.now() - Math.floor(Math.random() * 15000),
     })
   }
-  // Satellites
-  for (let i = 0; i < 4; i++) {
-    const pos = randomInGulf()
-    objs.push({
-      id: `S${i}`,
-      type: 'satellite',
-      callsign: CALLSIGNS_SAT[i % CALLSIGNS_SAT.length],
-      ...pos,
-      alt: 400000 + Math.floor(Math.random() * 200000),
-      speed: 7200 + Math.floor(Math.random() * 600),
-      heading: Math.floor(Math.random() * 360),
-      lastSeen: Date.now() - Math.floor(Math.random() * 30000),
-    })
-  }
-  // Maritime
+  // Maritime (simulated)
   for (let i = 0; i < 5; i++) {
     const pos = randomInGulf()
     objs.push({
@@ -84,7 +72,9 @@ function generateSeed(): TrackedObject[] {
 
 function drift(objs: TrackedObject[]): TrackedObject[] {
   return objs.map(o => {
-    const d = o.type === 'aircraft' ? 0.02 : o.type === 'satellite' ? 0.05 : 0.005
+    // Only drift aircraft and maritime — satellites are SGP4-computed
+    if (o.type === 'satellite') return o
+    const d = o.type === 'aircraft' ? 0.02 : 0.005
     return {
       ...o,
       lat: o.lat + (Math.random() - 0.5) * d,
@@ -98,28 +88,49 @@ function drift(objs: TrackedObject[]): TrackedObject[] {
   })
 }
 
+/** Convert SGP4 satellite position → TrackedObject */
+function satToTracked(pos: SatellitePosition): TrackedObject {
+  return {
+    id: `SAT-${pos.noradId}`,
+    type: 'satellite',
+    callsign: pos.name,
+    lat: pos.lat,
+    lng: pos.lng,
+    alt: pos.alt * 1000, // SGP4 returns km, tracking uses meters-ish display
+    speed: Math.round(pos.velocity * 1000), // km/s → m/s for display consistency
+    heading: Math.round(pos.heading),
+    lastSeen: Date.now(),
+  }
+}
+
 export function useTracking(): TrackingState {
-  const [objects, setObjects] = useState<TrackedObject[]>(() => generateSeed())
+  const { positions: satPositions } = useSatellitePositions()
+  const [simObjects, setSimObjects] = useState<TrackedObject[]>(() => generateSeed())
   const [status, setStatus] = useState<'ONLINE' | 'DEGRADED' | 'OFFLINE'>('ONLINE')
   const [lastUpdate, setLastUpdate] = useState(() => Date.now())
 
   const update = useCallback(() => {
-    setObjects(prev => drift(prev))
+    setSimObjects(prev => drift(prev))
     setLastUpdate(Date.now())
-    // Occasionally toggle status for realism
-    setStatus(Math.random() > 0.92 ? 'DEGRADED' : 'ONLINE')
+    setStatus('ONLINE')
   }, [])
 
   useEffect(() => {
-    const iv = setInterval(update, 10000) // 10s refresh like GulfWatch
+    const iv = setInterval(update, 10000)
     return () => clearInterval(iv)
   }, [update])
 
+  // Merge: simulated aircraft/maritime + real SGP4 satellites
+  const satellites = satPositions.map(satToTracked)
+  const objects = [...simObjects, ...satellites]
+
   const counts = {
-    aircraft: objects.filter(o => o.type === 'aircraft').length,
-    satellite: objects.filter(o => o.type === 'satellite').length,
-    maritime: objects.filter(o => o.type === 'maritime').length,
+    aircraft: simObjects.filter(o => o.type === 'aircraft').length,
+    satellite: satellites.length,
+    maritime: simObjects.filter(o => o.type === 'maritime').length,
   }
 
-  return { objects, counts, lastUpdate, status }
+  const totalTracked = objects.length
+
+  return { objects, counts, lastUpdate, status, totalTracked }
 }

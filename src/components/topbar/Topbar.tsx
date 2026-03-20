@@ -18,7 +18,7 @@ const NAV_ITEMS: { id: Lane; label: string }[] = [
   { id: 'analysis', label: 'ANALYSIS' },
 ]
 
-export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, activeLane, onNavigate }: TopbarProps) {
+export function Topbar({ threatLevel, incidentCount, activeLane, onNavigate }: TopbarProps) {
   const markRef = useDrawMark(32)
   const { zulu, elapsed } = useUtcClock()
 
@@ -45,18 +45,15 @@ export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, a
       </nav>
       <div className="tb-div" />
       <div className="tb-alert">
-        <span className="tb-alert-icon">&#9670;</span>
         <span className="tb-alert-t">GULF WATCH</span>
         <span className="tb-elapsed">{elapsed}</span>
       </div>
       <div className="tb-div" />
-      <button className={`tb-sandbox${sandbox ? ' active' : ''}`} onClick={onSandboxToggle}>
-        {sandbox ? '// SANDBOX ON' : '// SANDBOX OFF'}
-      </button>
+      <span style={{ fontFamily: 'var(--MONO)', fontSize: 'var(--fs-micro)', color: 'var(--g3)', marginRight: 8 }}>DATA: SIMULATED</span>
       <div className="tb-stats jp-intel">
         <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">INCIDENTS</div><div className="tb-stat-v jp-intel-val">{incidentCount || '—'}</div></div>
-        <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">THREAT</div><div className="tb-stat-v jp-intel-val" style={threatLevel !== null && threatLevel >= 60 ? {color:'var(--warn)'} : undefined}>{threatLevel ?? '—'}</div></div>
-        <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">UTC</div><div className="tb-stat-v jp-intel-val" style={{fontSize:'var(--fs-small)'}}>{zulu}</div></div>
+        <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">THREAT</div><div className="tb-stat-v jp-intel-val" style={threatLevel !== null && threatLevel >= 60 ? { color: 'var(--warn)' } : undefined}>{threatLevel ?? '—'}</div></div>
+        <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">UTC</div><div className="tb-stat-v jp-intel-val" style={{ fontSize: 'var(--fs-small)' }}>{zulu}</div></div>
       </div>
     </div>
   )

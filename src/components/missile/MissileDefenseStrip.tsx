@@ -1,19 +1,20 @@
 import { useMemo } from 'react'
-import { MissileCard } from './MissileCard'
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
+import { KillChainTracker } from './KillChainTracker'
 import type { Incident } from '@/hooks/useDataPipeline'
-
-/* ── Derive kinetic counts from live incidents ── */
 
 interface CountryStats {
   missile: number; drone: number; cruise: number; total: number
 }
 
+function matchesWord(text: string, word: string): boolean {
+  return new RegExp(`\\b${word}\\b`, 'i').test(text)
+}
+
 function classifyType(title: string): 'missile' | 'drone' | 'cruise' | 'other' {
   const t = (title || '').toLowerCase()
-  if (t.includes('cruise')) return 'cruise'
-  if (t.includes('drone') || t.includes('uav')) return 'drone'
-  if (t.includes('missile') || t.includes('ballistic') || t.includes('intercept')) return 'missile'
+  if (matchesWord(t, 'cruise')) return 'cruise'
+  if (matchesWord(t, 'drone') || matchesWord(t, 'uav')) return 'drone'
+  if (matchesWord(t, 'missile') || matchesWord(t, 'ballistic') || matchesWord(t, 'intercept')) return 'missile'
   return 'other'
 }
 
@@ -39,68 +40,73 @@ function deriveKineticStats(incidents: Incident[]) {
   return countries
 }
 
-/* ── Component ── */
-
 interface MissileDefenseStripProps {
   sandbox: boolean
   incidents: Incident[]
 }
 
-export function MissileDefenseStrip({ sandbox, incidents }: MissileDefenseStripProps) {
+const STATUS_DOT = { ACTIVE: 'var(--warn)', NOMINAL: 'var(--g)', CLEAR: 'var(--g3)' }
+
+export function MissileDefenseStrip({ incidents }: MissileDefenseStripProps) {
   const stats = useMemo(() => deriveKineticStats(incidents), [incidents])
-  const hasLive = incidents.length > 0
 
   const totalMissile = Object.values(stats).reduce((s, c) => s + c.missile, 0)
   const totalDrone = Object.values(stats).reduce((s, c) => s + c.drone, 0)
   const totalCruise = Object.values(stats).reduce((s, c) => s + c.cruise, 0)
   const totalAll = totalMissile + totalDrone + totalCruise
 
-  function mkBars(s: CountryStats) {
-    const bars = []
-    if (s.missile > 0) bars.push({ l: 'BALLISTIC', w: Math.min(100, (s.missile / Math.max(1, s.total)) * 100), v: String(s.missile) })
-    if (s.cruise > 0) bars.push({ l: 'CRUISE', w: Math.min(100, (s.cruise / Math.max(1, s.total)) * 100), v: String(s.cruise) })
-    if (s.drone > 0) bars.push({ l: 'DRONES', w: Math.min(100, (s.drone / Math.max(1, s.total)) * 100), v: String(s.drone) })
-    if (bars.length === 0) bars.push({ l: 'TOTAL', w: 0, v: '0' })
-    return bars
-  }
-
-  const cards = [
-    { country: 'UAE', src: hasLive ? 'OSINT' : 'STATIC', val: stats.uae.total, label: 'EVENTS', bars: mkBars(stats.uae), icon: 'ballistic' as const },
-    { country: 'KUWAIT', src: hasLive ? 'OSINT' : 'STATIC', val: stats.kuwait.total, label: 'EVENTS', bars: mkBars(stats.kuwait), icon: 'drone' as const },
-    { country: 'QATAR', src: hasLive ? 'OSINT' : 'STATIC', val: stats.qatar.total, label: 'EVENTS', bars: mkBars(stats.qatar), icon: 'cruise' as const },
-    { country: 'BAHRAIN', src: hasLive ? 'OSINT' : 'STATIC', val: stats.bahrain.total, label: 'EVENTS', bars: mkBars(stats.bahrain), icon: 'intercept' as const },
+  const rows = [
+    { name: 'UAE', ...stats.uae },
+    { name: 'Kuwait', ...stats.kuwait },
+    { name: 'Qatar', ...stats.qatar },
+    { name: 'Bahrain', ...stats.bahrain },
   ]
+
+  function statusLabel(total: number) {
+    if (total >= 5) return { label: 'ACTIVE', color: STATUS_DOT.ACTIVE }
+    if (total > 0) return { label: 'NOMINAL', color: STATUS_DOT.NOMINAL }
+    return { label: 'CLEAR', color: STATUS_DOT.CLEAR }
+  }
 
   return (
     <div className="missile-section">
-      <div className="ms-hdr jp-panel-header">
-        <div className={`HDR-DOT jp-status-dot ${hasLive ? 'active' : 'error'}`} />
-        &#9670; THEATRE KINETIC DATA · {hasLive ? 'DERIVED FROM OSINT FEED' : 'NO LIVE DATA'}
-        {!hasLive && <span className="prov-badge" style={{marginLeft:8}}>AWAITING PIPELINE</span>}
-      </div>
-      <div className="mc-grid">
-        <ResizablePanelGroup orientation="horizontal">
-          {cards.flatMap((c, i) => {
-            const panel = (
-              <ResizablePanel key={c.country} id={`mc-${c.country}`} defaultSize="25%" minSize="10%">
-                <MissileCard {...c} index={i} />
-              </ResizablePanel>
+      <h2 className="section-title" style={{ marginBottom: 12 }}>Theatre Kinetic Data</h2>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--MONO)', fontSize: 'var(--fs-small)' }}>
+        <thead>
+          <tr style={{ borderBottom: '1px solid var(--g15)' }}>
+            {['Country', 'Ballistic', 'Cruise', 'Drone', 'Total', 'Status'].map(h => (
+              <th key={h} style={{ fontFamily: 'var(--MONO)', fontWeight: 400, fontSize: 'var(--fs-micro)', letterSpacing: '.02em', color: 'var(--g3)', padding: '6px 10px', textAlign: 'left' }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(r => {
+            const st = statusLabel(r.total)
+            return (
+              <tr key={r.name} style={{ borderBottom: '1px solid var(--g07)' }}>
+                <td style={{ padding: '6px 10px', color: 'var(--g7)', fontFamily: 'var(--MONO)', fontWeight: 400 }}>{r.name}</td>
+                <td style={{ padding: '6px 10px', color: 'var(--g5)' }}>{r.missile}</td>
+                <td style={{ padding: '6px 10px', color: 'var(--g5)' }}>{r.cruise}</td>
+                <td style={{ padding: '6px 10px', color: 'var(--g5)' }}>{r.drone}</td>
+                <td style={{ padding: '6px 10px', color: 'var(--g)', fontWeight: 400 }}>{r.total}</td>
+                <td style={{ padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: st.color, display: 'inline-block' }} />
+                  <span style={{ color: st.color, fontFamily: 'var(--MONO)', fontWeight: 400, fontSize: 'var(--fs-micro)', letterSpacing: '.02em' }}>{st.label}</span>
+                </td>
+              </tr>
             )
-            if (i === 0) return [panel]
-            return [
-              <ResizableHandle key={`h-${c.country}`} disabled={!sandbox} />,
-              panel,
-            ]
           })}
-        </ResizablePanelGroup>
-      </div>
-      <div className="jp-intel m-agg">
-        <div className="jp-intel-cell"><div className="jp-intel-lbl">BALLISTIC</div><div className="ag-v jp-intel-val">{totalMissile}</div></div>
-        <div className="jp-intel-cell"><div className="jp-intel-lbl">DRONES</div><div className="ag-v jp-intel-val">{totalDrone}</div></div>
-        <div className="jp-intel-cell"><div className="jp-intel-lbl">CRUISE</div><div className="ag-v jp-intel-val">{totalCruise}</div></div>
-        <div className="jp-intel-cell"><div className="jp-intel-lbl">TOTAL KINETIC</div><div className="ag-v jp-intel-val">{totalAll}</div></div>
-        <div className="jp-intel-cell"><div className="jp-intel-lbl">COUNTRIES</div><div className="ag-v jp-intel-val">{Object.values(stats).filter(c => c.total > 0).length}</div></div>
-      </div>
+          <tr style={{ borderTop: '2px solid var(--g15)' }}>
+            <td style={{ padding: '6px 10px', color: 'var(--g)', fontFamily: 'var(--MONO)', fontWeight: 400 }}>Total</td>
+            <td style={{ padding: '6px 10px', color: 'var(--g)' }}>{totalMissile}</td>
+            <td style={{ padding: '6px 10px', color: 'var(--g)' }}>{totalCruise}</td>
+            <td style={{ padding: '6px 10px', color: 'var(--g)' }}>{totalDrone}</td>
+            <td style={{ padding: '6px 10px', color: 'var(--g)', fontWeight: 400 }}>{totalAll}</td>
+            <td />
+          </tr>
+        </tbody>
+      </table>
+      <KillChainTracker incidents={incidents} />
     </div>
   )
 }

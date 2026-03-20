@@ -107,18 +107,13 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
     predictions.push({
       category: 'ESCALATION ALERT',
       outcome: `Activity up ${escalation}% in last 3 days vs prior 3`,
-      probability: Math.min(40 + escalation, 75),
+      probability: Math.min(50 + escalation, 90),
       timeframe: '72H',
-      severity: severityLabel(Math.min(40 + escalation, 75)),
+      severity: severityLabel(Math.min(50 + escalation, 90)),
       actors: topActorList,
       confidence: `Based on ${events.length} recent incidents`,
     })
   }
-
-  // Base rates: how often each type appears overall (for lift calculation)
-  const totalEvents = events.length
-  const typeFreq: Record<string, number> = {}
-  for (const e of events) typeFreq[e.type] = (typeFreq[e.type] || 0) + 1
 
   // Type-based follow-on predictions from outcome patterns
   for (const [key, data] of Object.entries(outcomes)) {
@@ -130,21 +125,8 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
         .slice(0, 2)
 
       for (const [followType, count] of followUps) {
-        const rawProb = count / data.total
-        // Base-rate discount: only meaningful if observed rate exceeds what
-        // you'd expect from the overall type frequency. This prevents dense
-        // data from trivially producing 95% on everything.
-        const baseRate = (typeFreq[followType] || 1) / totalEvents
-        const lift = rawProb / Math.max(baseRate, 0.01)
-        if (lift < 1.3) continue // follow-on rate must be 30%+ above base rate
-
-        // Density discount: with dense data, raw count/total trivially → 1.0.
-        // Scale down by inverse-sqrt of total AND by timeframe length.
-        const density = Math.min(1, 3 / Math.sqrt(data.total))
-        // Longer windows are less meaningful (7D follow-on is nearly guaranteed)
-        const tfDiscount = tf.label === '7D' ? 0.5 : tf.label === '72H' ? 0.7 : 1.0
-        const prob = Math.round(rawProb * density * tfDiscount * 100)
-        if (prob < 10) continue
+        const prob = Math.round((count / data.total) * 100)
+        if (prob < 15) continue
 
         const dedup = `${followType}_${key}_${tf.label}`
         if (seen.has(dedup)) continue
@@ -157,15 +139,14 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
           .filter((v, i, a) => a.indexOf(v) === i)
           .slice(0, 3)
 
-        const cappedProb = Math.min(prob, 75)
         predictions.push({
           category: 'FOLLOW-ON EVENT',
           outcome: `${formatType(followType)} activity in ${(country || 'REGION').toUpperCase()} after ${formatType(srcType)}`,
-          probability: cappedProb,
+          probability: Math.min(prob, 95),
           timeframe: tf.label,
-          severity: severityLabel(cappedProb),
+          severity: severityLabel(prob),
           actors: relevantActors.length ? relevantActors : topActorList,
-          confidence: `${count}/${data.total} events · lift ${lift.toFixed(1)}x`,
+          confidence: `${count} of ${data.total} similar events`,
         })
       }
     }
@@ -176,13 +157,12 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
   for (const e of events) typeCounts[e.type] = (typeCounts[e.type] || 0) + 1
   const dominantType = Object.entries(typeCounts).sort((a, b) => b[1] - a[1])[0]?.[0]
 
-  const kineticCount = (typeCounts['missile'] || 0) + (typeCounts['drone'] || 0) + (typeCounts['airstrike'] || 0)
-  if (kineticCount >= 3) {
+  if (dominantType && ['missile', 'drone', 'airstrike'].includes(dominantType)) {
     if (!seen.has('MILITARY_RESPONSE')) {
       predictions.push({
         category: 'MILITARY RESPONSE',
         outcome: 'Retaliatory strikes or defense activation',
-        probability: 65,
+        probability: 75,
         timeframe: '72H',
         severity: 'HIGH',
         actors: topActorList,
@@ -193,7 +173,7 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
       predictions.push({
         category: 'MARKET IMPACT',
         outcome: 'Oil price volatility (+2-5%)',
-        probability: 45,
+        probability: 60,
         timeframe: '24H',
         severity: 'MEDIUM',
         actors: [],
@@ -204,9 +184,9 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
       predictions.push({
         category: 'DIPLOMATIC RESPONSE',
         outcome: 'Emergency consultations or condemnations',
-        probability: 30,
+        probability: 45,
         timeframe: '72H',
-        severity: 'LOW',
+        severity: 'MEDIUM',
         actors: [],
         confidence: 'Standard diplomatic protocol',
       })
@@ -219,9 +199,9 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
       predictions.push({
         category: 'MARITIME SECURITY',
         outcome: 'Increased naval patrols in region',
-        probability: 55,
+        probability: 70,
         timeframe: '72H',
-        severity: 'MEDIUM',
+        severity: 'HIGH',
         actors: topActorList,
         confidence: 'Standard naval response',
       })
@@ -247,9 +227,9 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
       predictions.push({
         category: 'ESCALATION RISK',
         outcome: 'Attacker may attempt follow-up strikes',
-        probability: 55,
+        probability: 65,
         timeframe: '24H',
-        severity: 'MEDIUM',
+        severity: 'HIGH',
         actors: topActorList,
         confidence: 'Post-interception patterns',
       })
@@ -258,7 +238,7 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
       predictions.push({
         category: 'DEFENSE POSTURE',
         outcome: 'Heightened alert status maintained',
-        probability: 60,
+        probability: 80,
         timeframe: '7D',
         severity: 'HIGH',
         actors: [],
@@ -282,7 +262,7 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
     if (seen.has(dedupKey)) continue
     seen.add(dedupKey)
     const [actor] = patternKey.split('_')
-    const prob = Math.min(25 + sorted[0][1] * 3, 55)
+    const prob = Math.min(60 + sorted[0][1] * 5, 95)
     predictions.push({
       category: 'REGIONAL RESPONSE',
       outcome: `Escalation likely in ${sorted.map(c => c[0].toUpperCase()).join(', ')}`,
@@ -294,18 +274,8 @@ export function predictSequences(events: NormalizedEvent[]): ScenarioPrediction[
     })
   }
 
-  // Balanced output: up to 4 follow-on + remaining from other categories
-  // This prevents dense data from flooding the ledger with identical follow-ons.
-  const followOns = predictions
-    .filter(p => p.category === 'FOLLOW-ON EVENT')
-    .sort((a, b) => b.probability - a.probability)
-    .slice(0, 4)
-  const others = predictions
-    .filter(p => p.category !== 'FOLLOW-ON EVENT')
-    .sort((a, b) => b.probability - a.probability)
-  return [...others, ...followOns]
-    .sort((a, b) => b.probability - a.probability)
-    .slice(0, 8)
+  // Sort by probability, limit to 8
+  return predictions.sort((a, b) => b.probability - a.probability).slice(0, 8)
 }
 
 function formatType(type: string): string {

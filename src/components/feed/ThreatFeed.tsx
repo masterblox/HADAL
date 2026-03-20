@@ -22,18 +22,24 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
   const [expanded, setExpanded] = useState(false)
 
   const allData = useMemo(() => {
+    const now = Date.now()
+    const FRESH_MS = 24 * 60 * 60 * 1000 // 24h
     const live: FeedItem[] = incidents.slice(0, 30).map((inc, i) => {
       const sev = (inc.credibility ?? 0) >= 90 ? 'CRITICAL' : (inc.credibility ?? 0) >= 80 ? 'HIGH' : 'MEDIUM'
       const region = mapCountryToRegion(inc.location?.country ?? '')
+      const pubTime = inc.published ? new Date(inc.published).getTime() : 0
+      const isFresh = pubTime > 0 && (now - pubTime) < FRESH_MS
+      const badge = inc.verificationBadge
+      const badgeLabel = badge === 'VERIFIED' ? '✓' : badge === 'LIKELY' ? '~' : ''
       return {
         id: 'TH-' + String(1000 + i).padStart(4, '0'),
         region,
-        type: inc.title ?? 'UNKNOWN',
+        type: (badgeLabel ? badgeLabel + ' ' : '') + (inc.title ?? 'UNKNOWN'),
         sev: sev as FeedItem['sev'],
         src: inc.source ? inc.source.split(' ')[0].toUpperCase().slice(0, 6) : 'OSINT',
         conf: inc.credibility ?? 50,
         tags: [region],
-        live: true,
+        live: isFresh,
       }
     })
     return [...feedData, ...live]
@@ -42,25 +48,23 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
   const filtered = filt === 'ALL' ? allData : allData.filter(r => r.tags.includes(filt))
 
   return (
-    <div className="jp-panel sev-critical sev-critical-pulse">
+    <div className="jp-panel">
       <div className="TABS">
         {regions.map(r => (
           <div key={r} className={`TAB${filt === r ? ' on' : ''}`} onClick={() => setFilt(r)}>{r}</div>
         ))}
         <div className="TAB-R" />
-        <div style={{padding:'0 14px',fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-small)',color:'var(--g3)',letterSpacing:'.1em',alignSelf:'center'}}>
+        <div style={{ padding: '0 14px', fontFamily: 'var(--MONO)', fontWeight: 400, fontSize: 'var(--fs-small)', color: 'var(--g3)', letterSpacing: '.02em', alignSelf: 'center' }}>
           {filtered.length} ACTIVE{incidents.length > 0 ? ' · LIVE' : ''}
         </div>
-        <div className="HDR-DOT" style={{marginRight:'14px',alignSelf:'center'}} />
       </div>
       <div className="THEAD">
-        <span style={{width:'72px',flexShrink:0}}>ID</span>
-        <span style={{width:'62px',flexShrink:0}}>REGION</span>
-        <span style={{flex:1}}>TYPE</span>
-        <span style={{width:'80px',flexShrink:0}}>SEVERITY</span>
-        <span style={{width:'36px',flexShrink:0}}>SRC</span>
-        <span style={{width:'46px',textAlign:'right'}}>CONF</span>
-        <span style={{width:'48px',textAlign:'center',flexShrink:0}}>FRESH</span>
+        <span style={{ width: '72px', flexShrink: 0 }}>ID</span>
+        <span style={{ width: '62px', flexShrink: 0 }}>REGION</span>
+        <span style={{ flex: 1 }}>TYPE</span>
+        <span style={{ width: '80px', flexShrink: 0 }}>SEVERITY</span>
+        <span style={{ width: '36px', flexShrink: 0 }}>SRC</span>
+        <span style={{ width: '46px', textAlign: 'right' }}>CONF</span>
       </div>
       <div className={`feed-scroll${expanded ? ' feed-expanded' : ''}`}>
         {filtered.slice(0, expanded ? filtered.length : 6).map(r => (
@@ -71,7 +75,6 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
             <span className={`sev-chip sev-${r.sev}`}>{r.sev}</span>
             <span className="feed-src">{r.src}</span>
             <span className="feed-conf">{r.conf}</span>
-            <span className={`freshness-chip ${r.live ? 'fresh-new' : 'fresh-stale'}`}>{r.live ? 'NEW' : 'STALE'}</span>
           </div>
         ))}
       </div>

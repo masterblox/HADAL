@@ -2,6 +2,7 @@
 
 **Status:** Active — execution mapping document
 **Created:** 2026-03-18
+**Last synced:** 2026-03-18 (v0.5.2, commit `3cb8bf8`)
 **Grounded in:** Commit `fbe42f1` (reference hierarchy) and commit `15535cc` (platform plan)
 **Reads with:** [HADAL_PLATFORM_PLAN.md](HADAL_PLATFORM_PLAN.md), [HADAL_REFERENCE_HIERARCHY.md](HADAL_REFERENCE_HIERARCHY.md), [HADAL_PAGE_ARCHITECTURE.md](HADAL_PAGE_ARCHITECTURE.md)
 
@@ -39,7 +40,7 @@ The core problem: **the majority of the app's visual authority comes from hardco
 
 | Component | Current Role | Data Source | Real or Fake | Reference Source | Action | Target Page | Priority | Notes |
 |-----------|-------------|-------------|:---:|--------|--------|-------------|:---:|-------|
-| `App.tsx` | Single-scroll orchestrator | Composition | Real (structure) | Gulf Watch | **Adapt** | Shell | P0 | Must become router shell per HADAL_PAGE_ARCHITECTURE. Currently renders all sections linearly. |
+| `App.tsx` | 3-lane router shell | Composition + hash routing | Real (structure) | Gulf Watch | **Done** | Shell | — | Router shell with lane-routing, lazy-loaded Operations/Analysis. Login gate → NucleusTransition → terminal reveal. |
 | `LoginPage.tsx` | Decorative keypad gate | Hardcoded (code='0000') | Fake | — | **Keep temp** | Shell | P3 | Decorative auth. Real auth is Phase 6 per platform plan. Keep as atmospheric gate until then. |
 | `SonarParticles.tsx` | Three.js login background | Procedural | Aesthetic | — | **Keep** | Shell | — | Pure atmosphere. No data claims. |
 | `Topbar.tsx` | Top nav bar | Computed (clock, pressure) | Mixed | Ground Station | **Adapt** | Shell (global) | P1 | Clock is real (UTC). Pressure gauge is aesthetic. "OP. EPIC FURY" is hardcoded. Stats (DEPTH: 10,924M) are cosplay. See §3.1. |
@@ -67,7 +68,7 @@ The core problem: **the majority of the app's visual authority comes from hardco
 
 | Component | Current Role | Data Source | Real or Fake | Reference Source | Action | Target Page | Priority | Notes |
 |-----------|-------------|-------------|:---:|--------|--------|-------------|:---:|-------|
-| `SepBand.tsx` | Visual separator + depth viz + stats | Hardcoded | **Fake** | — | **Adapt** | Overview | P2 | "THAAD DEGRADED · 5 NODES LOST" and "1,160 INTERCEPTIONS" are hardcoded. Tagline is fine. Ocean depth viz is aesthetic. Either connect stats to pipeline or strip them. |
+| `SepBand.tsx` | Grey noise separator with pipeline stats | Live (incidents) | **Real** | — | **Done** | Overview | — | Redesigned in v0.5.2. Uses `useNoiseCanvas` (grayscale). Shows live intercept count, tracked events, countries from pipeline. Falls back to "AWAITING FEED" when no data. Old decorative layers (birdmissile SVG, jp-depth, gradients) removed. |
 
 ### 2.5 Feed Section (Overview)
 
@@ -81,13 +82,13 @@ The core problem: **the majority of the app's visual authority comes from hardco
 |-----------|-------------|-------------|:---:|--------|--------|-------------|:---:|-------|
 | `IntelWireSection.tsx` | Operations workspace container | Composition + state | Real (structure) | Gulf Watch | **Move** | Operations | P0 | Already functions as a page. Must become the Operations page per HADAL_PAGE_ARCHITECTURE. |
 | `IwlNav.tsx` | Intel section nav | None | Real (UI) | MIT | **Keep** | Operations | — | Tab navigation. "MARIANA TRENCH VIEWER" title should update. |
-| `IwlLeftPanel.tsx` | Layer toggles | Hardcoded counts | **Fake** | Shadowbroker (aspiration) | **Adapt** | Operations | P2 | Toggle UI is real. Layer counts (Missile Strike 10, Air Strike 6, etc.) are hardcoded. Should derive from map-events.ts counts or live data. |
-| `IwlRightPanel.tsx` | Casualties + feed + telemetry | Hardcoded + static | **Fake** | Ground Station (cosplay) | **Adapt** | Operations | P2 | Casualty numbers (1847/423/11) hardcoded. Telemetry row (THEATRE THREAT, AIR DEF COVER, etc.) hardcoded. Feed uses static iwlFeedSeed. See §3.4. |
-| `IwlBottom.tsx` | Datalink status bar | Hardcoded | Aesthetic | — | **Keep** | Operations | — | Status indicator. Buttons (SHARE MAP, EXPORT SITREP) are functional-ish. |
+| `IwlLeftPanel.tsx` | Layer toggles | Static (map-events.ts counts) | **Static** | Shadowbroker (aspiration) | **Adapt** | Operations | P2 | Toggle UI is real. Dead icon field removed in v0.5.2. Layer counts derive from static data arrays. Should derive from live incidents. |
+| `IwlRightPanel.tsx` | Casualties + feed + telemetry | Live (incidents) + static fallback | **Mixed** | Ground Station | **Improved** | Operations | P2 | Casualty stats now derived from live incidents via useMemo. Feed uses live incidents (top 20) with static iwlFeedSeed fallback. Telemetry derives active events, kinetic events, sources from incidents. Entities tab filter fixed. Box-shadow removed. Still falls back to static when no pipeline data. |
+| `IwlBottom.tsx` | Datalink status bar | Hardcoded | Aesthetic | — | **Done** | Operations | — | Rewritten in v0.5.2 to status-only bar. Dead buttons (SHARE MAP, EXPORT SITREP) removed. |
 | `LeafletMap.tsx` | Interactive map | Static (68 events from map-events.ts) + live incident count | **Mostly static** | Shadowbroker (benchmark) | **Connect** | Operations | P1 | Map renders. But 68 events are hardcoded in map-events.ts. Live incidents are counted but not plotted as markers. Trajectory arcs and THAAD sites are static. IranWarLive fetch likely fails (CORS). See §4.3. |
 | `AirspaceTab.tsx` | Airspace closure table | **Live** (airspace) + static fallback | **Real** | Gulf Watch | **Keep** | Operations | — | One of the better components. Uses live airspace data with clean static fallback. |
-| `CasualtiesTab.tsx` | Participants & casualties | Hardcoded inline | **Fake** | — | **Adapt** | Operations | P2 | All stats hardcoded (2,340+ MIL KIA, 1,100+ CIV KIA, participant table). Labeled as real intelligence. See §3.5. |
-| `PosturingTab.tsx` | Diplomatic posturing | Static (postures.ts) | **Static** | — | **Label** | Operations | P3 | Data from postures.ts. Not live, not Gulf Watch pipeline. Should carry a "STATIC REFERENCE" label. |
+| `CasualtiesTab.tsx` | Participants & casualties | Live (incidents) + static scenario table | **Mixed** | — | **Improved** | Operations | P2 | Top 4 stat boxes now derive from live incidents (military KIA, civilian KIA, intercepts, total tracked). Scenario reference table below remains hardcoded but is labeled STATIC. Inline styles extracted to CSS classes. Panels stack on mobile. |
+| `PosturingTab.tsx` | Diplomatic posturing | Static (postures.ts) | **Static** | — | **Improved** | Operations | P3 | Data from postures.ts. Labeled with SCENARIO badges. Inline styles extracted to shared CSS classes (`.iwl-sub-h`, `.iwl-data-row`, `.iwl-data-entry`). Panels stack on mobile. |
 
 ### 2.7 Regional Section
 
@@ -125,7 +126,7 @@ The core problem: **the majority of the app's visual authority comes from hardco
 | `map-events.ts` | Map markers (6 categories) | 68 | Static | **Connect** | 68 hardcoded events plotted on map. Should derive from incidents.json. Highest-value connection target. See §4.3. |
 | `postures.ts` | Diplomatic postures | 16 | Static | **Label** | Not derivable from pipeline. Requires editorial input. Label as ANALYST ASSESSMENT. |
 | `demo-incidents.ts` | Fallback incidents | 15 | Static | **Keep as fallback** | Used when pipeline returns <5 incidents. Appropriate demo data pattern. |
-| `continents.ts` | Globe continent polygons | 26 | Static | **Keep** | Geographic reference. Static by nature. |
+| `continents.ts` | ~~Globe continent polygons~~ | 26 | Static | **Dead code** | Not imported anywhere. Globe uses `land-110m.ts` instead. Can be deleted. |
 | `globe-markers.ts` | Globe markers | 10 | Static | **Keep or derive** | 10 hardcoded theatre markers. Could derive from live incidents but low priority. |
 
 ### 2.12 Hooks
@@ -140,6 +141,7 @@ The core problem: **the majority of the app's visual authority comes from hardco
 | `useTracking.ts` | Simulated aircraft/sat/maritime | **Procedural** | **Label** | Generates 17 fake tracked objects. Used by sonar and signal monitor. No real tracking data. See §3.6. |
 | `useSignalMonitor.ts` | Random signal frequency | **Procedural** | **Label** | Displays fake kHz/dB readings. Cycles through useTracking objects. See §3.6. |
 | `usePrediction.ts` | Prediction wrapper | Computed (real math) | **Keep** | Runs real local prediction engine on real incidents. MIT math applied to Gulf Watch data. Correct pattern. |
+| `useOpenSky.ts` | Live aircraft tracking | **Live** (OpenSky proxy) | **Keep** | Added in v0.5.0. Consumes upstream OpenSky proxy for real Gulf airspace aircraft data. Replaces the need for procedural `useTracking` in FlightTracker. |
 
 ### 2.13 Canvas Hooks
 
@@ -149,9 +151,9 @@ The core problem: **the majority of the app's visual authority comes from hardco
 | `useSonar.ts` | Sonar sweep | Procedural (useTracking) | **Label** | Plots procedural tracking objects. Looks like real radar. See §3.6. |
 | `useNoiseCanvas.ts` | CRT noise | Procedural | **Keep** | Pure aesthetic. |
 | `useWaterfall.ts` | Spectrogram | Procedural | **Label** | Looks like real signal analysis. Is random noise. See §3.6. |
-| `useSepStatic.ts` | Separator noise | Procedural | **Keep** | Pure aesthetic. |
+| `useSepStatic.ts` | ~~Separator noise~~ | ~~Procedural~~ | **Dead code** | Unused since v0.5.2 — SepBand switched to `useNoiseCanvas`. Can be deleted. |
 | `useDrawMark.ts` | HADAL reticle | Animation | **Keep** | Brand element. |
-| `usePizzaSlice.ts` | 3D pizza slice | Procedural | **Remove** | Unused novelty. Not referenced by any component. |
+| `usePizzaSlice.ts` | ~~3D pizza slice~~ | ~~Procedural~~ | **Removed** | Deleted in v0.4.0 (3-lane shell extraction). |
 
 ### 2.14 Lib / Utils
 
@@ -207,35 +209,33 @@ These components present hardcoded or procedural data as operational intelligenc
 
 **Fix:** Label sonar/signal/waterfall cluster as "SIMULATED" or connect to real tracking data (Phase 4+ per platform plan). GCC intercepts should derive from incidents.json country breakdown or be labeled STATIC.
 
-### 3.4 IwlRightPanel — Hardcoded Casualty Intelligence
+### 3.4 IwlRightPanel — PARTIALLY FIXED (v0.5.2)
 
 **File:** `src/components/intel/IwlRightPanel.tsx`
 
-| Element | Current | Problem |
-|---------|---------|---------|
-| MILITARY 1847 | Hardcoded, animated | Animated counter makes it look live. Number never changes. |
-| CIVILIANS 423 | Hardcoded, animated | Same. |
-| ENTITIES 11 | Hardcoded | Same. |
-| Tactical telemetry row | Hardcoded | THEATRE THREAT, AIR DEF COVER, ACTIVE VECTORS, OSINT FEEDS, LAST STRIKE — all static text. |
-| Intel feed | iwlFeedSeed (12 static items) | Static news snippets presented as live feed. |
+| Element | Current | Status |
+|---------|---------|--------|
+| MILITARY casualties | Derived from live `incidents.casualties.military` | **Fixed** — shows live sum with NO DATA badge when offline |
+| CIVILIAN casualties | Derived from live `incidents.casualties.civilian` | **Fixed** |
+| ENTITIES / SOURCES | Derived from unique `incident.source` values | **Fixed** |
+| Intel feed | Uses live incidents (top 20) with static fallback | **Fixed** — Military/Civilian/Entities tabs filter correctly |
+| Tactical telemetry | Derives active events, kinetic events, sources, last strike from incidents | **Fixed** — values are live, fall back to "—" when no data |
 
-**Fix:** Either derive casualties from incidents.json (count events with casualty keywords) or label as ESTIMATED / STATIC. Telemetry row should connect to prediction engine metrics or be removed. Feed should merge with live incidents.
+**Remaining:** All data still falls back to static `iwlFeedSeed` when pipeline returns zero incidents. This is acceptable fallback behavior.
 
-### 3.5 CasualtiesTab — Fully Fabricated Intelligence Table
+### 3.5 CasualtiesTab — PARTIALLY FIXED (v0.5.2)
 
 **File:** `src/components/intel/CasualtiesTab.tsx`
 
-This is the most problematic component. Every number is hardcoded:
+**Fixed:** Top 4 stat boxes now derive from live pipeline:
+- Military KIA — summed from `incidents.casualties.military` (labeled PIPELINE)
+- Civilian KIA — summed from `incidents.casualties.civilian` (labeled PIPELINE)
+- Intercept events — counted from incident titles (labeled PIPELINE)
+- Total tracked events — live count (labeled LIVE)
 
-- 2,340+ MILITARY KIA — hardcoded
-- 1,100+ CIVILIAN KIA IRAN — hardcoded
-- 1,160 INTERCEPTS — hardcoded
-- 7-row participant table (troops, aircraft, armor, casualties per entity) — all hardcoded
+**Still static:** 7-row participant table (IRAN, USA, UAE, Saudi, Israel, Houthi, Hezbollah) with troops/aircraft/armor/casualties. Labeled STATIC with provenance badge. This is editorial scenario reference data, not live intelligence.
 
-**Fix:** This entire surface is fabricated. Three options:
-1. **Connect** to incident-derived estimates with clear "ESTIMATED FROM OSINT" label
-2. **Label** as "SCENARIO DATA — NOT VERIFIED" with visual distinction
-3. **Move** to demo-only mode — only show when sandbox toggle is active
+**Remaining:** The scenario table should either be removed or gated behind sandbox toggle if it creates confusion.
 
 ### 3.6 Tracking / SIGINT Cluster — Simulated Surveillance
 
@@ -330,13 +330,12 @@ Gulf Watch is not a static reference. Nikola ships meaningful human commits upst
 **Adaptation type:** Parameter/logic port. Not a rewrite — evaluate upstream changes to `sequenceModel` and `impactProfiler` equivalents, port improved thresholds and trend calculations.
 **Risk if skipped:** HADAL's prediction engine stagnates on initial extraction while upstream prediction quality improves.
 
-#### Aircraft/OpenSky Proxy Hardening
+#### Aircraft/OpenSky Proxy Hardening — PARTIALLY DONE
 **Upstream:** Auth handling, response caching, rate-limit management, error recovery
 **Lane:** Operations
-**HADAL target:** `FlightTracker.tsx` + potential new `useOpenSky.ts` hook
-**Priority:** High — Gulf Watch's original OpenSky integration was lost in the React migration. `useTracking.ts` currently generates 17 fake aircraft. Nikola's upstream proxy fixes make real aircraft data viable again.
-**Adaptation type:** Reconnection. HADAL needs a new data hook that hits the same OpenSky proxy endpoint Gulf Watch uses, consuming the auth/cache improvements upstream already built.
-**Risk if skipped:** FlightTracker remains permanently simulated. The Operations lane's most visible fake-authority surface stays fake.
+**HADAL target:** `FlightTracker.tsx` + `useOpenSky.ts` hook
+**Status:** `useOpenSky.ts` hook created in v0.5.0. FlightTracker component updated. The hook and component exist but need verification against the live upstream proxy endpoint.
+**Remaining:** Confirm the proxy endpoint is reachable from HADAL's deployment, verify auth token handling, test rate-limit behavior under real load.
 **Note:** The upstream proxy runs as a serverless function. HADAL can consume it directly or deploy its own instance.
 
 #### Mobile Country/Severity Filtering
@@ -355,6 +354,18 @@ Gulf Watch is not a static reference. Nikola ships meaningful human commits upst
 4. **Port logic, not code.** Gulf Watch is vanilla JS. HADAL is React + TypeScript. Extract the algorithm or parameter change, implement in HADAL's stack.
 5. **Do not delay HADAL's own roadmap** for upstream adaptation. Queue items slot into existing phases — they do not create new phases.
 
+### Upstream Watch — Next Audit Ready
+
+**Target repo:** `nKOxxx/gulfwatch-testing`
+**Last checked:** 2026-03-18 (data refresh commits only — no human logic changes since last audit)
+**Next audit scope:** Look for human commits after 2026-03-18 that touch:
+- `scripts/` (prediction, scoring, data model changes)
+- `api/` (proxy endpoints, auth handling)
+- `public/index.html` or main app logic (filter UX, mobile behavior)
+- Any new data contract changes (JSON schema evolution in incidents/prices/airspace)
+
+**Do not audit:** automated data refresh commits, dependency bumps, CI config.
+
 ---
 
 ## 5. Components Safe to Keep Temporarily
@@ -366,7 +377,7 @@ These components are not Gulf Watch-backed but serve legitimate purposes and do 
 | `GlobeView.tsx` | Visual identity, not intelligence claim | Keep as-is |
 | `useGlobe.ts` | Interactive brand element | Keep as-is |
 | `useNoiseCanvas.ts` | CRT aesthetic overlay | Keep as-is |
-| `useSepStatic.ts` | Separator texture | Keep as-is |
+| ~~`useSepStatic.ts`~~ | ~~Separator texture~~ | **Dead code — delete** |
 | `useDrawMark.ts` | Brand reticle | Keep as-is |
 | `useC2Type.ts` | Number animation effect | Keep as-is |
 | `useCasualtyCounter.ts` | Counter animation utility | Keep — problem is the data, not the animation |
@@ -378,7 +389,7 @@ These components are not Gulf Watch-backed but serve legitimate purposes and do 
 | `demo-incidents.ts` | Prediction fallback data | Keep — used correctly as demo gate |
 | `thaad-sites.ts` | Static reference positions | Keep — physical locations are inherently static |
 | `postures.ts` | Editorial assessment data | Keep — but label as ANALYST ASSESSMENT in UI |
-| `continents.ts` | Globe geography | Keep as-is |
+| ~~`continents.ts`~~ | ~~Globe geography~~ | **Dead code — delete** |
 
 ---
 
@@ -389,14 +400,14 @@ These should be gated behind the sandbox toggle or moved to a `_fixtures/` direc
 | Component/File | Reason | Recommended Action |
 |----------------|--------|-------------------|
 | `KillChainTracker.tsx` | Fully fabricated engagement records. Not imported in App.tsx (already dormant). | Move to `_fixtures/` or gate behind sandbox. Reintroduce when real engagement data exists. |
-| `usePizzaSlice.ts` | Unused 3D pizza slice. Not referenced anywhere. | Delete. |
+| ~~`usePizzaSlice.ts`~~ | ~~Unused 3D pizza slice.~~ | **Deleted** in v0.4.0. |
 | `gcc-data.ts` | Duplicates MissileDefenseStrip hardcoded data. | Consolidate into MissileDefenseStrip or replace both with incident-derived data. |
 
 ---
 
-## 7. Recommended Next 5 Implementation Moves
+## 7. Recommended Next Implementation Moves
 
-Ordered by impact and dependency. Each move is self-contained and committable.
+Ordered by impact and dependency. Each move is self-contained and committable. Move 4 (router shell) was completed in v0.4.0.
 
 ### Move 1: Wire Threat Level to Prediction Engine
 
@@ -422,13 +433,10 @@ Ordered by impact and dependency. Each move is self-contained and committable.
 **Effort:** Medium (3-4 hours).
 **Anti-pattern fixed:** Fake intelligence density (§7.5).
 
-### Move 4: Add Router Shell (3-Lane Pages)
+### Move 4: Add Router Shell (3-Lane Pages) — DONE (v0.4.0)
 
-**What:** Introduce React Router (or simple state-based routing) with three lanes: Overview, Operations, Analysis. Move `IntelWireSection` to Operations, `PredictorEngine` + `AnalysisSection` + `EconomicSection` to Analysis. Keep hero + missile strip + condensed feed on Overview.
-**Why:** Required by HADAL_PAGE_ARCHITECTURE and HADAL_MACRO_PLAN. Currently blocked by the single-scroll layout.
-**Files:** `App.tsx` (major refactor), potentially new route components.
-**Effort:** Large (6-8 hours). Must preserve all existing component behavior.
-**Dependency:** None, but Moves 1-3 should land first so the pages have real data when they separate.
+**Completed** in commit `6a439eb`. Hash-based routing via `src/lib/lane-routing.ts` with `useSyncExternalStore`. Three page files: `OverviewPage.tsx`, `OperationsPage.tsx` (lazy, 200KB), `AnalysisPage.tsx` (lazy, 28KB). Initial bundle reduced from 1084KB to 857KB.
+**Files changed:** `App.tsx`, `src/pages/OverviewPage.tsx`, `src/pages/OperationsPage.tsx`, `src/pages/AnalysisPage.tsx`, `src/lib/lane-routing.ts`.
 
 ### Move 5: Label or Gate Simulated Surfaces
 

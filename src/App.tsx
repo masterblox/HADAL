@@ -2,7 +2,8 @@ import { useState, useEffect, useSyncExternalStore, lazy, Suspense, useCallback 
 import { LoginPage } from './components/login/LoginPage'
 import { Topbar } from './components/topbar/Topbar'
 import { OverviewPage } from './pages/OverviewPage'
-import { NucleusTransition } from './components/shared/NucleusTransition'
+import { BootSequence } from './components/shared/BootSequence'
+import { ErrorBoundary } from './components/shared/ErrorBoundary'
 import { useDataPipeline } from './hooks/useDataPipeline'
 import { usePrediction } from './hooks/usePrediction'
 import { parseLane, subscribeHash, type Lane, navigateTo } from './lib/lane-routing'
@@ -23,14 +24,16 @@ const LANE_TITLES: Record<Lane, string> = {
 
 /* ── App ── */
 export function App() {
-  const skipLogin = new URLSearchParams(window.location.search).has('bypass')
-  const [phase, setPhase] = useState<'login' | 'unlocked' | 'nucleus' | 'glow' | 'terminal'>(skipLogin ? 'terminal' : 'login')
-  const [terminalVisible, setTerminalVisible] = useState(skipLogin)
-  const { prices, incidents, airspace } = useDataPipeline()
+  const [phase, setPhase] = useState<'login' | 'exploding' | 'terminal'>('login')
+  const [terminalVisible, setTerminalVisible] = useState(false)
+  const [bootDone, setBootDone] = useState(
+    !!sessionStorage.getItem('hadal-boot-played')
+  )
+  const onBootComplete = useCallback(() => setBootDone(true), [])
+  const { prices, incidents, airspace, health } = useDataPipeline()
   const prediction = usePrediction(incidents, airspace, prices)
   const threatLevel = prediction?.theatreThreatLevel ?? null
   const [sandbox, setSandbox] = useState(false)
-  const [afterglow, setAfterglow] = useState(false)
   const activeLane = useHashRoute()
 
   // Set default hash if none present
@@ -45,54 +48,28 @@ export function App() {
   }, [activeLane])
 
   const handleAccess = () => {
-    // Login card does its fast CSS animation, then we transition to nucleus
-    setPhase('unlocked')
+    setPhase('exploding')
+    setTerminalVisible(true)
   }
 
   useEffect(() => {
-    if (phase === 'unlocked') {
-      // Wait for login card's CSS exit animation (~500ms), then show nucleus
-      const t = setTimeout(() => {
-        setTerminalVisible(true) // render terminal behind nucleus overlay
-        setPhase('nucleus')
-      }, 500)
+    if (phase === 'exploding') {
+      const t = setTimeout(() => setPhase('terminal'), 1000)
       return () => clearTimeout(t)
     }
   }, [phase])
-
-  const handleNucleusComplete = useCallback(() => {
-    setPhase('glow')
-  }, [])
-
-  // Globe glow phase — pulsating glow before full terminal reveals
-  useEffect(() => {
-    if (phase === 'glow') {
-      const t = setTimeout(() => {
-        setAfterglow(true) // keep pulsing after reveal
-        setPhase('terminal')
-      }, 1400)
-      return () => clearTimeout(t)
-    }
-  }, [phase])
-
-  // Afterglow — globe keeps pulsing for 2s after terminal reveals
-  useEffect(() => {
-    if (afterglow) {
-      const t = setTimeout(() => setAfterglow(false), 2000)
-      return () => clearTimeout(t)
-    }
-  }, [afterglow])
 
   const pipelineStatus = {
-    incidents: incidents.length > 0,
-    prices: prices !== null,
-    airspace: airspace !== null,
+    incidents: health.incidents !== 'offline',
+    prices: health.prices !== 'offline',
+    airspace: health.airspace !== 'offline',
+    health,
   }
 
   return (
-    <>
-      {(phase === 'nucleus' || phase === 'glow' || phase === 'terminal') && (
-        <div className={`terminal-root ${terminalVisible ? 'terminal-visible' : 'terminal-hidden'} ${phase === 'glow' ? 'globe-glow-phase' : ''} ${afterglow ? 'globe-afterglow' : ''}`}>
+    <ErrorBoundary>
+      {phase !== 'login' && (
+        <div className={`terminal-root ${terminalVisible ? 'terminal-visible' : 'terminal-hidden'}`}>
           <div className="scanlines" />
           <div className="class-banner">
             <span className="class-banner-text">// TOP SECRET // SCI // NOFORN // HADAL-GULF-THEATRE // TS/SCI //</span>
@@ -129,6 +106,7 @@ export function App() {
                 <OperationsPage
                   incidents={incidents}
                   airspace={airspace}
+                  prices={prices}
                   sandbox={sandbox}
                 />
               )}
@@ -145,15 +123,13 @@ export function App() {
         </div>
       )}
 
-      {(phase === 'login' || phase === 'unlocked') && (
-        <div className={`login-overlay ${phase === 'unlocked' ? 'login-fading' : ''}`}>
+      {phase !== 'terminal' && bootDone && (
+        <div className={`login-overlay ${phase === 'exploding' ? 'login-fading' : ''}`}>
           <LoginPage onAccess={handleAccess} />
         </div>
       )}
 
-      {phase === 'nucleus' && (
-        <NucleusTransition onComplete={handleNucleusComplete} />
-      )}
-    </>
+      {!bootDone && <BootSequence onComplete={onBootComplete} />}
+    </ErrorBoundary>
   )
 }

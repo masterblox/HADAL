@@ -72,7 +72,7 @@ export function RegionalPanel() {
           <circle cx="7" cy="7" r="6" stroke="var(--g3)" strokeWidth="1" />
           <path d="M2 5h10M2 9h10M7 1c-2 2-2 10 0 12M7 1c2 2 2 10 0 12" stroke="var(--g3)" strokeWidth=".7" fill="none" />
         </svg>
-        <span className="regional-title">REGIONAL OVERVIEW</span>
+        <span className="regional-title section-title">REGIONAL ANALYSIS</span>
       </div>
 
       {/* Filter Pills */}
@@ -108,7 +108,7 @@ export function RegionalPanel() {
           </div>
 
           <div className="regional-stats-grid">
-            <StatBox label="CASUALTIES" value={country.casualties.total} detail={`${country.casualties.military} mil / ${country.casualties.civilian} civ`} bar={{ mil: country.casualties.military, civ: country.casualties.civilian, total: country.casualties.total }} />
+            <StatBox label="CASUALTIES" value={country.casualties.total} detail={`${country.casualties.military} mil / ${country.casualties.civilian} civ`} />
             <StatBox label="MISSILES" value={country.missiles.launched} detail={`${country.missiles.intercepted} int / ${country.missiles.landed} land`} />
             <StatBox label="AIRSTRIKES" value={country.airstrikes.total} detail="total strikes" />
             <StatBox label="DRONES" value={country.drones.total} detail={`${country.drones.downed} downed`} />
@@ -145,22 +145,15 @@ export function RegionalPanel() {
 }
 
 /* ── StatBox ── */
-function StatBox({ label, value, detail, bar }: {
+function StatBox({ label, value, detail }: {
   label: string
   value: number
   detail: string
-  bar?: { mil: number; civ: number; total: number }
 }) {
   return (
     <div className="stat-box jp-panel">
       <div className="stat-label jp-stat-lbl">{label}</div>
       <div className="stat-value jp-stat-val">{value.toLocaleString()}</div>
-      {bar && bar.total > 0 && (
-        <div className="stat-bar">
-          <div className="stat-bar-mil" style={{ width: `${(bar.mil / bar.total) * 100}%` }} />
-          <div className="stat-bar-civ" style={{ width: `${(bar.civ / bar.total) * 100}%` }} />
-        </div>
-      )}
       <div className="stat-detail">{detail}</div>
     </div>
   )

@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { MapDepthLayer } from '@/components/shared/MapDepthLayer'
 import { LeafletMap } from './LeafletMap'
 import { IwlNav } from './IwlNav'
 import { IwlLeftPanel } from './IwlLeftPanel'
@@ -8,15 +9,17 @@ import { CasualtiesTab } from './CasualtiesTab'
 import { PosturingTab } from './PosturingTab'
 import { IwlBottom } from './IwlBottom'
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
-import type { Incident, AirspaceData } from '@/hooks/useDataPipeline'
+import type { Incident, AirspaceData, PriceData } from '@/hooks/useDataPipeline'
+import { exportSitrep } from '@/lib/sitrep-export'
 
 interface IntelWireSectionProps {
   incidents: Incident[]
   airspace: AirspaceData | null
+  prices?: PriceData | null
   sandbox: boolean
 }
 
-export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSectionProps) {
+export function IntelWireSection({ incidents, airspace, prices, sandbox }: IntelWireSectionProps) {
   const [activeTab, setActiveTab] = useState<'map' | 'airspace' | 'casualties' | 'posturing'>('map')
   const [layerVisibility, setLayerVisibility] = useState<Record<string, boolean>>({
     satellite: true, missile: true, airstrike: true, ground: true,
@@ -24,7 +27,7 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
     'live-incidents': true,
   })
   const [syncStatus, setSyncStatus] = useState('SYNCING...')
-  const [datalinkText, setDatalinkText] = useState('ESTABLISHING SECURE DATALINK...')
+  const [datalinkText, setDatalinkText] = useState('INITIALIZING PIPELINE...')
 
   const toggleLayer = useCallback((name: string) => {
     setLayerVisibility(prev => ({ ...prev, [name]: !prev[name] }))
@@ -51,9 +54,10 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
   }, [incidents])
 
   return (
-    <div className="iwl-wrap">
+    <div className="iwl-wrap" style={{ position: 'relative' }}>
       <IwlNav activeTab={activeTab} onTabChange={setActiveTab} syncStatus={syncStatus} onCalc={handleCalc} />
       <div className="iwl-map-area" style={{ position: 'relative' }}>
+        <MapDepthLayer />
         <LeafletMap
           layerVisibility={layerVisibility}
           incidents={incidents}
@@ -62,7 +66,7 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
         />
         {activeTab === 'airspace' && <AirspaceTab airspace={airspace} />}
         {activeTab === 'casualties' && <CasualtiesTab sandbox={sandbox} incidents={incidents} />}
-        {activeTab === 'posturing' && <PosturingTab sandbox={sandbox} />}
+        {activeTab === 'posturing' && <PosturingTab />}
         {activeTab === 'map' && (
           <div className="iwl-resizable-overlay">
             <ResizablePanelGroup orientation="horizontal">
@@ -81,7 +85,7 @@ export function IntelWireSection({ incidents, airspace, sandbox }: IntelWireSect
           </div>
         )}
       </div>
-      <IwlBottom datalinkText={datalinkText} />
+      <IwlBottom datalinkText={datalinkText} onExportSitrep={() => exportSitrep(incidents, prices ?? null, airspace)} />
     </div>
   )
 }

@@ -44,7 +44,7 @@ export function OverviewPage({
         </p>
       </section>
 
-      <HeroGrid sandbox={sandbox} threatLevel={threatLevel} pipelineStatus={pipelineStatus} prediction={prediction} />
+      <HeroGrid sandbox={sandbox} threatLevel={threatLevel} pipelineStatus={pipelineStatus} prediction={prediction} incidents={incidents} />
       <section className="lane-cta-grid">
         <article className="lane-cta jp-panel">
           <div className="lane-cta-kicker">Lane 2</div>

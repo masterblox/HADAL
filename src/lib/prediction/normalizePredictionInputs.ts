@@ -47,27 +47,46 @@ const TYPE_WEIGHTS: Record<EventType, number> = {
   general: 30,
 }
 
+// ── Word-boundary matcher for classification ──
+
+function matchesWord(text: string, word: string): boolean {
+  const re = new RegExp(`\\b${word}\\b`, 'i')
+  return re.test(text)
+}
+
 // ── Map raw incident type string → EventType ──
+// Uses structured `type` field first, falls back to title analysis
 
 function mapEventType(raw?: string): EventType {
   if (!raw) return 'general'
   const lower = raw.toLowerCase()
-  if (lower.includes('missile')) return 'missile'
-  if (lower.includes('airstrike') || lower.includes('air_strike')) return 'airstrike'
-  if (lower.includes('drone') || lower.includes('uav')) return 'drone'
-  if (lower.includes('ground') || lower.includes('raid')) return 'ground'
-  if (lower.includes('naval') || lower.includes('maritime')) return 'naval'
-  if (lower.includes('cyber')) return 'cyber'
-  if (lower.includes('diplomatic') || lower.includes('sanction')) return 'diplomatic'
+  // Exact type field matches (structured data — preferred)
+  const typeMap: Record<string, EventType> = {
+    missile: 'missile', ballistic: 'missile', 'ballistic missile': 'missile',
+    airstrike: 'airstrike', air_strike: 'airstrike', 'air strike': 'airstrike',
+    drone: 'drone', uav: 'drone', 'drone strike': 'drone',
+    ground: 'ground', raid: 'ground', 'ground operation': 'ground',
+    naval: 'naval', maritime: 'naval',
+    cyber: 'cyber', 'cyber attack': 'cyber',
+    diplomatic: 'diplomatic', sanction: 'diplomatic', sanctions: 'diplomatic',
+  }
+  if (typeMap[lower]) return typeMap[lower]
+  // Fallback: word-boundary search on raw string
+  if (matchesWord(lower, 'missile') || matchesWord(lower, 'ballistic')) return 'missile'
+  if (matchesWord(lower, 'airstrike') || matchesWord(lower, 'air.strike')) return 'airstrike'
+  if (matchesWord(lower, 'drone') || matchesWord(lower, 'uav')) return 'drone'
+  if (matchesWord(lower, 'ground') || matchesWord(lower, 'raid')) return 'ground'
+  if (matchesWord(lower, 'naval') || matchesWord(lower, 'maritime')) return 'naval'
+  if (matchesWord(lower, 'cyber')) return 'cyber'
+  if (matchesWord(lower, 'diplomatic') || matchesWord(lower, 'sanction')) return 'diplomatic'
   return 'general'
 }
 
-// ── Extract actor from title ──
+// ── Extract actor from title using word boundaries ──
 
 function extractFromTitle(title: string, keywords: Record<string, string[]>): string {
-  const lower = title.toLowerCase()
   for (const [key, kw] of Object.entries(keywords)) {
-    if (kw.some(k => lower.includes(k))) return key
+    if (kw.some(k => matchesWord(title, k))) return key
   }
   return 'unknown'
 }

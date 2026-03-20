@@ -11,9 +11,9 @@ import { demoIncidents } from '@/data/demo-incidents'
 /* ── Shared axis tick style ── */
 const TICK = {
   fontFamily: 'var(--MONO)',
-  fontSize: 8,
+  fontSize: 10,
   fill: 'rgba(196,255,44,.4)',
-  letterSpacing: '.06em',
+  letterSpacing: '.02em',
 }
 
 /* ── Custom tooltip ── */
@@ -26,7 +26,7 @@ function Tip({ active, payload, label }: any) {
         <div key={p.dataKey} className="analysis-tooltip-row">
           <span className="analysis-tooltip-dot" style={{ background: p.color, color: p.color }} />
           <span>{p.name}</span>
-          <span style={{ color: 'var(--g)', fontWeight: 700 }}>{p.value}</span>
+          <span style={{ color: 'var(--g)', fontWeight: 400}}>{p.value}</span>
         </div>
       ))}
     </div>
@@ -43,12 +43,12 @@ function SourceTip({ active, payload, label }: any) {
       <div className="analysis-tooltip-row">
         <span className="analysis-tooltip-dot" style={{ background: '#C4FF2C', color: '#C4FF2C' }} />
         <span>Events</span>
-        <span style={{ color: 'var(--g)', fontWeight: 700 }}>{d?.count}</span>
+        <span style={{ color: 'var(--g)', fontWeight: 400}}>{d?.count}</span>
       </div>
       <div className="analysis-tooltip-row">
         <span className="analysis-tooltip-dot" style={{ background: 'rgba(255,140,0,.9)', color: 'rgba(255,140,0,.9)' }} />
         <span>Avg Credibility</span>
-        <span style={{ color: 'var(--warn)', fontWeight: 700 }}>{d?.avgCred}%</span>
+        <span style={{ color: 'var(--warn)', fontWeight: 400}}>{d?.avgCred}%</span>
       </div>
     </div>
   )
@@ -143,7 +143,7 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
           <rect x="5" y="5" width="2" height="8" fill="var(--g7)" />
           <rect x="9" y="2" width="2" height="11" fill="var(--g)" />
         </svg>
-        <span className="analysis-title">INCIDENT ANALYTICS</span>
+        <span className="analysis-title section-title">THREAT ANALYSIS</span>
         <span className="analysis-count">{data.length} EVENTS{isDemo ? ' · DEMO' : ''}</span>
       </div>
 
@@ -296,7 +296,7 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
               <ResponsiveContainer width="100%" height={280}>
                 <RadarChart data={typeData} cx="50%" cy="50%" outerRadius="72%">
                   <PolarGrid stroke="rgba(196,255,44,.12)" />
-                  <PolarAngleAxis dataKey="type" tick={{ ...TICK, fontSize: 7 }} />
+                  <PolarAngleAxis dataKey="type" tick={{ ...TICK, fontSize: 10 }} />
                   <Tooltip content={<Tip />} />
                   <Radar
                     name="Count"

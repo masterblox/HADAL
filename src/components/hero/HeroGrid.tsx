@@ -1,30 +1,23 @@
 import { LeftRail } from './LeftRail'
 import { GlobeView } from './GlobeView'
 import { RightRail } from './RightRail'
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
 import type { PredictionResult } from '@/lib/prediction/types'
+import type { Incident } from '@/hooks/useDataPipeline'
 
 interface HeroGridProps {
   sandbox: boolean
   threatLevel: number | null
   pipelineStatus: { incidents: boolean; prices: boolean; airspace: boolean }
   prediction: PredictionResult | null
+  incidents: Incident[]
 }
 
-export function HeroGrid({ sandbox, threatLevel, pipelineStatus, prediction }: HeroGridProps) {
+export function HeroGrid({ sandbox, threatLevel, pipelineStatus, prediction, incidents }: HeroGridProps) {
   return (
-    <ResizablePanelGroup orientation="horizontal" className="hero-grid">
-      <ResizablePanel id="hero-left" defaultSize="14%" minSize="11%" maxSize="20%">
-        <LeftRail sandbox={sandbox} threatLevel={threatLevel} pipelineStatus={pipelineStatus} prediction={prediction} />
-      </ResizablePanel>
-      <ResizableHandle disabled={!sandbox} />
-      <ResizablePanel id="hero-center" defaultSize="72%">
-        <GlobeView />
-      </ResizablePanel>
-      <ResizableHandle disabled={!sandbox} />
-      <ResizablePanel id="hero-right" defaultSize="14%" minSize="11%" maxSize="20%">
-        <RightRail sandbox={sandbox} />
-      </ResizablePanel>
-    </ResizablePanelGroup>
+    <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr 260px', gap: 0 }}>
+      <LeftRail sandbox={sandbox} threatLevel={threatLevel} pipelineStatus={pipelineStatus} prediction={prediction} />
+      <GlobeView />
+      <RightRail sandbox={sandbox} incidents={incidents} />
+    </div>
   )
 }

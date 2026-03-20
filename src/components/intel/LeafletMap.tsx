@@ -162,17 +162,14 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
         .bindTooltip(`<b>${z.country}</b> · ${z.closed ? 'AIRSPACE CLOSED' : 'RESTRICTED'}`, { sticky: true })
     })
 
-    // Live IranWarLive attempt
-    fetch('https://iranwarlive.com/feed.json')
-      .then(r => r.ok ? r.json() : Promise.reject('cors'))
-      .then(() => {
-        syncUpdateRef.current(`LIVE · IRANWARLIVE.COM · ${incidents.length} EVENTS`)
-        datalinkUpdateRef.current('SECURE DATALINK ESTABLISHED · IRANWARLIVE.COM · LIVE')
-      })
-      .catch(() => {
-        syncUpdateRef.current(`STATIC · OSINT DATABASE · ${incidents.length} EVENTS`)
-        datalinkUpdateRef.current('STATIC DATALINK · OSINT DATABASE · ' + new Date().toISOString().slice(0, 10))
-      })
+    // Status reflects actual pipeline state
+    if (incidents.length > 0) {
+      syncUpdateRef.current(`OSINT PIPELINE · ${incidents.length} EVENTS LOADED`)
+      datalinkUpdateRef.current(`PIPELINE ACTIVE · ${incidents.length} INCIDENTS · ${new Date().toISOString().slice(0, 16)}Z`)
+    } else {
+      syncUpdateRef.current('OSINT PIPELINE · NO LIVE DATA')
+      datalinkUpdateRef.current('PIPELINE OFFLINE · STATIC REFERENCE OVERLAYS ONLY')
+    }
 
     return () => { map.remove(); mapInstance.current = null }
   }, [incidents.length])

@@ -22,14 +22,15 @@ public/                  — Static JSON endpoints (incidents.json, prices.json,
 
 ## Design System Tokens
 
-| Token       | Value                        | Usage                  |
-|-------------|------------------------------|------------------------|
-| `--g`       | `#C4FF2C`                    | Primary lemon-green    |
-| `--warn`    | `rgba(255,140,0,.9)`         | Alerts, Iran highlight |
-| `--bg`      | `#060800`                    | Background             |
-| `--HEAD`    | `Rajdhani`                   | Headers/labels         |
-| `--C2`      | `Teko`                       | Large numbers          |
-| `--MONO`    | `Share Tech Mono`            | Code/data              |
+| Token       | Value                        | Usage                         |
+|-------------|------------------------------|-------------------------------|
+| `--g`       | `#C4FF2C`                    | Primary lemon-green           |
+| `--warn`    | `rgba(255,140,0,.9)`         | Alerts, Iran highlight        |
+| `--bg`      | `#060800`                    | Background                    |
+| `--TITLE`   | `UnifrakturMaguntia`         | Old English section headings  |
+| `--HEAD`    | `Rajdhani`                   | Sub-labels/nav                |
+| `--C2`      | `Inter`                      | Data numbers                  |
+| `--MONO`    | `Share Tech Mono`            | Code/data                     |
 
 All border-radius: 0px. Zero decorative animation. Zero glows/box-shadows. No CRT effects.
 

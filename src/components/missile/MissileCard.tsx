@@ -1,4 +1,3 @@
-import { useNoiseCanvas } from '@/canvas/useNoiseCanvas'
 import { useC2Type } from '@/hooks/useC2Type'
 import { WeaponIcon } from './WeaponIcon'
 import { thaadSites } from '@/data/thaad-sites'
@@ -19,12 +18,10 @@ interface MissileCardProps {
 }
 
 export function MissileCard({ country, src, val, valStr, label, bars, chip, warn, icon, index }: MissileCardProps) {
-  const noiseRef = useNoiseCanvas({ grayscale: false, interval: 80 })
   const display = useC2Type(val, 600 + index * 280)
 
   return (
     <div className="mc jp-panel sev-critical">
-      <canvas ref={noiseRef} className="mc-noise" width={200} height={320} />
       <div className="mc-inner">
         <div className="MCC">{country}<span className="MCS">{src}</span><span className="wtype-icon"><WeaponIcon type={icon} /></span></div>
         <div className={`MC-BIG${warn ? ' warn' : ''}`}>

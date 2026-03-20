@@ -1,35 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { SonarParticles } from './SonarParticles'
 
 const ACCESS_CODE = '0000'
-
-/* ── Gate sound effects (MIT assets) ── */
-const audioCache: Record<string, HTMLAudioElement> = {}
-
-function getAudio(src: string): HTMLAudioElement {
-  if (!audioCache[src]) {
-    audioCache[src] = new Audio(src)
-    audioCache[src].preload = 'auto'
-  }
-  return audioCache[src]
-}
-
-function useGateAudio() {
-  const playClick = useCallback(() => {
-    const el = getAudio('/audio/key-click.mp3')
-    el.currentTime = 0
-    el.play().catch(() => {})
-  }, [])
-
-  const playGrant = useCallback(() => {
-    getAudio('/audio/grant.mp3').play().catch(() => {})
-    setTimeout(() => {
-      getAudio('/audio/gate-open.mp3').play().catch(() => {})
-    }, 200)
-  }, [])
-
-  return { playClick, playGrant }
-}
 
 interface LoginPageProps {
   onAccess: () => void
@@ -40,7 +12,17 @@ export function LoginPage({ onAccess }: LoginPageProps) {
   const [error, setError] = useState(false)
   const [entering, setEntering] = useState(false)
   const markRef = useRef<HTMLCanvasElement>(null)
-  const { playClick, playGrant } = useGateAudio()
+  const keyAudioRef = useRef<HTMLAudioElement | null>(null)
+  const grantAudioRef = useRef<HTMLAudioElement | null>(null)
+  const openAudioRef = useRef<HTMLAudioElement | null>(null)
+
+  const playSfx = (ref: { current: HTMLAudioElement | null }, volume: number) => {
+    const audio = ref.current
+    if (!audio) return
+    audio.volume = volume
+    audio.currentTime = 0
+    void audio.play().catch(() => {})
+  }
 
   // Draw HADAL mark — small, single color, per rule 005
   useEffect(() => {
@@ -62,9 +44,23 @@ export function LoginPage({ onAccess }: LoginPageProps) {
     x.fillStyle = '#C4FF2C'; x.fill()
   }, [])
 
+  useEffect(() => {
+    keyAudioRef.current = new Audio('/audio/key-click.mp3')
+    grantAudioRef.current = new Audio('/audio/grant.mp3')
+    openAudioRef.current = new Audio('/audio/gate-open.mp3')
+
+    return () => {
+      ;[keyAudioRef.current, grantAudioRef.current, openAudioRef.current].forEach(audio => {
+        if (!audio) return
+        audio.pause()
+        audio.src = ''
+      })
+    }
+  }, [])
+
   const pressDigit = (d: string) => {
     if (entering || digits.length >= 4) return
-    playClick()
+    playSfx(keyAudioRef, 0.45)
     const next = [...digits, d]
     setDigits(next)
     setError(false)
@@ -73,7 +69,9 @@ export function LoginPage({ onAccess }: LoginPageProps) {
       const code = next.join('')
       if (code === ACCESS_CODE) {
         setEntering(true)
-        playGrant()
+        playSfx(grantAudioRef, 0.82)
+        playSfx(openAudioRef, 0.9)
+        // Card fades out, then notify parent to fade overlay
         setTimeout(onAccess, 500)
       } else {
         setError(true)

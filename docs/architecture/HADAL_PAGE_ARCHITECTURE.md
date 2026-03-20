@@ -1,32 +1,24 @@
 # HADAL Page Architecture
 
-This document defines the next-step page and tab architecture for HADAL.
+**Status:** Implemented and hardened (v0.5.2) — 3-lane shell is live, mobile-responsive, cross-lane consistent.
 
-It exists to stop the active app from growing as a single infinite scroll and to give tomorrow's implementation a clear extraction plan.
-
-If there is a conflict between "keep building the scroll" and this document, this document wins.
+This document defines the page and tab architecture for HADAL. The single-scroll layout is no longer active.
 
 ---
 
-## Why The Current Scroll Stops Working
+## Implementation Status
 
-The active app in [src/App.tsx](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/src/App.tsx) is one stacked terminal:
+The 3-lane shell is fully implemented and has been through mobile hardening, visual de-theatricalization, and cross-lane consistency passes:
 
-1. Topbar
-2. HeroGrid
-3. MissileDefenseStrip
-4. SepBand
-5. ThreatFeed
-6. IntelWireSection
-7. EconomicSection
+- **Overview** (`#overview`) — `src/pages/OverviewPage.tsx` — HeroGrid, lane CTAs, MissileDefenseStrip, SepBand, ThreatFeed
+- **Operations** (`#operations`) — `src/pages/OperationsPage.tsx` — lazy-loaded (~199KB), IntelWireSection (map + 4 tabs), FlightTracker, lane CTA
+- **Analysis** (`#analysis`) — `src/pages/AnalysisPage.tsx` — lazy-loaded (~453KB), AnalysisSection, PredictorEngine, RegionalPanel, EconomicSection
 
-That structure creates three immediate problems:
+Routing: hash-based via `src/lib/lane-routing.ts` + `useSyncExternalStore`. Nav with active state in Topbar.
 
-- it mixes primary user tasks with secondary context in one linear journey
-- it makes the map/intelligence surface compete with feed and economic modules for attention
-- it keeps forcing dense operator modules into one page instead of giving users clear destinations
+Entry flow: LoginPage → NucleusTransition (~2.3s) → terminal reveal → Overview.
 
-MIT-style density is acceptable for an internal cockpit. HADAL is not that. HADAL needs a clearer user-facing architecture with obvious entry points and less scroll fatigue.
+Phase machine: `login → unlocked (300ms) → nucleus → terminal`. No glow phase.
 
 ---
 
@@ -76,7 +68,7 @@ MIT-style density is acceptable for an internal cockpit. HADAL is not that. HADA
 
 ---
 
-## Proposed 3-Page Structure
+## Implemented 3-Page Structure
 
 ### Page 1: Overview
 
@@ -236,57 +228,34 @@ Can stay stubbed:
 
 ---
 
-## Tomorrow Build Order
+## Build Order — Completed
 
-### 1. Carve Out Operations First
+All three steps from the original plan have been executed:
 
-Reason:
-- lowest ambiguity
-- highest payoff
-- `IntelWireSection` is already page-shaped
+1. **Operations carved out** — `IntelWireSection` moved to `OperationsPage.tsx`, lazy-loaded
+2. **Overview rebuilt** — `HeroGrid` + `MissileDefenseStrip` + condensed `ThreatFeed` on `OverviewPage.tsx`
+3. **Analysis stubbed** — `EconomicSection` + `PredictorEngine` + `AnalysisSection` on `AnalysisPage.tsx`, lazy-loaded
 
-Implementation target:
-- route/page for Operations
-- move `IntelWireSection` there with minimal internal changes
+### Still untouched (by design)
 
-### 2. Rebuild Overview Second
-
-Reason:
-- once Operations is removed, the homepage becomes easier to simplify
-
-Implementation target:
-- keep `HeroGrid`
-- keep `MissileDefenseStrip`
-- keep a reduced `ThreatFeed`
-- remove deep operational density
-
-### 3. Stub Analysis Third
-
-Reason:
-- clear destination needed now, full logic can arrive later
-
-Implementation target:
-- route/page
-- `EconomicSection`
-- prediction placeholder
-- report/export placeholder
-
-### 4. Leave These Untouched For Now
-
-- data pipeline in [useDataPipeline.ts](/Users/carlosprada/Library/Mobile%20Documents/com~apple~CloudDocs/HADAL/src/hooks/useDataPipeline.ts)
-- current intelligence subcomponents inside `IntelWireSection`
-- core visual language / CSS system unless routing forces small layout changes
+- data pipeline in `useDataPipeline.ts`
+- intelligence subcomponents inside `IntelWireSection`
+- core visual language / CSS system (updated for 3-lane nav, otherwise stable)
 
 ---
 
-## Final Recommendation
+## Completed Post-Extraction Work (v0.5.1–v0.5.2)
 
-The correct next step is not "add more sections."
+1. **Mobile hardening** — all 3 lanes responsive at 430/390/375/360/768/1024px
+2. **Visual de-theatricalization** — CRT effects, glows, decorative animations removed
+3. **Cross-lane consistency** — unified `--g` token system, shared CSS classes, no off-system colors
+4. **Dead interaction cleanup** — removed non-functional buttons (CALC, EXPORT SITREP, SHARE MAP)
+5. **Operations mobile internals** — PosturingTab/CasualtiesTab stack on mobile, touch targets fixed
+6. **Login transition** — compressed from ~6s to ~2.3s, glow phase removed
 
-It is:
+## Remaining Work
 
-1. make `Overview` the public-facing operating picture
-2. make `Operations` the real map/intelligence workspace
-3. make `Analysis` the home for prediction, economics, and future user workflows
-
-That gives HADAL a clearer, user-facing product shape without forcing a full redesign tomorrow.
+1. **Connect remaining static surfaces** to Gulf Watch data (MissileDefenseStrip, map events, LeftRail threat index)
+2. **Label or gate simulated surfaces** (sonar, waterfall, signal monitor in RightRail)
+3. **Stabilize routing** — hash routing works but is not production-grade (consider React Router later)
+4. **Clean dead code** — `useSepStatic.ts`, `continents.ts` can be deleted

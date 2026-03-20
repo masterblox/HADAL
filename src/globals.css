@@ -22,8 +22,8 @@
   --bg: #060800;
   --bg1: rgba(8,10,2,.98);
   --bg2: rgba(6,8,0,.95);
-  --HEAD: 'Rajdhani', sans-serif;
-  --C2: 'Teko', sans-serif;
+  --HEAD: 'Share Tech Mono', monospace;
+  --C2: 'Share Tech Mono', monospace;
   --MONO: 'Share Tech Mono', monospace;
 
   /* ── FONT SCALE (3 body tiers + display numbers) ── */
@@ -67,8 +67,8 @@
 
 @theme inline {
   --font-sans: 'Share Tech Mono', monospace;
-  --font-head: 'Rajdhani', sans-serif;
-  --font-c2: 'Teko', sans-serif;
+  --font-head: 'Share Tech Mono', monospace;
+  --font-c2: 'Share Tech Mono', monospace;
   --font-mono: 'Share Tech Mono', monospace;
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -168,6 +168,15 @@ body::before, body::after { display: none; }
   padding: 0 var(--section-pad) var(--section-pad);
 }
 
+/* ── Section title — military C2 monospace ── */
+.section-title {
+  font-family: var(--MONO);
+  font-size: var(--fs-big);
+  letter-spacing: .14em;
+  color: var(--g);
+  text-transform: uppercase;
+}
+
 /* ── HERO ── */
 .hero-grid {
   border: 1px solid var(--g15);
@@ -175,7 +184,7 @@ body::before, body::after { display: none; }
   margin-bottom: 0;
   min-height: var(--hero-height);
   height: var(--hero-height);
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* ── RESIZABLE HANDLES ── */
@@ -298,7 +307,7 @@ canvas.NOISE { display: none; }
   max-width: min(560px, 100%);
   aspect-ratio: 1;
   flex-shrink: 1;
-  z-index: 20;
+  z-index: 2;
 }
 .globe-canvas {
   border-radius: 50%;

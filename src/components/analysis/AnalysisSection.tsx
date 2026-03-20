@@ -277,7 +277,7 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
         </div>
 
         {/* Row 2 */}
-        <div className="analysis-intensity-grid" style={{ marginTop: 14 }}>
+        <div className="analysis-intensity-grid" style={{ marginTop: 6 }}>
 
           {/* Incident type radar */}
           <div className="analysis-chart-shell">

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { landPolygons, gulfPolygons, iraqPolygons, iranPolygon } from './land-110m'
-import { globeMarkers } from './globe-markers'
+import type { Incident } from '../hooks/useDataPipeline'
 
 /* ── Point-in-polygon (ray casting) ── */
 function pip(px: number, py: number, poly: number[][]) {
@@ -57,8 +57,16 @@ const LABELS: { lon: number; lat: number; text: string; color: string }[] = [
   { lon: 36.3, lat: 33.5, text: 'DAMASCUS', color: 'rgba(218,255,74,.5)' },
 ]
 
-export function useGlobe() {
+/* ── Classify incident severity for rendering ── */
+function isKinetic(type: string): boolean {
+  const t = type.toLowerCase()
+  return ['missile', 'airstrike', 'drone', 'strike', 'attack', 'bombing', 'shelling'].some(k => t.includes(k))
+}
+
+export function useGlobe(incidents: Incident[] = []) {
   const ref = useRef<HTMLCanvasElement>(null)
+  const incidentsRef = useRef<Incident[]>(incidents)
+  incidentsRef.current = incidents
 
   useEffect(() => {
     const C = ref.current
@@ -172,6 +180,8 @@ export function useGlobe() {
       cosRY = Math.cos(ryRad); sinRY = Math.sin(ryRad)
       cosRX = Math.cos(rxRad); sinRX = Math.sin(rxRad)
 
+      const t0 = Date.now() / 1e3
+
       // Ocean base
       const ocean = x.createRadialGradient(cx - R * .28, cy - R * .22, R * .05, cx, cy, R)
       ocean.addColorStop(0, 'rgba(6,18,8,1)')
@@ -220,29 +230,65 @@ export function useGlobe() {
         const lit = .25 + diff * .6
 
         switch (d.type) {
-          case 0: // General land
+          case 0:
             x.fillStyle = `rgba(218,255,74,${(.1 + lit * .18).toFixed(3)})`
             x.fillRect(px - .7, py - .7, 1.4, 1.4)
             break
-          case 1: // Iraq
+          case 1:
             x.fillStyle = `rgba(218,255,74,${(.16 + lit * .25).toFixed(3)})`
             x.fillRect(px - .8, py - .8, 1.6, 1.6)
             break
-          case 2: // Gulf states
+          case 2:
             x.fillStyle = `rgba(218,255,74,${(.25 + lit * .4).toFixed(3)})`
             x.fillRect(px - .9, py - .9, 1.8, 1.8)
             break
-          case 3: // Iran (orange)
+          case 3:
             x.fillStyle = `rgba(255,140,0,${(.2 + lit * .4).toFixed(3)})`
             x.fillRect(px - .9, py - .9, 1.8, 1.8)
             break
         }
       }
 
-      /* ── Political borders (thin dashed lines) ── */
+      /* ── Political borders ── */
       for (let i = 0; i < gulfPolygons.length; i++) drawBorder(gulfPolygons[i], 'rgba(218,255,74,.3)', .6)
       for (let i = 0; i < iraqPolygons.length; i++) drawBorder(iraqPolygons[i], 'rgba(218,255,74,.2)', .5)
       drawBorder(iranPolygon, 'rgba(255,140,0,.35)', .6)
+
+      /* ── Incident / conflict markers ── */
+      const incs = incidentsRef.current
+      for (let i = 0; i < incs.length; i++) {
+        const inc = incs[i]
+        const lat = inc.location?.lat
+        const lng = inc.location?.lng
+        if (lat == null || lng == null) continue
+
+        const p = proj(lng, lat)
+        if (!p) continue
+        const [px, py] = p
+
+        const kinetic = isKinetic(inc.type || '')
+        const pulse = .5 + .5 * Math.sin(t0 * 2.5 + i * 1.7)
+
+        if (kinetic) {
+          // Kinetic events: orange pulsing marker with expanding ring
+          x.beginPath(); x.arc(px, py, 4, 0, PI * 2)
+          x.fillStyle = 'rgba(255,80,20,.9)'; x.fill()
+          // Expanding pulse ring
+          x.beginPath(); x.arc(px, py, 4 + pulse * 8, 0, PI * 2)
+          x.strokeStyle = `rgba(255,80,20,${.4 * (1 - pulse)})`; x.lineWidth = 1.2; x.stroke()
+          // Inner hot core
+          x.beginPath(); x.arc(px, py, 1.5, 0, PI * 2)
+          x.fillStyle = 'rgba(255,200,100,.95)'; x.fill()
+        } else {
+          // Non-kinetic events: green static marker
+          x.beginPath(); x.arc(px, py, 3, 0, PI * 2)
+          x.fillStyle = 'rgba(218,255,74,.8)'; x.fill()
+          // Subtle ring
+          x.beginPath(); x.arc(px, py, 5, 0, PI * 2)
+          x.strokeStyle = 'rgba(218,255,74,.25)'; x.lineWidth = .8; x.stroke()
+        }
+      }
+
       x.restore()
 
       // Rim darkening
@@ -259,22 +305,6 @@ export function useGlobe() {
       x.beginPath(); x.arc(cx, cy, R, 0, PI * 2)
       x.strokeStyle = 'rgba(218,255,74,.35)'; x.lineWidth = 1.5; x.stroke()
 
-      // Markers
-      globeMarkers.forEach(m => {
-        const p = proj(m.lon, m.lat)
-        if (!p) return
-        const [px, py] = p
-        if (m.t === 'l') {
-          x.beginPath(); x.arc(px, py, 3.5, 0, PI * 2); x.fillStyle = 'rgba(255,100,0,.9)'; x.fill()
-          x.beginPath(); x.arc(px, py, 5, 0, PI * 2)
-          x.strokeStyle = 'rgba(255,100,0,.3)'; x.lineWidth = 1; x.stroke()
-        } else {
-          x.beginPath(); x.arc(px, py, 2.5, 0, PI * 2); x.fillStyle = 'rgba(218,255,74,.9)'; x.fill()
-          x.beginPath(); x.arc(px, py, 4.5, 0, PI * 2)
-          x.strokeStyle = 'rgba(218,255,74,.25)'; x.lineWidth = 1; x.stroke()
-        }
-      })
-
       // City labels
       x.font = '10px "Share Tech Mono", monospace'
       for (const lb of LABELS) {
@@ -283,6 +313,16 @@ export function useGlobe() {
         const [px, py] = p
         x.fillStyle = lb.color
         x.fillText(lb.text, px + 6, py - 4)
+      }
+
+      // Incident count badge near globe
+      if (incs.length > 0) {
+        const withCoords = incs.filter(i => i.location?.lat != null && i.location?.lng != null)
+        if (withCoords.length > 0) {
+          x.font = '9px "Share Tech Mono", monospace'
+          x.fillStyle = 'rgba(255,80,20,.8)'
+          x.fillText(`${withCoords.length} ACTIVE CONFLICTS`, cx - 50, cy + R + 16)
+        }
       }
 
       // Momentum & auto-rotation

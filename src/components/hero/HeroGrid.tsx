@@ -16,7 +16,7 @@ export function HeroGrid({ sandbox, threatLevel, pipelineStatus, prediction, inc
   return (
     <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr 260px', gap: 0 }}>
       <LeftRail sandbox={sandbox} threatLevel={threatLevel} pipelineStatus={pipelineStatus} prediction={prediction} />
-      <GlobeView />
+      <GlobeView incidents={incidents} />
       <RightRail sandbox={sandbox} incidents={incidents} />
     </div>
   )

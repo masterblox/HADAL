@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { useGlobe } from '@/canvas/useGlobe'
+import type { Incident } from '@/hooks/useDataPipeline'
 
-export function GlobeView() {
-  const globeRef = useGlobe()
+export function GlobeView({ incidents }: { incidents: Incident[] }) {
+  const globeRef = useGlobe(incidents)
   const ticksRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {

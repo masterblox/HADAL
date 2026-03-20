@@ -11,6 +11,7 @@ import { IwlBottom } from './IwlBottom'
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
 import type { Incident, AirspaceData, PriceData } from '@/hooks/useDataPipeline'
 import { exportSitrep } from '@/lib/sitrep-export'
+import { useOpenSky } from '@/hooks/useOpenSky'
 
 interface IntelWireSectionProps {
   incidents: Incident[]
@@ -20,11 +21,12 @@ interface IntelWireSectionProps {
 }
 
 export function IntelWireSection({ incidents, airspace, prices, sandbox }: IntelWireSectionProps) {
+  const openSky = useOpenSky()
   const [activeTab, setActiveTab] = useState<'map' | 'airspace' | 'casualties' | 'posturing'>('map')
   const [layerVisibility, setLayerVisibility] = useState<Record<string, boolean>>({
     satellite: true, missile: true, airstrike: true, ground: true,
     intercept: true, combatants: true, diplomatic: true, 'airspace-lyr': true,
-    'live-incidents': true,
+    'live-incidents': true, aircraft: true,
   })
   const [syncStatus, setSyncStatus] = useState('SYNCING...')
   const [datalinkText, setDatalinkText] = useState('INITIALIZING PIPELINE...')
@@ -35,12 +37,13 @@ export function IntelWireSection({ incidents, airspace, prices, sandbox }: Intel
 
   return (
     <div className="iwl-wrap">
-      <IwlNav activeTab={activeTab} onTabChange={setActiveTab} syncStatus={syncStatus} />
+      <IwlNav activeTab={activeTab} onTabChange={setActiveTab} syncStatus={syncStatus} aircraftCount={openSky.flights.length} aircraftStatus={openSky.status} />
       <div className="iwl-map-area" style={{ position: 'relative' }}>
         <MapDepthLayer />
         <LeafletMap
           layerVisibility={layerVisibility}
           incidents={incidents}
+          flights={openSky.flights}
           onSyncUpdate={setSyncStatus}
           onDatalinkUpdate={setDatalinkText}
         />
@@ -65,7 +68,7 @@ export function IntelWireSection({ incidents, airspace, prices, sandbox }: Intel
           </div>
         )}
       </div>
-      <IwlBottom datalinkText={datalinkText} onExportSitrep={() => exportSitrep(incidents, prices ?? null, airspace)} />
+      <IwlBottom datalinkText={datalinkText} onExportSitrep={() => exportSitrep(incidents, prices ?? null, airspace)} flights={openSky.flights} aircraftStatus={openSky.status} />
     </div>
   )
 }

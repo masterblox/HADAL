@@ -194,7 +194,7 @@ export function useOpenSky(): OpenSkyState {
           }),
         }
       })
-    }, 2000)
+    }, 8000)
     return () => clearInterval(id)
   }, [])
 

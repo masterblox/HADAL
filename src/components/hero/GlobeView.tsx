@@ -31,7 +31,7 @@ export function GlobeView({ incidents }: { incidents: Incident[] }) {
         <canvas ref={ticksRef} width={420} height={420} className="globe-ticks" />
         <canvas ref={globeRef} width={420} height={420} className="globe-canvas" />
       </div>
-      <div className="globe-label">&#9670; GULF THEATRE · REAL-TIME OSINT</div>
+      <div className="globe-label">&#9670; PRESSURE MAP · REAL-TIME OSINT</div>
     </div>
   )
 }

@@ -63,6 +63,47 @@ function isKinetic(type: string): boolean {
   return ['missile', 'airstrike', 'drone', 'strike', 'attack', 'bombing', 'shelling'].some(k => t.includes(k))
 }
 
+/* ── Pressure grid: aggregate incidents into geographic cells ── */
+interface PressureCell {
+  lon: number
+  lat: number
+  pressure: number
+  kineticRatio: number
+  count: number
+  maxCred: number
+  hasVerified: boolean
+}
+
+const CELL_DEG = 3
+
+function buildPressureGrid(incidents: Incident[]): PressureCell[] {
+  const cells = new Map<string, PressureCell>()
+  for (const inc of incidents) {
+    const lat = inc.location?.lat
+    const lng = inc.location?.lng
+    if (lat == null || lng == null) continue
+    const cLat = Math.round(lat / CELL_DEG) * CELL_DEG
+    const cLon = Math.round(lng / CELL_DEG) * CELL_DEG
+    const key = `${cLat},${cLon}`
+    const kinetic = isKinetic(inc.type || '')
+    const cred = (inc.credibility ?? 50) / 100
+    const vMul = inc.verificationBadge === 'VERIFIED' ? 1.5
+               : inc.verificationBadge === 'LIKELY' ? 1.2 : 1.0
+    const casMul = ((inc.casualties?.total ?? 0) > 0) ? 1.5 : 1.0
+    const weight = cred * (kinetic ? 2.5 : 1.0) * vMul * casMul
+    if (!cells.has(key)) {
+      cells.set(key, { lon: cLon, lat: cLat, pressure: 0, kineticRatio: 0, count: 0, maxCred: 0, hasVerified: false })
+    }
+    const c = cells.get(key)!
+    c.kineticRatio = (c.kineticRatio * c.count + (kinetic ? 1 : 0)) / (c.count + 1)
+    c.count++
+    c.pressure += weight
+    c.maxCred = Math.max(c.maxCred, inc.credibility ?? 50)
+    if (inc.verificationBadge === 'VERIFIED') c.hasVerified = true
+  }
+  return Array.from(cells.values())
+}
+
 export function useGlobe(incidents: Incident[] = []) {
   const ref = useRef<HTMLCanvasElement>(null)
   const incidentsRef = useRef<Incident[]>(incidents)
@@ -99,6 +140,10 @@ export function useGlobe(incidents: Incident[] = []) {
     const AUTO_SPEED = .048
     const FRICTION = .92
     const IDLE_RESUME_MS = 2000
+
+    // Pressure grid cache
+    let cachedGrid: PressureCell[] = []
+    let cachedIncRef: Incident[] = []
 
     // Cached trig values
     let cosRY = 0, sinRY = 0, cosRX = 0, sinRX = 0
@@ -144,7 +189,7 @@ export function useGlobe(incidents: Incident[] = []) {
     C.style.cursor = 'grab'
     C.style.touchAction = 'none'
 
-    function proj(lon: number, lat: number): [number, number, number, number] | null {
+    function proj(lon: number, lat: number, r = R): [number, number, number, number] | null {
       const th = lon * PI / 180, ph = (90 - lat) * PI / 180
       const sph = Math.sin(ph)
       const X0 = sph * Math.cos(th), Y0 = Math.cos(ph), Z0 = sph * Math.sin(th)
@@ -154,7 +199,7 @@ export function useGlobe(incidents: Incident[] = []) {
       const Z2 = Y0 * sinRX + Z1 * cosRX
       if (Z2 < 0) return null
       const diff = Math.max(0, X1 * Lx + Y2 * (-Ly) + Z2 * Lz)
-      return [cx + R * X1, cy - R * Y2, Z2, diff]
+      return [cx + r * X1, cy - r * Y2, Z2, diff]
     }
 
     /* ── Draw thin dashed political borders ── */
@@ -254,41 +299,6 @@ export function useGlobe(incidents: Incident[] = []) {
       for (let i = 0; i < iraqPolygons.length; i++) drawBorder(iraqPolygons[i], 'rgba(218,255,74,.2)', .5)
       drawBorder(iranPolygon, 'rgba(255,140,0,.35)', .6)
 
-      /* ── Incident / conflict markers ── */
-      const incs = incidentsRef.current
-      for (let i = 0; i < incs.length; i++) {
-        const inc = incs[i]
-        const lat = inc.location?.lat
-        const lng = inc.location?.lng
-        if (lat == null || lng == null) continue
-
-        const p = proj(lng, lat)
-        if (!p) continue
-        const [px, py] = p
-
-        const kinetic = isKinetic(inc.type || '')
-        const pulse = .5 + .5 * Math.sin(t0 * 2.5 + i * 1.7)
-
-        if (kinetic) {
-          // Kinetic events: orange pulsing marker with expanding ring
-          x.beginPath(); x.arc(px, py, 4, 0, PI * 2)
-          x.fillStyle = 'rgba(255,80,20,.9)'; x.fill()
-          // Expanding pulse ring
-          x.beginPath(); x.arc(px, py, 4 + pulse * 8, 0, PI * 2)
-          x.strokeStyle = `rgba(255,80,20,${.4 * (1 - pulse)})`; x.lineWidth = 1.2; x.stroke()
-          // Inner hot core
-          x.beginPath(); x.arc(px, py, 1.5, 0, PI * 2)
-          x.fillStyle = 'rgba(255,200,100,.95)'; x.fill()
-        } else {
-          // Non-kinetic events: green static marker
-          x.beginPath(); x.arc(px, py, 3, 0, PI * 2)
-          x.fillStyle = 'rgba(218,255,74,.8)'; x.fill()
-          // Subtle ring
-          x.beginPath(); x.arc(px, py, 5, 0, PI * 2)
-          x.strokeStyle = 'rgba(218,255,74,.25)'; x.lineWidth = .8; x.stroke()
-        }
-      }
-
       x.restore()
 
       // Rim darkening
@@ -305,24 +315,102 @@ export function useGlobe(incidents: Incident[] = []) {
       x.beginPath(); x.arc(cx, cy, R, 0, PI * 2)
       x.strokeStyle = 'rgba(218,255,74,.35)'; x.lineWidth = 1.5; x.stroke()
 
-      // City labels
+      /* ── Pressure columns (data-driven intensity) ── */
+      const incs = incidentsRef.current
+      if (incs !== cachedIncRef) { cachedIncRef = incs; cachedGrid = buildPressureGrid(incs) }
+
+      if (cachedGrid.length > 0) {
+        const maxP = Math.max(...cachedGrid.map(c => c.pressure), 1)
+        const MAX_H = R * 0.18
+
+        const cols: { bx: number; by: number; tx: number; ty: number; z: number; norm: number; kr: number; hf: number }[] = []
+
+        for (const cell of cachedGrid) {
+          const norm = cell.pressure / maxP
+          const bH = MAX_H * Math.pow(norm, 0.6)
+
+          // Sub-bars: tight cluster around cell center
+          const subs: [number, number, number][] = [[0, 0, 1]]
+          if (cell.count >= 4) {
+            const o = CELL_DEG * .18
+            subs.push([o, 0, .65], [-o, 0, .6])
+          }
+          if (cell.count >= 8) {
+            const o = CELL_DEG * .22
+            subs.push([0, o, .5], [0, -o, .45])
+          }
+          if (cell.count >= 14) {
+            const o = CELL_DEG * .25
+            subs.push([o, o, .35], [-o, -o, .3])
+          }
+
+          for (const [dLo, dLa, hm] of subs) {
+            const lo = cell.lon + dLo, la = cell.lat + dLa
+            const base = proj(lo, la)
+            const tip = proj(lo, la, R + bH * hm)
+            if (!base || !tip) continue
+            cols.push({ bx: base[0], by: base[1], tx: tip[0], ty: tip[1], z: base[2], norm, kr: cell.kineticRatio, hf: hm })
+          }
+        }
+
+        // Sort back-to-front for correct depth
+        cols.sort((a, b) => a.z - b.z)
+        x.lineCap = 'round'
+
+        for (const c of cols) {
+          const rr = 218 + Math.round(37 * c.kr)
+          const gg = 255 - Math.round(115 * c.kr)
+          const bb = 74 - Math.round(74 * c.kr)
+          const hf = c.hf, n = c.norm
+
+          // Outer glow — thinner to reduce overlap
+          x.beginPath(); x.moveTo(c.bx, c.by); x.lineTo(c.tx, c.ty)
+          x.strokeStyle = `rgba(${rr},${gg},${bb},${((.08 + n * .14) * hf).toFixed(3)})`
+          x.lineWidth = 2 + n * 3; x.stroke()
+
+          // Core column
+          x.beginPath(); x.moveTo(c.bx, c.by); x.lineTo(c.tx, c.ty)
+          x.strokeStyle = `rgba(${rr},${gg},${bb},${((.45 + n * .45) * hf).toFixed(3)})`
+          x.lineWidth = 1 + n * 1.5; x.stroke()
+
+          // Base pad
+          x.beginPath(); x.arc(c.bx, c.by, 1.2 + n * 1.5, 0, PI * 2)
+          x.fillStyle = `rgba(${rr},${gg},${bb},${((.4 + n * .35) * hf).toFixed(3)})`; x.fill()
+
+          // Tip cap on tall bars only
+          if (n > .4 && hf > .6) {
+            x.beginPath(); x.arc(c.tx, c.ty, .6 + n * .8, 0, PI * 2)
+            x.fillStyle = `rgba(${rr},${gg},${bb},${((.2 + n * .25) * hf).toFixed(3)})`; x.fill()
+          }
+        }
+      }
+
+      // City labels — fade when near active pressure zones to avoid visual conflict
       x.font = '10px "Share Tech Mono", monospace'
       for (const lb of LABELS) {
         const p = proj(lb.lon, lb.lat)
         if (!p) continue
         const [px, py] = p
-        x.fillStyle = lb.color
+        const nearPressure = cachedGrid.some(c =>
+          Math.abs(c.lon - lb.lon) < CELL_DEG * 1.2 && Math.abs(c.lat - lb.lat) < CELL_DEG * 1.2
+        )
+        if (nearPressure) {
+          x.fillStyle = lb.color.replace(/[\d.]+\)$/, m => `${(parseFloat(m) * .35).toFixed(2)})`)
+        } else {
+          x.fillStyle = lb.color
+        }
         x.fillText(lb.text, px + 6, py - 4)
       }
 
-      // Incident count badge near globe
-      if (incs.length > 0) {
-        const withCoords = incs.filter(i => i.location?.lat != null && i.location?.lng != null)
-        if (withCoords.length > 0) {
-          x.font = '9px "Share Tech Mono", monospace'
-          x.fillStyle = 'rgba(255,80,20,.8)'
-          x.fillText(`${withCoords.length} ACTIVE CONFLICTS`, cx - 50, cy + R + 16)
-        }
+      // Pressure readout
+      if (cachedGrid.length > 0) {
+        const kZones = cachedGrid.filter(c => c.kineticRatio > .5).length
+        const evtCount = cachedGrid.reduce((s, c) => s + c.count, 0)
+        x.font = '9px "Share Tech Mono", monospace'
+        x.fillStyle = kZones > 3 ? 'rgba(255,140,0,.8)' : 'rgba(218,255,74,.6)'
+        const readout = `${evtCount} EVENTS \u00b7 ${cachedGrid.length} HOTSPOTS`
+        const tw = x.measureText(readout).width
+        x.fillText(readout, cx - tw / 2, cy + R + 16)
       }
 
       // Momentum & auto-rotation

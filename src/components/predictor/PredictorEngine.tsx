@@ -112,7 +112,7 @@ export function PredictorEngine({ incidents, airspace, prices }: Props) {
       <div className="predictor-header">
         <div className="predictor-title-row">
           <span className="predictor-title section-title">PREDICTION ENGINE</span>
-          <span className="predictor-subtitle">BOOTSTRAP PROFILE · SEQUENCE MODEL · THEATRE RESPONSE</span>
+          <span className="predictor-subtitle">SEQUENCE MODEL · THEATRE RESPONSE</span>
         </div>
         <div className="predictor-trend">
           <span>MODE {isDemo ? 'DEMO' : prediction.sufficient ? 'LOCAL' : 'LIMITED'}</span>

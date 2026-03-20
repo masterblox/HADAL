@@ -179,10 +179,9 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
 
           {/* Timeline / Tempo */}
           <div className="analysis-chart-shell">
-            <div className="analysis-chart-copy">
-              <div className="analysis-chart-kicker">TEMPO</div>
-              <div className="analysis-chart-title">Event Timeline</div>
-              <div className="analysis-chart-text">14D VOLUME · KINETIC OVERLAY</div>
+            <div className="analysis-chart-bar">
+              <span className="analysis-chart-kicker">TEMPO</span>
+              <span className="analysis-chart-title">Event Timeline</span>
             </div>
             <div className="analysis-chart-stage">
               <ResponsiveContainer width="100%" height={180}>
@@ -234,10 +233,9 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
 
           {/* Geographic concentration */}
           <div className="analysis-chart-shell">
-            <div className="analysis-chart-copy">
-              <div className="analysis-chart-kicker">GEOGRAPHY</div>
-              <div className="analysis-chart-title">Concentration</div>
-              <div className="analysis-chart-text">BY COUNTRY · ABSOLUTE COUNT</div>
+            <div className="analysis-chart-bar">
+              <span className="analysis-chart-kicker">GEOGRAPHY</span>
+              <span className="analysis-chart-title">Concentration</span>
             </div>
             <div className="analysis-chart-stage">
               <ResponsiveContainer width="100%" height={180}>
@@ -281,10 +279,9 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
 
           {/* Incident type radar */}
           <div className="analysis-chart-shell">
-            <div className="analysis-chart-copy">
-              <div className="analysis-chart-kicker">INTENSITY</div>
-              <div className="analysis-chart-title">Type Profile</div>
-              <div className="analysis-chart-text">CATEGORY DISTRIBUTION</div>
+            <div className="analysis-chart-bar">
+              <span className="analysis-chart-kicker">INTENSITY</span>
+              <span className="analysis-chart-title">Type Profile</span>
             </div>
             <div className="analysis-chart-stage radar">
               <ResponsiveContainer width="100%" height={180}>
@@ -308,10 +305,9 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
 
           {/* Source credibility */}
           <div className="analysis-chart-shell">
-            <div className="analysis-chart-copy">
-              <div className="analysis-chart-kicker">SOURCES</div>
-              <div className="analysis-chart-title">Feed Quality</div>
-              <div className="analysis-chart-text">BY SOURCE · AVG CREDIBILITY</div>
+            <div className="analysis-chart-bar">
+              <span className="analysis-chart-kicker">SOURCES</span>
+              <span className="analysis-chart-title">Feed Quality</span>
             </div>
             <div className="analysis-chart-stage">
               <ResponsiveContainer width="100%" height={180}>

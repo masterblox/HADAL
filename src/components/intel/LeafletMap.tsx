@@ -6,6 +6,38 @@ import { trajectories } from '@/data/trajectories'
 import { thaadSites } from '@/data/thaad-sites'
 import { airspaceZones } from '@/data/airspace-zones'
 import type { Incident } from '@/hooks/useDataPipeline'
+import type { DemoFlight } from '@/data/demo-flights'
+
+/* ── Aircraft rendering helpers (ported from FlightTracker) ── */
+const AIRCRAFT_COL: Record<DemoFlight['type'], string> = {
+  commercial: 'rgba(218,255,74,.8)',
+  military: 'rgba(255,140,0,.9)',
+  cargo: 'rgba(120,200,255,.7)',
+  surveillance: 'rgba(255,60,60,.85)',
+}
+
+function chevronSvg(heading: number, col: string) {
+  return `<div style="transform:rotate(${heading}deg);width:20px;height:20px;display:flex;align-items:center;justify-content:center;">
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <path d="M9 2 L15 14 L9 10 L3 14 Z" fill="${col.replace(/[\d.]+\)$/, '.25)')}" stroke="${col}" stroke-width="1.2" stroke-linejoin="round"/>
+    </svg>
+  </div>`
+}
+
+function trailPts(lat: number, lng: number, heading: number, len: number): [number, number][] {
+  const rad = ((heading + 180) % 360) * Math.PI / 180
+  const pts: [number, number][] = []
+  for (let i = 0; i <= 4; i++) {
+    const d = (i / 4) * len
+    pts.push([lat + d * Math.cos(rad), lng + d * Math.sin(rad) / Math.cos(lat * Math.PI / 180)])
+  }
+  return pts
+}
+
+function buildAircraftTooltip(f: DemoFlight) {
+  const col = AIRCRAFT_COL[f.type]
+  return `<div class="ft-tip"><span style="color:${col};font-weight:700;">${f.callsign}</span> <span style="opacity:.5">${f.aircraft}</span><br/>FL${f.alt} · ${f.speed}kt · ${f.heading.toFixed(0)}\u00b0<br/><span style="opacity:.4">${f.origin} \u2192 ${f.dest}</span></div>`
+}
 
 function mkPopup(title: string, type: string, lat: number, lon: number, conf: number, src: string, time: string, detail?: string) {
   const typeColors: Record<string, string> = {missile:'rgba(255,140,0,.9)',airstrike:'rgba(255,130,0,.9)',ground:'rgba(218,255,74,.65)',intercept:'rgba(218,255,74,.9)',combatants:'rgba(218,255,74,.9)',diplomatic:'rgba(180,120,255,.9)'}
@@ -16,16 +48,25 @@ function mkPopup(title: string, type: string, lat: number, lon: number, conf: nu
 interface LeafletMapProps {
   layerVisibility: Record<string, boolean>
   incidents: Incident[]
+  flights?: DemoFlight[]
   onSyncUpdate: (s: string) => void
   onDatalinkUpdate: (s: string) => void
 }
 
-export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalinkUpdate }: LeafletMapProps) {
+interface AircraftEntry {
+  marker: L.Marker
+  trail: L.Polyline
+  type: DemoFlight['type']
+}
+
+export function LeafletMap({ layerVisibility, incidents, flights, onSyncUpdate, onDatalinkUpdate }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<L.Map | null>(null)
   const layerGroups = useRef<Record<string, L.LayerGroup>>({})
   const syncUpdateRef = useRef(onSyncUpdate)
   const datalinkUpdateRef = useRef(onDatalinkUpdate)
+  const aircraftCache = useRef<Map<string, AircraftEntry>>(new Map())
+  const lastAircraftGroup = useRef<L.LayerGroup | null>(null)
 
   useEffect(() => {
     syncUpdateRef.current = onSyncUpdate
@@ -45,7 +86,7 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
     }).addTo(map)
 
     const groups: Record<string, L.LayerGroup> = {}
-    ;['missile','airstrike','ground','intercept','combatants','diplomatic','airspace-lyr','live-incidents'].forEach(n => {
+    ;['missile','airstrike','ground','intercept','combatants','diplomatic','airspace-lyr','live-incidents','aircraft'].forEach(n => {
       groups[n] = L.layerGroup().addTo(map)
     })
     layerGroups.current = groups
@@ -186,6 +227,94 @@ export function LeafletMap({ layerVisibility, incidents, onSyncUpdate, onDatalin
       if (!visible && map.hasLayer(lyr)) map.removeLayer(lyr)
     })
   }, [layerVisibility])
+
+  // Aircraft markers + heading trails — keyed by callsign, updated in place
+  useEffect(() => {
+    const map = mapInstance.current
+    const group = layerGroups.current['aircraft']
+    if (!map || !group) return
+
+    const cache = aircraftCache.current
+
+    // Map was recreated (incidents.length changed) — old layer refs are dead
+    if (group !== lastAircraftGroup.current) {
+      cache.clear()
+      lastAircraftGroup.current = group
+    }
+
+    const seen = new Set<string>()
+
+    if (flights && flights.length > 0) {
+      for (const f of flights) {
+        seen.add(f.callsign)
+        const col = AIRCRAFT_COL[f.type]
+        const existing = cache.get(f.callsign)
+
+        if (existing) {
+          // Position — cheap CSS transform via Leaflet
+          existing.marker.setLatLng([f.lat, f.lng])
+
+          // Heading — rotate the icon's inner div directly (no DOM rebuild)
+          const el = existing.marker.getElement()
+          if (el) {
+            const inner = el.firstElementChild as HTMLElement | null
+            if (inner) inner.style.transform = `rotate(${f.heading}deg)`
+          }
+
+          // Trail path update
+          existing.trail.setLatLngs(trailPts(f.lat, f.lng, f.heading, 0.5))
+
+          // Tooltip content
+          existing.marker.setTooltipContent(buildAircraftTooltip(f))
+
+          // Type change (rare — live reclassification) — requires icon + trail color rebuild
+          if (existing.type !== f.type) {
+            existing.marker.setIcon(L.divIcon({
+              html: chevronSvg(f.heading, col),
+              className: '',
+              iconSize: [20, 20],
+              iconAnchor: [10, 10],
+            }))
+            existing.trail.setStyle({ color: col.replace(/[\d.]+\)$/, '.2)') })
+            existing.type = f.type
+          }
+        } else {
+          // New aircraft — create marker + trail
+          const trail = L.polyline(trailPts(f.lat, f.lng, f.heading, 0.5), {
+            color: col.replace(/[\d.]+\)$/, '.2)'),
+            weight: 1,
+            dashArray: '3 4',
+          }).addTo(group)
+
+          const icon = L.divIcon({
+            html: chevronSvg(f.heading, col),
+            className: '',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+          })
+          const marker = L.marker([f.lat, f.lng], { icon })
+            .addTo(group)
+            .bindTooltip(buildAircraftTooltip(f), {
+              direction: 'right',
+              offset: [12, 0],
+              className: 'ft-tooltip',
+              permanent: false,
+            })
+
+          cache.set(f.callsign, { marker, trail, type: f.type })
+        }
+      }
+    }
+
+    // Remove aircraft that left the airspace
+    for (const [callsign, entry] of cache) {
+      if (!seen.has(callsign)) {
+        group.removeLayer(entry.marker)
+        group.removeLayer(entry.trail)
+        cache.delete(callsign)
+      }
+    }
+  }, [flights, incidents.length])
 
   return <div ref={mapRef} id="iwl-map" />
 }

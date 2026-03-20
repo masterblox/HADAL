@@ -1,5 +1,4 @@
 import { IntelWireSection } from '@/components/intel/IntelWireSection'
-import { FlightTracker } from '@/components/flight/FlightTracker'
 import type { Incident, AirspaceData, PriceData } from '@/hooks/useDataPipeline'
 import { navigateTo } from '@/lib/lane-routing'
 
@@ -30,7 +29,6 @@ export function OperationsPage({ incidents, airspace, prices, sandbox }: Operati
         </p>
       </section>
       <IntelWireSection incidents={incidents} airspace={airspace} prices={prices} sandbox={sandbox} />
-      <FlightTracker />
       <section className="lane-footer-grid">
         <article className="lane-footer-card jp-panel">
           <div className="lane-cta-kicker">Lane 3</div>

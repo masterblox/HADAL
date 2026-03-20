@@ -2,9 +2,11 @@ interface IwlNavProps {
   activeTab: string
   onTabChange: (tab: 'map' | 'airspace' | 'casualties' | 'posturing') => void
   syncStatus: string
+  aircraftCount?: number
+  aircraftStatus?: string
 }
 
-export function IwlNav({ activeTab, onTabChange, syncStatus }: IwlNavProps) {
+export function IwlNav({ activeTab, onTabChange, syncStatus, aircraftCount, aircraftStatus }: IwlNavProps) {
   const tabs: { id: 'map' | 'airspace' | 'casualties' | 'posturing'; label: string }[] = [
     { id: 'map', label: 'Tactical Map' },
     { id: 'airspace', label: 'Airspace Status' },
@@ -41,6 +43,15 @@ export function IwlNav({ activeTab, onTabChange, syncStatus }: IwlNavProps) {
         ))}
       </div>
       <div className="iwl-nav-r">
+        {aircraftCount != null && (
+          <div className="iwl-sync" style={{ marginRight: 12 }}>
+            <div className="jp-status-dot" style={{
+              width: 5, height: 5, borderRadius: '50%',
+              background: aircraftStatus === 'LIVE' ? 'var(--g)' : aircraftStatus === 'STALE' ? 'var(--warn)' : 'var(--g3)',
+            }} />
+            <span>{aircraftCount} TRACKS · {aircraftStatus}</span>
+          </div>
+        )}
         <div className="iwl-sync">
           <div className="iwl-sync-dot jp-status-dot active" />
           <span>{syncStatus}</span>

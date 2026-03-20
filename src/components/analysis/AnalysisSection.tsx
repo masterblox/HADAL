@@ -182,12 +182,10 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
             <div className="analysis-chart-copy">
               <div className="analysis-chart-kicker">TEMPO</div>
               <div className="analysis-chart-title">Event Timeline</div>
-              <div className="analysis-chart-text">
-                14-day incident volume with kinetic overlay. Spikes indicate escalation windows.
-              </div>
+              <div className="analysis-chart-text">14D VOLUME · KINETIC OVERLAY</div>
             </div>
             <div className="analysis-chart-stage">
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={180}>
                 <AreaChart data={timeline} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
                   <defs>
                     <linearGradient id="hadal-area-g" x1="0" y1="0" x2="0" y2="1">
@@ -239,12 +237,10 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
             <div className="analysis-chart-copy">
               <div className="analysis-chart-kicker">GEOGRAPHY</div>
               <div className="analysis-chart-title">Concentration</div>
-              <div className="analysis-chart-text">
-                Event volume by country. Bar length encodes absolute count.
-              </div>
+              <div className="analysis-chart-text">BY COUNTRY · ABSOLUTE COUNT</div>
             </div>
             <div className="analysis-chart-stage">
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={180}>
                 <BarChart
                   data={geoData}
                   layout="vertical"
@@ -288,12 +284,10 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
             <div className="analysis-chart-copy">
               <div className="analysis-chart-kicker">INTENSITY</div>
               <div className="analysis-chart-title">Type Profile</div>
-              <div className="analysis-chart-text">
-                Incident category distribution. Shape reveals the theatre's character — kinetic-heavy vs. diplomatic.
-              </div>
+              <div className="analysis-chart-text">CATEGORY DISTRIBUTION</div>
             </div>
             <div className="analysis-chart-stage radar">
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={180}>
                 <RadarChart data={typeData} cx="50%" cy="50%" outerRadius="72%">
                   <PolarGrid stroke="rgba(196,255,44,.12)" />
                   <PolarAngleAxis dataKey="type" tick={{ ...TICK, fontSize: 10 }} />
@@ -317,12 +311,10 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
             <div className="analysis-chart-copy">
               <div className="analysis-chart-kicker">SOURCES</div>
               <div className="analysis-chart-title">Feed Quality</div>
-              <div className="analysis-chart-text">
-                Source volume ranked by count. Tooltip shows average credibility score per source.
-              </div>
+              <div className="analysis-chart-text">BY SOURCE · AVG CREDIBILITY</div>
             </div>
             <div className="analysis-chart-stage">
-              <ResponsiveContainer width="100%" height={280}>
+              <ResponsiveContainer width="100%" height={180}>
                 <BarChart
                   data={sourceData}
                   layout="vertical"

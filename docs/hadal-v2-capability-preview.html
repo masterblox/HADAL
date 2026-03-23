@@ -136,16 +136,28 @@ function updClock(){document.getElementById('hTime').textContent=new Date().toIS
 updClock();setInterval(updClock,1000);
 
 // Shared: dense raster base texture
-function rasterBase(x,W,H,density){
-const pW=W*DPR,pH=H*DPR;
-const imgD=x.createImageData(pW,pH);
+// Cached noise textures — generate once, drawImage every frame
+const _noiseCache=new Map();
+function _makeNoise(w,h,density){
+const key=w+'x'+h+'d'+density;
+if(_noiseCache.has(key))return _noiseCache.get(key);
+const oc=document.createElement('canvas');oc.width=w;oc.height=h;
+const ox=oc.getContext('2d');
+const imgD=ox.createImageData(w,h);
 const d=imgD.data;
 for(let i=0;i<d.length;i+=4){
 const n=Math.random();
 const v=n<density?.06+(n*2):0;
 d[i]=Math.floor(218*v*.5);d[i+1]=Math.floor(255*v);d[i+2]=Math.floor(74*v*.3);d[i+3]=255;
 }
-x.save();x.setTransform(1,0,0,1,0,0);x.putImageData(imgD,0,0);x.restore();
+ox.putImageData(imgD,0,0);
+_noiseCache.set(key,oc);
+return oc;
+}
+function rasterBase(x,W,H,density){
+const pW=W*DPR,pH=H*DPR;
+const cached=_makeNoise(pW,pH,density);
+x.save();x.setTransform(1,0,0,1,0,0);x.drawImage(cached,0,0);x.restore();
 x.setTransform(DPR,0,0,DPR,0,0);
 }
 
@@ -257,11 +269,11 @@ x.fillStyle=BG;x.fillRect(vx-1.5,py-1.5,3,3);
 });
 // Downward pulses
 const p1=((t*.5+i*.13)%1);
-x.fillStyle=G;x.shadowColor=G;x.shadowBlur=8;
+x.fillStyle=G;
 x.fillRect(vx-3,H*.2+(H*.3)*p1-3,6,6);
 const p2=((t*.4+i*.17+.5)%1);
 x.fillRect(vx-3,H*.5+(H*.3)*p2-3,6,6);
-x.shadowBlur=0;
+
 });
 
 // IC blocks
@@ -311,13 +323,13 @@ const{W,H,x}=hd(c);if(!x)return;
 rasterBase(x,W,H,.12);
 const t=Date.now()/1000;
 
-// Dense binary character field
-x.font='6px "Share Tech Mono"';
+// Dense binary character field (every 3rd frame)
+if(Math.floor(t*60)%3===0){x.font='6px "Share Tech Mono"';
 for(let r=0;r<H;r+=7)for(let c2=0;c2<W;c2+=6){
 const v=Math.sin(r*.1+c2*.06+t*.4)>.5;
 x.fillStyle=G2+(v?.1:.02)+')';
 x.fillText(v?'1':'0',c2,r);
-}
+}}
 
 // Fat confidence arc
 const cx=W*.3,cy=H*.42,r=75;
@@ -340,9 +352,9 @@ x.beginPath();x.moveTo(cx+Math.cos(a)*i1,cy+Math.sin(a)*i1);x.lineTo(cx+Math.cos
 }
 // Bright tip
 const tipA=-PI*.8+PI*1.6*conf;
-x.fillStyle=G;x.shadowColor=G;x.shadowBlur=10;
+x.fillStyle=G;
 x.beginPath();x.arc(cx+Math.cos(tipA)*r,cy+Math.sin(tipA)*r,5,0,TAU);x.fill();
-x.shadowBlur=0;
+
 // Score
 x.font='bold 52px "Teko"';x.fillStyle=G;x.textAlign='center';
 x.fillText(Math.floor(conf*100),cx,cy+16);
@@ -865,9 +877,9 @@ x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.35)';
 x.save();x.translate(rx+50,H-55);
 x.strokeStyle=G2+'.15)';x.lineWidth=1;
 x.beginPath();x.ellipse(0,0,42,13,0,0,PI);x.stroke();
-x.fillStyle=G;x.shadowColor=G;x.shadowBlur=6;
+x.fillStyle=G;
 x.fillRect(Math.cos(t*.8)*42-3,-Math.sin(t*.8)*13-3,6,6);
-x.shadowBlur=0;
+
 x.restore();
 
 stamp(x,4,H-28,'SYS:SAT-ISR');
@@ -898,7 +910,7 @@ cell.appendChild(cv);grid.appendChild(cell);
 
 requestAnimationFrame(function anim(){
 const cW=cv.offsetWidth||80,cH=cv.offsetHeight||80;
-cv.width=cW*DPR;cv.height=cH*DPR;
+if(cv.width!==cW*DPR||cv.height!==cH*DPR){cv.width=cW*DPR;cv.height=cH*DPR;}
 const xx=cv.getContext('2d');if(!xx){requestAnimationFrame(anim);return}
 xx.setTransform(DPR,0,0,DPR,0,0);
 xx.fillStyle='#030500';xx.fillRect(0,0,cW,cH);
@@ -1315,39 +1327,14 @@ const offX=offC.getContext('2d');
 const blurC=document.createElement('canvas');
 const blurX=blurC.getContext('2d');
 
-function draw(){
-const W=c.offsetWidth,H=c.offsetHeight;
-if(!W||!H){requestAnimationFrame(draw);return}
-c.width=W*DPR;c.height=H*DPR;
-const x=c.getContext('2d');
-x.setTransform(DPR,0,0,DPR,0,0);
-const t=Date.now()/1000;
+// Video frame cache — only reprocess when video time changes
+let lastVidTime=-1;
+let vidProcessed=false;
+let blurSized=false;
 
-// ── 1. FULL-TILE NOISE BACKGROUND ──
-rasterBase(x,W,H,.12);
-
-const mcx=W*.44,mcy=H*.52;
-for(let i=0;i<700;i++){
-const nx=Math.random()*W,ny=Math.random()*H;
-const distSq=((nx-mcx)/W)*((nx-mcx)/W)+((ny-mcy)/H)*((ny-mcy)/H);
-const nearCenter=Math.max(0,1-distSq*3.5);
-const alpha=(.015+nearCenter*.05)*Math.random();
-x.fillStyle=G2+alpha.toFixed(3)+')';
-x.fillRect(nx,ny,1,1);
-}
-
-const bandY1=(Math.sin(t*.3)*H*.3+H*.5);
-x.fillStyle=G2+'.012)';
-x.fillRect(0,bandY1-12,W,24);
-
-x.strokeStyle=G2+'.018)';x.lineWidth=0.5;
-for(let i=0;i<W;i+=20){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke()}
-for(let i=0;i<H;i+=20){x.beginPath();x.moveTo(0,i);x.lineTo(W,i);x.stroke()}
-
-// ── 2. VIDEO FRAME — GREEN TINTED, THRESHOLD MASKED ──
-if(vid.readyState>=2){
+function processVideoFrame(W,H){
 const vw=vid.videoWidth,vh=vid.videoHeight;
-if(vw&&vh){
+if(!vw||!vh)return;
 const scale=Math.max(W/vw,H/vh)*1.05;
 const dw=vw*scale,dh=vh*scale;
 const dx=(W-dw)/2-W*.06,dy=(H-dh)/2+H*.15;
@@ -1376,41 +1363,78 @@ px[i+3]=Math.floor(boost*220);
 }
 offX.putImageData(imgData,0,0);
 
-// Ghost echo
-x.save();
-x.globalAlpha=0.12;
-x.globalCompositeOperation='screen';
-x.drawImage(offC,0,0,W*DPR,H*DPR,-W*.03,-H*.02,W*1.06,H*1.04);
-x.restore();
-
-// Main mech
-x.save();
-x.globalCompositeOperation='screen';
-x.globalAlpha=0.9;
-x.drawImage(offC,0,0,W*DPR,H*DPR,0,0,W,H);
-x.restore();
-
-// Glow halo
+// Size blur canvas once
+if(!blurSized){
 blurC.width=Math.floor(W*DPR*.25);blurC.height=Math.floor(H*DPR*.25);
+blurSized=true;
+}
 blurX.clearRect(0,0,blurC.width,blurC.height);
 blurX.filter='blur(8px)';
 blurX.drawImage(offC,0,0,blurC.width,blurC.height);
 blurX.filter='none';
-x.save();
-x.globalCompositeOperation='screen';
-x.globalAlpha=0.15;
+
+vidProcessed=true;
+}
+
+function draw(){
+const W=c.offsetWidth,H=c.offsetHeight;
+if(!W||!H){requestAnimationFrame(draw);return}
+c.width=W*DPR;c.height=H*DPR;
+const x=c.getContext('2d');
+x.setTransform(DPR,0,0,DPR,0,0);
+const t=Date.now()/1000;
+
+// 1. Noise bg
+rasterBase(x,W,H,.12);
+
+const mcx=W*.44,mcy=H*.52;
+for(let i=0;i<700;i++){
+const nx=Math.random()*W,ny=Math.random()*H;
+const distSq=((nx-mcx)/W)*((nx-mcx)/W)+((ny-mcy)/H)*((ny-mcy)/H);
+const nearCenter=Math.max(0,1-distSq*3.5);
+const alpha=(.015+nearCenter*.05)*Math.random();
+x.fillStyle=G2+alpha.toFixed(3)+')';
+x.fillRect(nx,ny,1,1);
+}
+
+const bandY1=(Math.sin(t*.3)*H*.3+H*.5);
+x.fillStyle=G2+'.012)';
+x.fillRect(0,bandY1-12,W,24);
+
+x.strokeStyle=G2+'.018)';x.lineWidth=0.5;
+for(let i=0;i<W;i+=20){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke()}
+for(let i=0;i<H;i+=20){x.beginPath();x.moveTo(0,i);x.lineTo(W,i);x.stroke()}
+
+// 2. Video — only reprocess when time changes
+if(vid.readyState>=2){
+const vt=Math.floor(vid.currentTime*30);
+if(vt!==lastVidTime){
+lastVidTime=vt;
+processVideoFrame(W,H);
+}
+if(vidProcessed){
+// Ghost echo
+x.save();x.globalAlpha=0.12;x.globalCompositeOperation='screen';
+x.drawImage(offC,0,0,W*DPR,H*DPR,-W*.03,-H*.02,W*1.06,H*1.04);
+x.restore();
+// Main
+x.save();x.globalCompositeOperation='screen';x.globalAlpha=0.9;
+x.drawImage(offC,0,0,W*DPR,H*DPR,0,0,W,H);
+x.restore();
+// Glow
+x.save();x.globalCompositeOperation='screen';x.globalAlpha=0.15;
 x.drawImage(blurC,0,0,W,H);
 x.restore();
 }}
 
-// ── 3. TOP GRAIN ──
+// 3. Top grain
 for(let i=0;i<400;i++){
 const nx=Math.random()*W,ny=Math.random()*H;
 x.fillStyle=G2+(Math.random()*.05).toFixed(3)+')';
 x.fillRect(nx,ny,1,1);
 }
 
-// ── 4. GLITCH ──
+// 4. Glitch
 if(Math.random()>.78){
 const gy=Math.floor(Math.random()*H);
 const gh=3+Math.floor(Math.random()*12);
@@ -1421,7 +1445,7 @@ x.putImageData(slice,gshift*DPR,gy*DPR);
 }catch(e){}
 }
 
-// ── 5. RETICLE ──
+// 5. Reticle
 const retCx=W*.44,retCy=H*.42,retR=Math.min(W,H)*.18;
 x.strokeStyle=G2+'.06)';x.lineWidth=1;x.setLineDash([3,8]);
 x.beginPath();x.arc(retCx,retCy,retR,0,TAU);x.stroke();
@@ -1431,19 +1455,19 @@ const ch=6;
 x.beginPath();x.moveTo(retCx-ch,retCy);x.lineTo(retCx+ch,retCy);x.stroke();
 x.beginPath();x.moveTo(retCx,retCy-ch);x.lineTo(retCx,retCy+ch);x.stroke();
 
-// ── 6. CORNERS ──
+// 6. Corners
 const bk=16,pd=4;
 [[pd,pd,1,1],[W-pd,pd,-1,1],[pd,H-pd,1,-1],[W-pd,H-pd,-1,-1]].forEach(([bx,by,dx,dy])=>{
 x.strokeStyle=G;x.lineWidth=2;
 x.beginPath();x.moveTo(bx,by+dy*bk);x.lineTo(bx,by);x.lineTo(bx+dx*bk,by);x.stroke();
 });
 
-// ── 7. CALLOUTS ──
+// 7. Callouts
 const callouts=[
 {label:'EAR FINS',jp:'イヤーフィン',tx:W*.12,ty:H*.28,mx:W*.38,my:H*.34},
 {label:'SENSOR',jp:'ブラスセンサー',tx:W*.08,ty:H*.46,mx:W*.35,my:H*.46},
-{label:'OPTICAL',jp:'センサー',tx:W*.1,ty:H*.64,mx:W*.4,my:H*.58},
-{label:'INTERNALS',jp:'インターナル',tx:W*.12,ty:H*.8,mx:W*.42,my:H*.72},
+{label:'OPTICAL',jp:'センサー',tx:W*.1,ty:H*.64,mx:W*.38,my:H*.58},
+{label:'INTERNALS',jp:'インターナル',tx:W*.12,ty:H*.8,mx:W*.4,my:H*.72},
 ];
 callouts.forEach((co)=>{
 x.strokeStyle=G2+'.08)';x.lineWidth=.5;
@@ -1457,7 +1481,7 @@ x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.35)';
 x.fillText(co.label,co.tx,co.ty+5);
 });
 
-// ── HADAL terminal typewriter — bottom left corner ──
+// HADAL terminal typewriter
 const fullStr='HADAL_MEKHEAD_HD-07_ISR_PROTOTYPE';
 const charCount=Math.floor(t*3)%(fullStr.length+8);
 const visStr=fullStr.slice(0,Math.min(charCount,fullStr.length));
@@ -1465,7 +1489,7 @@ const cursor=charCount<=fullStr.length?(Math.floor(t*4)%2===0?'_':' '):'';
 x.font='6px "Share Tech Mono"';x.fillStyle=G2+'.3)';
 x.fillText('>'+visStr+cursor,8,H-38);
 
-// ── 8. CLASSIFICATION ──
+// 8. Classification
 x.fillStyle='rgba(6,8,0,.7)';x.fillRect(6,6,W*.45,30);
 x.strokeStyle=G2+'.05)';x.lineWidth=.5;x.strokeRect(6,6,W*.45,30);
 x.font='bold 10px "Teko"';x.fillStyle=G;
@@ -1473,7 +1497,7 @@ x.fillText('HD-07 — MEKHEAD',12,20);
 x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.3)';
 x.fillText('TACTICAL INTELLIGENCE UNIT',12,30);
 
-// ── 9. TELEMETRY ──
+// 9. Telemetry
 const rx=W*.6,rw=W*.38;
 x.fillStyle='rgba(6,8,0,.65)';x.fillRect(rx,6,rw,H*.4);
 x.strokeStyle=G2+'.05)';x.lineWidth=.5;x.strokeRect(rx,6,rw,H*.4);
@@ -1489,7 +1513,7 @@ x.fillStyle='rgba(255,152,20,'+pulse.toFixed(2)+')';
 x.fillText(v,rx+50,ty);
 });
 
-// ── 10. AMBER BAR ──
+// 10. Amber bar
 x.fillStyle='rgba(255,152,20,.05)';x.fillRect(6,H-28,W*.45,14);
 x.strokeStyle='rgba(255,152,20,.12)';x.lineWidth=0.5;x.strokeRect(6,H-28,W*.45,14);
 x.font='bold 5px "Share Tech Mono"';x.fillStyle='rgba(255,152,20,.45)';

@@ -1,7 +1,7 @@
 import { useDrawMark } from '@/canvas/useDrawMark'
 import { useUtcClock } from '@/hooks/useUtcClock'
 
-type Lane = 'overview' | 'operations' | 'analysis'
+type Lane = 'overview' | 'operations' | 'analysis' | 'console'
 
 interface TopbarProps {
   threatLevel: number | null
@@ -16,11 +16,13 @@ const NAV_ITEMS: { id: Lane; label: string }[] = [
   { id: 'overview', label: 'OVERVIEW' },
   { id: 'operations', label: 'OPERATIONS' },
   { id: 'analysis', label: 'ANALYSIS' },
+  { id: 'console', label: 'CONSOLE' },
 ]
 
-export function Topbar({ threatLevel, incidentCount, activeLane, onNavigate }: TopbarProps) {
+export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, activeLane, onNavigate }: TopbarProps) {
   const markRef = useDrawMark(32)
   const { zulu, elapsed } = useUtcClock()
+  const readiness = threatLevel === null ? 'DEGRADED' : threatLevel >= 60 ? 'ELEVATED' : 'GUARDED'
 
   return (
     <div className="topbar">
@@ -28,7 +30,7 @@ export function Topbar({ threatLevel, incidentCount, activeLane, onNavigate }: T
         <canvas ref={markRef} width={32} height={32} />
         <div>
           <div className="lockup-word-top">HADAL</div>
-          <div className="lockup-sub">THREAT INTELLIGENCE TERMINAL</div>
+          <div className="lockup-sub">GULF THEATRE THREAT INTELLIGENCE TERMINAL</div>
         </div>
       </div>
       <div className="tb-div" />
@@ -45,11 +47,24 @@ export function Topbar({ threatLevel, incidentCount, activeLane, onNavigate }: T
       </nav>
       <div className="tb-div" />
       <div className="tb-alert">
-        <span className="tb-alert-t">GULF WATCH</span>
+        <span className="tb-alert-t">GULF WATCH PIPELINE</span>
         <span className="tb-elapsed">{elapsed}</span>
       </div>
+      <div className="tb-status-rail">
+        <div className="tb-status-cell">
+          <span className="tb-status-label">READINESS</span>
+          <span className={`tb-status-chip${threatLevel !== null && threatLevel >= 60 ? ' warn' : ''}`}>{readiness}</span>
+        </div>
+        <div className="tb-status-cell">
+          <span className="tb-status-label">POSTURE</span>
+          <span className="tb-status-chip">CONTESTED</span>
+        </div>
+      </div>
       <div className="tb-div" />
-      <span style={{ fontFamily: 'var(--MONO)', fontSize: 'var(--fs-micro)', color: 'var(--g3)', marginRight: 8 }}>DATA: SIMULATED</span>
+      <span className="tb-data-source">DATA: FUSED LIVE/SIM</span>
+      <button className={`tb-sandbox${sandbox ? ' active' : ''}`} onClick={onSandboxToggle}>
+        {sandbox ? 'SANDBOX ON' : 'SANDBOX'}
+      </button>
       <div className="tb-stats jp-intel">
         <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">INCIDENTS</div><div className="tb-stat-v jp-intel-val">{incidentCount || '—'}</div></div>
         <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">THREAT</div><div className="tb-stat-v jp-intel-val" style={threatLevel !== null && threatLevel >= 60 ? { color: 'var(--warn)' } : undefined}>{threatLevel ?? '—'}</div></div>

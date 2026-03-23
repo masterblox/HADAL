@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import type { DemoFlight } from '@/data/demo-flights'
-import type { OpenSkyStatus } from '@/hooks/useOpenSky'
 
 /* ── Aircraft type labels/colors for ticker ── */
 const TYPE_COL: Record<DemoFlight['type'], string> = {
@@ -45,10 +44,9 @@ interface IwlBottomProps {
   datalinkText: string
   onExportSitrep?: () => void
   flights?: DemoFlight[]
-  aircraftStatus?: OpenSkyStatus
 }
 
-export function IwlBottom({ datalinkText, onExportSitrep, flights, aircraftStatus }: IwlBottomProps) {
+export function IwlBottom({ datalinkText, onExportSitrep, flights }: IwlBottomProps) {
   return (
     <div className="iwl-bottom">
       <div className="iwl-datalink">

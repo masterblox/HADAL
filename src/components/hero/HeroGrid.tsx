@@ -1,23 +1,29 @@
-import { LeftRail } from './LeftRail'
+import type { PipelineHealth } from '@/hooks/useDataPipeline'
 import { GlobeView } from './GlobeView'
-import { RightRail } from './RightRail'
+import { HeroSidebar } from './HeroSidebar'
 import type { PredictionResult } from '@/lib/prediction/types'
 import type { Incident } from '@/hooks/useDataPipeline'
 
 interface HeroGridProps {
   sandbox: boolean
   threatLevel: number | null
-  pipelineStatus: { incidents: boolean; prices: boolean; airspace: boolean }
+  pipelineStatus: { incidents: boolean; prices: boolean; airspace: boolean; health: PipelineHealth }
   prediction: PredictionResult | null
   incidents: Incident[]
 }
 
-export function HeroGrid({ sandbox, threatLevel, pipelineStatus, prediction, incidents }: HeroGridProps) {
+export function HeroGrid({ sandbox: _sandbox, threatLevel, pipelineStatus, prediction, incidents }: HeroGridProps) {
   return (
-    <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '200px 1fr 260px', gap: 0 }}>
-      <LeftRail sandbox={sandbox} threatLevel={threatLevel} pipelineStatus={pipelineStatus} prediction={prediction} />
-      <GlobeView incidents={incidents} />
-      <RightRail sandbox={sandbox} incidents={incidents} />
-    </div>
+    <section className="hero-grid">
+      <div className="hero-stage jp-panel">
+        <HeroSidebar
+          threatLevel={threatLevel}
+          pipelineStatus={pipelineStatus}
+          prediction={prediction}
+          incidents={incidents}
+        />
+        <GlobeView incidents={incidents} />
+      </div>
+    </section>
   )
 }

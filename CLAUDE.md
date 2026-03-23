@@ -79,3 +79,42 @@ All border-radius: 0px. Zero decorative animation. Zero glows/box-shadows. No CR
   pill button / left: icon (+) / right: label text / no color, no animation — structure only
 - If you skip this step, you will spend 2x the time on corrections instead of directing
 - Only proceed to production UI after the structure is confirmed
+
+---
+
+## Design Context
+
+### Users
+Intelligence analysts and military operators monitoring Gulf theatre threats in real time. They're under pressure, scanning multiple data streams simultaneously, making decisions where misreads have real consequences. They expect the system to be dense, honest, and fast — not friendly.
+
+### Brand Personality
+**Brutal · Classified · Alive.** Harsh edges, redacted institutional feel, but the data underneath is living and breathing. Nothing decorative exists — every pixel either conveys information or reinforces the system's authority.
+
+### Emotional Target
+**Urgent vigilance.** The operator should feel that everything on screen is live and consequential. The interface creates controlled tension — not panic, but the sustained awareness that this data matters right now.
+
+### Aesthetic Direction
+- **Green-on-black military terminal** — not retro-nostalgic, not sci-fi futuristic. Contemporary classified infrastructure.
+- **Canvas-rendered visualizations** with pixel-level noise, static grain, structural borders. The screen should feel like it has texture — like looking at a real monitor in a SCIF.
+- **Typography is hierarchical and functional**: Rajdhani for headers (authority), Teko for large data (impact), Share Tech Mono for streams (machine truth).
+- **Color is rationed**: green (`#DAFF4A`) is the primary signal. Amber (`--warn`) is reserved for genuine alerts. Everything else is near-black with opacity variations.
+- **References**: Real C2 systems, SIGINT terminals, satellite ground stations, drone operator consoles. The aesthetic of systems that exist but aren't designed to be seen.
+
+### Anti-References
+- **Not cartoonish** — nothing playful, whimsical, or exaggerated
+- **Not sci-fi movie UI** — no glowing holograms, no Tron lines, no floating transparent panels
+- **Not corporate dashboard** — no clean minimalism, no friendly cards, no pleasant whitespace
+- **Not gaming HUD** — no health bars, no neon cyberpunk, no RGB energy
+- **Not AI slop** — no animated scan lines sweeping across tiles, no pulsing dots, no gratuitous particle effects. If an animation doesn't represent real data movement, it doesn't exist.
+
+### Design Principles
+
+1. **Information density over comfort.** Every tile should feel packed with real data. Whitespace is structural, never decorative. If there's room, fill it with useful context.
+
+2. **Noise is texture, not decoration.** Canvas grain, rasterBase noise, and static are part of the material feel — like phosphor on a real screen. But animated sweep lines, glowing pulses, and traveling highlights are banned. They're AI slop.
+
+3. **Structural borders, not decorative ones.** Borders exist to separate information zones. 1px solid `var(--g15)` or lower. No glows, no shadows, no rounded corners. Corner brackets (`┌ ┐ └ ┘`) are acceptable as framing devices.
+
+4. **Static over animated.** Status indicators are static colored fills. Data updates replace values — they don't transition. The only permitted motion is real data flow (scrolling feeds, updating numbers). Everything else holds still.
+
+5. **Earn every element.** Before adding any visual element, ask: does this help the operator make a decision? If not, delete it. The system's authority comes from restraint, not from looking busy.

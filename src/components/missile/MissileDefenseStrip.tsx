@@ -70,12 +70,19 @@ export function MissileDefenseStrip({ incidents }: MissileDefenseStripProps) {
 
   return (
     <div className="missile-section">
-      <h2 className="section-title" style={{ marginBottom: 12 }}>Theatre Kinetic Data</h2>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--MONO)', fontSize: 'var(--fs-small)' }}>
+      <div className="missile-section-head">
+        <h2 className="section-title">Theatre Kinetic Data</h2>
+        <div className="missile-headline">
+          <span className="missile-headline-label">KINETIC LOAD</span>
+          <span className="missile-headline-value">{totalAll}</span>
+          <span className="missile-headline-meta">BALLISTIC {totalMissile} / CRUISE {totalCruise} / DRONE {totalDrone}</span>
+        </div>
+      </div>
+      <table className="missile-table">
         <thead>
-          <tr style={{ borderBottom: '1px solid var(--g15)' }}>
+          <tr>
             {['Country', 'Ballistic', 'Cruise', 'Drone', 'Total', 'Status'].map(h => (
-              <th key={h} style={{ fontFamily: 'var(--MONO)', fontWeight: 400, fontSize: 'var(--fs-micro)', letterSpacing: '.02em', color: 'var(--g3)', padding: '6px 10px', textAlign: 'left' }}>{h}</th>
+              <th key={h}>{h}</th>
             ))}
           </tr>
         </thead>
@@ -83,25 +90,25 @@ export function MissileDefenseStrip({ incidents }: MissileDefenseStripProps) {
           {rows.map(r => {
             const st = statusLabel(r.total)
             return (
-              <tr key={r.name} style={{ borderBottom: '1px solid var(--g07)' }}>
-                <td style={{ padding: '6px 10px', color: 'var(--g7)', fontFamily: 'var(--MONO)', fontWeight: 400 }}>{r.name}</td>
-                <td style={{ padding: '6px 10px', color: 'var(--g5)' }}>{r.missile}</td>
-                <td style={{ padding: '6px 10px', color: 'var(--g5)' }}>{r.cruise}</td>
-                <td style={{ padding: '6px 10px', color: 'var(--g5)' }}>{r.drone}</td>
-                <td style={{ padding: '6px 10px', color: 'var(--g)', fontWeight: 400 }}>{r.total}</td>
-                <td style={{ padding: '6px 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: st.color, display: 'inline-block' }} />
-                  <span style={{ color: st.color, fontFamily: 'var(--MONO)', fontWeight: 400, fontSize: 'var(--fs-micro)', letterSpacing: '.02em' }}>{st.label}</span>
+              <tr key={r.name}>
+                <td className="missile-country">{r.name}</td>
+                <td>{r.missile}</td>
+                <td>{r.cruise}</td>
+                <td>{r.drone}</td>
+                <td className="missile-total">{r.total}</td>
+                <td className="missile-status">
+                  <span className="missile-status-dot" style={{ background: st.color }} />
+                  <span style={{ color: st.color }}>{st.label}</span>
                 </td>
               </tr>
             )
           })}
-          <tr style={{ borderTop: '2px solid var(--g15)' }}>
-            <td style={{ padding: '6px 10px', color: 'var(--g)', fontFamily: 'var(--MONO)', fontWeight: 400 }}>Total</td>
-            <td style={{ padding: '6px 10px', color: 'var(--g)' }}>{totalMissile}</td>
-            <td style={{ padding: '6px 10px', color: 'var(--g)' }}>{totalCruise}</td>
-            <td style={{ padding: '6px 10px', color: 'var(--g)' }}>{totalDrone}</td>
-            <td style={{ padding: '6px 10px', color: 'var(--g)', fontWeight: 400 }}>{totalAll}</td>
+          <tr className="missile-table-total">
+            <td className="missile-country">Total</td>
+            <td>{totalMissile}</td>
+            <td>{totalCruise}</td>
+            <td>{totalDrone}</td>
+            <td className="missile-total">{totalAll}</td>
             <td />
           </tr>
         </tbody>

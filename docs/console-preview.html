@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HADAL — Console Preview (Real Tiles)</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Teko:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--g:#DAFF4A;--g07:rgba(218,255,74,.07);--g15:rgba(218,255,74,.15);
+--g2:rgba(218,255,74,;--g3:rgba(218,255,74,.3);--g5:rgba(218,255,74,.5);
+--g7:rgba(218,255,74,.7);
+--warn:rgba(255,152,20,.92);--warn1:rgba(255,152,20,.15);--warn2:rgba(255,152,20,.25);
+--bg:#060800;--bg1:rgba(8,10,2,.98);
+--HEAD:Rajdhani,sans-serif;--C2:Teko,sans-serif;--MONO:'Share Tech Mono',monospace;
+--fs-micro:9px;--fs-small:11px;--fs-body:13px;
+}
+html,body{height:100%;background:var(--bg);color:var(--g);font-family:var(--MONO);overflow:hidden}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 16px;border-bottom:1px solid var(--g07);background:rgba(4,6,0,.95)}
+.topbar-logo{font-family:var(--HEAD);font-size:13px;letter-spacing:.3em;color:var(--g7)}
+.topbar-nav{display:flex;gap:0}
+.topbar-nav-item{font-family:var(--HEAD);font-size:var(--fs-small);letter-spacing:.22em;color:var(--g3);padding:12px 16px;border-bottom:2px solid transparent;cursor:pointer}
+.topbar-nav-item.active{color:var(--g);border-bottom-color:var(--g)}
+
+.console-toolbar{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;padding:10px 12px;min-height:42px;background:linear-gradient(180deg,rgba(7,10,0,.96),rgba(5,8,0,.84));border-bottom:1px solid var(--g07)}
+.console-toolbar-block{display:flex;align-items:center;gap:10px}
+.console-toolbar-label{font-family:var(--HEAD);font-size:var(--fs-micro);letter-spacing:.22em;color:var(--g3)}
+.console-toolbar-select{border:1px solid var(--g15);background:rgba(218,255,74,.04);color:var(--g7);font-family:var(--HEAD);font-size:var(--fs-small);letter-spacing:.18em;min-height:28px;padding:0 10px}
+.console-toolbar-edit{border:1px solid var(--g15);background:rgba(218,255,74,.04);color:var(--g7);font-family:var(--HEAD);font-size:var(--fs-small);letter-spacing:.18em;min-height:28px;padding:0 14px;cursor:pointer}
+.console-toolbar-hint{font-family:var(--MONO);font-size:var(--fs-micro);letter-spacing:.12em;color:var(--g3)}
+
+.console-page{display:flex;flex-direction:column;height:calc(100vh - 44px)}
+.console-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:1px;flex:1;min-height:0;background:var(--g07)}
+.console-slot{min-width:0;min-height:0;background:var(--bg);overflow:hidden}
+.console-tile{position:relative;display:grid;grid-template-rows:30px minmax(0,1fr) 22px;height:100%;min-height:0;border:1px solid var(--g07);background:linear-gradient(180deg,rgba(8,10,2,.98),rgba(4,6,0,.96))}
+.console-tile-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 10px;border-bottom:1px solid var(--g07)}
+.console-tile-head-main{display:flex;align-items:center;gap:6px}
+.console-tile-icon{font-size:10px;color:var(--g3)}
+.console-tile-title{font-family:var(--HEAD);font-size:var(--fs-micro);letter-spacing:.18em;color:var(--g7)}
+.console-tile-status{font-family:var(--HEAD);font-size:8px;letter-spacing:.15em}
+.console-tile-status.live{color:var(--g5)}
+.console-tile-status.stale{color:var(--warn)}
+.console-tile-body{min-height:0;overflow:hidden;position:relative}
+.console-tile-body canvas{position:absolute;inset:0;width:100%;height:100%}
+.console-tile-body .scn{position:absolute;inset:0;pointer-events:none;z-index:10;background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(0,0,0,.12) 1px,rgba(0,0,0,.12) 2px)}
+.console-tile-body .blm{position:absolute;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at 40% 45%,rgba(218,255,74,.05) 0%,transparent 65%)}
+.console-tile-foot{display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-top:1px solid var(--g07);font-family:var(--MONO);font-size:8px;letter-spacing:.12em;color:rgba(218,255,74,.18)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">HADAL</div>
+  <div class="topbar-nav">
+    <div class="topbar-nav-item">OVERVIEW</div>
+    <div class="topbar-nav-item">OPERATIONS</div>
+    <div class="topbar-nav-item">ANALYSIS</div>
+    <div class="topbar-nav-item active">CONSOLE</div>
+  </div>
+</div>
+
+<div class="console-page">
+  <div class="console-toolbar">
+    <div class="console-toolbar-block">
+      <span class="console-toolbar-label">LAYOUT</span>
+      <select class="console-toolbar-select">
+        <option>SHIFT BRIEF</option>
+        <option>INCIDENT FOCUS</option>
+        <option>AIR PICTURE</option>
+        <option>ANALYSIS STACK</option>
+      </select>
+      <span class="console-toolbar-hint">4×3 · 12 TILES</span>
+    </div>
+    <div class="console-toolbar-block">
+      <span class="console-toolbar-hint">LOCKED</span>
+    </div>
+    <div class="console-toolbar-block">
+      <button class="console-toolbar-edit">EDIT</button>
+    </div>
+  </div>
+  <div class="console-grid">
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">◈</span>
+            <span class="console-tile-title">THREAT SIGNAL</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-0"></div>
+        <div class="console-tile-foot">
+          <span>SRC: PIPELINE + MODEL</span>
+          <span>UPD: LIVE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">◉</span>
+            <span class="console-tile-title">PRESSURE GLOBE</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-1"></div>
+        <div class="console-tile-foot">
+          <span>SRC: INCIDENTS</span>
+          <span>UPD: 60S</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">△</span>
+            <span class="console-tile-title">SCENARIO OUTLOOK</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-2"></div>
+        <div class="console-tile-foot">
+          <span>SRC: MODEL</span>
+          <span>UPD: LOCAL</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">▣</span>
+            <span class="console-tile-title">THREAT FEED</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-3"></div>
+        <div class="console-tile-foot">
+          <span>SRC: VERIFIED / RAW</span>
+          <span>UPD: 60S</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">▲</span>
+            <span class="console-tile-title">KINETIC DATA</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-4"></div>
+        <div class="console-tile-foot">
+          <span>SRC: INCIDENTS</span>
+          <span>UPD: 60S</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">◇</span>
+            <span class="console-tile-title">AIRSPACE</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-5"></div>
+        <div class="console-tile-foot">
+          <span>SRC: AIRSPACE</span>
+          <span>UPD: 60S</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">⇄</span>
+            <span class="console-tile-title">THEATRE EXCHANGE</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-6"></div>
+        <div class="console-tile-foot">
+          <span>SRC: DERIVED</span>
+          <span>UPD: LIVE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">▥</span>
+            <span class="console-tile-title">CONFIDENCE</span>
+          </div>
+          <span class="console-tile-status stale">STALE</span>
+        </div>
+        <div class="console-tile-body" id="ct-7"></div>
+        <div class="console-tile-foot">
+          <span>SRC: VERIFICATION</span>
+          <span>UPD: LIVE</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">▤</span>
+            <span class="console-tile-title">MARKET IMPACT</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-8"></div>
+        <div class="console-tile-foot">
+          <span>SRC: PRICES</span>
+          <span>UPD: 60S</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">▧</span>
+            <span class="console-tile-title">SIGNAL INGESTION</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-9"></div>
+        <div class="console-tile-foot">
+          <span>SRC: MULTI-SOURCE</span>
+          <span>UPD: 5M</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">≣</span>
+            <span class="console-tile-title">SATELLITE ISR</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-10"></div>
+        <div class="console-tile-foot">
+          <span>SRC: SAT-ISR</span>
+          <span>UPD: DWELL</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="console-slot">
+      <div class="console-tile">
+        <div class="console-tile-head">
+          <div class="console-tile-head-main">
+            <span class="console-tile-icon">▨</span>
+            <span class="console-tile-title">EVENT TIMELINE</span>
+          </div>
+          <span class="console-tile-status live">LIVE</span>
+        </div>
+        <div class="console-tile-body" id="ct-11"></div>
+        <div class="console-tile-foot">
+          <span>SRC: INCIDENTS</span>
+          <span>UPD: 60S</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const G='#DAFF4A',G2='rgba(218,255,74,',AMB='#FF9814',BG='#050700',PI=Math.PI,TAU=PI*2;
+const DPR=window.devicePixelRatio||1;
+function hd(cv){
+const W=cv.offsetWidth,H=cv.offsetHeight;
+cv.width=W*DPR;cv.height=H*DPR;
+const ctx=cv.getContext('2d');
+ctx.setTransform(DPR,0,0,DPR,0,0);
+return{W,H,x:ctx};
+}
+// clock removed — no hTime element in console
+
+// Shared: dense raster base texture
+function rasterBase(x,W,H,density){
+const pW=W*DPR,pH=H*DPR;
+const imgD=x.createImageData(pW,pH);
+const d=imgD.data;
+for(let i=0;i<d.length;i+=4){
+const n=Math.random();
+const v=n<density?.06+(n*2):0;
+d[i]=Math.floor(218*v*.5);d[i+1]=Math.floor(255*v);d[i+2]=Math.floor(74*v*.3);d[i+3]=255;
+}
+x.save();x.setTransform(1,0,0,1,0,0);x.putImageData(imgD,0,0);x.restore();
+x.setTransform(DPR,0,0,DPR,0,0);
+}
+
+// Shared: subsystem stamp mark
+function stamp(x,sx,sy,code){
+x.save();
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.12)';
+x.fillText('▪ '+code,sx,sy);
+x.strokeStyle=G2+'.06)';x.lineWidth=.5;
+x.strokeRect(sx-2,sy-6,code.length*3.5+12,9);
+x.restore();
+}
+
+// Shared: diagonal graphic band
+function diagBand(x,W,H,y,thick,text,isAmb){
+x.save();
+x.translate(0,y);x.rotate(-6*PI/180);
+const h=thick?14:6;
+x.fillStyle=isAmb?'rgba(255,152,20,'+(thick?.7:.15)+')':G2+(thick?'.6)':'.08)');
+x.fillRect(-20,0,W+40,h);
+if(text&&thick){
+x.font='bold '+(h-2)+'px "Teko"';
+x.fillStyle=isAmb?BG:BG;
+x.fillText(text,8,h-2);
+x.fillText(text,W*.4,h-2);
+}
+x.restore();
+}
+
+
+
+// ═══════════════════════════════════════
+// TILE RENDERERS (from approved board)
+// ═══════════════════════════════════════
+(function(){
+const tile=document.getElementById('ct-0');
+
+const c=document.createElement('canvas');c.style.position='relative';c.style.zIndex='2';tile.appendChild(c);
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+x.fillStyle='#030500';x.fillRect(0,0,W,H);
+const t=Date.now()/1000;
+
+// Scrolling diagonal bands
+x.save();x.translate(W/2,H/2);x.rotate(-8*PI/180);
+const bandTexts=['ESCALATION','','MISSILE','','BLOCKADE','','PROXY','','DE-ESCAL','','CYBER','','STATUS QUO',''];
+const scroll=(t*14)%56;
+bandTexts.forEach((b,i)=>{
+const y=-H*.7+i*28+scroll;
+if(!b){x.fillStyle=G2+'.03)';x.fillRect(-W,y,W*2,4);return}
+x.fillStyle=G2+'.015)';x.fillRect(-W,y,W*2,22);
+x.font='10px "Teko"';x.fillStyle=G2+'.05)';
+x.fillText(b,-W*.3,y+15);x.fillText(b,W*.1,y+15);
+});
+x.restore();
+
+// Left panel
+x.fillStyle='rgba(5,7,0,.82)';x.fillRect(6,52,W*.48,H-80);
+x.strokeStyle=G2+'.1)';x.lineWidth=1.5;x.strokeRect(6,52,W*.48,H-80);
+x.fillStyle=G2+'.2)';x.fillRect(6,52,W*.48,3);
+
+x.font='7px "Teko"';x.fillStyle=G2+'.4)';x.fillText('SCENARIO RESOLUTION',14,68);
+const thr=Math.floor(64+Math.sin(t*.4)*5);
+x.font='bold 56px "Teko"';x.fillStyle=G;x.fillText(thr,14,126);
+x.font='6px "Share Tech Mono"';x.fillStyle=G2+'.3)';x.fillText('THEATRE THREAT',78,112);
+x.fillStyle=G2+'.35)';x.fillText('DOM:',14,142);x.fillStyle=AMB;x.fillText('ESCALATION PATH',36,142);
+x.fillStyle=G2+'.2)';x.font='5px "Share Tech Mono"';x.fillText('P(SEV)34% P(CRIT)12%',14,154);
+
+// Table
+x.fillStyle=G2+'.05)';x.fillRect(10,164,W*.46,14);
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.25)';
+x.fillText('SCENARIO',14,174);x.fillText('P%',120,174);x.fillText('SEV',140,174);x.fillText('WIN',168,174);
+const scen=[['Missile Exch',34,'CRIT','24-72h'],['Naval Block',22,'HIGH','72h-7d'],['Proxy Activ',18,'MED','24-72h'],['Cyber Offn',14,'MED','0-24h'],['De-escalat',12,'LOW','7d+']];
+const aRow=Math.floor(t*.5)%5;
+scen.forEach(([n,p,s,w],i)=>{
+const sy=186+i*14;const isA=i===aRow;
+if(isA){x.fillStyle=G2+'.04)';x.fillRect(10,sy-9,W*.46,14)}
+const al=isA?.7:.45-.04*i;
+x.fillStyle=G2+al.toFixed(2)+')';x.font='5px "Share Tech Mono"';
+x.fillText(n,14,sy);x.fillText(p,120,sy);
+x.fillStyle=s==='CRIT'||s==='HIGH'?AMB:G2+al.toFixed(2)+')';x.fillText(s,140,sy);
+x.fillStyle=G2+al.toFixed(2)+')';x.fillText(w,168,sy);
+});
+
+// Right panel
+x.fillStyle='rgba(5,7,0,.82)';x.fillRect(W*.52,52,W*.46,H-80);
+x.strokeStyle=G2+'.1)';x.lineWidth=1.5;x.strokeRect(W*.52,52,W*.46,H-80);
+x.fillStyle=G2+'.2)';x.fillRect(W*.52,52,W*.46,3);
+x.font='7px "Teko"';x.fillStyle=G2+'.4)';x.fillText('TIME WINDOWS',W*.52+8,68);
+[{n:'24H',s:'ELEVATED',e:14,k:6},{n:'72H',s:'MODERATE',e:38,k:0,d:'+22%'},{n:'7D',s:'BASELINE',e:112,k:0,d:'STABLE'}].forEach((w,i)=>{
+const wy=80+i*72,wx=W*.52+8,ww=W*.46-16;
+x.fillStyle=G2+'.015)';x.fillRect(wx,wy,ww,60);
+x.strokeStyle=G2+'.06)';x.strokeRect(wx,wy,ww,60);
+x.font='6px "Share Tech Mono"';x.fillStyle=G2+'.4)';x.fillText(w.n+' WINDOW',wx+6,wy+14);
+x.fillStyle=w.s==='ELEVATED'?AMB:G2+'.25)';x.fillText(w.s,wx+ww-42,wy+14);
+x.fillStyle=G2+'.3)';x.fillText('EVT:'+w.e,wx+6,wy+30);
+x.fillStyle=w.k?AMB:G2+'.2)';x.fillText(w.k?'KIN:'+w.k:'TREND:'+w.d,wx+6,wy+42);
+const prog=((t*.08+i*.3)%1);
+x.fillStyle=G2+'.05)';x.fillRect(wx+6,wy+52,ww-12,4);
+x.fillStyle=w.s==='ELEVATED'?'rgba(255,152,20,.35)':G2+'.25)';x.fillRect(wx+6,wy+52,(ww-12)*prog,4);
+});
+
+const cp=Math.sin(t*2)*.25+.35;
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+cp.toFixed(2)+')';
+x.fillText('CASCADE:0.62 CONTAGION:3',W*.52+8,H-34);
+
+stamp(x,4,H-28,'SYS:PRED-ENG');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-1');
+const c=document.createElement('canvas');tile.appendChild(c);
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+x.fillStyle='#020400';x.fillRect(0,0,W,H);
+const t=Date.now()/1000;
+const gcx=W*.36,gcy=H*.5,R=Math.min(W*.3,H*.38);
+
+// Globe
+x.strokeStyle=G2+'.12)';x.lineWidth=1;
+x.beginPath();x.arc(gcx,gcy,R,0,TAU);x.stroke();
+// Grid
+x.strokeStyle=G2+'.04)';x.lineWidth=.5;
+for(let lat=-60;lat<=60;lat+=20){
+const r2=R*Math.cos(lat*PI/180),y=gcy-R*Math.sin(lat*PI/180);
+x.beginPath();x.ellipse(gcx,y,r2,r2*.12,0,0,TAU);x.stroke();
+}
+for(let lon=0;lon<180;lon+=30){
+x.save();x.translate(gcx,gcy);x.rotate((lon+t*12)*PI/180);
+x.beginPath();x.ellipse(0,0,R*.12,R,0,0,TAU);x.stroke();
+x.restore();
+}
+// Land dots
+const step=4.5;
+for(let dy=-R;dy<=R;dy+=step)for(let dx=-R;dx<=R;dx+=step){
+if(dx*dx+dy*dy>R*R)continue;
+const sq=Math.max(0,R*R-dx*dx-dy*dy);
+const lon=(Math.atan2(dx,Math.sqrt(sq))*180/PI+t*12)%360;
+const lat=Math.asin(Math.max(-1,Math.min(1,dy/R)))*180/PI;
+const v=Math.sin(lon*.05)*Math.cos(lat*.08)+Math.sin(lon*.03+lat*.04)*.5;
+if(v>.15&&Math.abs(lat)<70){x.fillStyle=G2+(0.1+v*.15).toFixed(3)+')';x.fillRect(gcx+dx-1,gcy+dy-1,2,2);}
+}
+// Radar sweep
+x.save();x.translate(gcx,gcy);x.rotate(t*.8);
+try{const grad=x.createConicGradient(0,0,0);grad.addColorStop(0,G2+'.15)');grad.addColorStop(.08,'transparent');grad.addColorStop(1,'transparent');
+x.fillStyle=grad;x.beginPath();x.arc(0,0,R,0,TAU);x.fill();}catch(e){}
+x.strokeStyle=G2+'.3)';x.lineWidth=1;x.beginPath();x.moveTo(0,0);x.lineTo(R,0);x.stroke();
+x.restore();
+// Incident markers
+[{ix:gcx+R*.3,iy:gcy-R*.1,s:'c'},{ix:gcx-R*.2,iy:gcy+R*.15,s:'h'},{ix:gcx+R*.1,iy:gcy+R*.3,s:'m'},{ix:gcx-R*.35,iy:gcy-R*.2,s:'h'},{ix:gcx+R*.25,iy:gcy-R*.3,s:'c'}].forEach(inc=>{
+x.fillStyle=inc.s==='c'?'rgba(255,152,20,.8)':inc.s==='h'?'rgba(255,152,20,.45)':G2+'.4)';
+x.fillRect(inc.ix-2.5,inc.iy-2.5,5,5);
+if(inc.s==='c'){x.strokeStyle='rgba(255,152,20,.3)';x.lineWidth=1;x.beginPath();x.arc(inc.ix,inc.iy,8+Math.sin(t*3)*3,0,TAU);x.stroke()}
+});
+// Rim
+x.strokeStyle=G2+'.25)';x.lineWidth=2;x.beginPath();x.arc(gcx,gcy,R,0,TAU);x.stroke();
+
+// Telemetry islands
+const ix=W*.7,iw=W*.28;
+x.fillStyle='rgba(5,7,0,.8)';x.fillRect(ix,48,iw,H-76);
+x.strokeStyle=G2+'.08)';x.lineWidth=1.5;x.strokeRect(ix,48,iw,H-76);
+x.fillStyle=G2+'.2)';x.fillRect(ix,48,iw,3);
+const metrics=[{l:'EVENTS',b:224},{l:'ACTIVE',b:47},{l:'CRIT',b:8,w:1},{l:'AIRCRAFT',b:12},{l:'VESSELS',b:31},{l:'HOTSPOT',b:6,w:1},{l:'COUNTRY',b:14},{l:'SOURCES',b:5}];
+const activeM=Math.floor(t*1.5)%metrics.length;
+metrics.forEach((m,i)=>{
+const my=56+i*((H-84)/8),mh=(H-84)/8-2;
+const isA=i===activeM;
+x.fillStyle=isA?G2+'.04)':G2+'.015)';x.fillRect(ix+3,my,iw-6,mh);
+x.strokeStyle=isA?G2+'.15)':G2+'.05)';x.strokeRect(ix+3,my,iw-6,mh);
+x.font='4px "Share Tech Mono"';x.fillStyle=G2+'.25)';x.fillText(m.l,ix+6,my+10);
+const jit=isA?Math.floor(Math.sin(t*6)*2):0;
+x.font='bold 16px "Teko"';x.fillStyle=m.w?AMB:G;x.fillText(m.b+jit,ix+6,my+mh-3);
+});
+
+x.font='6px "Share Tech Mono"';x.fillStyle=G2+'.25)';x.fillText('GULF THEATRE',6,18);
+stamp(x,4,H-28,'SYS:MAP-OPS');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-2');
+const c=document.createElement('canvas');tile.appendChild(c);
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+x.fillStyle='#030500';x.fillRect(0,0,W,H);
+const t=Date.now()/1000;
+
+// Giant background type — breathing
+const br=Math.sin(t*.3)*.015+.035;
+x.font='bold 130px "Teko"';x.fillStyle=G2+br.toFixed(3)+')';x.fillText('BRIEF',W*.03,H*.38);
+x.strokeStyle=G2+(br+.03).toFixed(3)+')';x.lineWidth=1;x.strokeText('BRIEF',W*.03,H*.38);
+x.font='bold 70px "Teko"';x.fillStyle=G2+(br*.7).toFixed(3)+')';x.fillText('INTEL',W*.08,H*.54);
+
+// Amber bar — flashing
+const cf=Math.sin(t*2)>.6?.95:.7;
+x.fillStyle='rgba(255,152,20,'+cf.toFixed(2)+')';x.fillRect(0,48,W,22);
+x.fillStyle=BG;x.font='bold 11px "Teko"';x.fillText('⚠ CLASSIFIED — INTELLIGENCE ASSESSMENT',8,64);
+x.font='8px "Teko"';x.fillText('TS//SI//NOFORN',W-84,64);
+
+// Report content
+x.fillStyle='rgba(5,7,0,.85)';x.fillRect(10,80,W-20,H-110);
+x.strokeStyle=G2+'.1)';x.lineWidth=1.5;x.strokeRect(10,80,W-20,H-110);
+x.fillStyle=G2+'.2)';x.fillRect(10,80,W-20,3);
+
+x.font='12px "Teko"';x.fillStyle=G2+'.5)';x.fillText('HADAL INTELLIGENCE ASSESSMENT',18,100);
+x.font='6px "Share Tech Mono"';x.fillStyle=G2+'.2)';
+x.fillText('SERIAL:HADAL-2026-0322-001',18,114);
+const now=new Date();x.fillText('DTG:'+now.toISOString().slice(0,19).replace(/[-:T]/g,'')+'Z',18,126);
+x.fillStyle=G2+'.06)';x.fillRect(18,132,W-40,1);
+
+// Typewriter content
+const lines=[
+{f:'7px "Teko"',c:G2+'.4)',t:'1. SITUATION',y:148},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'Theatre threat: ORANGE (67/100).',y:162},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'Primary driver: IRGC posture shift.',y:174},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'4 kinetic events in 24h window.',y:186},
+{f:'7px "Teko"',c:G2+'.4)',t:'2. KEY JUDGMENTS',y:206},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'• Escalation dominant (P=34%)',y:220},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'• Naval blockade risk +4%',y:232},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'• ADS-B anomalies correlate SAM',y:244},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'• Social chatter spike (3 platforms)',y:256},
+{f:'7px "Teko"',c:G2+'.4)',t:'3. OUTLOOK (UNIFIED FEED)',y:276},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'72h: DETERIORATING. Cascade 0.62.',y:290},
+{f:'5px "Share Tech Mono"',c:G2+'.3)',t:'Sources: GOV+NEWS+CHATTER+SNSR',y:302},
+];
+const totalC=lines.reduce((s,l)=>s+l.t.length,0);
+const charP=Math.floor((t*20)%totalC);
+let drawn=0;
+lines.forEach(line=>{
+const vis=Math.min(line.t.length,Math.max(0,charP-drawn));drawn+=line.t.length;
+if(vis<=0)return;
+x.font=line.f;x.fillStyle=line.c;x.fillText(line.t.slice(0,vis),18,line.y);
+if(vis<line.t.length&&vis>0&&Math.sin(t*6)>0){
+const tw=x.measureText(line.t.slice(0,vis)).width;
+x.fillStyle=G;x.fillRect(18+tw+1,line.y-6,4,8);
+}
+});
+
+// Amber footer
+const fb=Math.sin(t*1.5)>.2;
+x.fillStyle='rgba(255,152,20,.05)';x.fillRect(10,H-38,W-20,16);
+x.strokeStyle='rgba(255,152,20,.15)';x.strokeRect(10,H-38,W-20,16);
+x.font='5px "Share Tech Mono"';x.fillStyle=fb?'rgba(255,152,20,.45)':'rgba(255,152,20,.12)';
+x.fillText('DISTRIBUTION: HADAL OPERATORS ONLY',18,H-28);
+
+stamp(x,4,H-28,'SYS:REPORT-GEN');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-3');
+const c=document.createElement('canvas');tile.appendChild(c);
+tile.appendChild(Object.assign(document.createElement('div'),{className:'scn'}));
+
+// Simulated chatter messages
+const msgs=[];
+const platforms=['TG','X','VK','FORUM','IRC','SIGNAL'];
+const tags=['IRGC','HORMUZ','MISSILE','NAVAL','DRONE','ARMED','DEPLOY','CHATTER','ALERT','THREAT'];
+for(let i=0;i<40;i++){
+msgs.push({
+plat:platforms[Math.random()*6|0],
+tag:tags[Math.random()*10|0],
+sent:Math.random()>.6?1:Math.random()>.4?0:-1, // 1=threat 0=neutral -1=low
+age:Math.random()*8,
+x:0
+});
+}
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+rasterBase(x,W,H,.07);
+const t=Date.now()/1000;
+
+// Platform source columns
+const platW=W*.28;
+x.fillStyle='rgba(5,7,0,.7)';x.fillRect(4,48,platW,H-76);
+x.strokeStyle=G2+'.1)';x.lineWidth=1.5;x.strokeRect(4,48,platW,H-76);
+x.fillStyle=G2+'.2)';x.fillRect(4,48,platW,3);
+
+x.font='bold 8px "Teko"';x.fillStyle=G2+'.45)';x.fillText('SOURCES',10,64);
+x.font='6px "Teko"';x.fillStyle=G2+'.3)';x.fillText('UNIFIED MULTI-SOURCE FEED',10,76);
+
+const platCounts={};
+platforms.forEach(p=>platCounts[p]=0);
+msgs.forEach(m=>platCounts[m.plat]++);
+
+platforms.forEach((p,i)=>{
+const py=88+i*22;
+const cnt=platCounts[p];
+const isOn=cnt>3;
+// Platform row
+x.fillStyle=G2+'.03)';x.fillRect(8,py,platW-8,16);
+// Status dot
+x.fillStyle=isOn?G:G2+'.15)';x.fillRect(10,py+5,5,5);
+// Name
+x.font='5px "Share Tech Mono"';x.fillStyle=isOn?G2+'.5)':G2+'.2)';
+x.fillText(p,20,py+11);
+// Count
+x.fillStyle=G2+'.35)';x.fillText(cnt+'sig',platW-28,py+11);
+// Activity bar
+const barW=(platW-50)*(cnt/12);
+x.fillStyle=G2+'.06)';x.fillRect(42,py+5,platW-74,5);
+x.fillStyle=isOn?G2+'.4)':G2+'.12)';x.fillRect(42,py+5,Math.min(barW,platW-74),5);
+});
+
+// Scrolling chatter stream — center
+const stX=platW+12,stW=W-platW-20;
+x.fillStyle='rgba(5,7,0,.6)';x.fillRect(stX,48,stW,H*.55);
+x.strokeStyle=G2+'.08)';x.lineWidth=1;x.strokeRect(stX,48,stW,H*.55);
+x.fillStyle=G2+'.15)';x.fillRect(stX,48,stW,3);
+
+x.font='6px "Teko"';x.fillStyle=G2+'.35)';x.fillText('CHATTER STREAM',stX+6,64);
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.2)';
+x.fillText((msgs.length)+' SIG TRACKED',stX+stW-68,64);
+
+// Message rows
+const visH=H*.55-24;
+const rowH=11;
+const maxRows=Math.floor(visH/rowH);
+const sorted=[...msgs].sort((a,b)=>a.age-b.age);
+sorted.slice(0,maxRows).forEach((m,i)=>{
+const my=72+i*rowH;
+if(my>48+H*.55-4)return;
+const isNew=m.age<.8;
+const isThreat=m.sent===1;
+// Row bg
+if(isNew){x.fillStyle=G2+'.04)';x.fillRect(stX+2,my-6,stW-4,rowH)}
+if(isThreat){x.fillStyle='rgba(255,152,20,.02)';x.fillRect(stX+2,my-6,stW-4,rowH)}
+// Platform tag
+x.font='4px "Share Tech Mono"';
+x.fillStyle=isNew?G:G2+'.3)';x.fillText(m.plat.padEnd(6),stX+6,my);
+// Tag
+x.fillStyle=isThreat?AMB:isNew?G2+'.5)':G2+'.25)';
+x.fillText(m.tag,stX+36,my);
+// Sentiment indicator
+const sentC=m.sent===1?'rgba(255,152,20,.5)':m.sent===0?G2+'.2)':G2+'.08)';
+x.fillStyle=sentC;x.fillRect(stX+stW-18,my-4,8,5);
+// Age
+x.fillStyle=G2+'.15)';x.fillText(m.age.toFixed(0)+'m',stX+stW-36,my);
+});
+
+// Sentiment gauge — bottom right
+const sgX=stX,sgY=48+H*.55+8,sgW=stW,sgH=H-sgY-34;
+x.fillStyle='rgba(5,7,0,.75)';x.fillRect(sgX,sgY,sgW,sgH);
+x.strokeStyle=G2+'.08)';x.lineWidth=1;x.strokeRect(sgX,sgY,sgW,sgH);
+x.font='6px "Teko"';x.fillStyle=G2+'.35)';x.fillText('SENTIMENT AGGREGATE',sgX+6,sgY+14);
+
+// Three sentiment bars
+const sentData=[
+{l:'THREAT',v:.34,c:AMB},
+{l:'NEUTRAL',v:.48,c:G2+'.4)'},
+{l:'LOW/CALM',v:.18,c:G2+'.15)'}
+];
+sentData.forEach((s,i)=>{
+const by=sgY+22+i*16;
+x.font='4px "Share Tech Mono"';x.fillStyle=G2+'.25)';x.fillText(s.l,sgX+6,by+6);
+x.fillStyle=G2+'.04)';x.fillRect(sgX+52,by,sgW-62,8);
+x.fillStyle=s.c;x.fillRect(sgX+52,by,(sgW-62)*s.v,8);
+x.fillStyle=G2+'.3)';x.fillText(Math.floor(s.v*100)+'%',sgX+sgW-22,by+6);
+});
+
+// Volume sparkline — bottom left
+x.fillStyle='rgba(5,7,0,.75)';x.fillRect(4,48+H*.55+8,platW,sgH);
+x.strokeStyle=G2+'.08)';x.lineWidth=1;x.strokeRect(4,48+H*.55+8,platW,sgH);
+x.font='6px "Teko"';x.fillStyle=G2+'.35)';x.fillText('VOLUME / 24H',10,48+H*.55+22);
+// Bar chart
+const bars=24;
+const barSpacing=Math.floor((platW-12)/bars);
+for(let b=0;b<bars;b++){
+const bh=(Math.sin(b*.5+t*.2)*.3+.5)*sgH*.5;
+const bx=8+b*barSpacing;
+const by2=48+H*.55+sgH-4;
+const isRecent=b>20;
+x.fillStyle=isRecent?G2+'.45)':G2+'.15)';
+x.fillRect(bx,by2-bh,barSpacing-1,bh);
+}
+
+// Age messages
+msgs.forEach(m=>{m.age+=.008;if(m.age>8){m.age=0;m.plat=platforms[Math.random()*6|0];m.tag=tags[Math.random()*10|0];m.sent=Math.random()>.6?1:Math.random()>.4?0:-1}});
+
+stamp(x,4,H-28,'SYS:CHATTER-SOCL');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-4');
+const grid=document.createElement('div');
+grid.style.cssText='position:absolute;inset:52px 0 28px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:2px;padding:2px;background:rgba(218,255,74,.05);z-index:1';
+tile.appendChild(grid);
+
+const chs=[{l:'HF/COMINT',t:'wave'},{l:'RADAR/ELINT',t:'pulse'},{l:'SIGINT GEO',t:'dots'},{l:'EW SPECTRUM',t:'spectrum'},{l:'THREAT RAD',t:'bars'},{l:'JAM DETECT',t:'noise'},{l:'DATALINK',t:'binary'},{l:'FORCE POS',t:'status'}];
+chs.forEach(ch=>{
+const cell=document.createElement('div');
+cell.style.cssText='position:relative;overflow:hidden;background:#030500;border:1px solid rgba(218,255,74,.06)';
+const lbl=document.createElement('div');
+lbl.style.cssText='position:absolute;top:1px;left:2px;font-size:5px;letter-spacing:2px;color:rgba(218,255,74,.3);z-index:2;font-family:"Share Tech Mono"';
+lbl.textContent=ch.l;cell.appendChild(lbl);
+const cv=document.createElement('canvas');cv.style.cssText='width:100%;height:100%';
+cell.appendChild(cv);grid.appendChild(cell);
+
+requestAnimationFrame(function anim(){
+const cW=cv.offsetWidth||80,cH=cv.offsetHeight||80;
+cv.width=cW*DPR;cv.height=cH*DPR;
+const xx=cv.getContext('2d');if(!xx){requestAnimationFrame(anim);return}
+xx.setTransform(DPR,0,0,DPR,0,0);
+xx.fillStyle='#030500';xx.fillRect(0,0,cW,cH);
+const t=Date.now()/1000;
+switch(ch.t){
+case'wave':
+xx.strokeStyle=G2+'.6)';xx.lineWidth=1.5;xx.beginPath();
+for(let j=0;j<cW;j++){const v=Math.sin(j*.12+t*4)*cH*.3+cH/2;j===0?xx.moveTo(j,v):xx.lineTo(j,v)}xx.stroke();
+xx.strokeStyle=G2+'.25)';xx.lineWidth=1;xx.beginPath();
+for(let j=0;j<cW;j++){const v=Math.sin(j*.25+t*6)*cH*.18+cH/2;j===0?xx.moveTo(j,v):xx.lineTo(j,v)}xx.stroke();break;
+case'pulse':
+for(let j=0;j<cW;j+=2){const shift=(t*60)%20;const h=((j+shift)%20)<4?cH*.65:cH*.08;
+xx.fillStyle=G2+(.15+h/cH*.5).toFixed(2)+')';xx.fillRect(j,cH/2-h/2,2,h);}break;
+case'dots':
+for(let r=3;r<cH;r+=6)for(let c=3;c<cW;c+=6){const v=Math.sin(t*2+r*.15+c*.1)*.5+.5;
+xx.fillStyle=G2+(v*.6).toFixed(2)+')';xx.fillRect(c-1,r-1,2,2);}break;
+case'spectrum':
+for(let c=0;c<cW;c+=2){const h=(Math.sin(c*.15+t*3)*.5+.5)*cH*.85;const isH=Math.abs(c-cW*.4)<12;
+xx.fillStyle=isH?'rgba(255,152,20,'+(h/cH*.6).toFixed(2)+')':G2+(.1+h/cH*.4).toFixed(2)+')';
+xx.fillRect(c,cH-h,2,h);}break;
+case'bars':
+for(let c=0;c<cW;c+=4){const h=(.2+Math.random()*.5)*cH;const thr=c>cW*.55&&c<cW*.75;
+xx.fillStyle=thr?'rgba(255,152,20,.5)':G2+'.2)';xx.fillRect(c,cH-h,3,h);}break;
+case'noise':
+for(let j=0;j<500;j++){xx.fillStyle=G2+(Math.random()*.35).toFixed(2)+')';
+xx.fillRect(Math.random()*cW,Math.random()*cH,2,2);}break;
+case'binary':
+xx.font='4px "Share Tech Mono"';
+for(let r=0;r<cH;r+=5)for(let c=0;c<cW;c+=4){const on=((r*7+c*13+Math.floor(t*3))%5)>2;
+xx.fillStyle=on?G2+'.5)':G2+'.03)';xx.fillText(on?'1':'0',c,r);}break;
+case'status':
+for(let r=0;r<4;r++)for(let c=0;c<4;c++){const si=(r*4+c+Math.floor(t))%5;
+const cols=[G2+'.5)',G2+'.08)',G2+'.5)','rgba(255,152,20,.4)',G2+'.25)'];
+xx.fillStyle=cols[si];xx.fillRect(c*(cW/4)+1,r*(cH/4)+1,cW/4-2,cH/4-2);}break;
+}
+requestAnimationFrame(anim);
+});
+});
+})();
+(function(){
+const tile=document.getElementById('ct-5');
+const c=document.createElement('canvas');tile.appendChild(c);
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+x.fillStyle='#030500';x.fillRect(0,0,W,H);
+const t=Date.now()/1000;
+
+// Hex mesh
+const hexR=16,hexH=hexR*Math.sqrt(3);
+for(let row=-1;row<H/hexH+1;row++){
+for(let col=-1;col<W/(hexR*3)+1;col++){
+const hx=col*hexR*3+(row%2)*hexR*1.5,hy=row*hexH*.5;
+const isR=hx>W*.12&&hx<W*.42&&hy>H*.15&&hy<H*.65;
+const isD=hx>W*.22&&hx<W*.38&&hy>H*.25&&hy<H*.55;
+x.beginPath();for(let i=0;i<6;i++){const a=PI/6+i*PI/3;i===0?x.moveTo(hx+Math.cos(a)*hexR*.87,hy+Math.sin(a)*hexR*.87):x.lineTo(hx+Math.cos(a)*hexR*.87,hy+Math.sin(a)*hexR*.87)}x.closePath();
+const dp=isD?Math.sin(t*2)*.03+.06:.06;
+if(isD){x.fillStyle='rgba(255,152,20,'+dp.toFixed(3)+')';x.fill();x.strokeStyle='rgba(255,152,20,.2)'}
+else if(isR){x.fillStyle=G2+'.015)';x.fill();x.strokeStyle=G2+'.07)'}
+else{x.strokeStyle=G2+'.035)'}
+x.lineWidth=.5;x.stroke();
+}}
+
+
+
+// Altitude bands
+[['FL200-UNL','rgba(255,152,20,.3)',H*.2],['FL100-FL200',G2+'.2)',H*.42],['SFC-FL100',G2+'.12)',H*.65]].forEach(([lbl,col,y])=>{
+x.fillStyle=col;x.font='5px "Share Tech Mono"';x.fillText(lbl,4,y);
+x.strokeStyle=col;x.setLineDash([2,8]);x.lineWidth=.5;
+x.beginPath();x.moveTo(0,y+4);x.lineTo(W*.52,y+4);x.stroke();x.setLineDash([]);
+});
+
+// Zone labels
+x.font='bold 8px "Teko"';x.fillStyle='rgba(255,152,20,.45)';x.fillText('DANGER',W*.25,H*.3);
+x.fillStyle=G2+'.25)';x.fillText('RESTRICTED',W*.14,H*.17);
+
+// NOTAM panel
+const nx=W*.54,nw=W*.44;
+x.fillStyle='rgba(5,7,0,.88)';x.fillRect(nx,48,nw,H-76);
+x.strokeStyle=G2+'.12)';x.lineWidth=1.5;x.strokeRect(nx,48,nw,H-76);
+x.fillStyle=G2+'.2)';x.fillRect(nx,48,nw,3);
+
+// Critical NOTAM amber
+const critF=Math.sin(t*3)>.3?1:.55;
+x.fillStyle='rgba(255,152,20,'+critF.toFixed(2)+')';x.fillRect(nx+4,58,nw-8,18);
+x.fillStyle=BG;x.font='bold 9px "Teko"';x.fillText('⚠ NOTAM A0847/26',nx+8,72);
+x.font='7px "Teko"';x.fillText('CRIT',nx+nw-30,72);
+
+x.fillStyle='rgba(255,152,20,.06)';x.fillRect(nx+4,78,nw-8,48);
+x.strokeStyle='rgba(255,152,20,.15)';x.strokeRect(nx+4,78,nw-8,48);
+x.font='5px "Share Tech Mono"';x.fillStyle='rgba(255,152,20,.55)';
+x.fillText('OMAE FIR — FL200-UNL',nx+8,92);
+x.fillText('DANGER AREA ACTIVE',nx+8,104);
+x.fillText('22/1400Z-22/2200Z',nx+8,116);
+
+[{id:'B1204',s:'HIGH',d:'OIIX TMA — CLOSED'},{id:'C0392',s:'ELEV',d:'OKBK CTR — RESTRICTED'},{id:'D0188',s:'MOD',d:'OMDB APP — MODIFIED'}].forEach((n,i)=>{
+const ny=134+i*40;
+x.fillStyle=G2+'.02)';x.fillRect(nx+4,ny,nw-8,34);
+x.strokeStyle=G2+'.06)';x.strokeRect(nx+4,ny,nw-8,34);
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.35)';x.fillText('NOTAM '+n.id,nx+8,ny+12);
+x.fillStyle=n.s==='HIGH'?AMB:G2+'.25)';x.fillText(n.s,nx+nw-32,ny+12);
+x.fillStyle=G2+'.25)';x.fillText(n.d,nx+8,ny+26);
+});
+
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.2)';
+x.fillText('47 NOTAMS · 12 CRIT/HIGH · 23 AIRPORTS',nx+8,H-34);
+
+stamp(x,4,H-28,'SYS:AIRSP-MON');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-6');
+const c=document.createElement('canvas');tile.appendChild(c);
+tile.appendChild(Object.assign(document.createElement('div'),{className:'scn'}));
+
+const vessels=[
+{mmsi:'211234567',name:'HORMUZ SPIRIT',type:'CRUDE',flag:'IR',sog:8.2,cog:142,lat:26.42,lon:56.18,gap:47,anom:1},
+{mmsi:'636092148',name:'GULF PIONEER',type:'LNG',flag:'PA',sog:14.1,cog:318,lat:26.55,lon:56.31,gap:0,anom:0},
+{mmsi:'477321900',name:'PERSIAN STAR',type:'CHEM',flag:'HK',sog:11.8,cog:87,lat:26.38,lon:56.44,gap:0,anom:0},
+{mmsi:'256412000',name:'BANDAR TRADER',type:'BULK',flag:'MT',sog:6.4,cog:205,lat:26.61,lon:55.92,gap:12,anom:1},
+{mmsi:'413876500',name:'QESHM FERRY',type:'PAX',flag:'IR',sog:18.2,cog:45,lat:26.48,lon:56.08,gap:0,anom:0},
+{mmsi:'538006721',name:'MUSCAT CARGO',type:'GEN',flag:'MH',sog:9.7,cog:271,lat:26.33,lon:56.55,gap:0,anom:0},
+{mmsi:'312045800',name:'AL DHAFRA',type:'CRUDE',flag:'AE',sog:7.1,cog:162,lat:26.71,lon:55.78,gap:0,anom:0},
+{mmsi:'229341000',name:'KHOR FAKKAN',type:'CONT',flag:'MT',sog:15.3,cog:92,lat:26.25,lon:56.68,gap:0,anom:0},
+{mmsi:'215432100',name:'SILENT WIND',type:'CRUDE',flag:'IR',sog:0.3,cog:0,lat:26.58,lon:56.12,gap:183,anom:1},
+{mmsi:'477998300',name:'JADE HARMONY',type:'LPG',flag:'HK',sog:12.6,cog:338,lat:26.44,lon:56.39,gap:0,anom:0},
+];
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+x.fillStyle='#020400';x.fillRect(0,0,W,H);
+const t=Date.now()/1000;
+
+// Position grid — left panel (strait chart)
+const gx=6,gy=52,gw=W*.42,gh=H*.52;
+x.fillStyle='rgba(5,7,0,.6)';x.fillRect(gx,gy,gw,gh);
+x.strokeStyle=G2+'.08)';x.lineWidth=1;x.strokeRect(gx,gy,gw,gh);
+
+// Grid lines
+x.strokeStyle=G2+'.03)';x.lineWidth=.5;
+for(let i=0;i<8;i++){const ly=gy+i*(gh/7);x.beginPath();x.moveTo(gx,ly);x.lineTo(gx+gw,ly);x.stroke()}
+for(let i=0;i<6;i++){const lx=gx+i*(gw/5);x.beginPath();x.moveTo(lx,gy);x.lineTo(lx,gy+gh);x.stroke()}
+
+// Lat/lon labels
+x.font='4px "Share Tech Mono"';x.fillStyle=G2+'.15)';
+x.fillText('56.0E',gx+4,gy+gh-3);x.fillText('56.7E',gx+gw-22,gy+gh-3);
+x.fillText('26.7N',gx+2,gy+10);x.fillText('26.2N',gx+2,gy+gh-10);
+
+// Vessel positions
+vessels.forEach((v,i)=>{
+const vx2=gx+((v.lon-55.7)/(56.8-55.7))*gw;
+const vy2=gy+((26.75-v.lat)/(26.75-26.2))*gh;
+if(vx2<gx||vx2>gx+gw||vy2<gy||vy2>gy+gh)return;
+if(v.anom){
+x.fillStyle='rgba(255,152,20,.6)';x.fillRect(vx2-3,vy2-3,6,6);
+const pr=Math.sin(t*3+i)*.15+.2;
+x.strokeStyle='rgba(255,152,20,'+pr.toFixed(2)+')';x.lineWidth=1;
+x.strokeRect(vx2-6,vy2-6,12,12);
+}else{
+x.fillStyle=G2+'.55)';x.fillRect(vx2-2,vy2-2,4,4);
+}
+const rad=v.cog*PI/180;
+if(v.sog>.5){
+x.strokeStyle=v.anom?'rgba(255,152,20,.25)':G2+'.15)';x.lineWidth=.5;
+x.beginPath();x.moveTo(vx2,vy2);x.lineTo(vx2+Math.sin(rad)*12,vy2-Math.cos(rad)*12);x.stroke();
+}
+});
+
+x.font='6px "Teko"';x.fillStyle=G2+'.35)';x.fillText('STRAIT OF HORMUZ — AIS COVERAGE',gx+4,gy-3);
+
+// Track table — right panel
+const tx=W*.46,tw=W*.52,ty=52;
+x.fillStyle='rgba(5,7,0,.85)';x.fillRect(tx,ty,tw,H-80);
+x.strokeStyle=G2+'.1)';x.lineWidth=1.5;x.strokeRect(tx,ty,tw,H-80);
+x.fillStyle=G2+'.15)';x.fillRect(tx,ty,tw,3);
+
+x.fillStyle=G2+'.04)';x.fillRect(tx+2,ty+6,tw-4,12);
+x.font='4px "Share Tech Mono"';x.fillStyle=G2+'.3)';
+[['MMSI',0],['NAME',52],['TYPE',108],['SOG',132],['COG',152],['GAP',172]].forEach(([label,cx])=>x.fillText(label,tx+6+cx,ty+15));
+
+const selRow=Math.floor(t*.6)%vessels.length;
+vessels.forEach((v,i)=>{
+const ry=ty+22+i*14;if(ry>H-34)return;
+const isSel=i===selRow;
+if(isSel){x.fillStyle=G2+'.04)';x.fillRect(tx+2,ry-2,tw-4,13);x.strokeStyle=G2+'.1)';x.lineWidth=.5;x.strokeRect(tx+2,ry-2,tw-4,13)}
+if(v.anom){x.fillStyle='rgba(255,152,20,.02)';x.fillRect(tx+2,ry-2,tw-4,13)}
+x.font='4px "Share Tech Mono"';
+x.fillStyle=isSel?G2+'.6)':G2+'.3)';x.fillText(v.mmsi.slice(-6),tx+6,ry+8);
+x.fillStyle=isSel?G:G2+'.45)';x.fillText(v.name.slice(0,12),tx+58,ry+8);
+x.fillStyle=G2+'.25)';x.fillText(v.type,tx+114,ry+8);
+x.fillStyle=G2+'.35)';x.fillText(v.sog.toFixed(1),tx+138,ry+8);
+x.fillText(v.cog+'°',tx+158,ry+8);
+if(v.gap>0){x.fillStyle=v.gap>30?AMB:'rgba(255,152,20,.5)';x.fillText(v.gap+'m',tx+178,ry+8)}
+else{x.fillStyle=G2+'.12)';x.fillText('—',tx+178,ry+8)}
+});
+
+// Gap severity strip
+const sy=gy+gh+8,sh=H-sy-34;
+x.fillStyle='rgba(5,7,0,.75)';x.fillRect(gx,sy,gw,sh);
+x.strokeStyle=G2+'.08)';x.lineWidth=1;x.strokeRect(gx,sy,gw,sh);
+x.font='5px "Teko"';x.fillStyle=G2+'.3)';x.fillText('AIS GAP TIMELINE — LAST 6H',gx+4,sy+12);
+const gapVessels=vessels.filter(v=>v.gap>0);
+gapVessels.forEach((v,i)=>{
+const by=sy+20+i*22;if(by+16>sy+sh)return;
+x.font='4px "Share Tech Mono"';x.fillStyle=AMB;x.fillText(v.name.slice(0,14),gx+4,by+6);
+const barW=Math.min(gw-12,(v.gap/200)*(gw-12));
+x.fillStyle='rgba(255,152,20,.08)';x.fillRect(gx+4,by+9,gw-12,6);
+x.fillStyle='rgba(255,152,20,.45)';x.fillRect(gx+4,by+9,barW,6);
+if(v.gap>30){const fl=Math.sin(t*2+i)*.15+.25;
+x.fillStyle='rgba(255,152,20,'+fl.toFixed(2)+')';x.fillRect(gx+4+barW-2,by+9,4,6)}
+x.font='4px "Share Tech Mono"';x.fillStyle='rgba(255,152,20,.35)';x.fillText(v.gap+'MIN',gx+gw-28,by+6);
+});
+
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.2)';
+x.fillText(vessels.length+' TRACKS · '+gapVessels.length+' GAPS · HORMUZ SECTOR',tx+6,H-34);
+
+stamp(x,4,H-28,'SYS:AIS-TRK');
+requestAnimationFrame(draw);
+}
+document.fonts.ready.then(draw);
+})();
+(function(){
+const tile=document.getElementById('ct-7');
+const c=document.createElement('canvas');tile.appendChild(c);
+tile.appendChild(Object.assign(document.createElement('div'),{className:'scn'}));
+tile.appendChild(Object.assign(document.createElement('div'),{className:'blm'}));
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+rasterBase(x,W,H,.12);
+const t=Date.now()/1000;
+
+// Dense binary character field
+x.font='6px "Share Tech Mono"';
+for(let r=0;r<H;r+=7)for(let c2=0;c2<W;c2+=6){
+const v=Math.sin(r*.1+c2*.06+t*.4)>.5;
+x.fillStyle=G2+(v?.1:.02)+')';
+x.fillText(v?'1':'0',c2,r);
+}
+
+// Fat confidence arc
+const cx=W*.3,cy=H*.42,r=75;
+const confTarget=.84,conf=Math.min(confTarget,((t*.15)%1.3)*confTarget/.7);
+// Track
+x.strokeStyle=G2+'.08)';x.lineWidth=12;
+x.beginPath();x.arc(cx,cy,r,-PI*.8,PI*.8);x.stroke();
+// Fill
+x.strokeStyle=G;x.lineWidth=12;
+x.beginPath();x.arc(cx,cy,r,-PI*.8,-PI*.8+PI*1.6*conf);x.stroke();
+// Inner ring
+x.strokeStyle=G2+'.15)';x.lineWidth=1;
+x.beginPath();x.arc(cx,cy,r-10,-PI*.8,PI*.8);x.stroke();
+// Tick marks
+for(let i=0;i<=20;i++){
+const a=-PI*.8+PI*1.6*(i/20);
+const i1=r+8,i2=r+(i%5===0?16:12);
+x.strokeStyle=G2+(i%5===0?'.3)':'.1)');x.lineWidth=i%5===0?1.5:1;
+x.beginPath();x.moveTo(cx+Math.cos(a)*i1,cy+Math.sin(a)*i1);x.lineTo(cx+Math.cos(a)*i2,cy+Math.sin(a)*i2);x.stroke();
+}
+// Bright tip
+const tipA=-PI*.8+PI*1.6*conf;
+x.fillStyle=G;x.shadowColor=G;x.shadowBlur=10;
+x.beginPath();x.arc(cx+Math.cos(tipA)*r,cy+Math.sin(tipA)*r,5,0,TAU);x.fill();
+x.shadowBlur=0;
+// Score
+x.font='bold 52px "Teko"';x.fillStyle=G;x.textAlign='center';
+x.fillText(Math.floor(conf*100),cx,cy+16);
+x.font='7px "Share Tech Mono"';x.fillStyle=G2+'.3)';
+x.fillText('CONFIDENCE',cx,cy+30);x.textAlign='left';
+
+// Factor bars — right side, fat
+const factors=[['SRC RELI',78,0],['SRC INDEP',91,0],['CROSS AGR',85,0],['GEO CONF',72,0],['TEMPORAL',80,0],['ENTITY',65,0],['SENSOR',88,0],['AGE ADJ',70,0],['CONTRA',12,1]];
+const fx=W*.56,fy=58,fh=16,fw=W*.4;
+x.fillStyle=G2+'.04)';x.fillRect(fx-4,fy-12,fw+8,factors.length*fh+20);
+x.strokeStyle=G2+'.08)';x.strokeRect(fx-4,fy-12,fw+8,factors.length*fh+20);
+x.font='6px "Teko"';x.fillStyle=G2+'.4)';x.fillText('9-FACTOR BREAKDOWN',fx,fy-2);
+factors.forEach(([label,val,warn],i)=>{
+const y=fy+8+i*fh;
+const fillDelay=i*.1;
+const fillP=Math.min(1,Math.max(0,((t*.2)%1.4-fillDelay)*2));
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.3)';x.fillText(label,fx,y+8);
+x.fillStyle=G2+'.04)';x.fillRect(fx+46,y+2,fw-62,7);
+x.fillStyle=warn?'rgba(255,152,20,.55)':G2+'.5)';
+x.fillRect(fx+46,y+2,(fw-62)*(val/100)*fillP,7);
+x.fillStyle=G2+(fillP>.7?'.4)':'.1)');x.fillText(Math.floor(val*fillP),fx+fw-14,y+8);
+});
+
+// Source glyphs at bottom
+x.font='8px "Share Tech Mono"';x.fillStyle=G2+'.15)';
+['◆GOV:3','◈NEWS:4','◇SOCL:2','▣SNSR:1'].forEach((s,i)=>x.fillText(s,fx+i*36,H-34));
+
+stamp(x,4,H-28,'SYS:CONF-9F');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-8');
+const c=document.createElement('canvas');tile.appendChild(c);
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+const t=Date.now()/1000;
+rasterBase(x,W,H,.06);
+
+// Faint grid hints
+x.strokeStyle=G2+'.03)';x.lineWidth=.5;
+for(let gx=40;gx<W;gx+=50){x.beginPath();x.moveTo(gx,0);x.lineTo(gx,H);x.stroke()}
+for(let gy=40;gy<H;gy+=50){x.beginPath();x.moveTo(0,gy);x.lineTo(W,gy);x.stroke()}
+
+// Central dark vertical strip (PCB trace)
+const stripX=W*.38,stripW=W*.08;
+x.fillStyle='rgba(218,255,74,.03)';x.fillRect(stripX,0,stripW,H);
+x.strokeStyle=G2+'.12)';x.lineWidth=.5;
+x.beginPath();x.moveTo(stripX,0);x.lineTo(stripX,H);x.moveTo(stripX+stripW,0);x.lineTo(stripX+stripW,H);x.stroke();
+// Detail flares in strip
+x.fillStyle=G2+'.2)';x.fillRect(stripX+4,H*.7,stripW-8,3);
+x.fillStyle=G2+'.1)';x.fillRect(stripX+3,H*.22,stripW-6,2);
+for(let i=0;i<8;i++){x.fillStyle=G2+'.04)';x.fillRect(stripX+2,H*.1+i*H*.1,stripW-4,1)}
+
+// Outer measurement frame
+x.strokeStyle=G;x.lineWidth=1.5;
+x.strokeRect(W*.2,H*.08,W*.62,H*.82);
+// Inner measurement box
+x.strokeStyle=G2+'.4)';x.lineWidth=1.2;
+x.strokeRect(W*.34,H*.32,W*.22,H*.22);
+
+// Corner brackets on outer
+const ox=W*.2,oy=H*.08,ow=W*.62,oh=H*.82,tk=10;
+x.strokeStyle=G2+'.6)';x.lineWidth=.8;
+[[ox,oy,1,1],[ox+ow,oy,-1,1],[ox,oy+oh,1,-1],[ox+ow,oy+oh,-1,-1]].forEach(([bx,by,dx,dy])=>{
+x.beginPath();x.moveTo(bx-dx*tk,by);x.lineTo(bx+dx*tk,by);x.moveTo(bx,by-dy*tk);x.lineTo(bx,by+dy*tk);x.stroke();
+});
+
+// Circle ring
+x.strokeStyle=G2+'.5)';x.lineWidth=1.5;
+x.beginPath();x.arc(W*.26,H*.14,W*.02,0,TAU);x.stroke();
+
+// IC element near top of strip
+const ix=stripX+2,iy=H*.12;
+x.strokeStyle=G2+'.4)';x.lineWidth=.8;x.strokeRect(ix,iy,stripW-4,H*.06);
+x.strokeStyle=G2+'.2)';x.lineWidth=.5;
+for(let p=0;p<3;p++){
+x.beginPath();x.moveTo(ix-4,iy+4+p*6);x.lineTo(ix,iy+4+p*6);x.stroke();
+x.beginPath();x.moveTo(ix+stripW-4,iy+4+p*6);x.lineTo(ix+stripW,iy+4+p*6);x.stroke();
+}
+
+// Stat cells as bonding pads
+const cells=[
+{l:'INCIDENTS',b:224,wx:W*.05,wy:H*.18},{l:'VERIFIED',b:187,wx:W*.05,wy:H*.34},
+{l:'KINETIC',b:47,wx:W*.05,wy:H*.50,w:1},{l:'CRITICAL',b:8,wx:W*.05,wy:H*.66,w:1},
+{l:'COUNTRIES',b:14,wx:W*.66,wy:H*.18},{l:'SOURCES',b:5,wx:W*.66,wy:H*.34},
+{l:'THREAT',b:67,wx:W*.66,wy:H*.50},{l:'CASCADE',b:62,wx:W*.66,wy:H*.66,w:1},
+];
+const activeP=Math.floor(t*1.2)%cells.length;
+
+cells.forEach((cell,i)=>{
+const isA=i===activeP;
+const padS=W*.04;
+// Green bonding pad
+x.fillStyle=isA?G:G2+'.5)';
+x.fillRect(cell.wx,cell.wy,padS,padS*.85);
+// Dark cutout in pad
+if(!isA){x.fillStyle=BG;x.fillRect(cell.wx+padS*.2,cell.wy+padS*.25,padS*.6,padS*.35)}
+// Value
+const jit=isA?Math.floor(Math.sin(t*8)*2):0;
+x.font='500 11px "Teko"';x.fillStyle=cell.w?AMB:G;
+x.fillText(''+(cell.b+jit),cell.wx+padS+6,cell.wy+padS*.65);
+// Label
+x.font='5px "Rajdhani"';x.fillStyle=G2+'.3)';
+x.fillText(cell.l,cell.wx+padS+6,cell.wy+padS*.95);
+// Connection line to frame
+x.strokeStyle=G2+'.08)';x.lineWidth=.5;
+x.beginPath();
+if(cell.wx<W*.5){x.moveTo(cell.wx+padS,cell.wy+padS*.4);x.lineTo(ox,cell.wy+padS*.4)}
+else{x.moveTo(cell.wx,cell.wy+padS*.4);x.lineTo(ox+ow,cell.wy+padS*.4)}
+x.stroke();
+});
+
+// Checkerboard test pattern
+const ckx=W*.62,cky=H*.6,ckw=W*.12,ckh=H*.12,cs=W*.02;
+for(let r=0;r<Math.ceil(ckh/cs);r++)for(let cl=0;cl<Math.ceil(ckw/cs);cl++){
+x.fillStyle=(r+cl)%2===0?G:G2+'.15)';
+x.fillRect(ckx+cl*cs,cky+r*cs,Math.min(cs,ckw-cl*cs),Math.min(cs,ckh-r*cs));
+}
+
+// Scattered test-point dots
+x.fillStyle=G2+'.5)';
+[[W*.12,H*.15],[W*.28,H*.28],[W*.72,H*.15],[W*.15,H*.85],[W*.75,H*.85],[W*.5,H*.9]].forEach(([dx,dy])=>{
+x.fillRect(dx,dy,3,3);
+});
+
+// Timestamps near elements
+x.font='500 11px "Teko"';x.fillStyle=G2+'.5)';
+x.fillText('12:00',W*.36,H*.55);
+x.fillText('5:40',W*.72,H*.12);
+x.fillText('13:54',W*.1,H*.7);
+
+stamp(x,4,H-28,'SYS:STATS-DRV');
+requestAnimationFrame(draw);
+}
+document.fonts.ready.then(draw);
+})();
+(function(){
+const tile=document.getElementById('ct-9');
+const c=document.createElement('canvas');tile.appendChild(c);
+tile.appendChild(Object.assign(document.createElement('div'),{className:'scn hv'}));
+tile.appendChild(Object.assign(document.createElement('div'),{className:'blm'}));
+
+
+const queue=[];for(let i=0;i<26;i++)queue.push({age:Math.random()*5,src:['GOV','NEWS','CHAT','SNSR','API','UNFD'][Math.random()*6|0]});
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+rasterBase(x,W,H,.1);
+const t=Date.now()/1000;
+
+
+
+// Horizontal data buses
+for(let i=0;i<6;i++){
+const y=54+i*(H-108)/5;
+x.fillStyle=G2+'.02)';x.fillRect(W*.32,y-3,W*.66,6);
+x.strokeStyle=G2+'.08)';x.lineWidth=1;
+x.beginPath();x.moveTo(W*.32,y);x.lineTo(W*.98,y);x.stroke();
+for(let p=0;p<3;p++){
+const px=((t*90+i*80+p*180)%(W*.66))+W*.32;
+x.fillStyle=G;x.fillRect(px,y-2,14,4);
+x.fillStyle=G2+'.25)';x.fillRect(px-24,y-1,24,2);
+}
+x.font='4px "Share Tech Mono"';x.fillStyle=G2+'.2)';
+x.fillText(['NORM','DEDUP','CANON','UNIFY','ENRICH','FUSE'][i],W*.33,y-5);
+}
+
+// Queue column — dense phosphor text
+x.font='5px "Share Tech Mono"';
+queue.forEach((q,i)=>{
+const y=48+i*13;
+const alpha=Math.max(.06,1-q.age/5);
+const arr=q.age<.4;
+x.fillStyle=arr?G:G2+alpha.toFixed(2)+')';
+x.fillText('▸'+q.src.padEnd(5)+(arr?'▮ARR':'QUE ').padEnd(5)+q.age.toFixed(1),4,y);
+q.age+=.016;if(q.age>5){q.age=0;q.src=['GOV','NEWS','CHAT','SNSR','API','UNFD'][Math.random()*6|0]}
+});
+
+// Stats block
+x.fillStyle='rgba(5,7,0,.8)';x.fillRect(W-74,8,68,50);
+x.strokeStyle=G2+'.1)';x.strokeRect(W-74,8,68,50);
+const pulse=Math.sin(t*4)*.3+.6;
+x.fillStyle=G2+pulse.toFixed(2)+')';x.fillRect(W-68,14,6,6);
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.45)';
+x.fillText('STREAM',W-58,19);
+x.fillText((11+Math.floor(Math.sin(t)*3))+' sig/m',W-68,32);
+x.fillText('LAT:<2s',W-68,44);
+
+stamp(x,4,H-28,'SYS:INGEST');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-10');
+const c=document.createElement('canvas');tile.appendChild(c);
+tile.appendChild(Object.assign(document.createElement('div'),{className:'scn'}));
+
+const art=['         ▓▓         ','        ▓▓▓▓        ','   ░░░░▓▓▓▓▓▓░░░░   ','  ░░░░░▓▓▓▓▓▓░░░░░  ',' ░░░░░░▓▓▓▓▓▓░░░░░░ ','  ░░░░░░▓▓▓▓░░░░░░  ','    ░░░░░░░░░░░░    ','      ▓▓▓▓▓▓▓▓      ','       ▓▓▓▓▓▓       ','        ▓▓▓▓        ','         ▓▓         '];
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+rasterBase(x,W,H,.06);
+const t=Date.now()/1000;
+
+// Lock frame
+const fcx=W*.36,fcy=H*.48,fw=175,fh=155;
+x.strokeStyle=G2+'.12)';x.lineWidth=1.5;x.strokeRect(fcx-fw/2,fcy-fh/2,fw,fh);
+const cm=16;
+[[fcx-fw/2,fcy-fh/2,1,1],[fcx+fw/2,fcy-fh/2,-1,1],[fcx-fw/2,fcy+fh/2,1,-1],[fcx+fw/2,fcy+fh/2,-1,-1]].forEach(([bx,by,dx,dy])=>{
+x.strokeStyle=G;x.lineWidth=3;
+x.beginPath();x.moveTo(bx,by+dy*cm);x.lineTo(bx,by);x.lineTo(bx+dx*cm,by);x.stroke();
+});
+x.fillStyle=G2+'.08)';
+x.fillStyle=G2+'.03)';
+
+// Char art
+const charW=7,charH=10;
+const artW=art[0].length*charW,artH=art.length*charH;
+const ox=fcx-artW/2,oy=fcy-artH/2;
+x.font='9px "Share Tech Mono"';
+art.forEach((line,row)=>{
+[...line].forEach((ch,col)=>{
+if(ch===' ')return;
+const bright=ch==='▓'?.7:.22;
+const flick=Math.sin(t*4+row*.6+col*.5)*.2+Math.sin(t*7+col)*.05;
+x.fillStyle=G2+(bright+flick).toFixed(2)+')';
+x.fillText(ch,ox+col*charW,oy+row*charH);
+});
+});
+
+// Telemetry labels
+x.font='6px "Share Tech Mono"';x.fillStyle=G2+'.4)';
+x.fillText('NORAD:58247',fcx-fw/2+4,fcy-fh/2+14);
+x.fillText('KH-11 BLK V',fcx-fw/2+4,fcy-fh/2+26);
+x.fillText('RECON:'+(78+Math.sin(t)*5).toFixed(1)+'%',fcx-fw/2+4,fcy+fh/2-8);
+
+// Mission window
+const rx=W*.62;
+x.fillStyle='rgba(5,7,0,.75)';x.fillRect(rx,48,W-rx-4,H-76);
+x.strokeStyle=G2+'.1)';x.lineWidth=1.5;x.strokeRect(rx,48,W-rx-4,H-76);
+x.fillStyle=G2+'.2)';x.fillRect(rx,48,W-rx-4,3);
+x.font='7px "Teko"';x.fillStyle=G2+'.45)';x.fillText('MISSION WINDOW',rx+6,66);
+x.font='5px "Share Tech Mono"';x.fillStyle=G2+'.35)';
+['INC:97.4°','ALT:262KM','PER:89.2MIN','NEXT:00:14:32','LOCK:ACQUIRED','DWELL:00:04:12','QUAL:HIGH','BAND:MSI','GSD:0.15M'].forEach((s,i)=>x.fillText(s,rx+6,82+i*16));
+
+// Orbital arc
+x.save();x.translate(rx+50,H-55);
+x.strokeStyle=G2+'.15)';x.lineWidth=1;
+x.beginPath();x.ellipse(0,0,42,13,0,0,PI);x.stroke();
+x.fillStyle=G;x.shadowColor=G;x.shadowBlur=6;
+x.fillRect(Math.cos(t*.8)*42-3,-Math.sin(t*.8)*13-3,6,6);
+x.shadowBlur=0;
+x.restore();
+
+stamp(x,4,H-28,'SYS:SAT-ISR');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+(function(){
+const tile=document.getElementById('ct-11');
+const c=document.createElement('canvas');tile.appendChild(c);
+tile.appendChild(Object.assign(document.createElement('div'),{className:'scn'}));
+
+function draw(){
+const{W,H,x}=hd(c);if(!x)return;
+rasterBase(x,W,H,.08);
+const t=Date.now()/1000;
+
+// Heavy PCB grid
+x.strokeStyle=G2+'.04)';x.lineWidth=1;
+for(let i=0;i<W;i+=10){x.beginPath();x.moveTo(i,0);x.lineTo(i,H);x.stroke()}
+for(let i=0;i<H;i+=10){x.beginPath();x.moveTo(0,i);x.lineTo(W,i);x.stroke()}
+
+// Three fat bus traces
+const buses=[{y:H*.2,label:'SIG',n:7},{y:H*.5,label:'EVT',n:1},{y:H*.8,label:'ENT',n:4}];
+buses.forEach((b,bi)=>{
+// Fat trace background
+x.fillStyle=G2+'.03)';x.fillRect(0,b.y-6,W,12);
+// Trace lines
+x.strokeStyle=G2+'.25)';x.lineWidth=3;
+x.beginPath();x.moveTo(0,b.y);x.lineTo(W,b.y);x.stroke();
+x.strokeStyle=G2+'.08)';x.lineWidth=1;
+x.beginPath();x.moveTo(0,b.y-4);x.lineTo(W,b.y-4);x.stroke();
+x.beginPath();x.moveTo(0,b.y+4);x.lineTo(W,b.y+4);x.stroke();
+// Label stamped
+x.fillStyle=G2+'.06)';x.fillRect(2,b.y-14,30,10);
+x.font='bold 9px "Teko"';x.fillStyle=G2+'.5)';x.fillText(b.label+' ×'+b.n,4,b.y-6);
+// Heavy pulses
+for(let p=0;p<5;p++){
+const px=((t*80+p*65+bi*50)%W);
+x.fillStyle=G;x.fillRect(px-8,b.y-2.5,16,5);
+x.fillStyle=G2+'.3)';x.fillRect(px-32,b.y-1.5,24,3);
+x.fillStyle=G2+'.1)';x.fillRect(px-56,b.y-1,24,2);
+}
+});
+
+// Vertical connectors with fat junction pads
+[W*.18,W*.32,W*.48,W*.62,W*.78].forEach((vx,i)=>{
+x.strokeStyle=G2+'.1)';x.lineWidth=1.5;
+x.beginPath();x.moveTo(vx,H*.2);x.lineTo(vx,H*.5);x.stroke();
+x.beginPath();x.moveTo(vx,H*.5);x.lineTo(vx,H*.8);x.stroke();
+// Fat pads
+[H*.2,H*.5,H*.8].forEach(py=>{
+x.fillStyle=G2+'.6)';x.fillRect(vx-4,py-4,8,8);
+x.fillStyle=BG;x.fillRect(vx-1.5,py-1.5,3,3);
+});
+// Downward pulses
+const p1=((t*.5+i*.13)%1);
+x.fillStyle=G;x.shadowColor=G;x.shadowBlur=8;
+x.fillRect(vx-3,H*.2+(H*.3)*p1-3,6,6);
+const p2=((t*.4+i*.17+.5)%1);
+x.fillRect(vx-3,H*.5+(H*.3)*p2-3,6,6);
+x.shadowBlur=0;
+});
+
+// IC blocks
+const ics=[{px:W*.25,py:H*.35,label:'FUSE'},{px:W*.55,py:H*.35,label:'DEDUP'},{px:W*.4,py:H*.65,label:'GRAPH'},{px:W*.7,py:H*.65,label:'NORM'}];
+ics.forEach(ic=>{
+const w=52,h=26;
+x.fillStyle=G2+'.06)';x.fillRect(ic.px-w/2,ic.py-h/2,w,h);
+x.strokeStyle=G2+'.4)';x.lineWidth=2;x.strokeRect(ic.px-w/2,ic.py-h/2,w,h);
+for(let p=0;p<5;p++){
+x.fillStyle=G2+'.35)';
+x.fillRect(ic.px-w/2-4,ic.py-h/2+3+p*4,3,2);
+x.fillRect(ic.px+w/2+1,ic.py-h/2+3+p*4,3,2);
+}
+x.font='bold 8px "Teko"';x.fillStyle=G;x.textAlign='center';
+x.fillText(ic.label,ic.px,ic.py+3);x.textAlign='left';
+});
+
+// Data overlay — dense, overlapping the visual
+x.fillStyle='rgba(5,7,0,.7)';x.fillRect(W-100,54,94,H-80);
+x.strokeStyle=G2+'.12)';x.strokeRect(W-100,54,94,H-80);
+x.font='6px "Teko"';x.fillStyle=G2+'.4)';x.fillText('EVT RECORD',W-94,68);
+const rows=['ID:EVT-03847','TYPE:MISSILE','SEV:CRITICAL','SIG:7 FUSED','ENT:4 LINKED','','SIG-001:GOV','SIG-002:SNSR','SIG-003:NEWS','SIG-004:OSINT','','ENT-A:IRGC','ENT-B:SHAHAB','ENT-C:TABRIZ'];
+x.font='5px "Share Tech Mono"';
+rows.forEach((r,i)=>{if(!r)return;const p=r.split(':');
+x.fillStyle=G2+'.2)';x.fillText(p[0],W-94,80+i*13);
+x.fillStyle=p[1]==='CRITICAL'?AMB:G2+'.45)';x.fillText(p[1]||'',W-58,80+i*13);
+});
+
+stamp(x,4,H-28,'SYS:ESE-ARCH');
+requestAnimationFrame(draw);
+}
+draw();
+})();
+</script>
+</body>
+</html>

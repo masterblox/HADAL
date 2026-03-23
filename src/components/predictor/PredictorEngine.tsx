@@ -65,14 +65,14 @@ interface Props {
   prices: PriceData | null
 }
 
-const probColor = (p: number) =>
-  p >= 70 ? 'rgba(255,140,0,.9)' : p >= 45 ? 'rgba(196,255,44,.82)' : 'rgba(136,151,171,.8)'
+const sevColor = (v: number) =>
+  v >= 75 ? 'rgba(255,140,0,.92)' : v >= 45 ? 'rgba(196,255,44,.82)' : 'rgba(136,151,171,.72)'
 
-const severityTone = (value: number) =>
-  value >= 75 ? 'rgba(255,140,0,.92)' : value >= 45 ? 'rgba(196,255,44,.82)' : 'rgba(136,151,171,.72)'
+const sevLabelColor = (v: string) =>
+  v === 'CRITICAL' || v === 'HIGH' ? 'rgba(255,140,0,.92)' : 'rgba(196,255,44,.76)'
 
-const labelTone = (value: string) =>
-  value === 'CRITICAL' || value === 'HIGH' ? 'rgba(255,140,0,.92)' : 'rgba(196,255,44,.76)'
+const trendArrow = (t: string) =>
+  t === 'escalating' ? '↑' : t === 'de-escalating' ? '↓' : '→'
 
 export function PredictorEngine({ incidents, airspace, prices }: Props) {
   const [scenario, setScenario] = useState<Scenario>({ actor: 'houthi', action: 'missile', target: 'oil_facility', country: 'uae' })
@@ -95,7 +95,7 @@ export function PredictorEngine({ incidents, airspace, prices }: Props) {
       .map(([type, cat]) => ({
         type: type.toUpperCase(),
         count: cat.count,
-        mean: cat.meanSeverity,
+        mean: Math.round(cat.meanSeverity),
         p10: cat.percentiles.p10,
         p50: cat.percentiles.p50,
         p90: cat.percentiles.p90,
@@ -106,233 +106,259 @@ export function PredictorEngine({ incidents, airspace, prices }: Props) {
   if (!prediction) return null
 
   const g = prediction.global
+  const regimeClass = prediction.theatreThreatLevel >= 80 ? 'regime-critical'
+    : prediction.theatreThreatLevel >= 60 ? 'regime-elevated'
+    : prediction.theatreThreatLevel >= 30 ? 'regime-guarded' : 'regime-nominal'
 
   return (
     <section className="predictor-section jp-panel sev-nominal">
-      <div className="predictor-header">
-        <div className="predictor-title-row">
-          <span className="predictor-title section-title">PREDICTION ENGINE</span>
-          <span className="predictor-subtitle">SEQUENCE MODEL · THEATRE RESPONSE</span>
+      {/* ── Header + Regime ── */}
+      <div className="pe-header">
+        <div className="pe-header-left">
+          <span className="pe-title section-title">PREDICTION ENGINE</span>
+          <span className="pe-provenance">SEQUENCE MODEL · {isDemo ? 'DEMO' : prediction.sufficient ? 'LOCAL' : 'LIMITED'}</span>
         </div>
-        <div className="predictor-trend">
-          <span>MODE {isDemo ? 'DEMO' : prediction.sufficient ? 'LOCAL' : 'LIMITED'}</span>
-          <span className="sep">|</span>
-          <span>THREAT {prediction.theatreThreatLevel}</span>
-          <span className="sep">|</span>
-          <span>CASCADE {prediction.cascadeRisk.contagionScore}</span>
-          <span className="sep">|</span>
-          <span>AIRSPACE {prediction.airspacePressure}</span>
+        <div className={`pe-regime ${regimeClass}`}>
+          <span className="pe-regime-label">REGIME</span>
+          <span className="pe-regime-value">{prediction.theatreThreatLevel >= 80 ? 'CRITICAL' : prediction.theatreThreatLevel >= 60 ? 'ELEVATED' : prediction.theatreThreatLevel >= 30 ? 'GUARDED' : 'NOMINAL'}</span>
+          <span className="pe-regime-score">{prediction.theatreThreatLevel}</span>
         </div>
       </div>
 
-      {prediction.sufficient && (
+      {/* ── Trend Summary ── */}
+      {prediction.trendSummary && (
+        <div className="pe-trend">
+          <span className="pe-trend-text">{prediction.trendSummary.summary}</span>
+          <span className="pe-trend-meta">
+            <span>{prediction.trendSummary.dailyAvg} EVENTS/DAY</span>
+            <span className="sep">|</span>
+            <span>CASCADE {prediction.cascadeRisk.contagionScore}</span>
+            <span className="sep">|</span>
+            <span>AIRSPACE {prediction.airspacePressure}</span>
+          </span>
+        </div>
+      )}
+
+      {prediction.sufficient && g && (
         <>
-          {/* Row 1: Severity Distribution + Regime Board — inline tables */}
-          <div className="pred-signal-grid">
-            <div className="pred-stage-card">
-              <div className="pred-stage-head">
-                <span className="pred-stage-kicker">SEVERITY DISTRIBUTION</span>
-                <span className="pred-stage-meta">5K RESAMPLES</span>
-              </div>
-              <div className="pred-compact-stats">
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">MEAN</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(g?.mean ?? 0) }}>{g?.mean.toFixed(1)}</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">SD</span>
-                  <span className="pred-stat-value">{g?.stdDev.toFixed(1)}</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">P(SEVERE)</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(g?.probSevere ?? 0) }}>{g?.probSevere}%</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">P(CRITICAL)</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(g?.probCritical ?? 0) }}>{g?.probCritical}%</span>
-                </div>
-              </div>
-              <div className="pred-percentile-strip">
-                <span>P5 {g?.percentiles.p5}</span>
-                <span>P10 {g?.percentiles.p10}</span>
-                <span>P25 {g?.percentiles.p25}</span>
-                <span style={{ color: 'var(--g)' }}>P50 {g?.percentiles.p50}</span>
-                <span>P75 {g?.percentiles.p75}</span>
-                <span>P90 {g?.percentiles.p90}</span>
-                <span>P95 {g?.percentiles.p95}</span>
-              </div>
+          {/* ── Composite Signals ── */}
+          <div className="pe-signals">
+            <div className="pe-signal-cell">
+              <span className="pe-sig-label">MEAN SEV</span>
+              <span className="pe-sig-value" style={{ color: sevColor(g.mean) }}>{g.mean.toFixed(1)}</span>
+              <div className="pe-sig-bar"><div className="pe-sig-fill" style={{ width: `${g.mean}%`, background: sevColor(g.mean) }} /></div>
             </div>
+            <div className="pe-signal-cell">
+              <span className="pe-sig-label">P(SEVERE)</span>
+              <span className="pe-sig-value" style={{ color: sevColor(g.probSevere) }}>{g.probSevere}%</span>
+              <div className="pe-sig-bar"><div className="pe-sig-fill" style={{ width: `${g.probSevere}%`, background: sevColor(g.probSevere) }} /></div>
+            </div>
+            <div className="pe-signal-cell">
+              <span className="pe-sig-label">P(CRITICAL)</span>
+              <span className="pe-sig-value" style={{ color: sevColor(g.probCritical) }}>{g.probCritical}%</span>
+              <div className="pe-sig-bar"><div className="pe-sig-fill" style={{ width: `${g.probCritical}%`, background: sevColor(g.probCritical) }} /></div>
+            </div>
+            <div className="pe-signal-cell">
+              <span className="pe-sig-label">CASCADE</span>
+              <span className="pe-sig-value" style={{ color: sevColor(prediction.cascadeRisk.contagionScore) }}>{prediction.cascadeRisk.contagionScore}</span>
+              <div className="pe-sig-bar"><div className="pe-sig-fill" style={{ width: `${prediction.cascadeRisk.contagionScore}%`, background: sevColor(prediction.cascadeRisk.contagionScore) }} /></div>
+            </div>
+            <div className="pe-signal-cell">
+              <span className="pe-sig-label">AIRSPACE</span>
+              <span className="pe-sig-value" style={{ color: sevColor(prediction.airspacePressure) }}>{prediction.airspacePressure}</span>
+              <div className="pe-sig-bar"><div className="pe-sig-fill" style={{ width: `${prediction.airspacePressure}%`, background: sevColor(prediction.airspacePressure) }} /></div>
+            </div>
+          </div>
 
-            <div className="pred-stage-card">
-              <div className="pred-stage-head">
-                <span className="pred-stage-kicker">REGIME BOARD</span>
-                <span className="pred-stage-meta">STATE VECTOR</span>
+          {/* ── Percentile Distribution Fan ── */}
+          <div className="pe-distribution">
+            <div className="pe-dist-header">
+              <span className="pe-dist-title">SEVERITY DISTRIBUTION</span>
+              <span className="pe-dist-stats">σ {g.stdDev.toFixed(1)} · 5K RESAMPLES</span>
+            </div>
+            <div className="pe-dist-fan">
+              <div className="pe-fan-track">
+                <div className="pe-fan-range pe-fan-outer" style={{ left: `${g.percentiles.p5}%`, width: `${g.percentiles.p95 - g.percentiles.p5}%` }} />
+                <div className="pe-fan-range pe-fan-inner" style={{ left: `${g.percentiles.p25}%`, width: `${g.percentiles.p75 - g.percentiles.p25}%` }} />
+                <div className="pe-fan-median" style={{ left: `${g.percentiles.p50}%` }} />
+                <div className="pe-fan-zone-mark" style={{ left: '70%' }} />
+                <div className="pe-fan-zone-mark pe-zone-warn" style={{ left: '90%' }} />
               </div>
-              <div className="pred-compact-stats">
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">THREAT</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(prediction.theatreThreatLevel) }}>{prediction.theatreThreatLevel}</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">SEVERE P</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(g?.probSevere ?? 0) }}>{g?.probSevere}</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">CRITICAL P</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(g?.probCritical ?? 0) }}>{g?.probCritical}</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">CASCADE</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(prediction.cascadeRisk.contagionScore) }}>{prediction.cascadeRisk.contagionScore}</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">AIRSPACE</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(prediction.airspacePressure) }}>{prediction.airspacePressure}</span>
-                </div>
+              <div className="pe-fan-labels pe-fan-labels-full">
+                <span style={{ left: `${g.percentiles.p5}%` }}>P5</span>
+                <span style={{ left: `${g.percentiles.p25}%` }}>P25</span>
+                <span style={{ left: `${g.percentiles.p50}%` }} className="pe-fan-label-med">P50</span>
+                <span style={{ left: `${g.percentiles.p75}%` }}>P75</span>
+                <span style={{ left: `${g.percentiles.p95}%` }}>P95</span>
               </div>
-              <div className="pred-regime-caption">
-                <span>CLUSTERS {prediction.cascadeRisk.clusterCount}</span>
-                <span>MAX CHAIN {prediction.cascadeRisk.maxClusterSize}</span>
-                <span>DOMINANT {prediction.dominantScenario}</span>
+              <div className="pe-fan-values pe-fan-values-full">
+                <span style={{ left: `${g.percentiles.p5}%` }}>{g.percentiles.p5}</span>
+                <span style={{ left: `${g.percentiles.p25}%` }}>{g.percentiles.p25}</span>
+                <span style={{ left: `${g.percentiles.p50}%` }} className="pe-fan-val-med">{g.percentiles.p50}</span>
+                <span style={{ left: `${g.percentiles.p75}%` }}>{g.percentiles.p75}</span>
+                <span style={{ left: `${g.percentiles.p95}%` }}>{g.percentiles.p95}</span>
+              </div>
+              <div className="pe-fan-inline-compact">
+                <span>P5 <b>{g.percentiles.p5}</b></span>
+                <span>P25 <b>{g.percentiles.p25}</b></span>
+                <span className="pe-fan-label-med">P50 <b>{g.percentiles.p50}</b></span>
+                <span>P75 <b>{g.percentiles.p75}</b></span>
+                <span>P95 <b>{g.percentiles.p95}</b></span>
               </div>
             </div>
           </div>
 
-          {/* Row 2: Category Envelope + Window Pressure — tables */}
-          <div className="pred-analysis-grid">
-            <div className="pred-stage-card">
-              <div className="pred-stage-head">
-                <span className="pred-stage-kicker">CATEGORY ENVELOPE</span>
-                <span className="pred-stage-meta">P10 / P50 / P90</span>
-              </div>
-              <div className="pred-cat-table-head" style={{ display: 'grid', gridTemplateColumns: '80px 36px 40px 36px 36px 36px 48px', gap: 0, padding: '2px 6px' }}>
-                <span>TYPE</span><span>CT</span><span>MEAN</span><span>P10</span><span>P50</span><span>P90</span><span>TREND</span>
-              </div>
-              {categoryRows.map(row => (
-                <div key={row.type} className="pred-cat-table-row" style={{ display: 'grid', gridTemplateColumns: '80px 36px 40px 36px 36px 36px 48px', gap: 0, padding: '2px 6px' }}>
-                  <span style={{ color: 'var(--g7)' }}>{row.type}</span>
-                  <span>{row.count}</span>
-                  <span style={{ color: severityTone(row.mean) }}>{row.mean}</span>
-                  <span>{row.p10}</span>
-                  <span style={{ color: 'var(--g)' }}>{row.p50}</span>
-                  <span style={{ color: severityTone(row.p90) }}>{row.p90}</span>
-                  <span>{row.trend}</span>
+          {/* ── Time Horizons ── */}
+          <div className="pe-horizons">
+            {([
+              { label: '24H', data: prediction.timeWindows.h24 },
+              { label: '72H', data: prediction.timeWindows.h72 },
+              { label: '7D', data: prediction.timeWindows.d7 },
+            ] as const).map(h => {
+              const maxCount = Math.max(prediction.timeWindows.h24.count, prediction.timeWindows.h72.count, prediction.timeWindows.d7.count, 1)
+              return (
+                <div key={h.label} className="pe-horizon-cell">
+                  <span className="pe-hz-label">{h.label}</span>
+                  <div className="pe-hz-bar-row">
+                    <div className="pe-hz-bar"><div className="pe-hz-sev-fill" style={{ width: `${h.data.meanSeverity}%`, background: sevColor(h.data.meanSeverity) }} /></div>
+                    <span className="pe-hz-value" style={{ color: sevColor(h.data.meanSeverity) }}>{h.data.meanSeverity.toFixed(0)}</span>
+                  </div>
+                  <div className="pe-hz-count-row">
+                    <div className="pe-hz-count-bar"><div className="pe-hz-count-fill" style={{ width: `${(h.data.count / maxCount) * 100}%` }} /></div>
+                    <span className="pe-hz-count">{h.data.count} EV</span>
+                  </div>
                 </div>
-              ))}
-            </div>
+              )
+            })}
+            {prediction.reactionWindow && (
+              <div className="pe-horizon-cell pe-reaction">
+                <span className="pe-hz-label">REACTION</span>
+                <div className="pe-hz-bar-row">
+                  <div className="pe-hz-bar"><div className="pe-hz-sev-fill" style={{ width: `${Math.min(prediction.reactionWindow.medianResponseHours * 2, 100)}%`, background: 'var(--g3)' }} /></div>
+                  <span className="pe-hz-value">{prediction.reactionWindow.medianResponseHours}h</span>
+                </div>
+                <span className="pe-hz-sub">FAST {prediction.reactionWindow.fastResponseImpact} · SLOW {prediction.reactionWindow.slowResponseImpact}</span>
+              </div>
+            )}
+          </div>
 
-            <div className="pred-stage-card">
-              <div className="pred-stage-head">
-                <span className="pred-stage-kicker">WINDOW PRESSURE</span>
-                <span className="pred-stage-meta">BY HORIZON</span>
+          {/* ── Category Severity Ranges ── */}
+          <div className="pe-categories">
+            <div className="pe-cat-header">
+              <span>TYPE</span><span>RANGE</span><span>N</span><span></span>
+            </div>
+            {categoryRows.map(row => (
+              <div key={row.type} className="pe-cat-row">
+                <span className="pe-cat-name">{row.type}</span>
+                <div className="pe-cat-range">
+                  <div className="pe-cat-track">
+                    <div className="pe-cat-bar" style={{ left: `${row.p10}%`, width: `${row.p90 - row.p10}%`, background: 'rgba(218,255,74,.12)' }} />
+                    <div className="pe-cat-median" style={{ left: `${row.p50}%`, background: sevColor(row.mean) }} />
+                  </div>
+                </div>
+                <span className="pe-cat-n">{row.count}</span>
+                <span className="pe-cat-trend" style={{ color: row.trend === 'escalating' ? 'var(--warn)' : 'var(--g3)' }}>{trendArrow(row.trend)}</span>
               </div>
-              <div className="pred-compact-stats">
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">24H SEV</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(prediction.timeWindows.h24.meanSeverity) }}>{prediction.timeWindows.h24.meanSeverity.toFixed(1)}</span>
-                  <span className="pred-stat-count">{prediction.timeWindows.h24.count} EV</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">72H SEV</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(prediction.timeWindows.h72.meanSeverity) }}>{prediction.timeWindows.h72.meanSeverity.toFixed(1)}</span>
-                  <span className="pred-stat-count">{prediction.timeWindows.h72.count} EV</span>
-                </div>
-                <div className="pred-stat-row">
-                  <span className="pred-stat-label">7D SEV</span>
-                  <span className="pred-stat-value" style={{ color: severityTone(prediction.timeWindows.d7.meanSeverity) }}>{prediction.timeWindows.d7.meanSeverity.toFixed(1)}</span>
-                  <span className="pred-stat-count">{prediction.timeWindows.d7.count} EV</span>
-                </div>
+            ))}
+          </div>
+
+          {/* ── Cascade & Response Board ── */}
+          <div className="pe-cascade-board">
+            <div className="pe-cascade-col">
+              <span className="pe-cb-title">CASCADE RISK</span>
+              <div className="pe-cb-row">
+                <span className="pe-cb-label">CONTAGION</span>
+                <span className="pe-cb-val" style={{ color: sevColor(prediction.cascadeRisk.contagionScore) }}>{prediction.cascadeRisk.contagionScore}</span>
               </div>
-              {prediction.reactionWindow && (
-                <div className="pred-compact-stats" style={{ marginTop: 6, borderTop: '1px solid rgba(196,255,44,.1)', paddingTop: 6 }}>
-                  <div className="pred-stage-head" style={{ marginBottom: 4 }}>
-                    <span className="pred-stage-kicker">RESPONSE LATENCY</span>
-                    <span className="pred-stage-meta">MEDIAN {prediction.reactionWindow.medianResponseHours}H</span>
+              <div className="pe-cb-bar"><div className="pe-cb-fill" style={{ width: `${prediction.cascadeRisk.contagionScore}%`, background: sevColor(prediction.cascadeRisk.contagionScore) }} /></div>
+              <div className="pe-cb-row" style={{ marginTop: 8 }}>
+                <span className="pe-cb-label">CLUSTERS</span>
+                <span className="pe-cb-val">{prediction.cascadeRisk.clusterCount}</span>
+              </div>
+              <div className="pe-cb-row">
+                <span className="pe-cb-label">MAX CHAIN</span>
+                <span className="pe-cb-val">{prediction.cascadeRisk.maxClusterSize}</span>
+              </div>
+            </div>
+            <div className="pe-cascade-col">
+              <span className="pe-cb-title">RESPONSE LATENCY</span>
+              {prediction.reactionWindow ? (
+                <>
+                  <div className="pe-cb-row">
+                    <span className="pe-cb-label">MEDIAN</span>
+                    <span className="pe-cb-val">{prediction.reactionWindow.medianResponseHours}h</span>
                   </div>
-                  <div className="pred-stat-row">
-                    <span className="pred-stat-label">FAST IMPACT</span>
-                    <span className="pred-stat-value" style={{ color: severityTone(prediction.reactionWindow.fastResponseImpact) }}>{prediction.reactionWindow.fastResponseImpact}</span>
+                  <div className="pe-response-compare">
+                    <div className="pe-resp-bar-group">
+                      <span className="pe-resp-label">FAST</span>
+                      <div className="pe-resp-bar"><div className="pe-resp-fill" style={{ width: `${prediction.reactionWindow.fastResponseImpact}%`, background: sevColor(prediction.reactionWindow.fastResponseImpact) }} /></div>
+                      <span className="pe-resp-val">{prediction.reactionWindow.fastResponseImpact}</span>
+                    </div>
+                    <div className="pe-resp-bar-group">
+                      <span className="pe-resp-label">SLOW</span>
+                      <div className="pe-resp-bar"><div className="pe-resp-fill" style={{ width: `${prediction.reactionWindow.slowResponseImpact}%`, background: sevColor(prediction.reactionWindow.slowResponseImpact) }} /></div>
+                      <span className="pe-resp-val">{prediction.reactionWindow.slowResponseImpact}</span>
+                    </div>
                   </div>
-                  <div className="pred-stat-row">
-                    <span className="pred-stat-label">SLOW IMPACT</span>
-                    <span className="pred-stat-value" style={{ color: severityTone(prediction.reactionWindow.slowResponseImpact) }}>{prediction.reactionWindow.slowResponseImpact}</span>
-                  </div>
-                </div>
+                </>
+              ) : (
+                <div className="pe-cb-row"><span className="pe-cb-label">NO DATA</span></div>
               )}
-            </div>
-          </div>
-
-          <div className="scenario-builder pred-controls">
-            <div className="pred-stage-head">
-              <span className="pred-stage-kicker">SEQUENCE FILTER</span>
-              <span className="pred-stage-meta">SCENARIO PROJECTION BY ACTOR / ACTION / TARGET / COUNTRY</span>
-            </div>
-            <div className="scenario-grid">
-              <label>
-                <span className="sc-label">ACTOR</span>
-                <select value={scenario.actor} onChange={e => setScenario(s => ({ ...s, actor: e.target.value }))}>
-                  {ACTORS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </select>
-              </label>
-              <label>
-                <span className="sc-label">ACTION</span>
-                <select value={scenario.action} onChange={e => setScenario(s => ({ ...s, action: e.target.value }))}>
-                  {ACTIONS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </select>
-              </label>
-              <label>
-                <span className="sc-label">TARGET</span>
-                <select value={scenario.target} onChange={e => setScenario(s => ({ ...s, target: e.target.value }))}>
-                  {TARGETS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                </select>
-              </label>
-              <label>
-                <span className="sc-label">COUNTRY</span>
-                <select value={scenario.country} onChange={e => setScenario(s => ({ ...s, country: e.target.value }))}>
-                  {COUNTRIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </label>
-            </div>
-            <button className="predict-btn" onClick={() => setShowScenarios(true)}>
-              BUILD FOLLOW-ON SCENARIOS
-            </button>
-          </div>
-
-          {showScenarios && filteredScenarios.length > 0 && (
-            <div className="pred-scenario-shell">
-              <div className="pred-stage-head">
-                <span className="pred-stage-kicker">SCENARIO LEDGER</span>
-                <span className="pred-stage-meta">SEQUENCE-DRIVEN FOLLOW-ON PATHS</span>
+              <div className="pe-cb-row" style={{ marginTop: 8 }}>
+                <span className="pe-cb-label">DOMINANT</span>
+                <span className="pe-cb-val" style={{ fontSize: 'var(--fs-micro)', letterSpacing: '.06em' }}>{prediction.dominantScenario}</span>
               </div>
-              <div className="predictions-grid pred-ledger">
+            </div>
+          </div>
+
+          {/* ── Scenario Ledger ── */}
+          <div className="pe-scenario-ledger">
+            <div className="pe-sl-header">
+              <span className="pe-sl-title">SCENARIO PROJECTION</span>
+              <div className="pe-sl-filters">
+                <div className="scenario-grid" style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                  <select value={scenario.actor} onChange={e => setScenario(s => ({ ...s, actor: e.target.value }))} className="pe-sl-filter">
+                    {ACTORS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  </select>
+                  <select value={scenario.action} onChange={e => setScenario(s => ({ ...s, action: e.target.value }))} className="pe-sl-filter">
+                    {ACTIONS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  </select>
+                  <select value={scenario.target} onChange={e => setScenario(s => ({ ...s, target: e.target.value }))} className="pe-sl-filter">
+                    {TARGETS.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                  </select>
+                  <select value={scenario.country} onChange={e => setScenario(s => ({ ...s, country: e.target.value }))} className="pe-sl-filter">
+                    {COUNTRIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <button className="pe-sl-filter" onClick={() => setShowScenarios(true)}>BUILD →</button>
+              </div>
+            </div>
+            {showScenarios && filteredScenarios.length > 0 && (
+              <>
+                <div className="pe-sl-col-header">
+                  <span>CATEGORY</span><span>OUTCOME</span><span>PROBABILITY</span><span>WINDOW</span><span>SEVERITY</span>
+                </div>
                 {filteredScenarios.map((p, i) => (
-                  <div key={i} className="prediction-card">
-                    <div className="pred-ledger-top">
-                      <div>
-                        <div className="pred-category">{p.category}</div>
-                        <div className="pred-outcome">{p.outcome}</div>
-                      </div>
-                      <div className="pred-ledger-prob" style={{ color: probColor(p.probability) }}>{p.probability}%</div>
-                    </div>
-                    <div className="pred-ledger-row">
-                      <span>{p.timeframe}</span>
-                      <span style={{ color: labelTone(p.severity) }}>{p.severity}</span>
-                      <span>{p.actors.length > 0 ? p.actors.join(' · ') : 'SYSTEMIC'}</span>
-                    </div>
-                    <div className="pred-ledger-gauge">
-                      <div className="pred-ledger-fill" style={{ width: `${p.probability}%`, background: probColor(p.probability) }} />
-                    </div>
+                  <div key={i} className="pe-sl-row">
+                    <span className="pe-sl-cat">{p.category}</span>
+                    <span className="pe-sl-outcome">{p.outcome}{p.actors.length > 0 && <span className="pe-sl-basis"> — {p.actors.join(', ')}</span>}</span>
+                    <span className="pe-sl-prob">
+                      <span className="pe-sl-prob-bar"><span className="pe-sl-prob-fill" style={{ width: `${p.probability}%`, background: sevColor(p.probability) }} /></span>
+                      <span className="pe-sl-prob-val" style={{ color: sevColor(p.probability) }}>{p.probability}%</span>
+                    </span>
+                    <span className="pe-sl-tf">{p.timeframe}</span>
+                    <span className="pe-sl-sev" style={{ color: sevLabelColor(p.severity) }}>{p.severity}</span>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
+              </>
+            )}
+          </div>
         </>
       )}
 
       {!prediction.sufficient && (
-        <div className="pred-insufficient">
-          <span className="jp-intel-lbl">INSUFFICIENT DATA — NEED 5+ EVENTS IN 14-DAY WINDOW</span>
+        <div className="pe-insufficient">
+          INSUFFICIENT DATA — NEED 5+ EVENTS IN 14-DAY WINDOW
         </div>
       )}
     </section>

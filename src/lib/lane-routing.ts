@@ -1,6 +1,6 @@
-export type Lane = 'overview' | 'operations' | 'analysis'
+export type Lane = 'overview' | 'operations' | 'analysis' | 'console'
 
-export const VALID_LANES: Lane[] = ['overview', 'operations', 'analysis']
+export const VALID_LANES: Lane[] = ['overview', 'operations', 'analysis', 'console']
 
 export function parseLane(): Lane {
   const h = window.location.hash.replace('#', '').toLowerCase()
@@ -15,4 +15,3 @@ export function subscribeHash(cb: () => void) {
 export function navigateTo(lane: Lane) {
   window.location.hash = lane
 }
-

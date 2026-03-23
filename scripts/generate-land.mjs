@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 /**
- * generate-land.mjs — Convert Natural Earth 110m TopoJSON to HADAL globe land data
+ * generate-land.mjs — Convert Natural Earth 50m TopoJSON to HADAL globe land data
  *
- * Source: world-atlas npm package (Natural Earth 110m, pre-simplified)
- * Output: src/canvas/land-110m.ts
+ * Source: world-atlas npm package (Natural Earth 50m, public domain)
+ * Output: src/canvas/land-110m.ts  (filename kept for import compatibility)
  *
  * Separates:
  *   - General land polygons (all continents/islands)
- *   - Gulf "hot zone" countries (Saudi Arabia, Yemen, Oman, UAE, Qatar, Kuwait)
+ *   - Gulf "hot zone" countries (Saudi Arabia, Yemen, Oman, UAE, Qatar, Kuwait, Bahrain)
  *   - Iran (special orange highlight)
  *   - Iraq (tactical context)
  *
  * Run: node scripts/generate-land.mjs
  * Deterministic — safe to rerun anytime.
+ *
+ * Previous source was 110m (~10K raw points, ~4K after simplification).
+ * Now using 50m (~97K raw points) with lighter simplification for faithful coastlines
+ * at R=260 (560×560 canvas). Target: ~8-14K output points.
  */
 
 import { readFileSync, writeFileSync } from 'fs'
@@ -23,12 +27,10 @@ import { feature } from 'topojson-client'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
 
-// ── Load TopoJSON ──
-const landTopo = JSON.parse(readFileSync(resolve(ROOT, 'node_modules/world-atlas/land-110m.json'), 'utf-8'))
-const countriesTopo = JSON.parse(readFileSync(resolve(ROOT, 'node_modules/world-atlas/countries-110m.json'), 'utf-8'))
+// ── Load TopoJSON (50m for better coastline fidelity) ──
+const countriesTopo = JSON.parse(readFileSync(resolve(ROOT, 'node_modules/world-atlas/countries-50m.json'), 'utf-8'))
 
 // ── Convert to GeoJSON ──
-const landGeo = feature(landTopo, landTopo.objects.land)
 const countriesGeo = feature(countriesTopo, countriesTopo.objects.countries)
 
 // ── Country IDs (ISO 3166-1 numeric) ──
@@ -41,6 +43,7 @@ const GULF_HOT_IDS = new Set([
   '784', // UAE
   '634', // Qatar
   '414', // Kuwait
+  '048', // Bahrain — small but strategically critical for Gulf intel
 ])
 
 // All IDs to exclude from general land (drawn separately with special styling)
@@ -60,7 +63,7 @@ function extractRings(geometry) {
   return rings
 }
 
-// ── Round coordinates to 1 decimal place (sufficient for 420px globe, R=196) ──
+// ── Round coordinates to 1 decimal place (0.1° ≈ 0.45px at R=260 — sufficient) ──
 function roundRing(ring) {
   return ring.map(([lon, lat]) => [
     Math.round(lon * 10) / 10,
@@ -92,13 +95,19 @@ function simplifyRing(ring, epsilon) {
   return [ring[0], ring[ring.length - 1]]
 }
 
-// Epsilon = 0.6° — at R=196, 1° ≈ 3.4px, so 0.6° ≈ 2px tolerance
-const SIMPLIFY_EPSILON = 0.6
+// Epsilon = 0.25° — at R=260, 1° ≈ 4.5px, so 0.25° ≈ 1.1px tolerance
+// This preserves detail down to about 1 pixel — the threshold of visibility
+const SIMPLIFY_EPSILON = 0.25
 
-// ── Filter out tiny islands (< 4 points or negligible area) ──
-function isSignificant(ring) {
+// Use a tighter epsilon for the Gulf/Iran/Iraq theatre — the area of interest
+// deserves higher fidelity than distant continents
+const THEATRE_EPSILON = 0.15
+
+// ── Filter out tiny islands ──
+// For special countries (Gulf region), use a much lower threshold to keep
+// small but strategically important landmasses (e.g., Bahrain islands)
+function isSignificant(ring, isTheatre = false) {
   if (ring.length < 4) return false
-  // Rough spherical area estimate — skip rings smaller than ~0.5° extent
   let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity
   for (const [lon, lat] of ring) {
     if (lon < minLon) minLon = lon
@@ -107,24 +116,39 @@ function isSignificant(ring) {
     if (lat > maxLat) maxLat = lat
   }
   const extent = (maxLon - minLon) * (maxLat - minLat)
-  return extent > 4 // ~4 square degrees minimum — filters tiny islands invisible at R=196px
+  // Theatre countries: 0.3 sq° (keeps small Gulf islands)
+  // General land: 0.8 sq° (keeps medium islands visible at R=260)
+  return extent > (isTheatre ? 0.3 : 0.8)
+}
+
+// ── Remove duplicate consecutive points after rounding ──
+function dedup(ring) {
+  const out = [ring[0]]
+  for (let i = 1; i < ring.length; i++) {
+    if (ring[i][0] !== ring[i - 1][0] || ring[i][1] !== ring[i - 1][1]) {
+      out.push(ring[i])
+    }
+  }
+  return out
 }
 
 // ── Build land polygons (exclude special countries) ──
-// Strategy: use the countries dataset for everything, so we can exclude Gulf/Iran
 const landRings = []
 const gulfRings = []
 const iraqRings = []
-let iranRing = null
+let iranRings = []
 
 for (const feat of countriesGeo.features) {
   const id = feat.id
+  const isTheatre = SPECIAL_IDS.has(id)
+  const eps = isTheatre ? THEATRE_EPSILON : SIMPLIFY_EPSILON
+
   const rings = extractRings(feat.geometry)
-    .map(r => simplifyRing(roundRing(r), SIMPLIFY_EPSILON))
-    .filter(isSignificant)
+    .map(r => dedup(simplifyRing(roundRing(r), eps)))
+    .filter(r => isSignificant(r, isTheatre))
 
   if (id === IRAN_ID) {
-    iranRing = rings[0] || null // Iran is a single Polygon
+    iranRings = rings
   } else if (id === IRAQ_ID) {
     iraqRings.push(...rings)
   } else if (GULF_HOT_IDS.has(id)) {
@@ -134,16 +158,22 @@ for (const feat of countriesGeo.features) {
   }
 }
 
+// For backwards compat, export the largest Iran ring as iranPolygon
+// and keep all rings available
+const iranRing = iranRings.length > 0
+  ? iranRings.reduce((best, r) => r.length > best.length ? r : best, iranRings[0])
+  : null
+
 // ── Stats ──
 const totalPoints = landRings.reduce((s, r) => s + r.length, 0)
   + gulfRings.reduce((s, r) => s + r.length, 0)
   + iraqRings.reduce((s, r) => s + r.length, 0)
-  + (iranRing ? iranRing.length : 0)
+  + iranRings.reduce((s, r) => s + r.length, 0)
 
 console.log(`Land polygons: ${landRings.length} rings, ${landRings.reduce((s, r) => s + r.length, 0)} points`)
 console.log(`Gulf hot zone: ${gulfRings.length} rings, ${gulfRings.reduce((s, r) => s + r.length, 0)} points`)
 console.log(`Iraq: ${iraqRings.length} rings, ${iraqRings.reduce((s, r) => s + r.length, 0)} points`)
-console.log(`Iran: ${iranRing ? iranRing.length : 0} points`)
+console.log(`Iran: ${iranRings.length} rings, ${iranRings.reduce((s, r) => s + r.length, 0)} points`)
 console.log(`Total: ${totalPoints} points`)
 
 // ── Serialize to TypeScript ──
@@ -155,19 +185,21 @@ function serializeRings(rings) {
   return rings.map(r => '  ' + serializeRing(r)).join(',\n')
 }
 
-const output = `// Auto-generated from Natural Earth 110m via scripts/generate-land.mjs
+const output = `// Auto-generated from Natural Earth 50m via scripts/generate-land.mjs
 // Source: world-atlas npm package (Natural Earth, public domain)
 // Do not edit manually. Rerun: node scripts/generate-land.mjs
 //
 // Total: ${totalPoints} coordinate pairs
-// Land: ${landRings.length} polygons | Gulf: ${gulfRings.length} | Iraq: ${iraqRings.length} | Iran: 1
+// Land: ${landRings.length} polygons | Gulf: ${gulfRings.length} | Iraq: ${iraqRings.length} | Iran: ${iranRings.length}
+// Source resolution: 50m (upgraded from 110m for coastline fidelity at R=260)
+// Simplification: ε=0.25° general, ε=0.15° theatre (Gulf/Iran/Iraq)
 
 /** General land polygons — all continents and major islands except Gulf/Iran/Iraq */
 export const landPolygons: number[][][] = [
 ${serializeRings(landRings)}
 ]
 
-/** Gulf "hot zone" countries: Saudi Arabia, Yemen, Oman, UAE, Qatar, Kuwait */
+/** Gulf "hot zone" countries: Saudi Arabia, Yemen, Oman, UAE, Qatar, Kuwait, Bahrain */
 export const gulfPolygons: number[][][] = [
 ${serializeRings(gulfRings)}
 ]
@@ -177,10 +209,16 @@ export const iraqPolygons: number[][][] = [
 ${serializeRings(iraqRings)}
 ]
 
-/** Iran — special orange highlight */
+/** Iran — main polygon (largest ring) for backwards-compatible single-polygon export */
 export const iranPolygon: number[][] = ${iranRing ? serializeRing(iranRing) : '[]'}
+
+/** Iran — all rings including islands (Qeshm, Kish, etc.) */
+export const iranAllRings: number[][][] = [
+${serializeRings(iranRings)}
+]
 `
 
 const outPath = resolve(ROOT, 'src/canvas/land-110m.ts')
 writeFileSync(outPath, output, 'utf-8')
 console.log(`\nWritten to ${outPath}`)
+console.log(`File size: ${(Buffer.byteLength(output) / 1024).toFixed(1)} KB`)

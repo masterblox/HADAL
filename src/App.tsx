@@ -1,8 +1,7 @@
-import { useState, useEffect, useSyncExternalStore, lazy, Suspense, useCallback } from 'react'
+import { useState, useEffect, useSyncExternalStore, lazy, Suspense } from 'react'
 import { LoginPage } from './components/login/LoginPage'
 import { Topbar } from './components/topbar/Topbar'
 import { OverviewPage } from './pages/OverviewPage'
-import { NucleusTransition } from './components/shared/NucleusTransition'
 import { ErrorBoundary } from './components/shared/ErrorBoundary'
 import { useDataPipeline } from './hooks/useDataPipeline'
 import { usePrediction } from './hooks/usePrediction'
@@ -11,6 +10,7 @@ import { parseLane, subscribeHash, type Lane, navigateTo } from './lib/lane-rout
 /* Lane-level code splitting — Operations and Analysis load on demand */
 const OperationsPage = lazy(() => import('./pages/OperationsPage').then(m => ({ default: m.OperationsPage })))
 const AnalysisPage = lazy(() => import('./pages/AnalysisPage').then(m => ({ default: m.AnalysisPage })))
+const ConsolePage = lazy(() => import('./pages/ConsolePage').then(m => ({ default: m.ConsolePage })))
 
 function useHashRoute(): Lane {
   return useSyncExternalStore(subscribeHash, parseLane)
@@ -20,12 +20,13 @@ const LANE_TITLES: Record<Lane, string> = {
   overview: 'Overview',
   operations: 'Operations',
   analysis: 'Analysis',
+  console: 'Console',
 }
 
 /* ── App ── */
 export function App() {
   const skipLogin = new URLSearchParams(window.location.search).has('bypass')
-  const [phase, setPhase] = useState<'login' | 'unlocked' | 'nucleus' | 'terminal'>(skipLogin ? 'terminal' : 'login')
+  const [phase, setPhase] = useState<'login' | 'unlocked' | 'terminal'>(skipLogin ? 'terminal' : 'login')
   const [terminalVisible, setTerminalVisible] = useState(skipLogin)
   const { prices, incidents, airspace, health } = useDataPipeline()
   const prediction = usePrediction(incidents, airspace, prices)
@@ -50,22 +51,13 @@ export function App() {
 
   useEffect(() => {
     if (phase === 'unlocked') {
-      // Wait for login card's CSS exit animation, then start nucleus
       const t = setTimeout(() => {
-        setPhase('nucleus')
+        setTerminalVisible(true)
+        setPhase('terminal')
       }, 300)
       return () => clearTimeout(t)
     }
   }, [phase])
-
-  // Nucleus reveal callback — mount terminal when it is about to be visible
-  const handleNucleusReveal = useCallback(() => {
-    setTerminalVisible(true)
-  }, [])
-
-  const handleNucleusComplete = useCallback(() => {
-    setPhase('terminal')
-  }, [])
 
   const pipelineStatus = {
     incidents: health.incidents !== 'offline',
@@ -105,8 +97,8 @@ export function App() {
                 pipelineStatus={pipelineStatus}
                 prediction={prediction}
                 incidents={incidents}
-                airspace={airspace}
                 prices={prices}
+                airspace={airspace}
               />
             )}
             <Suspense fallback={null}>
@@ -126,6 +118,18 @@ export function App() {
                   sandbox={sandbox}
                 />
               )}
+              {activeLane === 'console' && (
+                <ConsolePage
+                  threatLevel={threatLevel}
+                  pipelineStatus={pipelineStatus}
+                  incidents={incidents}
+                  airspace={airspace}
+                  prices={prices}
+                  prediction={prediction}
+                  sandbox={sandbox}
+                  onSandboxToggle={() => setSandbox(s => !s)}
+                />
+              )}
             </Suspense>
           </div>
         </div>
@@ -135,10 +139,6 @@ export function App() {
         <div className={`login-overlay ${phase === 'unlocked' ? 'login-fading' : ''}`}>
           <LoginPage onAccess={handleAccess} />
         </div>
-      )}
-
-      {phase === 'nucleus' && (
-        <NucleusTransition onComplete={handleNucleusComplete} onReveal={handleNucleusReveal} />
       )}
     </ErrorBoundary>
   )

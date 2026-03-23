@@ -54,9 +54,13 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
           <div key={r} className={`TAB${filt === r ? ' on' : ''}`} onClick={() => setFilt(r)}>{r}</div>
         ))}
         <div className="TAB-R" />
-        <div style={{ padding: '0 14px', fontFamily: 'var(--MONO)', fontWeight: 400, fontSize: 'var(--fs-small)', color: 'var(--g3)', letterSpacing: '.02em', alignSelf: 'center' }}>
+        <div className="feed-meta">
           {filtered.length} ACTIVE{incidents.length > 0 ? ' · LIVE' : ''}
         </div>
+      </div>
+      <div className="feed-command-strip">
+        <span className="feed-command-label">PRIORITY QUEUE</span>
+        <span className="feed-command-copy">Verification overlays merged with live ingest. Region filter constrains the queue without truncating telemetry.</span>
       </div>
       <div className="THEAD">
         <span style={{ width: '72px', flexShrink: 0 }}>ID</span>

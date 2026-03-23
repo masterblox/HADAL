@@ -2,40 +2,6 @@ import { useEffect, useRef } from 'react'
 import { landPolygons, gulfPolygons, iraqPolygons, iranPolygon } from './land-110m'
 import type { Incident } from '../hooks/useDataPipeline'
 
-/* ── Point-in-polygon (ray casting) ── */
-function pip(px: number, py: number, poly: number[][]) {
-  let inside = false
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const [xi, yi] = poly[i], [xj, yj] = poly[j]
-    if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) {
-      inside = !inside
-    }
-  }
-  return inside
-}
-
-/* ── Pre-compute land dots at mount time ── */
-interface LandDot { lon: number; lat: number; type: number } // 0=land, 1=iraq, 2=gulf, 3=iran
-
-function buildLandDots(): LandDot[] {
-  const dots: LandDot[] = []
-  const STEP = 1.4
-  for (let lat = -58; lat <= 78; lat += STEP) {
-    for (let lon = -180; lon <= 180; lon += STEP) {
-      if (pip(lon, lat, iranPolygon)) {
-        dots.push({ lon, lat, type: 3 })
-      } else if (gulfPolygons.some(p => pip(lon, lat, p))) {
-        dots.push({ lon, lat, type: 2 })
-      } else if (iraqPolygons.some(p => pip(lon, lat, p))) {
-        dots.push({ lon, lat, type: 1 })
-      } else if (landPolygons.some(p => pip(lon, lat, p))) {
-        dots.push({ lon, lat, type: 0 })
-      }
-    }
-  }
-  return dots
-}
-
 /* ── City / region labels ── */
 const LABELS: { lon: number; lat: number; text: string; color: string }[] = [
   { lon: 51.4, lat: 35.7, text: 'TEHRAN', color: 'rgba(255,140,0,.85)' },
@@ -114,15 +80,12 @@ export function useGlobe(incidents: Incident[] = []) {
     if (!C) return
     const x = C.getContext('2d')
     if (!x) return
-    const W = 420, H = 420, cx = W / 2, cy = H / 2, R = 196, PI = Math.PI
+    const W = 560, H = 560, cx = W / 2, cy = H / 2, R = 260, PI = Math.PI
 
     const Lx = -.55, Ly = -.65, Lz = .52
 
-    /* Pre-compute land dots (runs once) */
-    const landDots = buildLandDots()
-
-    let rotY = 40
-    let rotX = 0
+    let rotY = -50
+    let rotX = -15
     let raf: number
 
     // Mouse drag rotation
@@ -189,7 +152,8 @@ export function useGlobe(incidents: Incident[] = []) {
     C.style.cursor = 'grab'
     C.style.touchAction = 'none'
 
-    function proj(lon: number, lat: number, r = R): [number, number, number, number] | null {
+    /* ── Full projection (always returns, includes Z for visibility) ── */
+    function projFull(lon: number, lat: number, r = R) {
       const th = lon * PI / 180, ph = (90 - lat) * PI / 180
       const sph = Math.sin(ph)
       const X0 = sph * Math.cos(th), Y0 = Math.cos(ph), Z0 = sph * Math.sin(th)
@@ -197,18 +161,110 @@ export function useGlobe(incidents: Incident[] = []) {
       const Z1 = -X0 * sinRY + Z0 * cosRY
       const Y2 = Y0 * cosRX - Z1 * sinRX
       const Z2 = Y0 * sinRX + Z1 * cosRX
-      if (Z2 < 0) return null
       const diff = Math.max(0, X1 * Lx + Y2 * (-Ly) + Z2 * Lz)
-      return [cx + r * X1, cy - r * Y2, Z2, diff]
+      return { x: cx + r * X1, y: cy - r * Y2, z: Z2, diff }
     }
 
-    /* ── Draw thin dashed political borders ── */
-    function drawBorder(ptsArr: number[][], color: string, width: number) {
+    /* ── Front-face-only projection (returns null if behind globe) ── */
+    function proj(lon: number, lat: number, r = R): [number, number, number, number] | null {
+      const p = projFull(lon, lat, r)
+      return p.z < 0 ? null : [p.x, p.y, p.z, p.diff]
+    }
+
+    /* ── Binary-search for the horizon crossing between a visible and hidden point ── */
+    function horizonPt(vLon: number, vLat: number, hLon: number, hLat: number): [number, number] {
+      let aLo = vLon, aLa = vLat, bLo = hLon, bLa = hLat
+      for (let i = 0; i < 8; i++) {
+        const mLo = (aLo + bLo) / 2, mLa = (aLa + bLa) / 2
+        if (projFull(mLo, mLa).z >= 0) { aLo = mLo; aLa = mLa }
+        else { bLo = mLo; bLa = mLa }
+      }
+      const p = projFull(aLo, aLa)
+      return [p.x, p.y]
+    }
+
+    /* ── Render a filled polygon on the globe with horizon clipping ── */
+    function drawPoly(polygon: number[][], rgb: [number, number, number], fillAlpha: number, strokeAlpha: number) {
       if (!x) return
-      const pts = ptsArr.map(([lo, la]) => proj(lo, la)).filter(Boolean) as [number, number, number, number][]
-      if (pts.length < 3) return
+
+      // Centroid visibility check — skip polygons fully behind globe
+      let cLon = 0, cLat = 0
+      for (const [lo, la] of polygon) { cLon += lo; cLat += la }
+      cLon /= polygon.length; cLat /= polygon.length
+      const cp = projFull(cLon, cLat)
+      if (cp.z < -0.15) return
+
+      // Build visible path with horizon interpolation
+      const path: [number, number][] = []
+      const n = polygon.length
+
+      for (let i = 0; i < n; i++) {
+        const [lon1, lat1] = polygon[i]
+        const j = (i + 1) % n
+        const [lon2, lat2] = polygon[j]
+        const p1 = projFull(lon1, lat1)
+        const p2 = projFull(lon2, lat2)
+        const v1 = p1.z >= 0, v2 = p2.z >= 0
+
+        if (v1 && v2) {
+          if (path.length === 0) path.push([p1.x, p1.y])
+          path.push([p2.x, p2.y])
+        } else if (v1 && !v2) {
+          if (path.length === 0) path.push([p1.x, p1.y])
+          path.push(horizonPt(lon1, lat1, lon2, lat2))
+        } else if (!v1 && v2) {
+          path.push(horizonPt(lon2, lat2, lon1, lat1))
+          path.push([p2.x, p2.y])
+        }
+      }
+
+      if (path.length < 3) return
+
+      // Diffuse lighting from centroid
+      const lit = 0.35 + cp.diff * 0.55
+      const [r, g, b] = rgb
+
       x.beginPath()
-      pts.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
+      for (let i = 0; i < path.length; i++) {
+        i === 0 ? x.moveTo(path[i][0], path[i][1]) : x.lineTo(path[i][0], path[i][1])
+      }
+      x.closePath()
+      x.fillStyle = `rgba(${r},${g},${b},${(fillAlpha * lit).toFixed(3)})`
+      x.fill()
+
+      if (strokeAlpha > 0) {
+        x.strokeStyle = `rgba(${r},${g},${b},${(strokeAlpha * lit).toFixed(3)})`
+        x.lineWidth = 0.6
+        x.stroke()
+      }
+    }
+
+    /* ── Draw dashed political borders (theatre overlays) ── */
+    function drawBorder(polygon: number[][], color: string, width: number) {
+      if (!x) return
+      const path: [number, number][] = []
+      const n = polygon.length
+      for (let i = 0; i < n; i++) {
+        const [lon1, lat1] = polygon[i]
+        const j = (i + 1) % n
+        const [lon2, lat2] = polygon[j]
+        const p1 = projFull(lon1, lat1)
+        const p2 = projFull(lon2, lat2)
+        const v1 = p1.z >= 0, v2 = p2.z >= 0
+        if (v1 && v2) {
+          if (path.length === 0) path.push([p1.x, p1.y])
+          path.push([p2.x, p2.y])
+        } else if (v1 && !v2) {
+          if (path.length === 0) path.push([p1.x, p1.y])
+          path.push(horizonPt(lon1, lat1, lon2, lat2))
+        } else if (!v1 && v2) {
+          path.push(horizonPt(lon2, lat2, lon1, lat1))
+          path.push([p2.x, p2.y])
+        }
+      }
+      if (path.length < 3) return
+      x.beginPath()
+      path.forEach(([px, py], i) => i === 0 ? x.moveTo(px, py) : x.lineTo(px, py))
       x.closePath()
       x.setLineDash([3, 6])
       x.strokeStyle = color
@@ -224,8 +280,6 @@ export function useGlobe(incidents: Incident[] = []) {
       const ryRad = rotY * PI / 180, rxRad = rotX * PI / 180
       cosRY = Math.cos(ryRad); sinRY = Math.sin(ryRad)
       cosRX = Math.cos(rxRad); sinRX = Math.sin(rxRad)
-
-      const t0 = Date.now() / 1e3
 
       // Ocean base
       const ocean = x.createRadialGradient(cx - R * .28, cy - R * .22, R * .05, cx, cy, R)
@@ -265,36 +319,22 @@ export function useGlobe(incidents: Incident[] = []) {
       x.setLineDash([])
       x.restore()
 
-      /* ── Dot-based land rendering ── */
+      /* ── Filled land polygons ── */
       x.save(); x.beginPath(); x.arc(cx, cy, R, 0, PI * 2); x.clip()
-      for (let i = 0; i < landDots.length; i++) {
-        const d = landDots[i]
-        const p = proj(d.lon, d.lat)
-        if (!p) continue
-        const [px, py, , diff] = p
-        const lit = .25 + diff * .6
 
-        switch (d.type) {
-          case 0:
-            x.fillStyle = `rgba(218,255,74,${(.1 + lit * .18).toFixed(3)})`
-            x.fillRect(px - .7, py - .7, 1.4, 1.4)
-            break
-          case 1:
-            x.fillStyle = `rgba(218,255,74,${(.16 + lit * .25).toFixed(3)})`
-            x.fillRect(px - .8, py - .8, 1.6, 1.6)
-            break
-          case 2:
-            x.fillStyle = `rgba(218,255,74,${(.25 + lit * .4).toFixed(3)})`
-            x.fillRect(px - .9, py - .9, 1.8, 1.8)
-            break
-          case 3:
-            x.fillStyle = `rgba(255,140,0,${(.2 + lit * .4).toFixed(3)})`
-            x.fillRect(px - .9, py - .9, 1.8, 1.8)
-            break
-        }
-      }
+      // General land — subtle green fill with coastline strokes
+      for (const poly of landPolygons) drawPoly(poly, [218, 255, 74], 0.18, 0.14)
 
-      /* ── Political borders ── */
+      // Iraq — medium highlight
+      for (const poly of iraqPolygons) drawPoly(poly, [218, 255, 74], 0.28, 0.20)
+
+      // Gulf states — theatre highlight (brighter)
+      for (const poly of gulfPolygons) drawPoly(poly, [218, 255, 74], 0.36, 0.24)
+
+      // Iran — warm adversary orange
+      drawPoly(iranPolygon, [255, 140, 0], 0.30, 0.20)
+
+      /* ── Political borders (dashed overlays) ── */
       for (let i = 0; i < gulfPolygons.length; i++) drawBorder(gulfPolygons[i], 'rgba(218,255,74,.3)', .6)
       for (let i = 0; i < iraqPolygons.length; i++) drawBorder(iraqPolygons[i], 'rgba(218,255,74,.2)', .5)
       drawBorder(iranPolygon, 'rgba(255,140,0,.35)', .6)
@@ -363,7 +403,7 @@ export function useGlobe(incidents: Incident[] = []) {
           const bb = 74 - Math.round(74 * c.kr)
           const hf = c.hf, n = c.norm
 
-          // Outer glow — thinner to reduce overlap
+          // Outer glow
           x.beginPath(); x.moveTo(c.bx, c.by); x.lineTo(c.tx, c.ty)
           x.strokeStyle = `rgba(${rr},${gg},${bb},${((.08 + n * .14) * hf).toFixed(3)})`
           x.lineWidth = 2 + n * 3; x.stroke()
@@ -385,7 +425,7 @@ export function useGlobe(incidents: Incident[] = []) {
         }
       }
 
-      // City labels — fade when near active pressure zones to avoid visual conflict
+      // City labels — fade when near active pressure zones
       x.font = '10px "Share Tech Mono", monospace'
       for (const lb of LABELS) {
         const p = proj(lb.lon, lb.lat)

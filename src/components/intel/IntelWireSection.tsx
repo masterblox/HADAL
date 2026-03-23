@@ -68,7 +68,7 @@ export function IntelWireSection({ incidents, airspace, prices, sandbox }: Intel
           </div>
         )}
       </div>
-      <IwlBottom datalinkText={datalinkText} onExportSitrep={() => exportSitrep(incidents, prices ?? null, airspace)} flights={openSky.flights} aircraftStatus={openSky.status} />
+      <IwlBottom datalinkText={datalinkText} onExportSitrep={() => exportSitrep(incidents, prices ?? null, airspace)} flights={openSky.flights} />
     </div>
   )
 }

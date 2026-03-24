@@ -2,7 +2,10 @@ import { useEffect, useRef } from 'react'
 import type { Incident } from '@/hooks/useDataPipeline'
 import { G, G2, AMB, BG, PI, TAU, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
 
-// --- ArgusTile: ConfidenceTile visual body — entity/pipeline intelligence language ---
+// --- ArgusTile: entity/pipeline/corroboration — adapted for lm arrow bay
+// lm clip-path: polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%)
+// Arrow points RIGHT. Content flows: arc (left) → pipeline → factor output (right).
+// Factor bars EMANATE from arc right edge — no rectangular panel header.
 
 export function ArgusTile({ incidents }: { incidents: Incident[] }) {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -23,7 +26,7 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
       rasterBase(x, W, H, 0.12, DPR)
       const t = Date.now() / 1000
 
-      // Dense binary character field
+      // Dense binary field — substrate texture
       if (Math.floor(t * 60) % 3 === 0) {
         x.font = '6px "Share Tech Mono"'
         for (let row = 0; row < H; row += 7) for (let col = 0; col < W; col += 6) {
@@ -33,52 +36,87 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
         }
       }
 
-      // Entity resolution arc — enlarged now that right side is panel-free
-      const cx = W * 0.3, cy = H * 0.42, rad = 88
+      // ── ENTITY RESOLUTION ARC (left anchor) ────────────────────────────────
+      const rad = Math.min(72, H * 0.34)
+      const cx = W * 0.26, cy = H * 0.46
       const res = Math.min(resTarget, ((t * 0.15) % 1.3) * resTarget / 0.7)
-      x.strokeStyle = G2 + '.08)'; x.lineWidth = 12
+      x.strokeStyle = G2 + '.08)'; x.lineWidth = 11
       x.beginPath(); x.arc(cx, cy, rad, -PI * 0.8, PI * 0.8); x.stroke()
-      x.strokeStyle = G; x.lineWidth = 12
+      x.strokeStyle = G; x.lineWidth = 11
       x.beginPath(); x.arc(cx, cy, rad, -PI * 0.8, -PI * 0.8 + PI * 1.6 * res); x.stroke()
-      x.strokeStyle = G2 + '.15)'; x.lineWidth = 1
-      x.beginPath(); x.arc(cx, cy, rad - 10, -PI * 0.8, PI * 0.8); x.stroke()
+      x.strokeStyle = G2 + '.14)'; x.lineWidth = 1
+      x.beginPath(); x.arc(cx, cy, rad - 9, -PI * 0.8, PI * 0.8); x.stroke()
       for (let i = 0; i <= 20; i++) {
         const a = -PI * 0.8 + PI * 1.6 * (i / 20)
-        const i1 = rad + 8, i2 = rad + (i % 5 === 0 ? 16 : 12)
-        x.strokeStyle = G2 + (i % 5 === 0 ? '.3)' : '.1)'); x.lineWidth = i % 5 === 0 ? 1.5 : 1
+        const i1 = rad + 7, i2 = rad + (i % 5 === 0 ? 14 : 10)
+        x.strokeStyle = G2 + (i % 5 === 0 ? '.30)' : '.10)'); x.lineWidth = i % 5 === 0 ? 1.5 : 1
         x.beginPath(); x.moveTo(cx + Math.cos(a) * i1, cy + Math.sin(a) * i1); x.lineTo(cx + Math.cos(a) * i2, cy + Math.sin(a) * i2); x.stroke()
       }
       const tipA = -PI * 0.8 + PI * 1.6 * res
       x.fillStyle = G
-      x.beginPath(); x.arc(cx + Math.cos(tipA) * rad, cy + Math.sin(tipA) * rad, 5, 0, TAU); x.fill()
-      x.font = 'bold 60px "Teko"'; x.fillStyle = G; x.textAlign = 'center'
-      x.fillText(String(Math.floor(res * 100)), cx, cy + 18)
-      x.font = '7px "Share Tech Mono"'; x.fillStyle = G2 + '.3)'
-      x.fillText('RESOLUTION', cx, cy + 30); x.textAlign = 'left'
+      x.beginPath(); x.arc(cx + Math.cos(tipA) * rad, cy + Math.sin(tipA) * rad, 4, 0, TAU); x.fill()
+      x.font = 'bold 54px "Teko"'; x.fillStyle = G; x.textAlign = 'center'
+      x.fillText(String(Math.floor(res * 100)), cx, cy + 16)
+      x.font = '6px "Share Tech Mono"'; x.fillStyle = G2 + '.28)'
+      x.fillText('RESOLUTION', cx, cy + 28); x.textAlign = 'left'
 
-      // Entity factor bars — panel-free, data floats directly on canvas
+      // ── PIPELINE FLOW CHANNEL — arc right edge → factor zone ──────────────
+      const arcRight = cx + rad
+      const factorStartX = arcRight + 52   // labels here
+      const trackStartX  = arcRight + 98   // bar tracks here
+      const trackW       = W * 0.92 - trackStartX
+
+      // Flow corridor from arc to factors (horizontal dashes at cy)
+      x.strokeStyle = G2 + '.10)'; x.lineWidth = 1; x.setLineDash([3, 5])
+      x.beginPath(); x.moveTo(arcRight + 5, cy); x.lineTo(factorStartX - 4, cy); x.stroke()
+      x.setLineDash([])
+      // Animated data packet flowing right
+      const pktP = (t * 1.4) % 1
+      const pktX = arcRight + 5 + (factorStartX - arcRight - 10) * pktP
+      x.fillStyle = G; x.fillRect(pktX - 3, cy - 3, 6, 6)
+
+      // ── ENTITY FACTOR BARS — emanate from arc, no panel header ────────────
+      // Bars flow rightward from arc edge. Labels left of track, values right.
       const factors: [string, number, number][] = [
-        ['ENT GRAPH', 76, 0], ['SRC LINK', 88, 0], ['GEO ANCHOR', 71, 0],
-        ['TEMPORAL', 82, 0], ['CREDIBIL', 79, 0], ['VERIFIED', 65, 0],
-        ['CORROB', 88, 0], ['PIPELINE', 72, 0], ['CONTRA', 14, 1],
+        ['ENT GRAPH', 76, 0], ['SRC LINK',  88, 0], ['GEO ANCH', 71, 0],
+        ['TEMPORAL',  82, 0], ['CREDIBIL',  79, 0], ['VERIFIED', 65, 0],
+        ['CORROB',    88, 0], ['PIPELINE',  72, 0], ['CONTRA',   14, 1],
       ]
-      const fx = W * 0.56, fy = 58, fh = 16, fw = W * 0.4
-      // Header only — no panel box fill/stroke
-      x.font = '6px "Teko"'; x.fillStyle = G2 + '.4)'; x.fillText('ENTITY FACTOR BREAKDOWN', fx, fy - 2)
+      const fh = Math.min(16, (H * 0.85) / factors.length)
+      const fyStart = cy - (factors.length * fh) / 2
+
       factors.forEach(([label, val, warn], i) => {
-        const y = fy + 8 + i * fh
-        const fillDelay = i * 0.1
+        const y = fyStart + i * fh
+        const fillDelay = i * 0.08
         const fillP = Math.min(1, Math.max(0, ((t * 0.2) % 1.4 - fillDelay) * 2))
-        x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.3)'; x.fillText(label, fx, y + 8)
-        x.fillStyle = G2 + '.04)'; x.fillRect(fx + 46, y + 2, fw - 62, 7)
-        x.fillStyle = warn ? 'rgba(255,152,20,.55)' : G2 + '.5)'; x.fillRect(fx + 46, y + 2, (fw - 62) * (val / 100) * fillP, 7)
-        x.fillStyle = G2 + (fillP > 0.7 ? '.4)' : '.1)'); x.fillText(String(Math.floor(val * fillP)), fx + fw - 14, y + 8)
+
+        // Label (5px mono, left of track)
+        x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.28)'; x.fillText(label, factorStartX, y + 8)
+        // Bar track
+        x.fillStyle = G2 + '.04)'; x.fillRect(trackStartX, y + 2, trackW, 7)
+        // Bar fill
+        x.fillStyle = warn ? 'rgba(255,152,20,.55)' : G2 + '.50)'
+        x.fillRect(trackStartX, y + 2, trackW * (val / 100) * fillP, 7)
+        // Value (right of track)
+        x.font = '5px "Share Tech Mono"'
+        x.fillStyle = G2 + (fillP > 0.7 ? '.38)' : '.12)')
+        x.fillText(String(Math.floor(val * fillP)), trackStartX + trackW + 3, y + 8)
       })
 
-      x.font = '8px "Share Tech Mono"'; x.fillStyle = G2 + '.15)'
-      ;['◆ACTOR:' + actorCount, '◈STATE:4', '◇ORG:6', '▣PROXY:3'].forEach((s, i) => x.fillText(s, fx + i * 36, H - 34))
+      // ── ARROW FLOW INDICATOR — near canvas right edge → pointing to tip ───
+      // lm arrow tip is 72px BEYOND canvas right. These markers suggest momentum.
+      const arrowX = W * 0.93
+      ;[H * 0.35, H * 0.46, H * 0.57].forEach((ay, i) => {
+        const pulse = (Math.sin(t * 1.8 + i * 0.9) + 1) * 0.5
+        x.fillStyle = G2 + (0.08 + pulse * 0.14).toFixed(2) + ')'
+        x.fillText('→', arrowX, ay)
+      })
 
-      stamp(x, 4, H - 28, 'SYS:ARGUS-ENT')
+      // Source glyphs — bottom of arc zone
+      x.font = '7px "Share Tech Mono"'; x.fillStyle = G2 + '.14)'
+      ;['◆' + actorCount, '◈4', '◇6', '▣3'].forEach((s, i) => x.fillText(s, cx - rad + i * 28, H - 18))
+
+      stamp(x, 4, H - 8, 'SYS:ARGUS-ENT')
       rafId = requestAnimationFrame(draw)
     }
     draw()

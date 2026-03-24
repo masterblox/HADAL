@@ -47,33 +47,32 @@ interface ConsolePageProps {
 }
 
 const STORAGE_KEY = 'hadal-console-layout-v4'
-const RADIAL_SLOT_ORDER = [
-  'north-west',
-  'north',
-  'north-east',
-  'east',
-  'south-east',
-  'south',
-  'south-west',
-  'west',
-] as const
-
-/* SVG trace coordinates — gap centers at ~25/75% with 1fr:2fr:1fr grid + 10px gap */
+/* Phase A: 6-bay PCB layout
+   Grid: 1fr 2.8fr 1fr × 3 rows, gap 10px
+   Gap centers: x≈21% (left), x≈79% (right)
+   Row midpoints: y≈16.7%, 50%, 83.3%
+   Traces: horizontal from sector into gap channel */
 const TRACE_LINES: [number, number, number, number][] = [
-  [50, 12.5, 50, 25],    // N: sector → core
-  [50, 87.5, 50, 75],    // S
-  [12.5, 50, 25, 50],    // W
-  [87.5, 50, 75, 50],    // E
-  [12.5, 12.5, 25, 25],  // NW diagonal
-  [87.5, 12.5, 75, 25],  // NE diagonal
-  [12.5, 87.5, 25, 75],  // SW diagonal
-  [87.5, 87.5, 75, 75],  // SE diagonal
+  [0, 16.7, 21, 16.7],  // UL → core
+  [0, 50,   21, 50  ],  // LM → core
+  [0, 83.3, 21, 83.3],  // LL → core
+  [100, 16.7, 79, 16.7], // UR → core
+  [100, 50,   79, 50  ], // RM → core
+  [100, 83.3, 79, 83.3], // LR → core
 ]
 const BOND_PADS: [number, number][] = [
-  [25, 25], [50, 25], [75, 25],
-  [25, 50],           [75, 50],
-  [25, 75], [50, 75], [75, 75],
+  [21, 16.7], [21, 50], [21, 83.3],
+  [79, 16.7], [79, 50], [79, 83.3],
 ]
+
+const SECTOR_BAYS = [
+  { key: 'ul', id: 'A', label: 'UPPER LEFT'  },
+  { key: 'lm', id: 'B', label: 'LEFT MID'    },
+  { key: 'll', id: 'C', label: 'LOWER LEFT'  },
+  { key: 'ur', id: 'D', label: 'UPPER RIGHT' },
+  { key: 'rm', id: 'E', label: 'RIGHT MID'   },
+  { key: 'lr', id: 'F', label: 'LOWER RIGHT' },
+] as const
 
 interface StoredLayoutState {
   presetId: string
@@ -174,9 +173,6 @@ export function ConsolePage({
     icon: TILE_META[id].icon,
     placed: placedTiles.has(id),
   }))
-  const activeSlots = slots.filter((tileId): tileId is ConsoleTileId => Boolean(tileId && tileId !== 'mekhead'))
-  const radialSlots = activeSlots.slice(0, 8)
-  const auxSlots = activeSlots.slice(8, 16)
 
   function renderTile(tileId: ConsoleTileId) {
     switch (tileId) {
@@ -237,21 +233,7 @@ export function ConsolePage({
     }
   }
 
-  function renderWrappedTile(tileId: ConsoleTileId, key?: string) {
-    return (
-      <ConsoleTile
-        key={key ?? tileId}
-        icon={TILE_META[tileId].icon}
-        title={TILE_META[tileId].title}
-        source={TILE_META[tileId].source}
-        updated={TILE_META[tileId].updated}
-        status={TILE_META[tileId].status}
-        editMode={false}
-      >
-        {renderTile(tileId)}
-      </ConsoleTile>
-    )
-  }
+  /* Phase B: wire sector bays to real tiles via renderTile + ConsoleTile */
 
   return (
     <div className="console-page">
@@ -298,9 +280,12 @@ export function ConsolePage({
       ) : (
         <div className="console-circuit-shell">
           <div className="console-circuit-main jp-panel">
-            <div className="console-circuit-ring far" aria-hidden="true" />
+            {/* Decorative substrate rings — behind all content */}
+            <div className="console-circuit-ring far"   aria-hidden="true" />
             <div className="console-circuit-ring outer" aria-hidden="true" />
             <div className="console-circuit-ring inner" aria-hidden="true" />
+
+            {/* SVG conductor traces — visible only in gap channels */}
             <svg
               className="console-trace-svg"
               viewBox="0 0 100 100"
@@ -311,17 +296,22 @@ export function ConsolePage({
                 <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} className="console-trace-line" />
               ))}
               {BOND_PADS.map(([cx, cy], i) => (
-                <circle key={i} cx={cx} cy={cy} r="1.6" className="console-trace-pad" />
+                <circle key={i} cx={cx} cy={cy} r="1.8" className="console-trace-pad" />
               ))}
             </svg>
-            {RADIAL_SLOT_ORDER.map((position, index) => {
-              const tileId = radialSlots[index]
-              return (
-                <div key={position} className={`console-sector ${position}`}>
-                  {tileId ? renderWrappedTile(tileId, `${position}-${tileId}`) : <div className="console-sector-placeholder">UNASSIGNED</div>}
+
+            {/* 6 sector bays — Phase A: placeholder occupancy */}
+            {SECTOR_BAYS.map(({ key, id, label }) => (
+              <div key={key} className={`console-sector ${key}`}>
+                <div className="console-bay-placeholder">
+                  <div className="console-bay-crosshair" aria-hidden="true" />
+                  <span className="console-bay-id">{id}</span>
+                  <span className="console-bay-label">{label}</span>
                 </div>
-              )
-            })}
+              </div>
+            ))}
+
+            {/* Mekhead — persistent archive nucleus, spans full center column */}
             <div className="console-core-shell">
               <div className="console-core-label">
                 <span className="kicker">ARCHIVE CORE // PERSISTENT</span>
@@ -334,15 +324,14 @@ export function ConsolePage({
               </div>
             </div>
           </div>
+
+          {/* Lower support rail — secondary, 8 stubs */}
           <div className="console-aux-grid">
-            {Array.from({ length: 8 }, (_, index) => {
-              const tileId = auxSlots[index]
-              return (
-                <div key={`aux-${index}`} className="console-aux-slot">
-                  {tileId ? renderWrappedTile(tileId, `aux-${tileId}-${index}`) : <div className="console-aux-empty" />}
-                </div>
-              )
-            })}
+            {Array.from({ length: 8 }, (_, i) => (
+              <div key={i} className="console-aux-slot">
+                <div className="console-aux-empty" />
+              </div>
+            ))}
           </div>
         </div>
       )}

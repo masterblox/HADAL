@@ -330,12 +330,13 @@ body::after {
   min-height: 0;
   position: relative;
   display: grid;
+  /* Core spans the full center column across all 3 rows — PCB chip layout */
   grid-template-areas:
-    "nw  n   ne"
-    "w  core  e"
-    "sw  s   se";
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+    "ul  core  ur"
+    "lm  core  rm"
+    "ll  core  lr";
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.8fr) minmax(0, 1fr);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: 10px;
   background:
     repeating-linear-gradient(0deg, transparent 0 15px, rgba(218,255,74,.038) 15px 16px),
@@ -396,51 +397,108 @@ body::after {
   fill: rgba(218,255,74,.55);
 }
 
-/* Sector bays — explicit grid placement */
-.console-sector.north-west { grid-area: nw; }
-.console-sector.north      { grid-area: n; }
-.console-sector.north-east { grid-area: ne; }
-.console-sector.west       { grid-area: w; }
-.console-sector.east       { grid-area: e; }
-.console-sector.south-west { grid-area: sw; }
-.console-sector.south      { grid-area: s; }
-.console-sector.south-east { grid-area: se; }
+/* ── 6-sector PCB bay layout — left column (ul/lm/ll) + right column (ur/rm/lr) ── */
 
-/* Sector base — chamfered inner corners pointing toward core */
+/* Grid placement */
+.console-sector.ul { grid-area: ul; }
+.console-sector.lm { grid-area: lm; }
+.console-sector.ll { grid-area: ll; }
+.console-sector.ur { grid-area: ur; }
+.console-sector.rm { grid-area: rm; }
+.console-sector.lr { grid-area: lr; }
+
+/* Base sector — solid container with structural border */
 .console-sector {
   position: relative;
   overflow: hidden;
   z-index: 2;
+  background: rgba(4,6,0,.96);
   box-shadow: inset 0 0 0 1px rgba(218,255,74,.18);
 }
 
-/* 45° chamfer on the inner corner(s) facing the center — 36px cut */
-.console-sector.north-west {
+/* Left column: chamfer right-side corner(s) facing the core */
+.console-sector.ul {
+  /* upper-left: chamfer bottom-right */
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 36px), calc(100% - 36px) 100%, 0 100%);
 }
-.console-sector.north {
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 36px), calc(100% - 36px) 100%, 36px 100%, 0 calc(100% - 36px));
-}
-.console-sector.north-east {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 36px 100%, 0 calc(100% - 36px));
-}
-.console-sector.west {
+.console-sector.lm {
+  /* left-mid: chamfer top-right AND bottom-right (both core-facing corners) */
   clip-path: polygon(0 0, calc(100% - 36px) 0, 100% 36px, 100% calc(100% - 36px), calc(100% - 36px) 100%, 0 100%);
 }
-.console-sector.east {
-  clip-path: polygon(36px 0, 100% 0, 100% 100%, 36px 100%, 0 calc(100% - 36px), 0 36px);
-}
-.console-sector.south-west {
+.console-sector.ll {
+  /* lower-left: chamfer top-right */
   clip-path: polygon(0 0, calc(100% - 36px) 0, 100% 36px, 100% 100%, 0 100%);
 }
-.console-sector.south {
-  clip-path: polygon(36px 0, calc(100% - 36px) 0, 100% 36px, 100% 100%, 0 100%, 0 36px);
+
+/* Right column: chamfer left-side corner(s) facing the core */
+.console-sector.ur {
+  /* upper-right: chamfer bottom-left */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 36px 100%, 0 calc(100% - 36px));
 }
-.console-sector.south-east {
+.console-sector.rm {
+  /* right-mid: chamfer top-left AND bottom-left */
+  clip-path: polygon(36px 0, 100% 0, 100% 100%, 36px 100%, 0 calc(100% - 36px), 0 36px);
+}
+.console-sector.lr {
+  /* lower-right: chamfer top-left */
   clip-path: polygon(36px 0, 100% 0, 100% 100%, 0 100%, 0 36px);
 }
 
-/* Compact tile layout inside circuit sectors */
+/* Phase A — sector bay placeholder (proves occupancy) */
+.console-bay-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 10px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 31px, rgba(218,255,74,.018) 31px 32px),
+    repeating-linear-gradient(90deg, transparent 0 31px, rgba(218,255,74,.018) 31px 32px),
+    rgba(4,6,0,.98);
+}
+.console-bay-id {
+  font-family: var(--HEAD);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .4em;
+  color: rgba(218,255,74,.22);
+}
+.console-bay-label {
+  font-family: var(--MONO);
+  font-size: 7px;
+  letter-spacing: .28em;
+  color: rgba(218,255,74,.1);
+  text-transform: uppercase;
+}
+.console-bay-crosshair {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.console-bay-crosshair::before,
+.console-bay-crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(218,255,74,.06);
+}
+.console-bay-crosshair::before {
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+.console-bay-crosshair::after {
+  left: 50%;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+/* Compact tile layout inside circuit sectors (Phase B use) */
 .console-sector .console-tile {
   grid-template-rows: 22px minmax(0, 1fr) 16px;
 }
@@ -449,19 +507,7 @@ body::after {
   padding: 0 7px;
 }
 
-.console-sector-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-family: var(--MONO);
-  font-size: 7px;
-  letter-spacing: .22em;
-  color: rgba(218,255,74,.07);
-  background: rgba(218,255,74,.012);
-}
-
-/* Central Mekhead core — octagonal die */
+/* Central Mekhead core — octagonal die spanning full center column height */
 .console-core-shell {
   grid-area: core;
   display: flex;
@@ -469,16 +515,17 @@ body::after {
   position: relative;
   z-index: 3;
   background: #030500;
+  /* 40px cuts at all 8 corners */
   clip-path: polygon(
-    32px 0%, calc(100% - 32px) 0%,
-    100% 32px, 100% calc(100% - 32px),
-    calc(100% - 32px) 100%, 32px 100%,
-    0% calc(100% - 32px), 0% 32px
+    40px 0%, calc(100% - 40px) 0%,
+    100% 40px, 100% calc(100% - 40px),
+    calc(100% - 40px) 100%, 40px 100%,
+    0% calc(100% - 40px), 0% 40px
   );
   box-shadow:
     inset 0 0 0 1px var(--g5),
-    inset 0 0 0 2px rgba(218,255,74,.08),
-    inset 0 0 0 4px rgba(218,255,74,.03);
+    inset 0 0 0 3px rgba(218,255,74,.08),
+    inset 0 0 0 6px rgba(218,255,74,.03);
 }
 
 .console-core-label {

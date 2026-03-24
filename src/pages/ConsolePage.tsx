@@ -292,6 +292,7 @@ export function ConsolePage({
       ) : (
         <div className="console-circuit-shell">
           <div className="console-circuit-main jp-panel">
+            <div className="console-circuit-ring far" aria-hidden="true" />
             <div className="console-circuit-ring outer" aria-hidden="true" />
             <div className="console-circuit-ring inner" aria-hidden="true" />
             {TRACE_SEGMENTS.map(trace => (
@@ -307,7 +308,7 @@ export function ConsolePage({
             })}
             <div className="console-core-shell">
               <div className="console-core-label">
-                <span className="kicker">Persistent Archive Core</span>
+                <span className="kicker">ARCHIVE CORE // PERSISTENT</span>
                 <span className="value">MEKHEAD</span>
               </div>
               <div className="console-core">

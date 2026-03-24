@@ -58,16 +58,22 @@ const RADIAL_SLOT_ORDER = [
   'west',
 ] as const
 
-const TRACE_SEGMENTS = [
-  'diag-nw',
-  'north',
-  'diag-ne',
-  'east',
-  'diag-se',
-  'south',
-  'diag-sw',
-  'west',
-] as const
+/* SVG trace coordinates — gap centers at ~25/75% with 1fr:2fr:1fr grid + 10px gap */
+const TRACE_LINES: [number, number, number, number][] = [
+  [50, 12.5, 50, 25],    // N: sector → core
+  [50, 87.5, 50, 75],    // S
+  [12.5, 50, 25, 50],    // W
+  [87.5, 50, 75, 50],    // E
+  [12.5, 12.5, 25, 25],  // NW diagonal
+  [87.5, 12.5, 75, 25],  // NE diagonal
+  [12.5, 87.5, 25, 75],  // SW diagonal
+  [87.5, 87.5, 75, 75],  // SE diagonal
+]
+const BOND_PADS: [number, number][] = [
+  [25, 25], [50, 25], [75, 25],
+  [25, 50],           [75, 50],
+  [25, 75], [50, 75], [75, 75],
+]
 
 interface StoredLayoutState {
   presetId: string
@@ -295,9 +301,19 @@ export function ConsolePage({
             <div className="console-circuit-ring far" aria-hidden="true" />
             <div className="console-circuit-ring outer" aria-hidden="true" />
             <div className="console-circuit-ring inner" aria-hidden="true" />
-            {TRACE_SEGMENTS.map(trace => (
-              <span key={trace} className={`console-trace ${trace}`} aria-hidden="true" />
-            ))}
+            <svg
+              className="console-trace-svg"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              {TRACE_LINES.map(([x1, y1, x2, y2], i) => (
+                <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} className="console-trace-line" />
+              ))}
+              {BOND_PADS.map(([cx, cy], i) => (
+                <circle key={i} cx={cx} cy={cy} r="1.6" className="console-trace-pad" />
+              ))}
+            </svg>
             {RADIAL_SLOT_ORDER.map((position, index) => {
               const tileId = radialSlots[index]
               return (

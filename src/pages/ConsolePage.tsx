@@ -47,6 +47,27 @@ interface ConsolePageProps {
 }
 
 const STORAGE_KEY = 'hadal-console-layout-v4'
+const RADIAL_SLOT_ORDER = [
+  'north-west',
+  'north',
+  'north-east',
+  'east',
+  'south-east',
+  'south',
+  'south-west',
+  'west',
+] as const
+
+const TRACE_SEGMENTS = [
+  'diag-nw',
+  'north',
+  'diag-ne',
+  'east',
+  'diag-se',
+  'south',
+  'diag-sw',
+  'west',
+] as const
 
 interface StoredLayoutState {
   presetId: string
@@ -147,6 +168,9 @@ export function ConsolePage({
     icon: TILE_META[id].icon,
     placed: placedTiles.has(id),
   }))
+  const activeSlots = slots.filter((tileId): tileId is ConsoleTileId => Boolean(tileId && tileId !== 'mekhead'))
+  const radialSlots = activeSlots.slice(0, 8)
+  const auxSlots = activeSlots.slice(8, 16)
 
   function renderTile(tileId: ConsoleTileId) {
     switch (tileId) {
@@ -207,6 +231,22 @@ export function ConsolePage({
     }
   }
 
+  function renderWrappedTile(tileId: ConsoleTileId, key?: string) {
+    return (
+      <ConsoleTile
+        key={key ?? tileId}
+        icon={TILE_META[tileId].icon}
+        title={TILE_META[tileId].title}
+        source={TILE_META[tileId].source}
+        updated={TILE_META[tileId].updated}
+        status={TILE_META[tileId].status}
+        editMode={false}
+      >
+        {renderTile(tileId)}
+      </ConsoleTile>
+    )
+  }
+
   return (
     <div className="console-page">
       <ConsoleToolbar
@@ -220,34 +260,75 @@ export function ConsolePage({
           onSandboxToggle()
         }}
       />
-      <div className={`console-grid${sandbox ? ' is-editing' : ''}`}>
-        {slots.map((tileId, index) => (
-          <div key={index} className="console-slot">
-            {tileId ? (
-              <ConsoleTile
-                icon={TILE_META[tileId].icon}
-                title={TILE_META[tileId].title}
-                source={TILE_META[tileId].source}
-                updated={TILE_META[tileId].updated}
-                status={TILE_META[tileId].status}
-                editMode={sandbox}
-                onRemove={sandbox ? () => removeTile(index) : undefined}
-              >
-                {renderTile(tileId)}
-              </ConsoleTile>
-            ) : (
-              <button
-                className={`console-empty-slot${sandbox ? ' is-visible' : ''}`}
-                onClick={() => sandbox && setPickerIndex(index)}
-                disabled={!sandbox}
-              >
-                <span>+</span>
-                <small>ADD TILE</small>
-              </button>
-            )}
+      {sandbox ? (
+        <div className={`console-grid${sandbox ? ' is-editing' : ''}`}>
+          {slots.map((tileId, index) => (
+            <div key={index} className="console-slot">
+              {tileId ? (
+                <ConsoleTile
+                  icon={TILE_META[tileId].icon}
+                  title={TILE_META[tileId].title}
+                  source={TILE_META[tileId].source}
+                  updated={TILE_META[tileId].updated}
+                  status={TILE_META[tileId].status}
+                  editMode={sandbox}
+                  onRemove={sandbox ? () => removeTile(index) : undefined}
+                >
+                  {renderTile(tileId)}
+                </ConsoleTile>
+              ) : (
+                <button
+                  className={`console-empty-slot${sandbox ? ' is-visible' : ''}`}
+                  onClick={() => sandbox && setPickerIndex(index)}
+                  disabled={!sandbox}
+                >
+                  <span>+</span>
+                  <small>ADD TILE</small>
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="console-circuit-shell">
+          <div className="console-circuit-main jp-panel">
+            <div className="console-circuit-ring outer" aria-hidden="true" />
+            <div className="console-circuit-ring inner" aria-hidden="true" />
+            {TRACE_SEGMENTS.map(trace => (
+              <span key={trace} className={`console-trace ${trace}`} aria-hidden="true" />
+            ))}
+            {RADIAL_SLOT_ORDER.map((position, index) => {
+              const tileId = radialSlots[index]
+              return (
+                <div key={position} className={`console-sector ${position}`}>
+                  {tileId ? renderWrappedTile(tileId, `${position}-${tileId}`) : <div className="console-sector-placeholder">UNASSIGNED</div>}
+                </div>
+              )
+            })}
+            <div className="console-core-shell">
+              <div className="console-core-label">
+                <span className="kicker">Persistent Archive Core</span>
+                <span className="value">MEKHEAD</span>
+              </div>
+              <div className="console-core">
+                <div className="console-core-viewport">
+                  <MekheadTile />
+                </div>
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
+          <div className="console-aux-grid">
+            {Array.from({ length: 8 }, (_, index) => {
+              const tileId = auxSlots[index]
+              return (
+                <div key={`aux-${index}`} className="console-aux-slot">
+                  {tileId ? renderWrappedTile(tileId, `aux-${tileId}-${index}`) : <div className="console-aux-empty" />}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
       <TilePicker
         open={pickerIndex !== null}
         availableTiles={tilePickerOptions}

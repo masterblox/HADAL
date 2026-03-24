@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HADAL Phase 2 Wrap Preview</title>
+  <style>
+    :root {
+      --bg: #060800;
+      --bg2: #0a0e03;
+      --g: #daff4a;
+      --g2: rgba(218, 255, 74, 0.58);
+      --g3: rgba(218, 255, 74, 0.22);
+      --warn: rgba(255, 152, 20, 0.92);
+      --off: rgba(130, 139, 118, 0.52);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--g); font-family: "Rajdhani", "Segoe UI", sans-serif; }
+
+    body {
+      min-height: 100vh;
+      background-image:
+        linear-gradient(to right, rgba(218, 255, 74, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(218, 255, 74, 0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .frame {
+      width: min(1680px, 100vw - 28px);
+      margin: 14px auto;
+      border: 1px solid var(--g3);
+      background: linear-gradient(180deg, rgba(8, 12, 4, 0.96), rgba(6, 8, 0, 0.98));
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--g3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .title { font-size: 15px; font-weight: 700; }
+    .meta { font-size: 11px; color: var(--g2); }
+
+    .section {
+      border-top: 1px solid var(--g3);
+      padding: 10px 10px 12px;
+    }
+
+    .section:first-of-type { border-top: 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--g2);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 9px;
+      padding: 0 2px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .tile {
+      border: 1px solid var(--g3);
+      min-height: 148px;
+      background: linear-gradient(180deg, rgba(11, 16, 6, 0.84), rgba(7, 10, 2, 0.9));
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .tile.h2 { min-height: 196px; }
+    .tile.w2 { grid-column: span 2; }
+
+    .tile-h {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--g3);
+    }
+
+    .tile-c {
+      padding: 8px;
+      position: relative;
+      overflow: hidden;
+      font-family: "Share Tech Mono", monospace;
+      font-size: 11px;
+      color: var(--g2);
+    }
+
+    .tile-f {
+      border-top: 1px solid var(--g3);
+      padding: 5px 8px;
+      font-size: 10px;
+      color: var(--g2);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .tag {
+      padding: 1px 6px;
+      border: 1px solid var(--g3);
+      font-size: 10px;
+      color: var(--g);
+    }
+
+    .t-legacy { color: var(--off); border-color: rgba(130, 139, 118, 0.35); }
+    .t-new { color: var(--g); }
+    .t-shell { color: var(--warn); border-color: rgba(255, 152, 20, 0.45); }
+
+    .bars { display: grid; gap: 6px; margin-top: 4px; }
+    .bar {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .bar > i {
+      display: block;
+      height: 6px;
+      border: 1px solid var(--g3);
+      background: linear-gradient(90deg, rgba(218, 255, 74, 0.65), rgba(218, 255, 74, 0.2));
+    }
+
+    .lock {
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(218, 255, 74, 0.24);
+      pointer-events: none;
+    }
+    .lock:before,
+    .lock:after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(218, 255, 74, 0.38);
+    }
+    .lock:before { left: -1px; top: -1px; border-right: 0; border-bottom: 0; }
+    .lock:after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+
+    .chip {
+      height: 100%;
+      border: 1px solid var(--g3);
+      background:
+        repeating-linear-gradient(90deg, transparent 0 12px, rgba(218, 255, 74, 0.07) 12px 13px),
+        repeating-linear-gradient(0deg, transparent 0 10px, rgba(218, 255, 74, 0.05) 10px 11px);
+      padding: 8px;
+    }
+
+    .diag {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(156deg, transparent 0 43%, rgba(218, 255, 74, 0.18) 43% 45%, transparent 45% 100%),
+        linear-gradient(156deg, transparent 0 58%, rgba(218, 255, 74, 0.12) 58% 59%, transparent 59% 100%);
+      pointer-events: none;
+    }
+
+    .muted { color: var(--off); }
+    .warn { color: var(--warn); }
+
+    @media (max-width: 1140px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tile.w2 { grid-column: span 2; }
+    }
+
+    @media (max-width: 680px) {
+      .grid { grid-template-columns: 1fr; }
+      .tile.w2 { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <header class="top">
+      <div>
+        <div class="title">HADAL / PHASE 2 WRAP PREVIEW</div>
+        <div class="meta">Feature-driven tile migration map on new canonical repo</div>
+      </div>
+      <div class="meta">MODE: LEAN / NO FAKE TELEMETRY</div>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <span>Core Surfaces (Legacy Active)</span>
+        <span>⚪ Runtime-ready</span>
+      </div>
+      <div class="grid">
+        <article class="tile">
+          <div class="tile-h"><span>Monitor</span><span class="tag t-legacy">⚪ legacy</span></div>
+          <div class="tile-c">
+            Threat signal + feed + scenario stack.
+            <div class="bars">
+              <div class="bar"><span>signal</span><i style="width:88%"></i><span>88</span></div>
+              <div class="bar"><span>feed</span><i style="width:72%"></i><span>72</span></div>
+              <div class="bar"><span>model</span><i style="width:64%"></i><span>64</span></div>
+            </div>
+            <div class="lock"></div>
+          </div>
+          <div class="tile-f">wrap: lock geometry + raster module</div>
+        </article>
+
+        <article class="tile w2 h2">
+          <div class="tile-h"><span>Map</span><span class="tag t-legacy">⚪ legacy</span></div>
+          <div class="tile-c">
+            <div class="chip">
+              Geospatial-first operations shell. Preserve map semantics.
+              <div class="bars" style="margin-top:12px">
+                <div class="bar"><span>zones</span><i style="width:81%"></i><span>81</span></div>
+                <div class="bar"><span>tracks</span><i style="width:67%"></i><span>67</span></div>
+                <div class="bar"><span>notams</span><i style="width:59%"></i><span>59</span></div>
+              </div>
+            </div>
+            <div class="diag"></div>
+          </div>
+          <div class="tile-f">wrap: tactical overlays + geolocation labels</div>
+        </article>
+
+        <article class="tile">
+          <div class="tile-h"><span>Prediction</span><span class="tag t-legacy">⚪ legacy</span></div>
+          <div class="tile-c">
+            Scenario solver + threat level.
+            <div class="bars">
+              <div class="bar"><span>risk</span><i style="width:74%"></i><span>74</span></div>
+              <div class="bar"><span>cascade</span><i style="width:43%"></i><span>43</span></div>
+            </div>
+            <div class="lock"></div>
+          </div>
+          <div class="tile-f">wrap: solve-state + amber restrictions</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span>New Ayn Intelligence Modules</span>
+        <span>🟢 staged upgrade targets</span>
+      </div>
+      <div class="grid">
+        <article class="tile">
+          <div class="tile-h"><span>Argus</span><span class="tag t-new">🟢 new</span></div>
+          <div class="tile-c">Entity resolution + threat matrix + linked graph context.</div>
+          <div class="tile-f">target lane: console / data</div>
+        </article>
+        <article class="tile">
+          <div class="tile-h"><span>Chatter</span><span class="tag t-new">🟢 new</span></div>
+          <div class="tile-c">Multi-source social/news aggregation + urgency filters.</div>
+          <div class="tile-f">target lane: monitor / console</div>
+        </article>
+        <article class="tile">
+          <div class="tile-h"><span>Ignite</span><span class="tag t-new">🟢 new</span></div>
+          <div class="tile-c">Thermal detection (FIRMS) + heat-level classification.</div>
+          <div class="tile-f">target lane: map / analysis</div>
+        </article>
+        <article class="tile">
+          <div class="tile-h"><span>Chronos</span><span class="tag t-new">🟢 new</span></div>
+          <div class="tile-c">Temporal change detection (new/removed/increased sources).</div>
+          <div class="tile-f">target lane: analysis / console</div>
+        </article>
+        <article class="tile w2">
+          <div class="tile-h"><span>Skyline</span><span class="tag t-new">🟢 new</span></div>
+          <div class="tile-c">
+            Weather intelligence window scoring for operations.
+            <div class="bars" style="margin-top:10px">
+              <div class="bar"><span>drone</span><i style="width:68%"></i><span>68%</span></div>
+              <div class="bar"><span>aircraft</span><i style="width:82%"></i><span>82%</span></div>
+              <div class="bar"><span>sat imagery</span><i style="width:55%"></i><span>55%</span></div>
+            </div>
+          </div>
+          <div class="tile-f">target lane: operations / prediction</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span>Shells To Rework or Cut</span>
+        <span>❌ invalid/useless in latest state</span>
+      </div>
+      <div class="grid">
+        <article class="tile">
+          <div class="tile-h"><span>Military Signals</span><span class="tag t-shell">❌ shell</span></div>
+          <div class="tile-c">Current state: mostly shell. Needs real ADS-B/AIS/SIGINT wiring or explicit SIMULATED label.</div>
+          <div class="tile-f warn">action: gate by data availability</div>
+        </article>
+        <article class="tile">
+          <div class="tile-h"><span>Venus Trap</span><span class="tag t-shell">❌ shell</span></div>
+          <div class="tile-c">Keep as special systems flow only if it explains real correlations. Otherwise cut from default nav.</div>
+          <div class="tile-f warn">action: repurpose or remove</div>
+        </article>
+        <article class="tile">
+          <div class="tile-h"><span>Data / Reports</span><span class="tag t-shell">❌ shell</span></div>
+          <div class="tile-c">If route exists but content is thin, merge into Console tiles until full workspace lands.</div>
+          <div class="tile-f warn">action: consolidate temporary surfaces</div>
+        </article>
+        <article class="tile">
+          <div class="tile-h"><span>Arch Shells</span><span class="tag t-shell">❌ shell</span></div>
+          <div class="tile-c muted">Confidence explanation, cross-source layer, ingestion, websocket, mini-services.</div>
+          <div class="tile-f warn">action: expose only when wired</div>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

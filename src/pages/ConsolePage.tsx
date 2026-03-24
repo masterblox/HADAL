@@ -12,6 +12,13 @@ import { KineticDataTile } from '@/components/console/tiles/KineticDataTile'
 import { TheatreExchangeTile } from '@/components/console/tiles/TheatreExchangeTile'
 import { ScenarioOutlookTile } from '@/components/console/tiles/ScenarioOutlookTile'
 import { AnalysisSummaryTile } from '@/components/console/tiles/AnalysisSummaryTile'
+import { IntelligenceTile } from '@/components/console/tiles/IntelligenceTile'
+import { VerificationTile } from '@/components/console/tiles/VerificationTile'
+import { ReportsTile } from '@/components/console/tiles/ReportsTile'
+import { ArgusTile, ChatterTile, IgniteTile, ChronosTile, SkylineTile } from '@/components/console/tiles/AynFeatureTiles'
+import { MekheadTile } from '@/components/console/tiles/MekheadTile'
+import { SatelliteTile } from '@/components/console/tiles/SatelliteTile'
+import { MilitarySignalsTile } from '@/components/console/tiles/MilitarySignalsTile'
 import {
   EventTimelineTile,
   GeographicConcentrationTile,
@@ -39,7 +46,7 @@ interface ConsolePageProps {
   prediction: PredictionResult | null
 }
 
-const STORAGE_KEY = 'hadal-console-layout'
+const STORAGE_KEY = 'hadal-console-layout-v4'
 
 interface StoredLayoutState {
   presetId: string
@@ -59,11 +66,21 @@ const TILE_META: Record<ConsoleTileId, { title: string; icon: string; source: st
   'threat-feed': { title: 'THREAT FEED', icon: '▣', source: 'VERIFIED / RAW', updated: '60S', status: 'live' },
   'theatre-exchange': { title: 'THEATRE EXCHANGE', icon: '⇄', source: 'DERIVED', updated: 'LIVE', status: 'live' },
   confidence: { title: 'CONFIDENCE', icon: '▥', source: 'VERIFICATION', updated: 'LIVE', status: 'stale' },
+  verification: { title: 'VERIFICATION', icon: '⊞', source: 'INCIDENTS', updated: '60S', status: 'live' },
+  reports: { title: 'REPORTS', icon: '▤', source: 'MODEL + INCIDENTS', updated: 'LOCAL', status: 'live' },
   'analysis-summary': { title: 'ANALYSIS SUMMARY', icon: '▧', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'event-timeline': { title: 'EVENT TIMELINE', icon: '▨', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'geographic-concentration': { title: 'GEOGRAPHIC CONCENTRATION', icon: '▩', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'type-profile': { title: 'TYPE PROFILE', icon: '◎', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'feed-quality': { title: 'FEED QUALITY', icon: '≣', source: 'INCIDENTS', updated: '60S', status: 'live' },
+  argus: { title: 'ARGUS', icon: '◬', source: 'PIPELINE PROXY', updated: 'DERIVED', status: 'stale' },
+  chatter: { title: 'CHATTER', icon: '☰', source: 'PIPELINE SOURCES', updated: 'DERIVED', status: 'stale' },
+  ignite: { title: 'IGNITE', icon: '✦', source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'offline' },
+  chronos: { title: 'CHRONOS', icon: '⌁', source: 'INCIDENTS', updated: 'DERIVED', status: 'stale' },
+  skyline: { title: 'SKYLINE', icon: '◫', source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'offline' },
+  mekhead: { title: 'MEKHEAD', icon: '◆', source: 'ARCHIVE', updated: 'STATIC', status: 'stale' },
+  satellite: { title: 'SATELLITE', icon: '◌', source: 'ORBITAL REF', updated: 'STATIC', status: 'stale' },
+  'military-signals': { title: 'MILITARY SIGNALS', icon: '▶', source: 'INCIDENTS', updated: '60S', status: 'live' },
 }
 
 function loadInitialState(): StoredLayoutState {
@@ -71,7 +88,7 @@ function loadInitialState(): StoredLayoutState {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return { presetId: DEFAULT_CONSOLE_PRESET.id, slots: [...DEFAULT_CONSOLE_PRESET.slots], custom: false }
     const parsed = JSON.parse(raw) as StoredLayoutState
-    if (!Array.isArray(parsed.slots) || parsed.slots.length !== 12) throw new Error('Invalid console layout')
+    if (!Array.isArray(parsed.slots) || parsed.slots.length !== 16) throw new Error('Invalid console layout')
     return parsed
   } catch {
     return { presetId: DEFAULT_CONSOLE_PRESET.id, slots: [...DEFAULT_CONSOLE_PRESET.slots], custom: false }
@@ -141,30 +158,33 @@ export function ConsolePage({
           <ThreatSignalTile
             threatLevel={threatLevel}
             pipelineStatus={pipelineStatus}
-            prediction={prediction}
             incidents={incidents}
           />
         )
       case 'globe':
-        return <GlobeTile incidents={incidents} />
+        return <GlobeTile />
       case 'market-impact':
         return <SituationTile mode="market" prices={prices} airspace={null} prediction={null} />
       case 'tempo':
         return <SituationTile mode="tempo" prices={null} airspace={null} prediction={prediction} />
       case 'intelligence':
-        return <SituationTile mode="intelligence" prices={null} airspace={null} prediction={prediction} />
+        return <IntelligenceTile />
       case 'threat-feed':
-        return <ThreatFeedTile incidents={incidents} />
+        return <ThreatFeedTile />
       case 'scenario-outlook':
-        return <ScenarioOutlookTile prediction={prediction} />
+        return <ScenarioOutlookTile />
       case 'airspace':
-        return <AirspaceTile airspace={airspace} />
+        return <AirspaceTile />
       case 'confidence':
-        return <ConfidenceTile incidents={incidents} prediction={prediction} />
+        return <ConfidenceTile />
+      case 'verification':
+        return <VerificationTile />
       case 'kinetic-data':
-        return <KineticDataTile incidents={incidents} />
+        return <KineticDataTile />
       case 'theatre-exchange':
-        return <TheatreExchangeTile incidents={incidents} />
+        return <TheatreExchangeTile />
+      case 'reports':
+        return <ReportsTile />
       case 'analysis-summary':
         return <AnalysisSummaryTile incidents={incidents} />
       case 'event-timeline':
@@ -174,7 +194,23 @@ export function ConsolePage({
       case 'type-profile':
         return <TypeProfileTile incidents={incidents} />
       case 'feed-quality':
-        return <FeedQualityTile incidents={incidents} />
+        return <FeedQualityTile />
+      case 'argus':
+        return <ArgusTile incidents={incidents} />
+      case 'chatter':
+        return <ChatterTile />
+      case 'ignite':
+        return <IgniteTile incidents={incidents} />
+      case 'chronos':
+        return <ChronosTile incidents={incidents} />
+      case 'skyline':
+        return <SkylineTile />
+      case 'mekhead':
+        return <MekheadTile />
+      case 'satellite':
+        return <SatelliteTile />
+      case 'military-signals':
+        return <MilitarySignalsTile />
       default:
         return null
     }

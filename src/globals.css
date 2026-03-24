@@ -298,7 +298,7 @@ body::after {
 .console-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(220px, 1fr));
+  grid-template-rows: repeat(4, minmax(220px, 1fr));
   gap: 1px;
   flex: 1;
   min-height: 0;
@@ -570,8 +570,7 @@ body::after {
 }
 
 .console-feed-head,
-.console-airspace-grid,
-.console-confidence-summary {
+.console-airspace-grid {
   border-bottom: 1px solid var(--g07);
 }
 
@@ -706,9 +705,10 @@ body::after {
 
 .console-airspace-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   background: var(--g07);
+  border-bottom: 1px solid var(--g07);
 }
 
 .console-airspace-cell {
@@ -753,7 +753,27 @@ body::after {
 }
 
 .console-airspace-row {
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 48px 40px minmax(0, 1fr) auto;
+}
+
+.console-airspace-icao {
+  font-family: var(--MONO);
+  font-size: var(--fs-micro);
+  color: var(--g5);
+}
+
+.console-airspace-row .high {
+  color: rgba(255,208,80,.85);
+}
+
+.console-airspace-severity-bar {
+  display: flex;
+  height: 6px;
+  border-bottom: 1px solid var(--g07);
+}
+
+.console-airspace-severity-seg {
+  min-width: 2px;
 }
 
 .console-situation {
@@ -793,37 +813,105 @@ body::after {
   color: var(--g7);
 }
 
-.console-confidence-summary {
+.console-confidence-header {
   display: flex;
-  align-items: baseline;
   justify-content: space-between;
-  padding: 12px;
-  font-family: var(--HEAD);
-  font-size: var(--fs-small);
-  letter-spacing: .18em;
-  color: var(--g5);
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--g07);
 }
 
-.console-confidence-summary b {
+.console-confidence-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.console-confidence-metric.right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.console-confidence-metric span {
+  font-family: var(--HEAD);
+  font-size: var(--fs-micro);
+  letter-spacing: .16em;
+  color: var(--g3);
+}
+
+.console-confidence-metric b {
   font-family: var(--C2);
-  font-size: 32px;
-  line-height: .8;
+  font-size: 28px;
+  line-height: .9;
   color: var(--g);
 }
 
-.console-confidence-bars {
+.console-confidence-metric small {
+  font-family: var(--HEAD);
+  font-size: 12px;
+  color: var(--g5);
+}
+
+.console-confidence-badges {
   display: flex;
   flex-direction: column;
+  border-bottom: 1px solid var(--g07);
+}
+
+.console-confidence-badge-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-top: 1px solid var(--g07);
+  font-family: var(--MONO);
+  font-size: var(--fs-micro);
+  color: var(--g5);
+}
+
+.console-confidence-badge-row b {
+  justify-self: end;
+  font-family: var(--HEAD);
+  color: var(--g7);
+}
+
+.console-confidence-footer {
+  padding: 0;
 }
 
 .console-confidence-row {
-  grid-template-columns: 78px 1fr 28px;
+  grid-template-columns: 90px 1fr 28px;
 }
 
 .console-confidence-row b {
   justify-self: end;
   font-family: var(--HEAD);
   color: var(--g7);
+}
+
+.console-confidence-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  font-family: var(--HEAD);
+  font-size: var(--fs-micro);
+  letter-spacing: .14em;
+  color: var(--g3);
+}
+
+.console-confidence-status b {
+  font-family: var(--MONO);
+  color: var(--g);
+}
+
+.console-confidence-status b.warn {
+  color: var(--warn);
+}
+
+.console-confidence-band {
+  margin-left: auto;
+  color: var(--g5);
 }
 
 .console-kinetic-head {
@@ -959,7 +1047,7 @@ body::after {
 @media (max-width: 1200px) {
   .console-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(6, minmax(220px, 1fr));
+    grid-template-rows: repeat(8, minmax(220px, 1fr));
   }
 }
 
@@ -970,14 +1058,17 @@ body::after {
 
   .console-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(12, minmax(220px, auto));
+    grid-template-rows: repeat(16, minmax(220px, auto));
   }
 
   .console-picker-grid,
   .console-situation,
-  .console-prediction-metrics,
-  .console-airspace-grid {
+  .console-prediction-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .console-airspace-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

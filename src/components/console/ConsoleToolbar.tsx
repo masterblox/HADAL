@@ -12,6 +12,7 @@ const PRESET_OPTIONS = [
   { id: 'incident-focus', label: 'INCIDENT FOCUS' },
   { id: 'air-picture', label: 'AIR PICTURE' },
   { id: 'analysis-stack', label: 'ANALYSIS STACK' },
+  { id: 'capability-16', label: 'AYN WRAP' },
   { id: 'custom', label: 'CUSTOM' },
 ]
 

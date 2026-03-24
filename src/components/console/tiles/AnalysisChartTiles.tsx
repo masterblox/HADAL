@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react'
+import { useMemo, useEffect, useRef, type ReactNode } from 'react'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar,
@@ -7,6 +7,7 @@ import {
 } from 'recharts'
 import type { Incident } from '@/hooks/useDataPipeline'
 import { demoIncidents } from '@/data/demo-incidents'
+import { G, G2, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
 
 const TICK = {
   fontFamily: 'var(--MONO)',
@@ -170,19 +171,65 @@ export function TypeProfileTile({ incidents }: { incidents: Incident[] }) {
   )
 }
 
-export function FeedQualityTile({ incidents }: { incidents: Incident[] }) {
-  const { sourceData } = useAnalysisData(incidents)
-  return (
-    <ChartShell kicker="SOURCES" title="FEED QUALITY">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={sourceData} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 0 }}>
-          <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" horizontal={false} />
-          <XAxis type="number" tick={TICK} axisLine={{ stroke: 'rgba(218,255,74,.15)' }} tickLine={false} allowDecimals={false} />
-          <YAxis type="category" dataKey="source" tick={TICK} axisLine={false} tickLine={false} width={64} />
-          <Tooltip content={<ChartTip />} />
-          <Bar dataKey="count" name="Events" fill="rgba(218,255,74,.55)" radius={[0, 2, 2, 0]} maxBarSize={16} />
-        </BarChart>
-      </ResponsiveContainer>
-    </ChartShell>
-  )
+const _ingestQueue: { age: number; src: string }[] = []
+for (let i = 0; i < 26; i++) _ingestQueue.push({ age: Math.random() * 5, src: ['GOV', 'NEWS', 'CHAT', 'SNSR', 'API', 'UNFD'][Math.random() * 6 | 0] })
+
+export function FeedQualityTile() {
+  const ref = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return
+    const DPR = window.devicePixelRatio || 1
+    let rafId: number
+
+    function draw() {
+      const r = hdSetup(cv!, DPR); if (!r) { rafId = requestAnimationFrame(draw); return }
+      const { W, H, x } = r
+      rasterBase(x, W, H, 0.1, DPR)
+      const t = Date.now() / 1000
+
+      // Horizontal data buses
+      for (let i = 0; i < 6; i++) {
+        const y = 54 + i * (H - 108) / 5
+        x.fillStyle = G2 + '.02)'; x.fillRect(W * 0.32, y - 3, W * 0.66, 6)
+        x.strokeStyle = G2 + '.08)'; x.lineWidth = 1
+        x.beginPath(); x.moveTo(W * 0.32, y); x.lineTo(W * 0.98, y); x.stroke()
+        for (let p = 0; p < 3; p++) {
+          const px = ((t * 90 + i * 80 + p * 180) % (W * 0.66)) + W * 0.32
+          x.fillStyle = G; x.fillRect(px, y - 2, 14, 4)
+          x.fillStyle = G2 + '.25)'; x.fillRect(px - 24, y - 1, 24, 2)
+        }
+        x.font = '4px "Share Tech Mono"'; x.fillStyle = G2 + '.2)'
+        x.fillText(['NORM', 'DEDUP', 'CANON', 'UNIFY', 'ENRICH', 'FUSE'][i], W * 0.33, y - 5)
+      }
+
+      // Queue column
+      x.font = '5px "Share Tech Mono"'
+      _ingestQueue.forEach((q, i) => {
+        const y = 48 + i * 13
+        const alpha = Math.max(0.06, 1 - q.age / 5)
+        const arr = q.age < 0.4
+        x.fillStyle = arr ? G : G2 + alpha.toFixed(2) + ')'
+        x.fillText('▸' + q.src.padEnd(5) + (arr ? '▮ARR' : 'QUE ').padEnd(5) + q.age.toFixed(1), 4, y)
+        q.age += 0.016; if (q.age > 5) { q.age = 0; q.src = ['GOV', 'NEWS', 'CHAT', 'SNSR', 'API', 'UNFD'][Math.random() * 6 | 0] }
+      })
+
+      // Stats block
+      x.fillStyle = 'rgba(5,7,0,.8)'; x.fillRect(W - 74, 8, 68, 50)
+      x.strokeStyle = G2 + '.1)'; x.strokeRect(W - 74, 8, 68, 50)
+      const pulse = Math.sin(t * 4) * 0.3 + 0.6
+      x.fillStyle = G2 + pulse.toFixed(2) + ')'; x.fillRect(W - 68, 14, 6, 6)
+      x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.45)'
+      x.fillText('STREAM', W - 58, 19)
+      x.fillText((11 + Math.floor(Math.sin(t) * 3)) + ' sig/m', W - 68, 32)
+      x.fillText('LAT:<2s', W - 68, 44)
+
+      stamp(x, 4, H - 28, 'SYS:INGEST')
+      rafId = requestAnimationFrame(draw)
+    }
+    draw()
+    return () => cancelAnimationFrame(rafId)
+  }, [])
+
+  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
 }

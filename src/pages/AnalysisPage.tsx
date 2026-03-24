@@ -1,7 +1,5 @@
 import { PredictorEngine } from '@/components/predictor/PredictorEngine'
 import { AnalysisSection } from '@/components/analysis/AnalysisSection'
-import { RegionalPanel } from '@/components/regional/RegionalPanel'
-import { EconomicSection } from '@/components/economic/EconomicSection'
 import type { Incident, AirspaceData, PriceData } from '@/hooks/useDataPipeline'
 
 interface AnalysisPageProps {
@@ -11,7 +9,7 @@ interface AnalysisPageProps {
   sandbox: boolean
 }
 
-export function AnalysisPage({ incidents, airspace, prices, sandbox }: AnalysisPageProps) {
+export function AnalysisPage({ incidents, airspace, prices }: AnalysisPageProps) {
   return (
     <>
       <section className="page-intro jp-panel">
@@ -21,19 +19,17 @@ export function AnalysisPage({ incidents, airspace, prices, sandbox }: AnalysisP
             <h1 className="page-title">Analysis</h1>
           </div>
           <div className="page-statline">
-            <span>{prices ? 'Prices live' : 'Prices offline'}</span>
+            <span>{incidents.length > 0 ? 'Incident analytics live' : 'No incidents in scope'}</span>
             <span>{airspace?.airports_tracked ?? 0} airports</span>
             <span>{incidents.length} events in scope</span>
           </div>
         </div>
         <p className="page-copy">
-          Incident analytics, prediction engine, regional intelligence, market monitors.
+          Incident analytics and scenario modeling only. Regional and economic spillover surfaces move to Console.
         </p>
       </section>
       <AnalysisSection incidents={incidents} />
       <PredictorEngine incidents={incidents} airspace={airspace} prices={prices} />
-      <RegionalPanel />
-      <EconomicSection prices={prices} sandbox={sandbox} />
     </>
   )
 }

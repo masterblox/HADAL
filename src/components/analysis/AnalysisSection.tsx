@@ -6,7 +6,6 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import type { Incident } from '../../hooks/useDataPipeline'
-import { demoIncidents } from '@/data/demo-incidents'
 
 /* ── Shared axis tick style ── */
 const TICK = {
@@ -55,8 +54,7 @@ function SourceTip({ active, payload, label }: any) {
 }
 
 export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
-  const data = incidents.length === 0 ? demoIncidents : incidents
-  const isDemo = incidents.length === 0
+  const data = incidents
 
   /* ── Summary metrics ── */
   const stats = useMemo(() => {
@@ -144,8 +142,12 @@ export function AnalysisSection({ incidents }: { incidents: Incident[] }) {
           <rect x="9" y="2" width="2" height="11" fill="var(--g)" />
         </svg>
         <span className="analysis-title section-title">THREAT ANALYSIS</span>
-        <span className="analysis-count">{data.length} EVENTS{isDemo ? ' · DEMO' : ''}</span>
+        <span className="analysis-count">{data.length} EVENTS</span>
       </div>
+
+      {data.length === 0 && (
+        <div className="regional-loading">NO INCIDENT DATA · ANALYSIS WAITING ON PIPELINE</div>
+      )}
 
       {/* ── Summary strip ── */}
       <div className="analysis-overview-strip">

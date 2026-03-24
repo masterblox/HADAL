@@ -8,6 +8,8 @@ export type ConsoleTileId =
   | 'scenario-outlook'
   | 'airspace'
   | 'confidence'
+  | 'verification'
+  | 'reports'
   | 'kinetic-data'
   | 'theatre-exchange'
   | 'analysis-summary'
@@ -15,6 +17,14 @@ export type ConsoleTileId =
   | 'geographic-concentration'
   | 'type-profile'
   | 'feed-quality'
+  | 'argus'
+  | 'chatter'
+  | 'ignite'
+  | 'chronos'
+  | 'skyline'
+  | 'mekhead'
+  | 'satellite'
+  | 'military-signals'
 
 export interface ConsoleLayoutPreset {
   id: string
@@ -34,39 +44,62 @@ export const CONSOLE_TILE_ORDER: ConsoleTileId[] = [
   'threat-feed',
   'theatre-exchange',
   'confidence',
+  'verification',
+  'reports',
   'analysis-summary',
   'event-timeline',
   'geographic-concentration',
   'type-profile',
   'feed-quality',
+  'military-signals',
+  'argus',
+  'chatter',
+  'ignite',
+  'chronos',
+  'skyline',
+  'mekhead',
+  'satellite',
 ]
 
 export const CONSOLE_PRESETS: ConsoleLayoutPreset[] = [
   {
+    id: 'capability-board',
+    label: 'CAPABILITY BOARD',
+    slots: [
+      'threat-signal', 'confidence',   'verification',  'feed-quality',
+      'airspace',      'theatre-exchange', 'satellite', 'military-signals',
+      'globe',         'scenario-outlook', 'intelligence', 'mekhead',
+      'reports',       'chatter',       'kinetic-data',  'threat-feed',
+    ],
+  },
+  {
     id: 'shift-brief',
     label: 'SHIFT BRIEF',
     slots: [
-      'threat-signal', 'globe', 'scenario-outlook', 'threat-feed',
-      'kinetic-data', 'airspace', 'theatre-exchange', 'confidence',
-      'market-impact', 'tempo', 'intelligence', 'analysis-summary',
+      'threat-signal', 'globe',         'scenario-outlook', 'threat-feed',
+      'kinetic-data',  'airspace',      'verification',     'confidence',
+      'market-impact', 'tempo',         'intelligence',     'reports',
+      null,            null,            null,               null,
     ],
   },
   {
     id: 'incident-focus',
     label: 'INCIDENT FOCUS',
     slots: [
-      'threat-feed', 'kinetic-data', 'scenario-outlook', 'globe',
-      'theatre-exchange', 'confidence', 'threat-signal', 'airspace',
-      'tempo', 'intelligence', 'analysis-summary', 'market-impact',
+      'threat-feed',   'kinetic-data',  'scenario-outlook', 'globe',
+      'verification',  'confidence',    'threat-signal',    'airspace',
+      'reports',       'intelligence',  'theatre-exchange', 'market-impact',
+      null,            null,            null,               null,
     ],
   },
   {
     id: 'air-picture',
     label: 'AIR PICTURE',
     slots: [
-      'globe', 'airspace', 'threat-signal', 'scenario-outlook',
-      'theatre-exchange', 'confidence', 'threat-feed', 'kinetic-data',
-      'market-impact', 'tempo', 'intelligence', 'analysis-summary',
+      'globe',         'airspace',      'threat-signal',    'scenario-outlook',
+      'verification',  'confidence',    'threat-feed',      'kinetic-data',
+      'market-impact', 'tempo',         'intelligence',     'reports',
+      null,            null,            null,               null,
     ],
   },
   {
@@ -74,8 +107,9 @@ export const CONSOLE_PRESETS: ConsoleLayoutPreset[] = [
     label: 'ANALYSIS STACK',
     slots: [
       'event-timeline', 'geographic-concentration', 'type-profile', 'feed-quality',
-      'analysis-summary', 'scenario-outlook', 'threat-signal', 'confidence',
-      'threat-feed', 'tempo', 'intelligence', 'market-impact',
+      'verification',   'scenario-outlook',          'threat-signal', 'confidence',
+      'threat-feed',    'reports',                   'intelligence',  'market-impact',
+      null,             null,                         null,           null,
     ],
   },
 ]

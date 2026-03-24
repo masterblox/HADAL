@@ -1,9 +1,11 @@
-export type Lane = 'overview' | 'operations' | 'analysis' | 'console'
+export type Lane = 'overview' | 'operations' | 'console'
 
-export const VALID_LANES: Lane[] = ['overview', 'operations', 'analysis', 'console']
+export const VALID_LANES: Lane[] = ['overview', 'operations', 'console']
 
 export function parseLane(): Lane {
   const h = window.location.hash.replace('#', '').toLowerCase()
+  // Legacy redirect: #analysis → console (Analysis demoted to Console preset)
+  if (h === 'analysis') return 'console'
   return VALID_LANES.includes(h as Lane) ? (h as Lane) : 'overview'
 }
 

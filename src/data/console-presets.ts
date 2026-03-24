@@ -17,6 +17,7 @@ export type ConsoleTileId =
   | 'geographic-concentration'
   | 'type-profile'
   | 'feed-quality'
+  | 'predictor-engine'
   | 'argus'
   | 'chatter'
   | 'ignite'
@@ -51,6 +52,7 @@ export const CONSOLE_TILE_ORDER: ConsoleTileId[] = [
   'geographic-concentration',
   'type-profile',
   'feed-quality',
+  'predictor-engine',
   'military-signals',
   'argus',
   'chatter',
@@ -104,12 +106,12 @@ export const CONSOLE_PRESETS: ConsoleLayoutPreset[] = [
   },
   {
     id: 'analysis-stack',
-    label: 'ANALYSIS STACK',
+    label: 'ANALYSIS',
     slots: [
-      'event-timeline', 'geographic-concentration', 'type-profile', 'feed-quality',
-      'verification',   'scenario-outlook',          'threat-signal', 'confidence',
-      'threat-feed',    'reports',                   'intelligence',  'market-impact',
-      null,             null,                         null,           null,
+      'event-timeline',   'geographic-concentration', 'type-profile',  'feed-quality',
+      'analysis-summary', 'scenario-outlook',          'threat-signal', 'confidence',
+      'threat-feed',      'reports',                   'intelligence',  'market-impact',
+      'predictor-engine', null,                        null,            null,
     ],
   },
 ]

@@ -12,13 +12,12 @@ const PRESET_OPTIONS = [
   { id: 'shift-brief', label: 'SHIFT BRIEF' },
   { id: 'incident-focus', label: 'INCIDENT FOCUS' },
   { id: 'air-picture', label: 'AIR PICTURE' },
-  { id: 'analysis-stack', label: 'ANALYSIS STACK' },
+  { id: 'analysis-stack', label: 'ANALYSIS' },
   { id: 'custom', label: 'CUSTOM' },
 ]
 
 export function ConsoleToolbar({
   editMode,
-  presetLabel,
   presetId,
   custom,
   onPresetChange,
@@ -29,7 +28,7 @@ export function ConsoleToolbar({
   return (
     <div className={`console-toolbar jp-panel${editMode ? ' is-editing' : ''}`}>
       <div className="console-toolbar-block">
-        <span className="console-toolbar-label">LAYOUT</span>
+        <span className="console-toolbar-label">VIEW</span>
         <div className="console-toolbar-select-wrap">
           <select
             className="console-toolbar-select"
@@ -45,7 +44,6 @@ export function ConsoleToolbar({
             ))}
           </select>
         </div>
-        <span className="console-toolbar-hint">{presetLabel}</span>
       </div>
       <div className="console-toolbar-block meta">
         <span className="console-toolbar-label">MODE</span>

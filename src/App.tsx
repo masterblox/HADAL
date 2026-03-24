@@ -7,9 +7,8 @@ import { useDataPipeline } from './hooks/useDataPipeline'
 import { usePrediction } from './hooks/usePrediction'
 import { parseLane, subscribeHash, type Lane, navigateTo } from './lib/lane-routing'
 
-/* Lane-level code splitting — Operations and Analysis load on demand */
+/* Lane-level code splitting — Operations and Console load on demand */
 const OperationsPage = lazy(() => import('./pages/OperationsPage').then(m => ({ default: m.OperationsPage })))
-const AnalysisPage = lazy(() => import('./pages/AnalysisPage').then(m => ({ default: m.AnalysisPage })))
 const ConsolePage = lazy(() => import('./pages/ConsolePage').then(m => ({ default: m.ConsolePage })))
 
 function useHashRoute(): Lane {
@@ -19,7 +18,6 @@ function useHashRoute(): Lane {
 const LANE_TITLES: Record<Lane, string> = {
   overview: 'Overview',
   operations: 'Operations',
-  analysis: 'Analysis',
   console: 'Console',
 }
 
@@ -104,14 +102,6 @@ export function App() {
             <Suspense fallback={null}>
               {activeLane === 'operations' && (
                 <OperationsPage
-                  incidents={incidents}
-                  airspace={airspace}
-                  prices={prices}
-                  sandbox={sandbox}
-                />
-              )}
-              {activeLane === 'analysis' && (
-                <AnalysisPage
                   incidents={incidents}
                   airspace={airspace}
                   prices={prices}

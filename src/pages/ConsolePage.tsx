@@ -25,6 +25,7 @@ import {
   TypeProfileTile,
   FeedQualityTile,
 } from '@/components/console/tiles/AnalysisChartTiles'
+import { PredictorEngineTile } from '@/components/console/tiles/PredictorEngineTile'
 import type { AirspaceData, Incident, PriceData } from '@/hooks/useDataPipeline'
 import type { PipelineHealth } from '@/hooks/useDataPipeline'
 import type { PredictionResult } from '@/lib/prediction/types'
@@ -115,6 +116,7 @@ const TILE_META: Record<ConsoleTileId, { title: string; icon: string; source: st
   'geographic-concentration': { title: 'GEOGRAPHIC CONCENTRATION', icon: '▩', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'type-profile': { title: 'TYPE PROFILE', icon: '◎', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'feed-quality': { title: 'FEED QUALITY', icon: '≣', source: 'INCIDENTS', updated: '60S', status: 'live' },
+  'predictor-engine': { title: 'PREDICTOR ENGINE', icon: '⊿', source: 'SEQUENCE MODEL', updated: 'LOCAL', status: 'live' },
   argus: { title: 'ARGUS', icon: '◬', source: 'PIPELINE PROXY', updated: 'DERIVED', status: 'stale' },
   chatter: { title: 'CHATTER', icon: '☰', source: 'PIPELINE SOURCES', updated: 'DERIVED', status: 'stale' },
   ignite: { title: 'IGNITE', icon: '✦', source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'offline' },
@@ -163,6 +165,7 @@ export function ConsolePage({
   sandbox,
   onSandboxToggle,
   incidents,
+  airspace,
   prices,
   prediction,
 }: ConsolePageProps) {
@@ -221,7 +224,7 @@ export function ConsolePage({
   function renderTile(tileId: ConsoleTileId) {
     switch (tileId) {
       case 'threat-signal':
-        return <ThreatSignalTile />
+        return <ThreatSignalTile incidents={incidents} />
       case 'globe':
         return <GlobeTile />
       case 'market-impact':
@@ -256,6 +259,8 @@ export function ConsolePage({
         return <TypeProfileTile incidents={incidents} />
       case 'feed-quality':
         return <FeedQualityTile />
+      case 'predictor-engine':
+        return <PredictorEngineTile incidents={incidents} airspace={airspace} prices={prices} />
       case 'argus':
         return <ArgusTile incidents={incidents} />
       case 'chatter':
@@ -284,7 +289,7 @@ export function ConsolePage({
         presetLabel={effectivePresetLabel}
         presetId={effectivePresetId}
         custom={sandbox ? custom : false}
-        onPresetChange={sandbox ? applyPreset : () => {}}
+        onPresetChange={applyPreset}
         onEditToggle={() => {
           setPickerIndex(null)
           onSandboxToggle()

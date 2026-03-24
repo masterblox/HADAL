@@ -1,7 +1,7 @@
 import { useDrawMark } from '@/canvas/useDrawMark'
 import { useUtcClock } from '@/hooks/useUtcClock'
 
-type Lane = 'overview' | 'operations' | 'analysis' | 'console'
+type Lane = 'overview' | 'operations' | 'console'
 
 interface TopbarProps {
   threatLevel: number | null
@@ -15,7 +15,6 @@ interface TopbarProps {
 const NAV_ITEMS: { id: Lane; label: string }[] = [
   { id: 'overview', label: 'OVERVIEW' },
   { id: 'operations', label: 'OPERATIONS' },
-  { id: 'analysis', label: 'ANALYSIS' },
   { id: 'console', label: 'CONSOLE' },
 ]
 

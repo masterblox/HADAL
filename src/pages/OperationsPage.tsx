@@ -31,9 +31,9 @@ export function OperationsPage({ incidents, airspace, prices, sandbox }: Operati
       <IntelWireSection incidents={incidents} airspace={airspace} prices={prices} sandbox={sandbox} />
       <section className="lane-footer-grid">
         <article className="lane-footer-card jp-panel">
-          <div className="lane-cta-kicker">Lane 3</div>
+          <div className="lane-cta-kicker">Console → ANALYSIS preset</div>
           <h2 className="lane-cta-title">Analysis</h2>
-          <button type="button" className="lane-cta-btn" onClick={() => navigateTo('analysis')}>
+          <button type="button" className="lane-cta-btn" onClick={() => navigateTo('console')}>
             OPEN →
           </button>
         </article>

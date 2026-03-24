@@ -241,18 +241,6 @@ export function IgniteTile({ incidents }: { incidents: Incident[] }) {
       x.fillStyle = '#030500'; x.fillRect(0, 0, W, H)
       const t = Date.now() / 1000
 
-      // Scrolling diagonal bands — thermal scan language
-      x.save(); x.translate(W / 2, H / 2); x.rotate(-8 * PI / 180)
-      const bandTexts = ['THERMAL SCAN', '', 'IR OVERLAY', '', 'HOT ZONE', '', 'SAT DETECT', '', 'FIRMS PROXY', '', 'HEAT INDEX', '', 'NO UPSTREAM', '']
-      const scroll = (t * 14) % 56
-      bandTexts.forEach((b, i) => {
-        const y = -H * 0.7 + i * 28 + scroll
-        if (!b) { x.fillStyle = G2 + '.03)'; x.fillRect(-W, y, W * 2, 4); return }
-        x.fillStyle = G2 + '.015)'; x.fillRect(-W, y, W * 2, 22)
-        x.font = '10px "Teko"'; x.fillStyle = G2 + '.05)'
-        x.fillText(b, -W * 0.3, y + 15); x.fillText(b, W * 0.1, y + 15)
-      })
-      x.restore()
 
       // Left panel
       x.fillStyle = 'rgba(5,7,0,.82)'; x.fillRect(18, 52, W * 0.48, H - 80)

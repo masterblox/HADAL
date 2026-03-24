@@ -8,11 +8,11 @@ interface ConsoleToolbarProps {
 }
 
 const PRESET_OPTIONS = [
+  { id: 'capability-board', label: 'CAPABILITY BOARD' },
   { id: 'shift-brief', label: 'SHIFT BRIEF' },
   { id: 'incident-focus', label: 'INCIDENT FOCUS' },
   { id: 'air-picture', label: 'AIR PICTURE' },
   { id: 'analysis-stack', label: 'ANALYSIS STACK' },
-  { id: 'capability-16', label: 'AYN WRAP' },
   { id: 'custom', label: 'CUSTOM' },
 ]
 

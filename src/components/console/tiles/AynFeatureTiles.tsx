@@ -33,8 +33,8 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
         }
       }
 
-      // Entity resolution arc
-      const cx = W * 0.3, cy = H * 0.42, rad = 75
+      // Entity resolution arc — enlarged now that right side is panel-free
+      const cx = W * 0.3, cy = H * 0.42, rad = 88
       const res = Math.min(resTarget, ((t * 0.15) % 1.3) * resTarget / 0.7)
       x.strokeStyle = G2 + '.08)'; x.lineWidth = 12
       x.beginPath(); x.arc(cx, cy, rad, -PI * 0.8, PI * 0.8); x.stroke()
@@ -51,20 +51,19 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
       const tipA = -PI * 0.8 + PI * 1.6 * res
       x.fillStyle = G
       x.beginPath(); x.arc(cx + Math.cos(tipA) * rad, cy + Math.sin(tipA) * rad, 5, 0, TAU); x.fill()
-      x.font = 'bold 52px "Teko"'; x.fillStyle = G; x.textAlign = 'center'
-      x.fillText(String(Math.floor(res * 100)), cx, cy + 16)
+      x.font = 'bold 60px "Teko"'; x.fillStyle = G; x.textAlign = 'center'
+      x.fillText(String(Math.floor(res * 100)), cx, cy + 18)
       x.font = '7px "Share Tech Mono"'; x.fillStyle = G2 + '.3)'
       x.fillText('RESOLUTION', cx, cy + 30); x.textAlign = 'left'
 
-      // Entity factor bars
+      // Entity factor bars — panel-free, data floats directly on canvas
       const factors: [string, number, number][] = [
         ['ENT GRAPH', 76, 0], ['SRC LINK', 88, 0], ['GEO ANCHOR', 71, 0],
         ['TEMPORAL', 82, 0], ['CREDIBIL', 79, 0], ['VERIFIED', 65, 0],
         ['CORROB', 88, 0], ['PIPELINE', 72, 0], ['CONTRA', 14, 1],
       ]
       const fx = W * 0.56, fy = 58, fh = 16, fw = W * 0.4
-      x.fillStyle = G2 + '.04)'; x.fillRect(fx - 4, fy - 12, fw + 8, factors.length * fh + 20)
-      x.strokeStyle = G2 + '.08)'; x.strokeRect(fx - 4, fy - 12, fw + 8, factors.length * fh + 20)
+      // Header only — no panel box fill/stroke
       x.font = '6px "Teko"'; x.fillStyle = G2 + '.4)'; x.fillText('ENTITY FACTOR BREAKDOWN', fx, fy - 2)
       factors.forEach(([label, val, warn], i) => {
         const y = fy + 8 + i * fh
@@ -218,32 +217,32 @@ export function IgniteTile({ incidents }: { incidents: Incident[] }) {
       x.restore()
 
       // Left panel
-      x.fillStyle = 'rgba(5,7,0,.82)'; x.fillRect(6, 52, W * 0.48, H - 80)
-      x.strokeStyle = G2 + '.1)'; x.lineWidth = 1.5; x.strokeRect(6, 52, W * 0.48, H - 80)
-      x.fillStyle = G2 + '.2)'; x.fillRect(6, 52, W * 0.48, 3)
+      x.fillStyle = 'rgba(5,7,0,.82)'; x.fillRect(18, 52, W * 0.48, H - 80)
+      x.strokeStyle = G2 + '.1)'; x.lineWidth = 1.5; x.strokeRect(18, 52, W * 0.48, H - 80)
+      x.fillStyle = G2 + '.2)'; x.fillRect(18, 52, W * 0.48, 3)
 
-      x.font = '7px "Teko"'; x.fillStyle = G2 + '.4)'; x.fillText('IGNITE SCAN ZONES', 14, 68)
-      x.font = 'bold 56px "Teko"'; x.fillStyle = G; x.fillText(String(totalZones || '---'), 14, 126)
-      x.font = '6px "Share Tech Mono"'; x.fillStyle = G2 + '.3)'; x.fillText('ACTIVE HOT ZONES', 78, 112)
-      x.fillStyle = G2 + '.35)'; x.fillText('SOURCE:', 14, 142); x.fillStyle = AMB; x.fillText('INCIDENT PROXY', 46, 142)
-      x.fillStyle = G2 + '.2)'; x.font = '5px "Share Tech Mono"'; x.fillText('NO FIRMS FEED — UPSTREAM MODULE', 14, 154)
+      x.font = '7px "Teko"'; x.fillStyle = G2 + '.4)'; x.fillText('IGNITE SCAN ZONES', 26, 68)
+      x.font = 'bold 56px "Teko"'; x.fillStyle = G; x.fillText(String(totalZones || '---'), 26, 126)
+      x.font = '6px "Share Tech Mono"'; x.fillStyle = G2 + '.3)'; x.fillText('ACTIVE HOT ZONES', 90, 112)
+      x.fillStyle = G2 + '.35)'; x.fillText('SOURCE:', 26, 142); x.fillStyle = AMB; x.fillText('INCIDENT PROXY', 58, 142)
+      x.fillStyle = G2 + '.2)'; x.font = '5px "Share Tech Mono"'; x.fillText('NO FIRMS FEED — UPSTREAM MODULE', 26, 154)
 
       // Hotspot table
-      x.fillStyle = G2 + '.05)'; x.fillRect(10, 164, W * 0.46, 14)
+      x.fillStyle = G2 + '.05)'; x.fillRect(22, 164, W * 0.46, 14)
       x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.25)'
-      x.fillText('ZONE', 14, 174); x.fillText('EVT', 120, 174); x.fillText('HEAT', 140, 174); x.fillText('SRC', 168, 174)
+      x.fillText('ZONE', 26, 174); x.fillText('EVT', 132, 174); x.fillText('HEAT', 152, 174); x.fillText('SRC', 180, 174)
       const aRow = Math.floor(t * 0.5) % Math.max(zones.length, 1)
       const rows: [string, number, string, string][] = zones.length
         ? zones.map(([c, n]) => [c.slice(0, 11), n, n > 5 ? 'CRIT' : n > 2 ? 'HIGH' : 'MED', 'PROXY'] as [string, number, string, string])
         : [['NO DATA', 0, '---', 'NONE'], ['UPSTREAM', 0, '---', 'NONE'], ['MODULE', 0, '---', 'NONE'], ['AWAITING', 0, '---', 'NONE'], ['FIRMS', 0, '---', 'NONE']]
       rows.forEach(([n, p, s, w], i) => {
         const sy = 186 + i * 14; const isA = i === aRow
-        if (isA) { x.fillStyle = G2 + '.04)'; x.fillRect(10, sy - 9, W * 0.46, 14) }
+        if (isA) { x.fillStyle = G2 + '.04)'; x.fillRect(22, sy - 9, W * 0.46, 14) }
         const al = isA ? 0.7 : 0.45 - 0.04 * i
         x.fillStyle = G2 + al.toFixed(2) + ')'; x.font = '5px "Share Tech Mono"'
-        x.fillText(n, 14, sy); x.fillText(String(p || '0'), 120, sy)
-        x.fillStyle = s === 'CRIT' || s === 'HIGH' ? AMB : G2 + al.toFixed(2) + ')'; x.fillText(s, 140, sy)
-        x.fillStyle = G2 + al.toFixed(2) + ')'; x.fillText(w, 168, sy)
+        x.fillText(n, 26, sy); x.fillText(String(p || '0'), 132, sy)
+        x.fillStyle = s === 'CRIT' || s === 'HIGH' ? AMB : G2 + al.toFixed(2) + ')'; x.fillText(s, 152, sy)
+        x.fillStyle = G2 + al.toFixed(2) + ')'; x.fillText(w, 180, sy)
       })
 
       // Right panel — scan windows

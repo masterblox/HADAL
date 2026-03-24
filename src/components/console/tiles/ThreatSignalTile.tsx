@@ -57,17 +57,18 @@ export function ThreatSignalTile() {
         x.font = 'bold 8px "Teko"'; x.fillStyle = G; x.textAlign = 'center'
         x.fillText(ic.label, ic.px, ic.py + 3); x.textAlign = 'left'
       })
-      x.fillStyle = 'rgba(5,7,0,.7)'; x.fillRect(W - 100, 54, 94, H - 80)
-      x.strokeStyle = G2 + '.12)'; x.strokeRect(W - 100, 54, 94, H - 80)
-      x.font = '6px "Teko"'; x.fillStyle = G2 + '.4)'; x.fillText('EVT RECORD', W - 94, 68)
-      const rows = ['ID:EVT-03847', 'TYPE:MISSILE', 'SEV:CRITICAL', 'SIG:7 FUSED', 'ENT:4 LINKED', '', 'SIG-001:GOV', 'SIG-002:SNSR', 'SIG-003:NEWS', 'SIG-004:OSINT', '', 'ENT-A:IRGC', 'ENT-B:SHAHAB', 'ENT-C:TABRIZ']
+      // Inline event annotations — no floating panel, data lives in the circuit diagram
       x.font = '5px "Share Tech Mono"'
-      rows.forEach((row, i) => {
-        if (!row) return
-        const [k, v] = row.split(':')
-        x.fillStyle = G2 + '.2)'; x.fillText(k, W - 94, 80 + i * 13)
-        x.fillStyle = v === 'CRITICAL' ? AMB : G2 + '.45)'; x.fillText(v || '', W - 58, 80 + i * 13)
-      })
+      x.fillStyle = AMB;          x.fillText('EVT-03847', W * 0.60, H * 0.18)
+      x.fillStyle = AMB;          x.fillText('MISSILE / CRITICAL', W * 0.60, H * 0.28)
+      x.fillStyle = G2 + '.35)'; x.fillText('SIG:7 FUSED', W * 0.60, H * 0.38)
+      x.fillStyle = G2 + '.25)'; x.fillText('ENT:4 LINKED', W * 0.60, H * 0.48)
+      x.fillStyle = G2 + '.18)'; x.fillText('GOV·SNSR·NEWS·OSINT', W * 0.60, H * 0.58)
+      x.fillStyle = G2 + '.15)'; x.fillText('IRGC·SHAHAB·TABRIZ', W * 0.60, H * 0.68)
+      // Diagonal accent line — references the ul bay angled geometry
+      x.strokeStyle = G2 + '.12)'; x.lineWidth = 0.5; x.setLineDash([3, 7])
+      x.beginPath(); x.moveTo(W * 0.57, H * 0.12); x.lineTo(W * 0.82, H * 0.88); x.stroke()
+      x.setLineDash([])
       stamp(x, 4, H - 28, 'SYS:ESE-ARCH')
       rafId = requestAnimationFrame(draw)
     }

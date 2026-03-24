@@ -329,20 +329,13 @@ body::after {
   flex: 1;
   min-height: 0;
   position: relative;
-  display: grid;
-  /* Core spans the full center column across all 3 rows — PCB chip layout */
-  grid-template-areas:
-    "ul  core  ur"
-    "lm  core  rm"
-    "ll  core  lr";
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2.8fr) minmax(0, 1fr);
-  grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: 10px;
   background:
-    repeating-linear-gradient(0deg, transparent 0 15px, rgba(218,255,74,.038) 15px 16px),
-    repeating-linear-gradient(90deg, transparent 0 15px, rgba(218,255,74,.038) 15px 16px),
+    radial-gradient(circle at 50% 50%, rgba(218,255,74,.035), transparent 26%),
+    repeating-linear-gradient(0deg, transparent 0 78px, rgba(218,255,74,.008) 78px 79px),
+    repeating-linear-gradient(90deg, transparent 0 78px, rgba(218,255,74,.006) 78px 79px),
     #050700;
   overflow: hidden;
+  padding: 14px;
 }
 
 /* jp-panel aesthetic — outer structural border */
@@ -361,19 +354,19 @@ body::after {
   z-index: 1;
 }
 .console-circuit-ring.far {
-  width: clamp(400px, 46vw, 600px);
-  height: clamp(400px, 46vw, 600px);
-  border: 1px solid rgba(218,255,74,.032);
+  width: clamp(560px, 58vw, 820px);
+  height: clamp(560px, 58vw, 820px);
+  border: 1px solid rgba(218,255,74,.024);
 }
 .console-circuit-ring.outer {
-  width: clamp(310px, 35vw, 480px);
-  height: clamp(310px, 35vw, 480px);
-  border: 1px solid rgba(218,255,74,.065);
+  width: clamp(440px, 46vw, 640px);
+  height: clamp(440px, 46vw, 640px);
+  border: 1px solid rgba(218,255,74,.05);
 }
 .console-circuit-ring.inner {
-  width: clamp(200px, 25vw, 320px);
-  height: clamp(200px, 25vw, 320px);
-  border: 1px solid rgba(218,255,74,.12);
+  width: clamp(300px, 31vw, 430px);
+  height: clamp(300px, 31vw, 430px);
+  border: 1px solid rgba(218,255,74,.1);
 }
 
 /* SVG conductor trace overlay — behind sectors (z:1), traces visible only in gap channels */
@@ -387,61 +380,122 @@ body::after {
   overflow: visible;
 }
 .console-trace-line {
-  stroke: rgba(218,255,74,.38);
+  stroke: rgba(218,255,74,.28);
   stroke-width: 0.55;
   fill: none;
   stroke-linecap: square;
+  stroke-linejoin: bevel;
   vector-effect: non-scaling-stroke;
 }
 .console-trace-pad {
-  fill: rgba(218,255,74,.55);
+  fill: rgba(218,255,74,.4);
 }
 
 /* ── 6-sector PCB bay layout — left column (ul/lm/ll) + right column (ur/rm/lr) ── */
 
 /* Grid placement */
-.console-sector.ul { grid-area: ul; }
-.console-sector.lm { grid-area: lm; }
-.console-sector.ll { grid-area: ll; }
-.console-sector.ur { grid-area: ur; }
-.console-sector.rm { grid-area: rm; }
-.console-sector.lr { grid-area: lr; }
-
-/* Base sector — solid container with structural border */
 .console-sector {
   position: relative;
   overflow: hidden;
   z-index: 2;
   background: rgba(4,6,0,.96);
-  box-shadow: inset 0 0 0 1px rgba(218,255,74,.18);
+  box-shadow:
+    inset 0 0 0 1px rgba(218,255,74,.16);
+  min-height: 0;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.console-sector::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(218,255,74,.01), transparent 24%),
+    linear-gradient(90deg, transparent 0 18%, rgba(218,255,74,.012) 18% 18.1%, transparent 18.1% 100%);
+  opacity: .22;
+}
+.console-sector::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  pointer-events: none;
+  border: 1px solid rgba(218,255,74,.08);
+  clip-path: inherit;
+  opacity: .9;
 }
 
-/* Left column: chamfer right-side corner(s) facing the core */
 .console-sector.ul {
-  /* upper-left: chamfer bottom-right */
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 36px), calc(100% - 36px) 100%, 0 100%);
+  position: absolute;
+  left: 0;
+  top: 4%;
+  width: 41%;
+  height: 19%;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+  --body-left: 8px;
+  --body-right: 78px;
+  --body-top: 18px;
+  --body-bottom: 10px;
 }
 .console-sector.lm {
-  /* left-mid: chamfer top-right AND bottom-right (both core-facing corners) */
-  clip-path: polygon(0 0, calc(100% - 36px) 0, 100% 36px, 100% calc(100% - 36px), calc(100% - 36px) 100%, 0 100%);
+  position: absolute;
+  left: 0;
+  top: 24%;
+  width: 37%;
+  height: 28%;
+  clip-path: polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%);
+  --body-left: 8px;
+  --body-right: 72px;
+  --body-top: 18px;
+  --body-bottom: 10px;
 }
 .console-sector.ll {
-  /* lower-left: chamfer top-right */
-  clip-path: polygon(0 0, calc(100% - 36px) 0, 100% 36px, 100% 100%, 0 100%);
+  position: absolute;
+  left: 0;
+  top: 57%;
+  width: 44%;
+  height: 24%;
+  clip-path: polygon(0 0, 67% 0, 100% 48%, 84% 100%, 0 100%);
+  --body-left: 8px;
+  --body-right: 88px;
+  --body-top: 18px;
+  --body-bottom: 10px;
 }
 
-/* Right column: chamfer left-side corner(s) facing the core */
 .console-sector.ur {
-  /* upper-right: chamfer bottom-left */
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 36px 100%, 0 calc(100% - 36px));
+  position: absolute;
+  right: 0;
+  top: 4%;
+  width: 41%;
+  height: 19%;
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
+  --body-left: 78px;
+  --body-right: 8px;
+  --body-top: 18px;
+  --body-bottom: 10px;
 }
 .console-sector.rm {
-  /* right-mid: chamfer top-left AND bottom-left */
-  clip-path: polygon(36px 0, 100% 0, 100% 100%, 36px 100%, 0 calc(100% - 36px), 0 36px);
+  position: absolute;
+  right: 0;
+  top: 24%;
+  width: 37%;
+  height: 28%;
+  clip-path: polygon(22% 0, 100% 0, 100% 100%, 22% 100%, 0 50%);
+  --body-left: 72px;
+  --body-right: 8px;
+  --body-top: 18px;
+  --body-bottom: 10px;
 }
 .console-sector.lr {
-  /* lower-right: chamfer top-left */
-  clip-path: polygon(36px 0, 100% 0, 100% 100%, 0 100%, 0 36px);
+  position: absolute;
+  right: 0;
+  top: 57%;
+  width: 44%;
+  height: 24%;
+  clip-path: polygon(33% 0, 100% 0, 100% 100%, 16% 100%, 0 48%);
+  --body-left: 88px;
+  --body-right: 8px;
+  --body-top: 18px;
+  --body-bottom: 10px;
 }
 
 /* Phase A — sector bay placeholder (proves occupancy) */
@@ -454,6 +508,7 @@ body::after {
   height: 100%;
   gap: 10px;
   background:
+    radial-gradient(circle at 50% 50%, rgba(218,255,74,.05), transparent 35%),
     repeating-linear-gradient(0deg, transparent 0 31px, rgba(218,255,74,.018) 31px 32px),
     repeating-linear-gradient(90deg, transparent 0 31px, rgba(218,255,74,.018) 31px 32px),
     rgba(4,6,0,.98);
@@ -499,58 +554,158 @@ body::after {
 }
 
 /* Compact tile layout inside circuit sectors (Phase B use) */
-.console-sector .console-tile {
-  grid-template-rows: 22px minmax(0, 1fr) 16px;
+.console-sector-shell {
+  position: absolute;
+  inset: 0;
+  clip-path: inherit;
+  background:
+    linear-gradient(180deg, rgba(7,10,1,.98), rgba(3,5,0,.9)),
+    radial-gradient(circle at 50% 50%, rgba(218,255,74,.018), transparent 58%);
+  isolation: isolate;
 }
-.console-sector .console-tile-head,
-.console-sector .console-tile-foot {
-  padding: 0 7px;
+.console-sector-shell::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  pointer-events: none;
+  border: 1px solid rgba(218,255,74,.06);
+  clip-path: inherit;
+  z-index: 0;
+}
+.console-sector-kicker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: 4;
+  pointer-events: none;
+  gap: 4px;
+  font-size: 5px;
+  letter-spacing: .16em;
+  font-family: var(--HEAD);
+  text-transform: uppercase;
+  padding: 0 5px;
+  height: 10px;
+  background: rgba(5,7,0,.7);
+  border: 1px solid rgba(218,255,74,.08);
+}
+.console-sector-icon,
+.console-sector-title {
+  font-family: var(--HEAD);
+}
+.console-sector-title {
+  color: rgba(218,255,74,.7);
+}
+.console-sector-kicker.top-left { top: 8px; left: 8px; }
+.console-sector-kicker.top-right { top: 8px; right: 8px; }
+.console-sector-kicker.live { color: var(--g5); }
+.console-sector-kicker.stale { color: var(--warn); }
+.console-sector-kicker.offline { color: rgba(255,255,255,.35); }
+.console-sector-body {
+  position: absolute;
+  inset: var(--body-top, 18px) var(--body-right, 8px) var(--body-bottom, 10px) var(--body-left, 8px);
+  min-height: 0;
+  overflow: hidden;
+  z-index: 1;
+  clip-path: inset(0);
+}
+.console-sector-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(218,255,74,.012), transparent 18%),
+    repeating-linear-gradient(0deg, transparent 0 36px, rgba(218,255,74,.006) 36px 37px);
+  opacity: .18;
+  z-index: 2;
 }
 
-/* Central Mekhead core — octagonal die spanning full center column height */
+.console-sector-body > * {
+  position: absolute;
+  inset: 0;
+}
+
+.console-sector-stitch {
+  position: absolute;
+  top: 50%;
+  width: 56px;
+  height: 10px;
+  transform: translateY(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+.console-sector-stitch::before,
+.console-sector-stitch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.console-sector-stitch::before {
+  left: 0;
+  right: 12px;
+  height: 1px;
+  background: rgba(218,255,74,.18);
+}
+.console-sector-stitch::after {
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: rgba(218,255,74,.55);
+  transform: translateY(-50%) rotate(45deg);
+}
+.console-sector.ul .console-sector-stitch,
+.console-sector.lm .console-sector-stitch,
+.console-sector.ll .console-sector-stitch {
+  right: 12px;
+}
+.console-sector.ur .console-sector-stitch,
+.console-sector.rm .console-sector-stitch,
+.console-sector.lr .console-sector-stitch {
+  left: 12px;
+  transform: translateY(-50%) scaleX(-1);
+}
+
 .console-core-shell {
-  grid-area: core;
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 560px;
+  height: 500px;
+  transform: translate(-50%, -50%);
   z-index: 3;
-  background: #030500;
-  /* 40px cuts at all 8 corners */
-  clip-path: polygon(
-    40px 0%, calc(100% - 40px) 0%,
-    100% 40px, 100% calc(100% - 40px),
-    calc(100% - 40px) 100%, 40px 100%,
-    0% calc(100% - 40px), 0% 40px
-  );
-  box-shadow:
-    inset 0 0 0 1px var(--g5),
-    inset 0 0 0 3px rgba(218,255,74,.08),
-    inset 0 0 0 6px rgba(218,255,74,.03);
+  background: transparent;
+  box-shadow: none;
+  min-height: 0;
 }
 
 .console-core-label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 14px;
-  height: 26px;
-  min-height: 26px;
+  padding: 0 18px;
+  height: 22px;
+  min-height: 22px;
   border-bottom: 1px solid var(--g07);
   flex-shrink: 0;
   z-index: 4;
   position: relative;
-  background: rgba(3,5,0,.92);
+  background: transparent;
+  border-bottom: none;
 }
 .console-core-label .kicker {
   font-family: var(--MONO);
-  font-size: 7px;
+  font-size: 6px;
   letter-spacing: .18em;
   color: var(--g15);
   text-transform: uppercase;
 }
 .console-core-label .value {
   font-family: var(--HEAD);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: .42em;
   color: var(--g5);
@@ -558,27 +713,58 @@ body::after {
 }
 
 .console-core {
+  position: relative;
   flex: 1;
   min-height: 0;
-  position: relative;
+  clip-path: polygon(24% 6%, 76% 6%, 96% 50%, 76% 94%, 24% 94%, 4% 50%);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(218,255,74,.10), transparent 42%),
+    linear-gradient(180deg, rgba(8,10,2,.92), rgba(2,3,0,.98));
+  box-shadow:
+    inset 0 0 0 1px rgba(218,255,74,.35),
+    inset 0 0 0 10px rgba(218,255,74,.04);
+}
+.console-core::before,
+.console-core::after {
+  content: "";
+  position: absolute;
+  inset: 28px;
+  clip-path: inherit;
+  border: 1px solid rgba(218,255,74,.10);
+  pointer-events: none;
+}
+.console-core::after {
+  inset: 72px;
+  border-color: rgba(218,255,74,.18);
+}
+.console-core-viewport::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgba(218,255,74,.08);
+  clip-path: inherit;
+  pointer-events: none;
+  z-index: 20;
 }
 .console-core-viewport {
   position: absolute;
-  inset: 0;
+  inset: 8px;
   overflow: hidden;
+  clip-path: polygon(24% 6%, 76% 6%, 96% 50%, 76% 94%, 24% 94%, 4% 50%);
 }
 
-/* Aux support rail — 8-column lower band */
+/* Aux support rail — compact secondary band */
 .console-aux-grid {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 2px;
-  height: 132px;
+  height: 126px;
   flex-shrink: 0;
   border-top: 1px solid rgba(218,255,74,.06);
   background:
     repeating-linear-gradient(90deg, transparent 0 19px, rgba(218,255,74,.018) 19px 20px),
     var(--bg);
+  padding: 0 8%;
 }
 
 .console-aux-slot {
@@ -587,12 +773,75 @@ body::after {
   min-width: 0;
   background: #030500;
   box-shadow: inset 0 0 0 1px rgba(218,255,74,.08);
+  min-height: 0;
+}
+.console-aux-slot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(218,255,74,.01), transparent 44%);
+}
+.console-aux-slot::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  border: 1px solid rgba(218,255,74,.055);
 }
 
 .console-aux-empty {
   width: 100%;
   height: 100%;
   background: transparent;
+}
+.console-aux-slot > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.console-aux-slot .console-chart-shell {
+  grid-template-rows: 20px minmax(0, 1fr);
+}
+
+.console-aux-slot .console-chart-bar {
+  padding: 0 8px;
+}
+
+.console-aux-slot canvas {
+  display: block;
+}
+
+.console-sector:hover,
+.console-aux-slot:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 1px rgba(218,255,74,.28),
+    inset 0 0 0 24px rgba(218,255,74,.03);
+}
+
+@media (max-width: 1440px) {
+  .console-core-shell {
+    width: 500px;
+    height: 450px;
+  }
+
+  .console-sector.ul,
+  .console-sector.ur {
+    width: 39%;
+  }
+
+  .console-sector.lm,
+  .console-sector.rm {
+    width: 35%;
+  }
+
+  .console-sector.ll,
+  .console-sector.lr {
+    width: 41%;
+  }
 }
 
 /* ── END CONSOLE CIRCUIT SHELL ─────────────────────────────────────────────── */

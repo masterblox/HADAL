@@ -22,20 +22,20 @@ export function ReportsTile() {
 
       // Amber bar
       const cf = Math.sin(t * 2) > 0.6 ? 0.95 : 0.7
-      x.fillStyle = 'rgba(255,152,20,' + cf.toFixed(2) + ')'; x.fillRect(0, 48, W, 22)
-      x.fillStyle = BG; x.font = 'bold 11px "Teko"'; x.fillText('⚠ CLASSIFIED — INTELLIGENCE ASSESSMENT', 8, 64)
+      x.fillStyle = 'rgba(255,152,20,' + cf.toFixed(2) + ')'; x.fillRect(24, 48, W - 24, 22)
+      x.fillStyle = BG; x.font = 'bold 11px "Teko"'; x.fillText('⚠ CLASSIFIED — INTELLIGENCE ASSESSMENT', 32, 64)
       x.font = '8px "Teko"'; x.fillText('TS//SI//NOFORN', W - 84, 64)
 
       // Report content
-      x.fillStyle = 'rgba(5,7,0,.85)'; x.fillRect(10, 80, W - 20, H - 110)
-      x.strokeStyle = G2 + '.1)'; x.lineWidth = 1.5; x.strokeRect(10, 80, W - 20, H - 110)
-      x.fillStyle = G2 + '.2)'; x.fillRect(10, 80, W - 20, 3)
+      x.fillStyle = 'rgba(5,7,0,.85)'; x.fillRect(28, 80, W - 48, H - 110)
+      x.strokeStyle = G2 + '.1)'; x.lineWidth = 1.5; x.strokeRect(28, 80, W - 48, H - 110)
+      x.fillStyle = G2 + '.2)'; x.fillRect(28, 80, W - 48, 3)
 
-      x.font = '12px "Teko"'; x.fillStyle = G2 + '.5)'; x.fillText('HADAL INTELLIGENCE ASSESSMENT', 18, 100)
+      x.font = '12px "Teko"'; x.fillStyle = G2 + '.5)'; x.fillText('HADAL INTELLIGENCE ASSESSMENT', 32, 100)
       x.font = '6px "Share Tech Mono"'; x.fillStyle = G2 + '.2)'
-      x.fillText('SERIAL:HADAL-2026-0322-001', 18, 114)
-      const now = new Date(); x.fillText('DTG:' + now.toISOString().slice(0, 19).replace(/[-:T]/g, '') + 'Z', 18, 126)
-      x.fillStyle = G2 + '.06)'; x.fillRect(18, 132, W - 40, 1)
+      x.fillText('SERIAL:HADAL-2026-0322-001', 32, 114)
+      const now = new Date(); x.fillText('DTG:' + now.toISOString().slice(0, 19).replace(/[-:T]/g, '') + 'Z', 32, 126)
+      x.fillStyle = G2 + '.06)'; x.fillRect(32, 132, W - 64, 1)
 
       // Typewriter content
       const lines: { f: string; c: string; t2: string; y: number }[] = [
@@ -58,19 +58,19 @@ export function ReportsTile() {
       lines.forEach(line => {
         const vis = Math.min(line.t2.length, Math.max(0, charP - drawn)); drawn += line.t2.length
         if (vis <= 0) return
-        x.font = line.f; x.fillStyle = line.c; x.fillText(line.t2.slice(0, vis), 18, line.y)
+        x.font = line.f; x.fillStyle = line.c; x.fillText(line.t2.slice(0, vis), 32, line.y)
         if (vis < line.t2.length && vis > 0 && Math.sin(t * 6) > 0) {
           const tw = x.measureText(line.t2.slice(0, vis)).width
-          x.fillStyle = G; x.fillRect(18 + tw + 1, line.y - 6, 4, 8)
+          x.fillStyle = G; x.fillRect(32 + tw + 1, line.y - 6, 4, 8)
         }
       })
 
       // Amber footer
       const fb = Math.sin(t * 1.5) > 0.2
-      x.fillStyle = 'rgba(255,152,20,.05)'; x.fillRect(10, H - 38, W - 20, 16)
-      x.strokeStyle = 'rgba(255,152,20,.15)'; x.strokeRect(10, H - 38, W - 20, 16)
+      x.fillStyle = 'rgba(255,152,20,.05)'; x.fillRect(28, H - 38, W - 56, 16)
+      x.strokeStyle = 'rgba(255,152,20,.15)'; x.strokeRect(28, H - 38, W - 56, 16)
       x.font = '5px "Share Tech Mono"'; x.fillStyle = fb ? 'rgba(255,152,20,.45)' : 'rgba(255,152,20,.12)'
-      x.fillText('DISTRIBUTION: HADAL OPERATORS ONLY', 18, H - 28)
+      x.fillText('DISTRIBUTION: HADAL OPERATORS ONLY', 32, H - 28)
 
       stamp(x, 4, H - 28, 'SYS:REPORT-GEN')
       rafId = requestAnimationFrame(draw)

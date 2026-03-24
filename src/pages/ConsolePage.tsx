@@ -46,23 +46,23 @@ interface ConsolePageProps {
   prediction: PredictionResult | null
 }
 
-const STORAGE_KEY = 'hadal-console-layout-v4'
-/* Phase A: 6-bay PCB layout
-   Grid: 1fr 2.8fr 1fr × 3 rows, gap 10px
-   Gap centers: x≈21% (left), x≈79% (right)
-   Row midpoints: y≈16.7%, 50%, 83.3%
-   Traces: horizontal from sector into gap channel */
-const TRACE_LINES: [number, number, number, number][] = [
-  [0, 16.7, 21, 16.7],  // UL → core
-  [0, 50,   21, 50  ],  // LM → core
-  [0, 83.3, 21, 83.3],  // LL → core
-  [100, 16.7, 79, 16.7], // UR → core
-  [100, 50,   79, 50  ], // RM → core
-  [100, 83.3, 79, 83.3], // LR → core
-]
+const STORAGE_KEY = 'hadal-console-layout-v5'
+const TRACE_PATHS = [
+  '0,16 18,16 31,29',
+  '0,50 24,50 34,50',
+  '0,84 18,84 31,71',
+  '100,16 82,16 69,29',
+  '100,50 76,50 66,50',
+  '100,84 82,84 69,71',
+] as const
+
 const BOND_PADS: [number, number][] = [
-  [21, 16.7], [21, 50], [21, 83.3],
-  [79, 16.7], [79, 50], [79, 83.3],
+  [18, 16], [31, 29],
+  [24, 50], [34, 50],
+  [18, 84], [31, 71],
+  [82, 16], [69, 29],
+  [76, 50], [66, 50],
+  [82, 84], [69, 71],
 ]
 
 const SECTOR_BAYS = [
@@ -73,6 +73,22 @@ const SECTOR_BAYS = [
   { key: 'rm', id: 'E', label: 'RIGHT MID'   },
   { key: 'lr', id: 'F', label: 'LOWER RIGHT' },
 ] as const
+
+const LOCKED_SECTOR_ORDER: ConsoleTileId[] = [
+  'threat-signal',
+  'argus',
+  'verification',
+  'chatter',
+  'ignite',
+  'reports',
+]
+
+const LOCKED_AUX_ORDER: ConsoleTileId[] = [
+  'event-timeline',
+  'geographic-concentration',
+  'type-profile',
+  'feed-quality',
+]
 
 interface StoredLayoutState {
   presetId: string
@@ -121,6 +137,28 @@ function loadInitialState(): StoredLayoutState {
   }
 }
 
+function renderSectorTile(
+  tileId: ConsoleTileId,
+  renderTile: (tileId: ConsoleTileId) => React.ReactNode,
+) {
+  const meta = TILE_META[tileId]
+  return (
+    <section className="console-sector-shell">
+      <div className="console-sector-kicker top-left">
+        <span className="console-sector-icon">{meta.icon}</span>
+        <span className="console-sector-title">{meta.title}</span>
+      </div>
+      <div className={`console-sector-kicker top-right ${meta.status ?? 'live'}`}>
+        {(meta.status ?? 'live').toUpperCase()}
+      </div>
+      <div className="console-sector-stitch" aria-hidden="true" />
+      <div className="console-sector-body">
+        {renderTile(tileId)}
+      </div>
+    </section>
+  )
+}
+
 export function ConsolePage({
   sandbox,
   onSandboxToggle,
@@ -139,6 +177,9 @@ export function ConsolePage({
     if (custom) return 'CUSTOM'
     return CONSOLE_PRESETS.find(preset => preset.id === presetId)?.label ?? DEFAULT_CONSOLE_PRESET.label
   }, [custom, presetId])
+
+  const effectivePresetId = sandbox ? presetId : DEFAULT_CONSOLE_PRESET.id
+  const effectivePresetLabel = sandbox ? presetLabel : DEFAULT_CONSOLE_PRESET.label
 
   const placedTiles = new Set(slots.filter(Boolean) as ConsoleTileId[])
 
@@ -173,6 +214,9 @@ export function ConsolePage({
     icon: TILE_META[id].icon,
     placed: placedTiles.has(id),
   }))
+
+  const sectorTiles = LOCKED_SECTOR_ORDER
+  const auxTiles = LOCKED_AUX_ORDER
 
   function renderTile(tileId: ConsoleTileId) {
     switch (tileId) {
@@ -233,16 +277,14 @@ export function ConsolePage({
     }
   }
 
-  /* Phase B: wire sector bays to real tiles via renderTile + ConsoleTile */
-
   return (
     <div className="console-page">
       <ConsoleToolbar
         editMode={sandbox}
-        presetLabel={presetLabel}
-        presetId={presetId}
-        custom={custom}
-        onPresetChange={applyPreset}
+        presetLabel={effectivePresetLabel}
+        presetId={effectivePresetId}
+        custom={sandbox ? custom : false}
+        onPresetChange={sandbox ? applyPreset : () => {}}
         onEditToggle={() => {
           setPickerIndex(null)
           onSandboxToggle()
@@ -292,26 +334,40 @@ export function ConsolePage({
               preserveAspectRatio="none"
               aria-hidden="true"
             >
-              {TRACE_LINES.map(([x1, y1, x2, y2], i) => (
-                <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} className="console-trace-line" />
+              {TRACE_PATHS.map((points, i) => (
+                <polyline key={i} points={points} className="console-trace-line" />
               ))}
               {BOND_PADS.map(([cx, cy], i) => (
-                <circle key={i} cx={cx} cy={cy} r="1.8" className="console-trace-pad" />
+                <rect
+                  key={i}
+                  x={cx - 1.8}
+                  y={cy - 1.8}
+                  width="3.6"
+                  height="3.6"
+                  rx="0"
+                  ry="0"
+                  transform={`rotate(45 ${cx} ${cy})`}
+                  className="console-trace-pad"
+                />
               ))}
             </svg>
 
-            {/* 6 sector bays — Phase A: placeholder occupancy */}
-            {SECTOR_BAYS.map(({ key, id, label }) => (
+            {/* 6 loaded sector bays */}
+            {SECTOR_BAYS.map(({ key, id, label }, index) => (
               <div key={key} className={`console-sector ${key}`}>
-                <div className="console-bay-placeholder">
-                  <div className="console-bay-crosshair" aria-hidden="true" />
-                  <span className="console-bay-id">{id}</span>
-                  <span className="console-bay-label">{label}</span>
-                </div>
+                {sectorTiles[index]
+                  ? renderSectorTile(sectorTiles[index], renderTile)
+                  : (
+                    <div className="console-bay-placeholder">
+                      <div className="console-bay-crosshair" aria-hidden="true" />
+                      <span className="console-bay-id">{id}</span>
+                      <span className="console-bay-label">{label}</span>
+                    </div>
+                  )}
               </div>
             ))}
 
-            {/* Mekhead — persistent archive nucleus, spans full center column */}
+            {/* Mekhead — persistent archive nucleus */}
             <div className="console-core-shell">
               <div className="console-core-label">
                 <span className="kicker">ARCHIVE CORE // PERSISTENT</span>
@@ -325,11 +381,13 @@ export function ConsolePage({
             </div>
           </div>
 
-          {/* Lower support rail — secondary, 8 stubs */}
+          {/* Lower support rail — secondary */}
           <div className="console-aux-grid">
-            {Array.from({ length: 8 }, (_, i) => (
+            {Array.from({ length: 4 }, (_, i) => (
               <div key={i} className="console-aux-slot">
-                <div className="console-aux-empty" />
+                {auxTiles[i]
+                  ? renderTile(auxTiles[i])
+                  : <div className="console-aux-empty" />}
               </div>
             ))}
           </div>

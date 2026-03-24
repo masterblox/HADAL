@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { G, G2, AMB, PI, TAU, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { G, G2, PI, TAU, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
 
 export function ConfidenceTile() {
   const ref = useRef<HTMLCanvasElement>(null)

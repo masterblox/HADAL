@@ -104,7 +104,7 @@ export function MekheadTile() {
       if (Math.random() > 0.78) {
         const gy = Math.floor(Math.random() * H), gh = 3 + Math.floor(Math.random() * 12)
         const gshift = Math.floor(Math.random() * 16) - 8
-        try { const slice = x.getImageData(0, gy * DPR, cv.width, gh * DPR); x.putImageData(slice, gshift * DPR, gy * DPR) } catch (_) {}
+        try { const slice = x.getImageData(0, gy * DPR, cv!.width, gh * DPR); x.putImageData(slice, gshift * DPR, gy * DPR) } catch (_) {}
       }
 
       // Reticle

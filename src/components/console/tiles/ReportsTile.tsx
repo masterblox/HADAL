@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { G, G2, AMB, BG, stamp, hdSetup } from '@/canvas/canvasKit'
+import { G, G2, BG, stamp, hdSetup } from '@/canvas/canvasKit'
 
 export function ReportsTile() {
   const ref = useRef<HTMLCanvasElement>(null)

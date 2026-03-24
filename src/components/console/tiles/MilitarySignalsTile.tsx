@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-const G = '#DAFF4A'
 const G2 = 'rgba(218,255,74,'
-const AMB = '#FF9814'
 
 const chs = [
   { l: 'HF/COMINT', t: 'wave' },

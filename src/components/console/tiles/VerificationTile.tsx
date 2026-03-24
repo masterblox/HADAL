@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { G, G2, AMB, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { G, G2, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
 
 export function VerificationTile() {
   const ref = useRef<HTMLCanvasElement>(null)

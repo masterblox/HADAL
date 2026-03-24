@@ -66,10 +66,10 @@ export const CONSOLE_PRESETS: ConsoleLayoutPreset[] = [
     id: 'capability-board',
     label: 'CAPABILITY BOARD',
     slots: [
-      'threat-signal', 'confidence',   'verification',  'feed-quality',
-      'airspace',      'theatre-exchange', 'satellite', 'military-signals',
-      'globe',         'scenario-outlook', 'intelligence', 'mekhead',
-      'reports',       'chatter',       'kinetic-data',  'threat-feed',
+      'threat-signal', 'argus',          'verification',      'feed-quality',
+      'airspace',      'ignite',          'chatter',           'skyline',
+      'globe',         'scenario-outlook','chronos',           'mekhead',
+      'reports',       null,              'kinetic-data',      'threat-feed',
     ],
   },
   {

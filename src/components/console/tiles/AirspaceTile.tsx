@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { G, G2, AMB, BG, PI, TAU, stamp, hdSetup } from '@/canvas/canvasKit'
+import { G2, AMB, BG, PI, stamp, hdSetup } from '@/canvas/canvasKit'
 
 export function AirspaceTile() {
   const ref = useRef<HTMLCanvasElement>(null)

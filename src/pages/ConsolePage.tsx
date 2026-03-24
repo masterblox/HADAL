@@ -98,11 +98,8 @@ function loadInitialState(): StoredLayoutState {
 export function ConsolePage({
   sandbox,
   onSandboxToggle,
-  threatLevel,
-  pipelineStatus,
   incidents,
   prices,
-  airspace,
   prediction,
 }: ConsolePageProps) {
   const [{ presetId, slots, custom }, setLayout] = useState<StoredLayoutState>(loadInitialState)
@@ -154,13 +151,7 @@ export function ConsolePage({
   function renderTile(tileId: ConsoleTileId) {
     switch (tileId) {
       case 'threat-signal':
-        return (
-          <ThreatSignalTile
-            threatLevel={threatLevel}
-            pipelineStatus={pipelineStatus}
-            incidents={incidents}
-          />
-        )
+        return <ThreatSignalTile />
       case 'globe':
         return <GlobeTile />
       case 'market-impact':

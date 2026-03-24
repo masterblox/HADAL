@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { G, G2, AMB, BG, PI, stamp, hdSetup } from '@/canvas/canvasKit'
+import { G, G2, AMB, PI, stamp, hdSetup } from '@/canvas/canvasKit'
 
 export function ScenarioOutlookTile() {
   const ref = useRef<HTMLCanvasElement>(null)

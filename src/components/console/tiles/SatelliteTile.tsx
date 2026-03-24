@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { G, G2, PI, TAU, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { G, G2, PI, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
 
 const art = [
   '         ▓▓         ',

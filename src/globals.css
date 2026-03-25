@@ -399,136 +399,56 @@ body::after {
 }
 
 .overview-hero-shell {
-  flex: 1;
-  min-height: 0;
+  /* flex: none overrides flex: 1 from .console-circuit-shell — prevents flex-basis: 0%
+     from collapsing the shell when the terminal ancestor has no explicit height.
+     Without this, the unconstrained terminal causes height: 100% to be ignored. */
+  flex: none;
   height: 100%;
   min-height: 720px;
   gap: 8px;
   position: relative;
-  transition: opacity 180ms ease, filter 180ms ease;
   background:
     linear-gradient(180deg, rgba(5,8,0,.98), rgba(3,5,0,.96)),
     #050700;
-}
-
-.overview-hero-shell.is-loading .console-circuit-ring,
-.overview-hero-shell.is-loading .console-trace-svg,
-.overview-hero-shell.is-loading .console-sector-stitch,
-.overview-hero-shell.is-loading .console-aux-grid {
-  opacity: 0;
-}
-
-.overview-hero-shell.is-loading .console-sector::before,
-.overview-hero-shell.is-loading .console-sector-body::before,
-.overview-hero-shell.is-loading .console-sector-kicker {
-  opacity: 0.16;
-}
-
-.overview-hero-shell.is-loading .console-sector-shell {
-  background: rgba(3, 5, 0, 0.92);
-  box-shadow: inset 0 0 0 1px rgba(218,255,74,.05);
-}
-
-.overview-hero-shell.is-loading .console-core {
-  background:
-    linear-gradient(180deg, rgba(4,6,0,.94), rgba(2,3,0,.98));
-}
-
-.overview-hero-shell.is-loading .console-core-viewport::after {
-  content: "";
-  position: absolute;
-  inset: 18px;
-  background:
-    linear-gradient(180deg, rgba(10, 16, 2, 0.12), rgba(4, 6, 0, 0.24)),
-    url('/mekhead-frames/C00.jpg') center 38% / cover no-repeat;
-  filter: grayscale(1) brightness(0.9) contrast(1.24) sepia(0.85) hue-rotate(50deg) saturate(2.1);
-  mix-blend-mode: screen;
-  opacity: .72;
-  clip-path: inherit;
-  pointer-events: none;
-  z-index: 3;
-  transition: opacity 180ms ease;
-}
-
-.overview-hero-shell.is-loading .console-core::before,
-.overview-hero-shell.is-loading .console-core::after,
-.overview-hero-shell.is-loading .console-core-viewport::before,
-.overview-hero-shell.is-loading .console-core-label {
-  opacity: .34;
-}
-
-.overview-hero-shell.is-ready .console-circuit-ring,
-.overview-hero-shell.is-ready .console-trace-svg,
-.overview-hero-shell.is-ready .console-sector-stitch,
-.overview-hero-shell.is-ready .console-aux-grid,
-.overview-hero-shell.is-ready .console-core::before,
-.overview-hero-shell.is-ready .console-core::after,
-.overview-hero-shell.is-ready .console-core-viewport::before,
-.overview-hero-shell.is-ready .console-core-label {
-  opacity: 1;
-}
-
-.overview-hero-shell.is-ready .console-core-viewport::after {
-  opacity: 0;
 }
 
 .overview-hero-shell .console-circuit-main {
   flex: 1;
   min-height: 0;
   padding: 12px 14px 8px;
-  background:
-    radial-gradient(circle at 50% 42%, rgba(218,255,74,.024), transparent 28%),
-    repeating-linear-gradient(0deg, transparent 0 96px, rgba(218,255,74,.005) 96px 97px),
-    repeating-linear-gradient(90deg, transparent 0 96px, rgba(218,255,74,.004) 96px 97px),
-    #050700;
+  background: #030500;
+}
+
+/* Unified sector depth — solid dark fill, single strong outer border, suppressed face noise */
+.overview-hero-shell .console-sector {
+  background: rgba(3,5,0,.98);
+  box-shadow: inset 0 0 0 1px rgba(218,255,74,.22);
 }
 
 .overview-hero-shell .console-sector::before {
-  opacity: .1;
+  opacity: 0;
+}
+
+.overview-hero-shell .console-sector::after {
+  border-color: rgba(218,255,74,.10);
+}
+
+.overview-hero-shell .console-sector-shell {
+  background: rgba(3,5,0,.97);
 }
 
 .overview-hero-shell .console-sector-body::before {
-  opacity: .08;
+  opacity: 0;
 }
 
-.overview-hero-shell .console-circuit-ring.far {
-  width: clamp(620px, 60vw, 900px);
-  height: clamp(620px, 60vw, 900px);
+/* Lower rail matches sector depth family */
+.overview-hero-shell .console-aux-slot {
+  background: rgba(3,5,0,.98);
+  box-shadow: inset 0 0 0 1px rgba(218,255,74,.22);
 }
 
-.overview-hero-shell .console-circuit-ring.outer {
-  width: clamp(500px, 48vw, 720px);
-  height: clamp(500px, 48vw, 720px);
-}
-
-.overview-hero-shell .console-circuit-ring.inner {
-  width: clamp(340px, 33vw, 470px);
-  height: clamp(340px, 33vw, 470px);
-}
-
-.overview-hero-shell .console-trace-line {
-  stroke: rgba(218,255,74,.2);
-  transition: opacity 180ms ease;
-}
-
-.overview-hero-shell .console-trace-pad {
-  fill: rgba(218,255,74,.3);
-  transition: opacity 180ms ease;
-}
-
-.overview-hero-shell .console-sector-stitch {
-  opacity: .28;
-  transition: opacity 180ms ease;
-}
-
-.overview-hero-shell .console-sector-stitch::before {
-  background: rgba(218,255,74,.08);
-}
-
-.overview-hero-shell .console-sector-stitch::after {
-  width: 6px;
-  height: 6px;
-  background: rgba(218,255,74,.18);
+.overview-hero-shell .console-aux-slot::after {
+  border-color: rgba(218,255,74,.10);
 }
 
 .overview-hero-shell .console-core-shell {
@@ -563,7 +483,6 @@ body::after {
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
-  transition: opacity 180ms ease;
 }
 .console-circuit-ring.far {
   width: clamp(560px, 58vw, 820px);
@@ -907,7 +826,6 @@ body::after {
   position: relative;
   background: transparent;
   border-bottom: none;
-  transition: opacity 180ms ease;
 }
 .console-core-label .kicker {
   font-family: var(--MONO);
@@ -958,7 +876,6 @@ body::after {
   clip-path: inherit;
   pointer-events: none;
   z-index: 20;
-  transition: opacity 180ms ease;
 }
 .console-core-viewport {
   position: absolute;
@@ -979,7 +896,6 @@ body::after {
     repeating-linear-gradient(90deg, transparent 0 19px, rgba(218,255,74,.018) 19px 20px),
     var(--bg);
   padding: 0 8%;
-  transition: opacity 180ms ease;
 }
 
 .overview-hero-shell .console-aux-grid {

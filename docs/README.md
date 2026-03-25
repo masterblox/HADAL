@@ -13,6 +13,7 @@ This directory holds the non-runtime project documents for HADAL.
 - [HADAL_BLUEPRINT.md](architecture/HADAL_BLUEPRINT.md) — 7-layer pipeline stack
 - [HADAL_REPURPOSING_BLUEPRINT.md](architecture/HADAL_REPURPOSING_BLUEPRINT.md) — repurposing plan
 - [HADAL_EXTRACTION_PLAN.md](architecture/HADAL_EXTRACTION_PLAN.md) — extraction plan
+- [HADAL_PALANTIR_PATTERN_DIGEST.md](architecture/HADAL_PALANTIR_PATTERN_DIGEST.md) — institutional architecture patterns mapped onto HADAL lanes
 
 ## Reference
 

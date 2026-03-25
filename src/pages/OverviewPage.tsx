@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { ThreatSignalTile } from '@/components/console/tiles/ThreatSignalTile'
 import { VerificationTile } from '@/components/console/tiles/VerificationTile'
 import { ReportsTile } from '@/components/console/tiles/ReportsTile'
@@ -11,24 +10,6 @@ import {
 } from '@/components/console/tiles/AnalysisChartTiles'
 import { MekheadTile } from '@/components/console/tiles/MekheadTile'
 import type { PipelineHealth, PriceData, AirspaceData, Incident } from '@/hooks/useDataPipeline'
-
-const TRACE_PATHS = [
-  '0,16 18,16 31,29',
-  '0,50 24,50 34,50',
-  '0,84 18,84 31,71',
-  '100,16 82,16 69,29',
-  '100,50 76,50 66,50',
-  '100,84 82,84 69,71',
-] as const
-
-const BOND_PADS: [number, number][] = [
-  [18, 16], [31, 29],
-  [24, 50], [34, 50],
-  [18, 84], [31, 71],
-  [82, 16], [69, 29],
-  [76, 50], [66, 50],
-  [82, 84], [69, 71],
-]
 
 const OVERVIEW_BAYS = [
   { key: 'ul', title: 'THREAT SIGNAL', status: 'live' as const },
@@ -68,35 +49,10 @@ function renderOverviewBay(key: (typeof OVERVIEW_BAYS)[number]['key'], incidents
 }
 
 export function OverviewPage({ incidents }: OverviewPageProps) {
-  const [mekheadReady, setMekheadReady] = useState(false)
-
   return (
     <div className="overview-page">
-      <div className={`console-circuit-shell overview-hero-shell${mekheadReady ? ' is-ready' : ' is-loading'}`}>
+      <div className="console-circuit-shell overview-hero-shell">
         <div className="console-circuit-main jp-panel">
-          <div className="console-circuit-ring far" aria-hidden="true" />
-          <div className="console-circuit-ring outer" aria-hidden="true" />
-          <div className="console-circuit-ring inner" aria-hidden="true" />
-
-          <svg className="console-trace-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            {TRACE_PATHS.map((points, i) => (
-              <polyline key={i} points={points} className="console-trace-line" />
-            ))}
-            {BOND_PADS.map(([cx, cy], i) => (
-              <rect
-                key={i}
-                x={cx - 1.8}
-                y={cy - 1.8}
-                width="3.6"
-                height="3.6"
-                rx="0"
-                ry="0"
-                transform={`rotate(45 ${cx} ${cy})`}
-                className="console-trace-pad"
-              />
-            ))}
-          </svg>
-
           {OVERVIEW_BAYS.map(bay => (
             <div key={bay.key} className={`console-sector ${bay.key}`}>
               <section className="console-sector-shell">
@@ -106,7 +62,6 @@ export function OverviewPage({ incidents }: OverviewPageProps) {
                 <div className={`console-sector-kicker top-right ${bay.status}`}>
                   {bay.status.toUpperCase()}
                 </div>
-                <div className="console-sector-stitch" aria-hidden="true" />
                 <div className="console-sector-body">
                   {renderOverviewBay(bay.key, incidents)}
                 </div>
@@ -121,7 +76,7 @@ export function OverviewPage({ incidents }: OverviewPageProps) {
             </div>
             <div className="console-core">
               <div className="console-core-viewport">
-                <MekheadTile onReady={() => setMekheadReady(true)} />
+                <MekheadTile />
               </div>
             </div>
           </div>

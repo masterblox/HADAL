@@ -53,6 +53,10 @@ dist/
 # Local config
 .env
 .env.local
+.agents/
+.claude/
+.worktrees/
+.session-note.txt
 .vercel
 _local/
 hadal_inspiration/

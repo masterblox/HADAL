@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HADAL Explorer Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --g: #c8ff1a;
+      --g4: rgba(200,255,26,.34);
+      --a: rgba(255,153,26,.78);
+      --a2: rgba(255,153,26,.24);
+      --t: rgba(52,255,220,.88);
+      --bg: #020301;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--g); font-family: "Share Tech Mono", monospace; }
+    .scene {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,153,26,.08), transparent 20%),
+        #020301;
+    }
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, transparent 40%, rgba(0,0,0,.55) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: .08;
+      pointer-events: none;
+    }
+    .wrap {
+      position: absolute;
+      inset: 24px;
+      border: 1px solid rgba(255,153,26,.16);
+      overflow: hidden;
+    }
+    .title {
+      position: absolute;
+      top: 22px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      justify-content: space-between;
+      font: 700 12px/1 "Rajdhani", sans-serif;
+      letter-spacing: .24em;
+      color: var(--a);
+      text-transform: uppercase;
+    }
+    .globe {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 540px;
+      height: 540px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba(255,153,26,.24);
+      box-shadow: inset 0 0 80px rgba(255,153,26,.1), 0 0 40px rgba(255,153,26,.06);
+      overflow: hidden;
+    }
+    .globe::before {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 34%, rgba(255,153,26,.5), transparent 8%),
+        radial-gradient(circle at 58% 42%, rgba(255,153,26,.48), transparent 7%),
+        radial-gradient(circle at 44% 60%, rgba(255,153,26,.42), transparent 9%);
+    }
+    .hex-layer {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, transparent 0 160px, rgba(255,153,26,.2) 160px 161px, transparent 161px 100%);
+    }
+    .hex-layer svg {
+      width: 100%;
+      height: 100%;
+      opacity: .72;
+      filter: drop-shadow(0 0 6px rgba(255,153,26,.16));
+    }
+    .orbit {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,153,26,.12);
+    }
+    .orbit.o1 { width: 620px; height: 620px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .orbit.o2 { width: 760px; height: 760px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .dash {
+      position: absolute;
+      width: 26px;
+      height: 8px;
+      background: var(--g);
+      box-shadow: 0 0 10px rgba(200,255,26,.2);
+      border-radius: 4px;
+    }
+    .dash.d1 { left: 36%; top: 40%; transform: rotate(24deg); }
+    .dash.d2 { left: 62%; top: 30%; transform: rotate(-18deg); }
+    .dash.d3 { left: 68%; top: 58%; transform: rotate(56deg); }
+    .dash.d4 { left: 30%; top: 58%; transform: rotate(-60deg); }
+    .panel {
+      position: absolute;
+      border: 1px solid rgba(255,153,26,.16);
+      background: rgba(5,6,2,.7);
+      padding: 12px;
+    }
+    .panel.wave { left: 28px; top: 78px; width: 190px; height: 88px; color: var(--a); }
+    .panel.mesh { right: 24px; top: 180px; width: 280px; height: 240px; color: var(--t); }
+    .panel.count { left: 44px; bottom: 120px; width: 160px; height: 160px; color: var(--t); }
+    .panel-label {
+      font: 700 10px/1 "Rajdhani", sans-serif;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .count-num {
+      font: 700 64px/.8 "Rajdhani", sans-serif;
+      letter-spacing: .04em;
+      margin-top: 22px;
+    }
+    .mesh-mini {
+      position: absolute;
+      width: 86px;
+      height: 60px;
+      border-top: 1px solid currentColor;
+      border-left: 1px solid currentColor;
+      transform: perspective(220px) rotateX(66deg);
+      opacity: .8;
+    }
+    .mesh-mini.m1 { left: 14px; top: 74px; }
+    .mesh-mini.m2 { left: 108px; top: 54px; }
+    .mesh-mini.m3 { left: 170px; top: 96px; }
+    .mesh-mini.m4 { left: 70px; top: 138px; }
+    .mesh-mini::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(currentColor 1px, transparent 1px),
+        linear-gradient(90deg, currentColor 1px, transparent 1px);
+      background-size: 16px 16px;
+      opacity: .7;
+    }
+    .hex-icon {
+      position: absolute;
+      width: 92px;
+      height: 92px;
+      border: 2px solid var(--a);
+      clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+      opacity: .8;
+    }
+    .hex-icon.h1 { right: 70px; top: 24px; }
+    .hex-icon.h2 { right: 108px; bottom: 34px; }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="wrap">
+      <div class="title">
+        <span>Explorer / Orbital Probe Study</span>
+        <span>Hex Shielding / Telemetry Islands</span>
+      </div>
+      <div class="orbit o1"></div>
+      <div class="orbit o2"></div>
+      <div class="globe">
+        <div class="hex-layer">
+          <svg viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg" fill="none">
+            <defs>
+              <pattern id="hex" width="34" height="30" patternUnits="userSpaceOnUse">
+                <path d="M8 1H24L32 15L24 29H8L0 15Z" stroke="rgba(255,153,26,.72)" stroke-width="1.6"/>
+              </pattern>
+            </defs>
+            <circle cx="270" cy="270" r="248" fill="url(#hex)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="dash d1"></div>
+      <div class="dash d2"></div>
+      <div class="dash d3"></div>
+      <div class="dash d4"></div>
+
+      <div class="panel wave">
+        <div class="panel-label">Systems</div>
+        <svg viewBox="0 0 160 46" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <path d="M0 24C18 24 18 18 36 18C54 18 56 34 72 34C92 34 88 10 112 10C134 10 136 26 160 26" stroke="rgba(52,255,220,.9)" stroke-width="2"/>
+          <path d="M0 20C16 20 22 30 38 30C54 30 60 12 78 12C98 12 100 34 118 34C136 34 144 20 160 20" stroke="rgba(255,153,26,.7)" stroke-width="1.6"/>
+        </svg>
+      </div>
+
+      <div class="panel mesh">
+        <div class="panel-label">Field Mesh</div>
+        <div class="mesh-mini m1"></div>
+        <div class="mesh-mini m2"></div>
+        <div class="mesh-mini m3"></div>
+        <div class="mesh-mini m4"></div>
+      </div>
+
+      <div class="panel count">
+        <div class="panel-label">Nodes</div>
+        <div class="count-num">53</div>
+        <div class="count-num" style="font-size:54px; opacity:.84;">53</div>
+      </div>
+
+      <div class="hex-icon h1"></div>
+      <div class="hex-icon h2"></div>
+    </div>
+  </div>
+</body>
+</html>

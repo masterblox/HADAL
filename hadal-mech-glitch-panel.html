@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HADAL Mech Glitch Panel</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Teko:wght@400;600;700&display=swap');
+
+      :root {
+        --bg: #060800;
+        --g: #DAFF4A;
+        --ga: rgba(218, 255, 74, %a);
+        --amb: #FF9814;
+        --grid-c: rgba(218, 255, 74, 0.04);
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0 }
+
+      html, body {
+        min-height: 100%;
+        background: var(--bg);
+        font-family: 'Share Tech Mono', monospace;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      /* ── Tile container ── */
+      .tile {
+        position: relative;
+        width: min(88vw, 720px);
+        aspect-ratio: 0.72;
+        background: #080a02;
+        border: 1px solid rgba(218, 255, 74, 0.12);
+        overflow: hidden;
+      }
+
+      /* Outer grid pattern */
+      .tile::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--grid-c) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-c) 1px, transparent 1px);
+        background-size: 32px 32px;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* ── Inner frame — inset border ── */
+      .inner-frame {
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(218, 255, 74, 0.08);
+        z-index: 1;
+        pointer-events: none;
+      }
+      .inner-frame::before {
+        content: '';
+        position: absolute;
+        top: -1px; left: -1px;
+        width: 16px; height: 16px;
+        border-top: 2px solid rgba(218, 255, 74, 0.3);
+        border-left: 2px solid rgba(218, 255, 74, 0.3);
+      }
+      .inner-frame::after {
+        content: '';
+        position: absolute;
+        bottom: -1px; right: -1px;
+        width: 16px; height: 16px;
+        border-bottom: 2px solid rgba(218, 255, 74, 0.3);
+        border-right: 2px solid rgba(218, 255, 74, 0.3);
+      }
+
+      /* ── Image viewport ── */
+      .img-viewport {
+        position: absolute;
+        inset: 28px 28px 44px 28px;
+        overflow: hidden;
+        z-index: 2;
+      }
+
+      /* Base image — green channel remap */
+      .base {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 38%;
+        user-select: none;
+        -webkit-user-drag: none;
+        filter:
+          grayscale(1)
+          brightness(0.68)
+          contrast(1.35);
+      }
+
+      /* Green channel overlay — screen blend for HADAL tint */
+      .green-map {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg,
+            rgba(218, 255, 74, 0.22) 0%,
+            rgba(140, 190, 30, 0.18) 40%,
+            rgba(80, 120, 10, 0.25) 100%
+          );
+        mix-blend-mode: color;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* Second tint pass — screen for highlight push */
+      .green-screen {
+        position: absolute;
+        inset: 0;
+        background: rgba(180, 230, 50, 0.08);
+        mix-blend-mode: screen;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* Vignette / edge darken */
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 80% 70% at 50% 45%,
+          transparent 40%,
+          rgba(6, 8, 0, 0.65) 100%
+        );
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      /* Scanline degradation */
+      .scanlines {
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.08) 2px,
+          rgba(0, 0, 0, 0.08) 4px
+        );
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      /* ── Glitch slice — displaced strip ── */
+      .glitch-slice {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 38%;
+        user-select: none;
+        -webkit-user-drag: none;
+        filter:
+          grayscale(1)
+          brightness(0.85)
+          contrast(1.5);
+        clip-path: polygon(
+          0% 8.5%,
+          12% 8.2%,
+          18% 9.1%,
+          26% 8.4%,
+          35% 9.3%,
+          42% 8.6%,
+          50% 9.0%,
+          58% 8.3%,
+          67% 9.2%,
+          74% 8.7%,
+          82% 9.4%,
+          90% 8.5%,
+          100% 9.1%,
+          100% 14.8%,
+          88% 15.2%,
+          78% 14.6%,
+          70% 15.4%,
+          62% 14.9%,
+          52% 15.3%,
+          44% 14.7%,
+          36% 15.1%,
+          28% 14.5%,
+          18% 15.2%,
+          8% 14.8%,
+          0% 15.1%
+        );
+        transform: translateX(6px);
+        z-index: 5;
+        opacity: 0.88;
+      }
+
+      /* Glitch tint on displaced slice */
+      .glitch-tint {
+        position: absolute;
+        inset: 0;
+        background: rgba(218, 255, 74, 0.15);
+        mix-blend-mode: color;
+        clip-path: polygon(
+          0% 8.5%,
+          12% 8.2%,
+          18% 9.1%,
+          26% 8.4%,
+          35% 9.3%,
+          42% 8.6%,
+          50% 9.0%,
+          58% 8.3%,
+          67% 9.2%,
+          74% 8.7%,
+          82% 9.4%,
+          90% 8.5%,
+          100% 9.1%,
+          100% 14.8%,
+          88% 15.2%,
+          78% 14.6%,
+          70% 15.4%,
+          62% 14.9%,
+          52% 15.3%,
+          44% 14.7%,
+          36% 15.1%,
+          28% 14.5%,
+          18% 15.2%,
+          8% 14.8%,
+          0% 15.1%
+        );
+        transform: translateX(6px);
+        z-index: 6;
+        pointer-events: none;
+      }
+
+      /* ── Glitch edge lines — jagged signal tears ── */
+      .glitch-edge-top, .glitch-edge-bottom {
+        position: absolute;
+        left: 0; right: 0;
+        height: 0;
+        z-index: 7;
+        pointer-events: none;
+      }
+      .glitch-edge-top {
+        top: calc(28px + 8.8%);
+      }
+      .glitch-edge-bottom {
+        top: calc(28px + 15%);
+      }
+
+      /* Signal noise band around glitch */
+      .signal-noise {
+        position: absolute;
+        left: 0; right: 0;
+        top: calc(28px + 7%);
+        height: 10%;
+        z-index: 6;
+        pointer-events: none;
+        background:
+          repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            rgba(218, 255, 74, 0.03) 1px,
+            transparent 2px,
+            transparent 4px,
+            rgba(218, 255, 74, 0.02) 5px,
+            transparent 6px,
+            transparent 11px
+          );
+        mask-image: linear-gradient(
+          180deg,
+          transparent 10%,
+          rgba(0,0,0,0.6) 30%,
+          rgba(0,0,0,0.8) 50%,
+          rgba(0,0,0,0.6) 70%,
+          transparent 90%
+        );
+      }
+
+      /* ── Corner brackets on image viewport ── */
+      .bracket {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        z-index: 8;
+        pointer-events: none;
+      }
+      .bracket--tl { top: 28px; left: 28px; border-top: 1px solid rgba(218,255,74,0.2); border-left: 1px solid rgba(218,255,74,0.2); }
+      .bracket--tr { top: 28px; right: 28px; border-top: 1px solid rgba(218,255,74,0.2); border-right: 1px solid rgba(218,255,74,0.2); }
+      .bracket--bl { bottom: 44px; left: 28px; border-bottom: 1px solid rgba(218,255,74,0.2); border-left: 1px solid rgba(218,255,74,0.2); }
+      .bracket--br { bottom: 44px; right: 28px; border-bottom: 1px solid rgba(218,255,74,0.2); border-right: 1px solid rgba(218,255,74,0.2); }
+
+      /* ── Bottom label strip ── */
+      .label-strip {
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 44px;
+        background: rgba(6, 8, 0, 0.95);
+        border-top: 1px solid rgba(218, 255, 74, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 14px;
+        z-index: 10;
+      }
+
+      .label-strip .sys {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 7px;
+        letter-spacing: 3px;
+        color: rgba(218, 255, 74, 0.25);
+        text-transform: uppercase;
+      }
+
+      .label-strip .class-tag {
+        font-family: 'Teko', sans-serif;
+        font-weight: 600;
+        font-size: 10px;
+        letter-spacing: 4px;
+        color: rgba(218, 255, 74, 0.4);
+        text-transform: uppercase;
+      }
+
+      .label-strip .st {
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 6px;
+        letter-spacing: 2px;
+        padding: 2px 6px;
+        color: rgba(255, 152, 20, 0.7);
+        border: 1px solid rgba(255, 152, 20, 0.25);
+        background: rgba(255, 152, 20, 0.04);
+      }
+
+      /* ── Top edge micro-label ── */
+      .top-mark {
+        position: absolute;
+        top: 5px;
+        right: 16px;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 6px;
+        letter-spacing: 2px;
+        color: rgba(218, 255, 74, 0.12);
+        z-index: 10;
+      }
+
+      /* ── Tile number ── */
+      .tile-num {
+        position: absolute;
+        top: 4px;
+        left: 14px;
+        font-family: 'Teko', sans-serif;
+        font-weight: 700;
+        font-size: 28px;
+        color: rgba(218, 255, 74, 0.15);
+        line-height: 0.85;
+        letter-spacing: 2px;
+        z-index: 10;
+      }
+
+      /* ── Canvas noise overlay ── */
+      canvas#noise {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9;
+        pointer-events: none;
+        opacity: 0.35;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tile">
+      <!-- Grid background via ::before -->
+
+      <!-- Inner frame with corner accents -->
+      <div class="inner-frame"></div>
+
+      <!-- Tile number -->
+      <div class="tile-num">GF</div>
+
+      <!-- Top micro-label -->
+      <div class="top-mark">▪ RESTRICTED / ISR-MECH / DEGRADED</div>
+
+      <!-- Image viewport -->
+      <div class="img-viewport">
+        <img class="base" src="reference-shots/stitch/mech-source-3q.png" alt="" />
+        <div class="green-map"></div>
+        <div class="green-screen"></div>
+        <div class="vignette"></div>
+        <div class="scanlines"></div>
+
+        <!-- Displaced glitch slice -->
+        <img class="glitch-slice" src="reference-shots/stitch/mech-source-3q.png" alt="" />
+        <div class="glitch-tint"></div>
+        <div class="signal-noise"></div>
+      </div>
+
+      <!-- Corner brackets -->
+      <div class="bracket bracket--tl"></div>
+      <div class="bracket bracket--tr"></div>
+      <div class="bracket bracket--bl"></div>
+      <div class="bracket bracket--br"></div>
+
+      <!-- Bottom label -->
+      <div class="label-strip">
+        <span class="sys">sys:guardian-frame</span>
+        <span class="class-tag">ISR — MECH ARCHIVE</span>
+        <span class="st">SCAN DEGRADED</span>
+      </div>
+
+      <!-- Canvas noise -->
+      <canvas id="noise"></canvas>
+
+      <!-- Glitch edge lines drawn by canvas -->
+      <canvas id="glitchLines" style="position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none"></canvas>
+    </div>
+
+    <script>
+      const DPR = window.devicePixelRatio || 1;
+
+      // Static film grain noise
+      (function initNoise() {
+        const cv = document.getElementById('noise');
+        const W = cv.offsetWidth, H = cv.offsetHeight;
+        cv.width = W * DPR; cv.height = H * DPR;
+        const ctx = cv.getContext('2d');
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        const imgD = ctx.createImageData(W * DPR, H * DPR);
+        const d = imgD.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const n = Math.random();
+          if (n < 0.06) {
+            const v = 0.15 + n * 3;
+            d[i] = Math.floor(218 * v * 0.5);
+            d[i + 1] = Math.floor(255 * v);
+            d[i + 2] = Math.floor(74 * v * 0.3);
+          }
+          d[i + 3] = 255;
+        }
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.putImageData(imgD, 0, 0);
+        ctx.restore();
+      })();
+
+      // Glitch edge lines — jagged signal tears
+      (function initGlitchLines() {
+        const cv = document.getElementById('glitchLines');
+        const W = cv.offsetWidth, H = cv.offsetHeight;
+        cv.width = W * DPR; cv.height = H * DPR;
+        const ctx = cv.getContext('2d');
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+        const viewportTop = 28;
+        const glitchTop = viewportTop + H * 0.085;
+        const glitchBot = viewportTop + H * 0.15;
+
+        // Top tear line
+        ctx.beginPath();
+        ctx.moveTo(0, glitchTop);
+        for (let x = 0; x < W; x += 3) {
+          const jitter = (Math.random() - 0.5) * 3.5;
+          ctx.lineTo(x, glitchTop + jitter);
+        }
+        ctx.strokeStyle = 'rgba(218, 255, 74, 0.5)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Secondary faint tear
+        ctx.beginPath();
+        ctx.moveTo(0, glitchTop + 3);
+        for (let x = 0; x < W; x += 5) {
+          const jitter = (Math.random() - 0.5) * 2;
+          ctx.lineTo(x, glitchTop + 3 + jitter);
+        }
+        ctx.strokeStyle = 'rgba(218, 255, 74, 0.12)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+
+        // Bottom tear line
+        ctx.beginPath();
+        ctx.moveTo(0, glitchBot);
+        for (let x = 0; x < W; x += 4) {
+          const jitter = (Math.random() - 0.5) * 2.5;
+          ctx.lineTo(x, glitchBot + jitter);
+        }
+        ctx.strokeStyle = 'rgba(218, 255, 74, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Scattered micro-artifacts in the glitch zone
+        for (let i = 0; i < 40; i++) {
+          const ax = Math.random() * W;
+          const ay = glitchTop + Math.random() * (glitchBot - glitchTop);
+          const aw = 2 + Math.random() * 8;
+          ctx.fillStyle = `rgba(218, 255, 74, ${0.03 + Math.random() * 0.08})`;
+          ctx.fillRect(ax, ay, aw, 1);
+        }
+
+        // Small amber artifact — one only
+        ctx.fillStyle = 'rgba(255, 152, 20, 0.25)';
+        ctx.fillRect(W * 0.72, glitchTop + 1, 12, 2);
+      })();
+    </script>
+  </body>
+</html>

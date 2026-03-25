@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HADAL Monitor Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --g: #c8ff1a;
+      --g2: rgba(200,255,26,.18);
+      --g4: rgba(200,255,26,.4);
+      --g7: rgba(200,255,26,.72);
+      --g9: rgba(200,255,26,.96);
+      --bg: #030500;
+      --mono: "Share Tech Mono", monospace;
+      --head: "Rajdhani", sans-serif;
+      --display: "Teko", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--g7); }
+    body {
+      background:
+        radial-gradient(circle at 50% 30%, rgba(200,255,26,.08), transparent 28%),
+        #030500;
+      font-family: var(--mono);
+    }
+    .frame {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at center, rgba(200,255,26,.06), transparent 34%),
+        linear-gradient(180deg, rgba(200,255,26,.03), transparent 22%);
+    }
+    .frame::before,
+    .frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .frame::before {
+      opacity: .14;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+    .frame::after {
+      opacity: .2;
+      background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,.36) 2px 4px);
+    }
+    .hud {
+      position: absolute;
+      inset: 24px;
+      border: 1px solid var(--g2);
+      background:
+        linear-gradient(var(--g2) 1px, transparent 1px),
+        linear-gradient(90deg, var(--g2) 1px, transparent 1px);
+      background-size: 104px 104px;
+      overflow: hidden;
+    }
+    .geo-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(200,255,26,.12);
+    }
+    .geo-ring.r1 { width: 540px; height: 540px; left: -120px; bottom: -180px; }
+    .geo-ring.r2 { width: 720px; height: 720px; left: 120px; top: 110px; }
+    .geo-ring.r3 { width: 960px; height: 960px; right: -340px; top: -260px; }
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 22px;
+      right: 22px;
+      display: flex;
+      justify-content: space-between;
+      font: 700 12px/1 var(--head);
+      letter-spacing: .28em;
+      color: var(--g4);
+      text-transform: uppercase;
+    }
+    .feed {
+      position: absolute;
+      inset: 90px 50px 56px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 22px;
+    }
+    .scan {
+      position: relative;
+      border: 1px solid var(--g2);
+      background:
+        radial-gradient(circle at 50% 46%, rgba(200,255,26,.12), transparent 28%),
+        rgba(5,8,1,.5);
+      overflow: hidden;
+    }
+    .thermal-cloud {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 38% 42%, rgba(200,255,26,.78), transparent 17%),
+        radial-gradient(circle at 58% 31%, rgba(200,255,26,.62), transparent 14%),
+        radial-gradient(circle at 52% 52%, rgba(200,255,26,.5), transparent 12%),
+        radial-gradient(circle at 46% 63%, rgba(200,255,26,.44), transparent 16%),
+        radial-gradient(circle at 60% 64%, rgba(200,255,26,.34), transparent 20%),
+        radial-gradient(circle at 34% 60%, rgba(200,255,26,.3), transparent 20%);
+      filter: blur(18px) saturate(120%);
+      opacity: .95;
+    }
+    .crosshair {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 250px;
+      height: 250px;
+      transform: translate(-50%, -50%);
+    }
+    .crosshair .box {
+      position: absolute;
+      inset: 18px;
+      border: 3px solid var(--g7);
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      opacity: .88;
+    }
+    .crosshair .box::before,
+    .crosshair .box::after {
+      content: "";
+      position: absolute;
+      background: var(--g7);
+    }
+    .crosshair .box::before { left: 50%; top: 34px; bottom: 34px; width: 5px; transform: translateX(-50%); }
+    .crosshair .box::after { top: 50%; left: 34px; right: 34px; height: 5px; transform: translateY(-50%); }
+    .ret {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 54px;
+      height: 54px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid var(--g9);
+      box-shadow: 0 0 18px rgba(200,255,26,.35);
+    }
+    .ret::before {
+      content: "";
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+      border: 1px solid rgba(200,255,26,.34);
+    }
+    .corner-bracket {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      border-color: var(--g9);
+      border-style: solid;
+      border-width: 0;
+    }
+    .corner-bracket.tl { top: 0; left: 0; border-top-width: 6px; border-left-width: 6px; }
+    .corner-bracket.tr { top: 0; right: 0; border-top-width: 6px; border-right-width: 6px; }
+    .corner-bracket.bl { bottom: 0; left: 0; border-bottom-width: 6px; border-left-width: 6px; }
+    .corner-bracket.br { bottom: 0; right: 0; border-bottom-width: 6px; border-right-width: 6px; }
+    .tele {
+      position: absolute;
+      font: 700 12px/1 var(--head);
+      letter-spacing: .18em;
+      color: var(--g7);
+      text-transform: uppercase;
+    }
+    .tele.a { top: 34%; left: 15%; }
+    .tele.b { top: 34%; right: 16%; }
+    .tele.c { bottom: 28%; left: 43%; }
+    .tele.d { bottom: 21%; right: 42%; }
+    .coords {
+      position: absolute;
+      display: grid;
+      gap: 8px;
+      font: 700 10px/1.25 var(--mono);
+      color: var(--g4);
+      text-transform: uppercase;
+    }
+    .coords.left { left: 30px; top: 30px; }
+    .coords.right { right: 28px; bottom: 30px; text-align: right; }
+    .stats {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 20px;
+    }
+    .recon {
+      position: relative;
+      border: 1px solid var(--g2);
+      background: rgba(6,9,2,.55);
+      overflow: hidden;
+    }
+    .recon-grid {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(200,255,26,.03), transparent 40%),
+        linear-gradient(var(--g2) 1px, transparent 1px),
+        linear-gradient(90deg, var(--g2) 1px, transparent 1px);
+      background-size: auto, 48px 48px, 48px 48px;
+      opacity: .45;
+    }
+    .recon-globe {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 360px;
+      height: 360px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba(200,255,26,.28);
+      box-shadow: inset 0 0 60px rgba(200,255,26,.06);
+      overflow: hidden;
+    }
+    .recon-globe::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 35%, rgba(200,255,26,.52), transparent 12%),
+        radial-gradient(circle at 62% 44%, rgba(200,255,26,.5), transparent 12%),
+        radial-gradient(circle at 48% 62%, rgba(200,255,26,.54), transparent 16%),
+        repeating-linear-gradient(to bottom, rgba(200,255,26,.22) 0 2px, transparent 2px 18px);
+      filter: blur(2px);
+    }
+    .axis {
+      position: absolute;
+      left: 50%;
+      top: -12%;
+      bottom: -12%;
+      width: 4px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, var(--g4), transparent);
+    }
+    .tickline {
+      position: absolute;
+      left: 50%;
+      bottom: 90px;
+      width: 180px;
+      height: 2px;
+      transform: translateX(-50%);
+      background: var(--g7);
+      box-shadow: 0 0 8px rgba(200,255,26,.18);
+    }
+    .mini {
+      position: absolute;
+      border: 1px solid var(--g2);
+      background: rgba(5,8,2,.7);
+      padding: 10px;
+    }
+    .mini.wave { left: 20px; top: 18px; width: 180px; height: 84px; }
+    .mini.hex { right: 18px; top: 18px; width: 156px; height: 118px; }
+    .mini.wave svg,
+    .mini.hex svg { width: 100%; height: 100%; }
+    .statusbar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .card {
+      position: relative;
+      border: 1px solid var(--g2);
+      background: rgba(6,9,2,.74);
+      padding: 14px;
+      min-height: 128px;
+    }
+    .card .k {
+      font: 700 11px/1 var(--head);
+      letter-spacing: .22em;
+      color: var(--g4);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .card .v {
+      font: 700 72px/.84 var(--display);
+      color: var(--g9);
+    }
+    .card .copy {
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--g7);
+    }
+    .card .bar {
+      height: 6px;
+      margin-top: 10px;
+      background: rgba(200,255,26,.08);
+    }
+    .card .bar span {
+      display: block;
+      width: 72%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--g4), var(--g9));
+      box-shadow: 0 0 14px rgba(200,255,26,.2);
+    }
+    @media (max-width: 1100px) {
+      .feed { grid-template-columns: 1fr; }
+      .statusbar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="hud">
+      <div class="geo-ring r1"></div>
+      <div class="geo-ring r2"></div>
+      <div class="geo-ring r3"></div>
+      <div class="header">
+        <span>Monitor / ISR Density Study</span>
+        <span>Real Geolocation / Phosphor Feed</span>
+      </div>
+      <div class="feed">
+        <div class="scan">
+          <div class="thermal-cloud"></div>
+          <div class="crosshair">
+            <div class="box">
+              <div class="corner-bracket tl"></div>
+              <div class="corner-bracket tr"></div>
+              <div class="corner-bracket bl"></div>
+              <div class="corner-bracket br"></div>
+            </div>
+            <div class="ret"></div>
+          </div>
+          <div class="tele a">5C</div>
+          <div class="tele b">5D</div>
+          <div class="tele c">AV</div>
+          <div class="tele d">AU</div>
+          <div class="coords left">
+            <span>GRID REF // 25.2048N</span>
+            <span>AZIMUTH // 055.2708E</span>
+            <span>FRAME // GULF-TRACK-02</span>
+          </div>
+          <div class="coords right">
+            <span>RANGE // 18.4 KM</span>
+            <span>SOURCE // ISR THERMAL</span>
+            <span>TIME // 18:31:42Z</span>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="recon">
+            <div class="recon-grid"></div>
+            <div class="mini wave">
+              <svg viewBox="0 0 160 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <path d="M0 30C20 30 18 20 38 20C58 20 54 44 78 44C102 44 98 12 120 12C142 12 142 32 160 32" stroke="rgba(200,255,26,.9)" stroke-width="2"/>
+                <path d="M0 40C18 40 22 12 40 12C58 12 58 48 80 48C102 48 104 18 122 18C140 18 144 36 160 36" stroke="rgba(200,255,26,.48)" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="mini hex">
+              <svg viewBox="0 0 136 98" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <g stroke="rgba(200,255,26,.42)" stroke-width="1.3">
+                  <path d="M24 18L38 10H54L68 18V34L54 42H38L24 34Z"/>
+                  <path d="M58 18L72 10H88L102 18V34L88 42H72L58 34Z"/>
+                  <path d="M41 42L55 34H71L85 42V58L71 66H55L41 58Z"/>
+                  <path d="M75 42L89 34H105L119 42V58L105 66H89L75 58Z"/>
+                </g>
+              </svg>
+            </div>
+            <div class="recon-globe"></div>
+            <div class="axis"></div>
+            <div class="tickline"></div>
+          </div>
+          <div class="statusbar">
+            <div class="card">
+              <div class="k">Theatre Threat</div>
+              <div class="v">72</div>
+              <div class="bar"><span></span></div>
+            </div>
+            <div class="card">
+              <div class="k">Live Geo Overlay</div>
+              <div class="copy">Real coordinates, range ticks, source tags, and time markers should sit inside the feed instead of below it.</div>
+            </div>
+            <div class="card">
+              <div class="k">Sensor State</div>
+              <div class="copy">Dense scanline/noise treatment is contextual. It belongs to monitoring and ISR surfaces only.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

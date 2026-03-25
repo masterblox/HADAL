@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HADAL V2 — Visual Systems Board</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+--g:#DAFF4A;
+--g2:#b8d840;
+--g3:#8aad20;
+--glo:rgba(218,255,74,.12);
+--amb:#FF9814;
+--amb2:#cc7a10;
+--bg:#050700;
+--bg2:#0a0d02;
+--bg3:#0f1204;
+--dim:rgba(218,255,74,.25);
+--dim2:rgba(218,255,74,.08);
+}
+
+html{background:var(--bg);color:var(--g);font-family:'Share Tech Mono',monospace}
+body{min-height:100vh;padding:0}
+
+/* ═══ HEADER ═══ */
+.board-header{
+padding:24px 32px 20px;
+border-bottom:2px solid rgba(218,255,74,.15);
+display:flex;justify-content:space-between;align-items:flex-end;
+background:linear-gradient(180deg,rgba(218,255,74,.03) 0%,transparent 100%);
+}
+.board-header h1{
+font-family:'Teko',sans-serif;font-weight:700;font-size:42px;letter-spacing:6px;
+line-height:1;text-transform:uppercase;color:var(--g);
+}
+.board-header .sub{
+font-size:10px;letter-spacing:3px;color:var(--dim);
+margin-top:2px;
+}
+.board-header .meta{
+text-align:right;font-size:9px;letter-spacing:2px;color:var(--dim);
+line-height:1.8;
+}
+
+/* ═══ GRID ═══ */
+.board{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:3px;
+padding:3px;
+background:rgba(218,255,74,.04);
+}
+
+/* ═══ TILE CONTAINER ═══ */
+.tile{
+background:var(--bg);
+position:relative;
+overflow:hidden;
+min-height:420px;
+}
+.tile.tall{min-height:520px}
+.tile.wide{grid-column:span 2}
+
+.tile-num{
+position:absolute;top:8px;left:10px;z-index:20;
+font-family:'Teko',sans-serif;font-weight:700;font-size:38px;
+color:var(--g);line-height:1;letter-spacing:2px;
+opacity:.9;
+}
+.tile-num::before{
+content:'';display:block;width:100%;height:2px;
+background:var(--g);margin-bottom:2px;opacity:.4;
+}
+
+.tile-label{
+position:absolute;bottom:0;left:0;right:0;z-index:20;
+padding:6px 10px;
+background:rgba(5,7,0,.92);
+border-top:1px solid rgba(218,255,74,.12);
+font-size:8px;letter-spacing:3px;text-transform:uppercase;
+color:var(--dim);
+}
+
+.tile-body{
+position:absolute;inset:0;
+display:flex;align-items:center;justify-content:center;
+padding:50px 16px 30px;
+}
+
+/* ═══ CANVAS TILES ═══ */
+.tile canvas{
+position:absolute;inset:0;
+width:100%;height:100%;
+}
+
+/* ═══ 01 LOCK GEOMETRY ═══ */
+.lock-geo{position:relative;width:100%;height:100%}
+
+/* ═══ 04 CIRCUIT ═══ */
+.circuit-surface{
+position:absolute;inset:0;
+background:
+repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(218,255,74,.015) 3px,rgba(218,255,74,.015) 4px),
+repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(218,255,74,.015) 3px,rgba(218,255,74,.015) 4px);
+}
+
+/* ═══ 05 CHIP ═══ */
+.chip-surface{
+width:100%;height:100%;position:relative;
+background:
+linear-gradient(135deg,rgba(218,255,74,.02) 25%,transparent 25%,transparent 75%,rgba(218,255,74,.02) 75%),
+linear-gradient(45deg,rgba(218,255,74,.02) 25%,transparent 25%,transparent 75%,rgba(218,255,74,.02) 75%);
+background-size:4px 4px;
+}
+
+/* ═══ 06 BINARY ═══ */
+.binary-square{
+font-family:'Share Tech Mono',monospace;
+font-size:7px;line-height:8px;letter-spacing:1px;
+color:var(--g);word-break:break-all;
+overflow:hidden;
+opacity:.85;
+}
+
+/* ═══ 08 GLYPHS ═══ */
+.glyph-grid{
+display:grid;grid-template-columns:repeat(4,1fr);
+gap:8px;width:100%;
+}
+.glyph-cell{
+aspect-ratio:1;
+border:1px solid rgba(218,255,74,.15);
+display:flex;align-items:center;justify-content:center;
+font-size:28px;
+position:relative;
+background:rgba(218,255,74,.02);
+}
+.glyph-cell::after{
+content:attr(data-id);
+position:absolute;bottom:2px;right:3px;
+font-size:6px;letter-spacing:1px;
+font-family:'Share Tech Mono',monospace;
+color:var(--dim);
+}
+
+/* ═══ 10 HEX ═══ */
+.hex-field{position:relative;width:100%;height:100%;overflow:hidden}
+
+/* ═══ 13 DIAGONAL ═══ */
+.diag-bands{
+position:absolute;inset:0;overflow:hidden;
+transform:rotate(-12deg) scale(1.4);
+transform-origin:center;
+}
+.diag-band{
+height:28px;
+display:flex;align-items:center;
+padding:0 20px;
+font-family:'Teko',sans-serif;
+font-size:16px;letter-spacing:6px;
+text-transform:uppercase;
+white-space:nowrap;
+overflow:hidden;
+}
+.diag-band:nth-child(odd){
+background:var(--g);color:var(--bg);font-weight:700;
+}
+.diag-band:nth-child(even){
+background:transparent;color:var(--g);font-weight:400;
+border-top:1px solid rgba(218,255,74,.2);
+border-bottom:1px solid rgba(218,255,74,.2);
+}
+.diag-band.amb{background:var(--amb);color:var(--bg)}
+.diag-band.thin{height:6px;background:rgba(218,255,74,.15)}
+.diag-band.thick{height:42px;font-size:22px}
+
+/* ═══ 14 STRUCTURAL TYPE ═══ */
+.struct-type{
+position:absolute;inset:0;overflow:hidden;
+display:flex;flex-direction:column;justify-content:center;
+padding:10px;
+}
+.struct-type .mega{
+font-family:'Teko',sans-serif;
+font-weight:700;
+font-size:120px;
+line-height:.82;
+letter-spacing:-2px;
+color:var(--g);
+text-transform:uppercase;
+}
+.struct-type .mega.outline{
+-webkit-text-stroke:1.5px var(--g);
+color:transparent;
+}
+.struct-type .micro{
+font-family:'Share Tech Mono',monospace;
+font-size:8px;letter-spacing:4px;
+color:var(--dim);margin-top:4px;
+}
+
+/* ═══ 15 AMBER ═══ */
+.amber-panel{
+width:100%;height:100%;position:relative;
+border:2px solid var(--amb);
+background:rgba(255,152,20,.03);
+}
+.amber-panel .amber-header{
+background:var(--amb);color:var(--bg);
+padding:6px 12px;
+font-family:'Teko',sans-serif;font-weight:700;
+font-size:18px;letter-spacing:4px;
+display:flex;justify-content:space-between;align-items:center;
+}
+.amber-panel .amber-body{padding:12px;color:var(--amb)}
+.amber-flash{animation:ambflash 1.8s ease-in-out infinite}
+@keyframes ambflash{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ═══ 16 RASTER MICRO ═══ */
+.micro-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+grid-template-rows:repeat(3,1fr);
+gap:3px;
+width:100%;height:100%;
+}
+.micro-mod{
+background:var(--bg2);
+border:1px solid rgba(218,255,74,.1);
+position:relative;
+overflow:hidden;
+padding:4px;
+}
+.micro-mod canvas{width:100%;height:100%;display:block}
+.micro-mod .micro-label{
+position:absolute;top:2px;left:3px;
+font-size:6px;letter-spacing:2px;color:var(--dim);
+}
+
+/* ═══ SCANLINES OVERLAY ═══ */
+.scanlines{
+position:absolute;inset:0;pointer-events:none;z-index:10;
+background:repeating-linear-gradient(
+0deg,
+transparent,
+transparent 1px,
+rgba(0,0,0,.15) 1px,
+rgba(0,0,0,.15) 2px
+);
+}
+.scanlines.heavy{
+background:repeating-linear-gradient(
+0deg,
+transparent,
+transparent 1px,
+rgba(0,0,0,.3) 1px,
+rgba(0,0,0,.3) 3px
+);
+}
+
+/* ═══ PHOSPHOR BLOOM ═══ */
+.bloom{
+position:absolute;inset:0;pointer-events:none;z-index:5;
+background:radial-gradient(ellipse at center,rgba(218,255,74,.06) 0%,transparent 70%);
+}
+
+</style>
+</head>
+<body>
+
+<div class="board-header">
+<div>
+<h1>HADAL V2</h1>
+<div class="sub">VISUAL SYSTEMS BOARD — MOODBOARD — NOT FOR PRODUCTION</div>
+</div>
+<div class="meta">
+CLASSIFICATION: INTERNAL DESIGN REVIEW<br>
+REVISION: 001 &nbsp;|&nbsp; TILES: 16<br>
+<span id="headerTime"></span>
+</div>
+</div>
+
+<div class="board" id="board">
+<!-- Tiles injected by JS -->
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// HADAL V2 MOODBOARD — ALL 16 TILES
+// ══════════════════════════════════════════════
+
+const G = '#DAFF4A';
+const G2 = 'rgba(218,255,74,';
+const AMB = '#FF9814';
+const BG = '#050700';
+const PI = Math.PI;
+const TAU = PI*2;
+
+// Header clock
+function updateClock(){
+const d=new Date();
+document.getElementById('headerTime').textContent=
+d.toISOString().replace('T',' ').slice(0,19)+' UTC';
+}
+updateClock();setInterval(updateClock,1000);
+
+// Board element
+const board = document.getElementById('board');
+
+// Tile definitions
+const tiles = [
+{num:'01',label:'LOCK GEOMETRY',id:'lock'},
+{num:'02',label:'DENSE MONITOR SCAN',id:'scan'},
+{num:'03',label:'GEOLOCATION OVERLAY',id:'geo'},
+{num:'04',label:'ACTIVATED CIRCUIT TRACES',id:'circuit'},
+{num:'05',label:'CHIP / HARDWARE SURFACE',id:'chip'},
+{num:'06',label:'BINARY LOCKED SQUARE',id:'binary'},
+{num:'07',label:'SATELLITE RECONSTRUCTION',id:'sat'},
+{num:'08',label:'GLYPH / INSIGNIA SYSTEM',id:'glyph'},
+{num:'09',label:'SENTINEL EMBLEM',id:'sentinel'},
+{num:'10',label:'EXPLORER HEX MESH',id:'hex'},
+{num:'11',label:'ORBITAL PROBE OBJECT',id:'orbital'},
+{num:'12',label:'TELEMETRY ISLANDS',id:'telemetry'},
+{num:'13',label:'DIAGONAL GRAPHIC BANDS',id:'diag'},
+{num:'14',label:'STRUCTURAL TYPOGRAPHY',id:'structtype'},
+{num:'15',label:'RESTRICTED AMBER LANGUAGE',id:'amber'},
+{num:'16',label:'RASTER MICRO MODULES',id:'micro'},
+];
+
+tiles.forEach(t=>{
+const div=document.createElement('div');
+div.className='tile';
+div.id='tile-'+t.id;
+div.innerHTML=`
+<div class="tile-num">${t.num}</div>
+<div class="tile-body" id="body-${t.id}"></div>
+<div class="tile-label">${t.label}</div>
+`;
+board.appendChild(div);
+});
+
+
+// ════════════════════════════════════════
+// 01. LOCK GEOMETRY
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-lock');
+const c=document.createElement('canvas');
+body.parentElement.querySelector('.tile-body').remove();
+body.parentElement.appendChild(c);
+c.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1';
+const num=document.createElement('div');
+num.className='tile-num';num.textContent='01';
+body.parentElement.appendChild(num);
+
+function draw(){
+const W=c.width=c.offsetWidth, H=c.height=c.offsetHeight;
+const x=c.getContext('2d');
+const cx=W/2, cy=H/2;
+x.fillStyle=BG;x.fillRect(0,0,W,H);
+
+// Outer acquisition box
+x.strokeStyle=G2+'.3)';x.lineWidth=1;
+x.strokeRect(cx-140,cy-140,280,280);
+// Corner brackets
+const bk=20;
+[[cx-140,cy-140,1,1],[cx+140,cy-140,-1,1],[cx-140,cy+140,1,-1],[cx+140,cy+140,-1,-1]].forEach(([bx,by,dx,dy])=>{
+x.strokeStyle=G;x.lineWidth=2;
+x.beginPath();x.moveTo(bx,by+dy*bk);x.lineTo(bx,by);x.lineTo(bx+dx*bk,by);x.stroke();
+});
+
+// Second box
+x.strokeStyle=G2+'.2)';x.lineWidth=1;
+x.strokeRect(cx-100,cy-100,200,200);
+
+// Inner box
+x.strokeStyle=G2+'.5)';x.lineWidth=1.5;
+x.strokeRect(cx-60,cy-60,120,120);
+
+// Crosshairs
+x.strokeStyle=G2+'.4)';x.lineWidth=1;
+x.setLineDash([4,6]);
+x.beginPath();x.moveTo(cx-160,cy);x.lineTo(cx+160,cy);x.stroke();
+x.beginPath();x.moveTo(cx,cy-160);x.lineTo(cx,cy+160);x.stroke();
+x.setLineDash([]);
+
+// Center cross
+x.strokeStyle=G;x.lineWidth=2;
+x.beginPath();x.moveTo(cx-12,cy);x.lineTo(cx+12,cy);x.stroke();
+x.beginPath();x.moveTo(cx,cy-12);x.lineTo(cx,cy+12);x.stroke();
+
+// Rotating ring
+const t=Date.now()/3000;
+x.save();x.translate(cx,cy);x.rotate(t);
+x.strokeStyle=G2+'.35)';x.lineWidth=1;
+x.beginPath();x.arc(0,0,90,0,PI*1.2);x.stroke();
+x.beginPath();x.arc(0,0,90,PI*1.4,PI*1.9);x.stroke();
+x.restore();
+
+// Counter-rotating ring
+x.save();x.translate(cx,cy);x.rotate(-t*0.7);
+x.strokeStyle=G2+'.2)';x.lineWidth=1;
+x.beginPath();x.arc(0,0,110,0.3,PI*0.9);x.stroke();
+x.beginPath();x.arc(0,0,110,PI*1.1,PI*1.8);x.stroke();
+x.restore();
+
+// Diamond
+x.save();x.translate(cx,cy);x.rotate(PI/4);
+x.strokeStyle=G2+'.25)';x.lineWidth=1;
+x.strokeRect(-45,-45,90,90);
+x.restore();
+
+// Measurement labels
+x.font='8px "Share Tech Mono"';x.fillStyle=G2+'.5)';
+x.fillText('RNG 2.4KM',cx+145,cy-4);
+x.fillText('AZ 047.2°',cx+145,cy+10);
+x.fillText('EL +12.8°',cx-140,cy+155);
+x.fillText('TRK 224',cx-140,cy+168);
+x.fillText('LOCK',cx+50,cy-145);
+x.fillText('ACQ',cx-70,cy-145);
+
+// Scale ticks on top edge
+for(let i=-6;i<=6;i++){
+const tx=cx+i*20;
+x.strokeStyle=G2+(i===0?'.6)':'.2)');x.lineWidth=1;
+x.beginPath();x.moveTo(tx,cy-140);x.lineTo(tx,cy-140+(i%3===0?8:4));x.stroke();
+}
+// Scale ticks on left edge
+for(let i=-6;i<=6;i++){
+const ty=cy+i*20;
+x.strokeStyle=G2+(i===0?'.6)':'.2)');x.lineWidth=1;
+x.beginPath();x.moveTo(cx-140,ty);x.lineTo(cx-140+(i%3===0?8:4),ty);x.stroke();
+}
+
+// Blinking dot
+if(Math.sin(Date.now()/300)>0){
+x.fillStyle=G;
+x.fillRect(cx-2,cy-2,4,4);
+}
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+
+// ════════════════════════════════════════
+// 02. DENSE MONITOR SCAN
+// ════════════════════════════════════════
+(function(){
+const tile=document.getElementById('tile-scan');
+const body=document.getElementById('body-scan');
+body.remove();
+const c=document.createElement('canvas');
+c.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1';
+tile.appendChild(c);
+
+// Heavy scanlines
+const sl=document.createElement('div');
+sl.className='scanlines heavy';tile.appendChild(sl);
+const bl=document.createElement('div');
+bl.className='bloom';tile.appendChild(bl);
+
+let scanY=0;
+function draw(){
+const W=c.width=c.offsetWidth, H=c.height=c.offsetHeight;
+const x=c.getContext('2d');
+x.fillStyle='#020400';x.fillRect(0,0,W,H);
+
+const t=Date.now()/1000;
+
+// Phosphor noise field
+const imgD=x.createImageData(W,H);
+const d=imgD.data;
+for(let i=0;i<d.length;i+=4){
+const py=Math.floor((i/4)/W);
+const px=(i/4)%W;
+const n=Math.random();
+const scanDist=Math.abs(py-scanY);
+const scanBoost=scanDist<8?0.3:0;
+const base=n<0.15?(0.08+scanBoost):0;
+// Thermal-ish hot spots
+const hx=W*0.4,hy=H*0.45;
+const dist=Math.sqrt((px-hx)**2+(py-hy)**2);
+const heat=Math.max(0,1-dist/120)*0.25;
+const v=base+heat;
+d[i]=Math.floor(218*v*0.4);
+d[i+1]=Math.floor(255*v);
+d[i+2]=Math.floor(74*v*0.3);
+d[i+3]=255;
+}
+x.putImageData(imgD,0,0);
+
+// Scan sweep line
+scanY=(scanY+1.5)%H;
+x.fillStyle=G2+'.08)';
+x.fillRect(0,scanY-20,W,40);
+x.fillStyle=G2+'.2)';
+x.fillRect(0,scanY-1,W,2);
+
+// Readout overlays
+x.font='9px "Share Tech Mono"';
+x.fillStyle=G2+'.7)';
+x.fillText('ISR-FEED::CH04',10,20);
+x.fillText('FLIR/MWIR',10,32);
+x.fillText('GAIN:+14.2dB',10,44);
+x.fillText(Math.floor(t)%2===0?'▮ REC':'  REC',W-60,20);
+x.fillStyle=G2+'.4)';
+x.fillText('FRM:'+String(Math.floor(t*24)%9999).padStart(4,'0'),W-80,H-20);
+x.fillText('SNR:'+((Math.sin(t)*5+18).toFixed(1))+'dB',10,H-20);
+
+// Target box
+const bx=W*0.35,by=H*0.38,bw=80,bh=60;
+x.strokeStyle=G2+'.5)';x.lineWidth=1;
+x.strokeRect(bx,by,bw,bh);
+x.font='7px "Share Tech Mono"';
+x.fillStyle=G;
+x.fillText('TGT-01',bx+2,by-3);
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+
+// ════════════════════════════════════════
+// 03. GEOLOCATION OVERLAY
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-geo');
+body.style.cssText='position:absolute;inset:0;padding:50px 12px 30px;display:flex;flex-direction:column;justify-content:center;gap:0;font-size:9px;line-height:1;letter-spacing:1px;overflow:hidden;';
+
+const lines=[
+{t:'COORD',v:'25°15\'42.8"N  055°18\'23.1"E',c:G},
+{t:'MGRS',v:'40R CM 4832 9547',c:G},
+{t:'AZ/RNG',v:'047.2° TRUE / 2.418 KM',c:G},
+{t:'ALT',v:'+000042M MSL',c:G},
+{t:'CEP',v:'3.2M (90%)',c:G2+'.6)'},
+{t:'SRC',v:'SIGINT/ELINT COLLECT',c:G},
+{t:'TIME',v:'2026-03-22T14:32:08.442Z',c:G},
+{t:'DWELL',v:'00:04:12.8',c:G2+'.5)'},
+{t:'',v:'',c:''},
+{t:'FREQ',v:'9.375 GHZ X-BAND',c:G},
+{t:'PRI',v:'1247μs STAGGER',c:G},
+{t:'SNR',v:'+22.4 dB',c:G},
+{t:'CLASS',v:'SAM ENGAGEMENT RADAR',c:AMB},
+{t:'THREAT',v:'SA-21 GROWLER / S-400',c:AMB},
+{t:'CONF',v:'0.87 HIGH',c:G},
+{t:'',v:'',c:''},
+{t:'GRID',v:'▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓',c:G2+'.12)'},
+{t:'STATUS',v:'▮ ACTIVE TRACK',c:G},
+];
+
+let html='';
+lines.forEach(l=>{
+if(!l.t&&!l.v){html+='<div style="height:8px"></div>';return;}
+html+=`<div style="display:flex;gap:8px;margin:2px 0;align-items:baseline">
+<span style="color:${G2}.35);min-width:52px;font-size:7px;letter-spacing:2px">${l.t}</span>
+<span style="color:${l.c};font-family:'Share Tech Mono',monospace;font-size:9px">${l.v}</span>
+</div>`;
+});
+
+// Dense coordinate grid background
+html+='<div style="position:absolute;inset:0;z-index:-1;opacity:.04;font-size:7px;line-height:8px;overflow:hidden;padding:8px;word-break:break-all;color:'+G+'">';
+for(let i=0;i<800;i++)html+=(Math.random()*90|0).toString().padStart(2,'0')+' ';
+html+='</div>';
+
+body.innerHTML=html;
+})();
+
+
+// ════════════════════════════════════════
+// 04. ACTIVATED CIRCUIT TRACES
+// ════════════════════════════════════════
+(function(){
+const tile=document.getElementById('tile-circuit');
+const body=document.getElementById('body-circuit');
+body.remove();
+const c=document.createElement('canvas');
+c.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1';
+tile.appendChild(c);
+
+// Substrate grid
+const sub=document.createElement('div');
+sub.className='circuit-surface';tile.appendChild(sub);
+
+function draw(){
+const W=c.width=c.offsetWidth, H=c.height=c.offsetHeight;
+const x=c.getContext('2d');
+x.clearRect(0,0,W,H);
+
+const t=Date.now()/1000;
+const gridS=20;
+
+// Draw PCB traces
+x.lineWidth=2;x.lineCap='square';
+
+// Horizontal traces
+const traces=[
+{y:0.2,x1:0.05,x2:0.7,active:true},
+{y:0.2,x1:0.7,x2:0.7,vert:true,y2:0.35,active:true},
+{y:0.35,x1:0.7,x2:0.95,active:true},
+{y:0.4,x1:0.1,x2:0.5,active:false},
+{y:0.4,x1:0.5,x2:0.5,vert:true,y2:0.6,active:false},
+{y:0.6,x1:0.5,x2:0.9,active:false},
+{y:0.55,x1:0.05,x2:0.35,active:true},
+{y:0.55,x1:0.35,x2:0.35,vert:true,y2:0.75,active:true},
+{y:0.75,x1:0.35,x2:0.85,active:true},
+{y:0.8,x1:0.15,x2:0.6,active:false},
+{y:0.3,x1:0.15,x2:0.45,active:true},
+];
+
+traces.forEach(tr=>{
+const act=tr.active;
+x.strokeStyle=act?G2+'.6)':G2+'.12)';
+x.lineWidth=act?2:1;
+x.beginPath();
+if(tr.vert){
+x.moveTo(tr.x1*W,tr.y*H);
+x.lineTo(tr.x1*W,tr.y2*H);
+}else{
+x.moveTo(tr.x1*W,tr.y*H);
+x.lineTo(tr.x2*W,tr.y*H);
+}
+x.stroke();
+
+// Via pads at endpoints
+if(act){
+const px=tr.vert?tr.x1*W:tr.x2*W;
+const py=tr.vert?tr.y2*H:tr.y*H;
+x.fillStyle=G2+'.8)';
+x.fillRect(px-3,py-3,6,6);
+x.fillStyle=BG;
+x.fillRect(px-1,py-1,2,2);
+}
+});
+
+// Activation pulse traveling along trace
+const pulsePos=(t*0.3)%1;
+traces.filter(tr=>tr.active).forEach((tr,i)=>{
+const p=((pulsePos+i*0.2)%1);
+let px,py;
+if(tr.vert){
+px=tr.x1*W;
+py=tr.y*H+(tr.y2-tr.y)*H*p;
+}else{
+px=(tr.x1+(tr.x2-tr.x1)*p)*W;
+py=tr.y*H;
+}
+x.fillStyle=G;
+x.shadowColor=G;x.shadowBlur=8;
+x.fillRect(px-2,py-2,4,4);
+x.shadowBlur=0;
+});
+
+// IC pads
+[[0.5,0.2,28,16],[0.2,0.55,20,20],[0.75,0.75,24,14],[0.45,0.4,16,12]].forEach(([px,py,w,h])=>{
+x.fillStyle=G2+'.06)';
+x.fillRect(px*W-w/2,py*H-h/2,w,h);
+x.strokeStyle=G2+'.2)';x.lineWidth=1;
+x.strokeRect(px*W-w/2,py*H-h/2,w,h);
+// Pin marks
+for(let p=0;p<4;p++){
+x.fillStyle=G2+'.3)';
+x.fillRect(px*W-w/2-4,py*H-h/2+3+p*(h-6)/3,3,2);
+x.fillRect(px*W+w/2+1,py*H-h/2+3+p*(h-6)/3,3,2);
+}
+});
+
+// Labels
+x.font='7px "Share Tech Mono"';x.fillStyle=G2+'.3)';
+x.fillText('U1',0.5*W+16,0.2*H-10);
+x.fillText('U2',0.2*W+14,0.55*H-12);
+x.fillText('R14',0.75*W+14,0.75*H-8);
+x.fillText('J3',0.45*W+10,0.4*H-7);
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+
+// ════════════════════════════════════════
+// 05. CHIP / HARDWARE SURFACE
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-chip');
+body.style.cssText='position:absolute;inset:0;padding:50px 0 30px;display:flex;align-items:center;justify-content:center;';
+
+let html='<div style="width:85%;aspect-ratio:1.4;position:relative;border:3px solid '+G2+'.3);background:'+G2+'.02)">';
+// Die area
+html+='<div style="position:absolute;inset:16px;border:1px solid '+G2+'.15);background:repeating-linear-gradient(0deg,transparent,transparent 2px,'+G2+'.015) 2px,'+G2+'.015) 3px)">';
+// Bond pads top
+html+='<div style="display:flex;justify-content:space-around;padding:4px 8px">';
+for(let i=0;i<12;i++)html+='<div style="width:6px;height:6px;background:'+G2+'.4);border:1px solid '+G2+'.15)"></div>';
+html+='</div>';
+// Bond pads bottom
+html+='<div style="display:flex;justify-content:space-around;padding:4px 8px;position:absolute;bottom:0;left:0;right:0">';
+for(let i=0;i<12;i++)html+='<div style="width:6px;height:6px;background:'+G2+'.4);border:1px solid '+G2+'.15)"></div>';
+html+='</div>';
+// Central die
+html+='<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;height:50%;border:2px solid '+G+';background:'+G2+'.04)">';
+html+='<div style="font-family:Teko;font-size:22px;font-weight:700;text-align:center;margin-top:8px;letter-spacing:4px;color:'+G+'">HADAL</div>';
+html+='<div style="font-size:6px;text-align:center;letter-spacing:3px;color:'+G2+'.4);margin-top:2px">V2.0-ASIC-GF22</div>';
+// Functional blocks
+html+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:8px">';
+['SIGINT','GEOINT','ELINT','MASINT','COMINT','FUSION'].forEach(b=>{
+html+='<div style="border:1px solid '+G2+'.2);padding:2px;text-align:center;font-size:5px;letter-spacing:1px;color:'+G2+'.5)">'+b+'</div>';
+});
+html+='</div></div>';
+// Side bond pads
+html+='<div style="position:absolute;top:20px;left:0;bottom:20px;display:flex;flex-direction:column;justify-content:space-around">';
+for(let i=0;i<8;i++)html+='<div style="width:6px;height:6px;background:'+G2+'.4);border:1px solid '+G2+'.15);margin-left:-3px"></div>';
+html+='</div>';
+html+='<div style="position:absolute;top:20px;right:0;bottom:20px;display:flex;flex-direction:column;justify-content:space-around">';
+for(let i=0;i<8;i++)html+='<div style="width:6px;height:6px;background:'+G2+'.4);border:1px solid '+G2+'.15);margin-right:-3px"></div>';
+html+='</div>';
+html+='</div>';
+// Package label
+html+='<div style="position:absolute;bottom:3px;right:6px;font-size:6px;letter-spacing:2px;color:'+G2+'.3)">PKG-BGA-484 &nbsp; LOT:H2-0322</div>';
+html+='<div style="position:absolute;top:3px;left:6px;font-size:6px;letter-spacing:2px;color:'+G2+'.3)">MIL-STD-883 CLASS B</div>';
+html+='</div>';
+
+body.innerHTML=html;
+})();
+
+
+// ════════════════════════════════════════
+// 06. BINARY LOCKED SQUARE
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-binary');
+body.style.cssText='position:absolute;inset:0;padding:50px 8px 30px;display:flex;align-items:center;justify-content:center';
+
+const outer=document.createElement('div');
+outer.style.cssText='width:90%;aspect-ratio:1;position:relative;border:2px solid '+G+';background:#020300';
+body.appendChild(outer);
+
+// Dense binary fill
+const bin=document.createElement('div');
+bin.className='binary-square';
+bin.style.cssText='position:absolute;inset:3px;overflow:hidden;padding:2px';
+let bStr='';
+for(let i=0;i<3000;i++){
+bStr+=Math.random()>0.5?'1':'0';
+if(i%48===47)bStr+='\n';
+}
+bin.textContent=bStr;
+outer.appendChild(bin);
+
+// Lock frame overlay
+const lock=document.createElement('div');
+lock.style.cssText='position:absolute;inset:0;pointer-events:none';
+lock.innerHTML=`
+<div style="position:absolute;top:8px;left:8px;width:20px;height:20px;border-top:2px solid ${G};border-left:2px solid ${G}"></div>
+<div style="position:absolute;top:8px;right:8px;width:20px;height:20px;border-top:2px solid ${G};border-right:2px solid ${G}"></div>
+<div style="position:absolute;bottom:8px;left:8px;width:20px;height:20px;border-bottom:2px solid ${G};border-left:2px solid ${G}"></div>
+<div style="position:absolute;bottom:8px;right:8px;width:20px;height:20px;border-bottom:2px solid ${G};border-right:2px solid ${G}"></div>
+<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Teko;font-weight:700;font-size:28px;letter-spacing:6px;color:${G};background:rgba(5,7,0,.85);padding:2px 12px">ENCODED</div>
+`;
+outer.appendChild(lock);
+
+// Phosphor glow
+const glow=document.createElement('div');
+glow.style.cssText='position:absolute;inset:0;background:radial-gradient(circle,rgba(218,255,74,.08) 0%,transparent 60%);pointer-events:none';
+outer.appendChild(glow);
+
+// Scanlines on top
+const scl=document.createElement('div');
+scl.className='scanlines';
+outer.appendChild(scl);
+})();
+
+
+// ════════════════════════════════════════
+// 07. SATELLITE RECONSTRUCTION
+// ════════════════════════════════════════
+(function(){
+const tile=document.getElementById('tile-sat');
+const body=document.getElementById('body-sat');
+body.remove();
+const c=document.createElement('canvas');
+c.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1';
+tile.appendChild(c);
+const sl=document.createElement('div');sl.className='scanlines';tile.appendChild(sl);
+
+// Satellite shape as character art
+const satArt=[
+'          ▓▓          ',
+'         ▓▓▓▓         ',
+'    ░░░░▓▓▓▓▓▓░░░░    ',
+'   ░░░░░▓▓▓▓▓▓░░░░░   ',
+'  ░░░░░░▓▓▓▓▓▓░░░░░░  ',
+'   ░░░░░░▓▓▓▓░░░░░░   ',
+'    ░░░░░░▓▓░░░░░░░    ',
+'     ░░░░░░░░░░░░      ',
+'      ░░░░░░░░░░       ',
+'       ▓▓▓▓▓▓▓▓        ',
+'      ▓▓▓▓▓▓▓▓▓▓       ',
+'       ▓▓▓▓▓▓▓▓        ',
+'        ▓▓▓▓▓▓         ',
+'         ▓▓▓▓          ',
+'          ▓▓           ',
+];
+
+function draw(){
+const W=c.width=c.offsetWidth, H=c.height=c.offsetHeight;
+const x=c.getContext('2d');
+x.fillStyle='#020300';x.fillRect(0,0,W,H);
+
+const t=Date.now()/1000;
+
+// Background binary noise (sparse)
+x.font='6px "Share Tech Mono"';
+x.fillStyle=G2+'.06)';
+for(let i=0;i<60;i++){
+const rx=Math.random()*W, ry=Math.random()*H;
+x.fillText(Math.random()>0.5?'1':'0',rx,ry);
+}
+
+// Lock frame
+const fx=W*0.15,fy=H*0.15,fw=W*0.7,fh=H*0.7;
+x.strokeStyle=G2+'.2)';x.lineWidth=1;
+x.strokeRect(fx,fy,fw,fh);
+// Corner marks
+const cm=14;
+x.strokeStyle=G2+'.6)';x.lineWidth=2;
+[[fx,fy,1,1],[fx+fw,fy,-1,1],[fx,fy+fh,1,-1],[fx+fw,fy+fh,-1,-1]].forEach(([bx,by,dx,dy])=>{
+x.beginPath();x.moveTo(bx,by+dy*cm);x.lineTo(bx,by);x.lineTo(bx+dx*cm,by);x.stroke();
+});
+
+// Draw satellite from char art
+const charW=8,charH=12;
+const artW=satArt[0].length*charW;
+const artH=satArt.length*charH;
+const ox=W/2-artW/2,oy=H/2-artH/2;
+x.font='10px "Share Tech Mono"';
+satArt.forEach((line,row)=>{
+[...line].forEach((ch,col)=>{
+if(ch===' ')return;
+const bright=ch==='▓'?0.8:0.3;
+const flicker=Math.sin(t*3+row*0.5+col*0.3)*0.1;
+x.fillStyle=G2+(bright+flicker).toFixed(2)+')';
+x.fillText(ch,ox+col*charW,oy+row*charH);
+});
+});
+
+// Telemetry labels
+x.font='8px "Share Tech Mono"';x.fillStyle=G2+'.5)';
+x.fillText('NORAD: 58247',fx+8,fy+14);
+x.fillText('OBJECT: KH-11 BLK V',fx+8,fy+26);
+x.fillText('INC: 97.4°',fx+fw-80,fy+14);
+x.fillText('ALT: 262KM',fx+fw-80,fy+26);
+x.fillText('RECON FIDELITY: '+(78+Math.sin(t)*5).toFixed(1)+'%',fx+8,fy+fh-8);
+
+// Mission tag
+x.fillStyle=G;
+x.font='bold 10px "Teko"';
+x.fillText('▸ HADAL-SAT-RECON',fx+8,fy+fh-22);
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+
+// ════════════════════════════════════════
+// 08. GLYPH / INSIGNIA SYSTEM
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-glyph');
+body.style.cssText='position:absolute;inset:0;padding:50px 12px 30px;display:flex;align-items:center;justify-content:center';
+
+const grid=document.createElement('div');
+grid.className='glyph-grid';
+body.appendChild(grid);
+
+// SVG glyphs inline
+const glyphs=[
+// Crosshair/lock
+`<svg viewBox="0 0 40 40" width="32" height="32"><line x1="20" y1="4" x2="20" y2="16" stroke="${G}" stroke-width="1.5"/><line x1="20" y1="24" x2="20" y2="36" stroke="${G}" stroke-width="1.5"/><line x1="4" y1="20" x2="16" y2="20" stroke="${G}" stroke-width="1.5"/><line x1="24" y1="20" x2="36" y2="20" stroke="${G}" stroke-width="1.5"/><circle cx="20" cy="20" r="8" fill="none" stroke="${G}" stroke-width="1" opacity=".5"/></svg>`,
+// Radiation/signal
+`<svg viewBox="0 0 40 40" width="32" height="32"><path d="M20 8 L20 4" stroke="${G}" stroke-width="1.5"/><path d="M20 8 A12 12 0 0 1 32 20" fill="none" stroke="${G}" stroke-width="1.5"/><path d="M20 8 A12 12 0 0 0 8 20" fill="none" stroke="${G}" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="${G}"/><path d="M20 32 A12 12 0 0 1 8 20" fill="none" stroke="${G}" stroke-width="1" opacity=".4"/></svg>`,
+// Chevron/rank
+`<svg viewBox="0 0 40 40" width="32" height="32"><path d="M12 14 L20 22 L28 14" fill="none" stroke="${G}" stroke-width="2"/><path d="M12 20 L20 28 L28 20" fill="none" stroke="${G}" stroke-width="2" opacity=".5"/><line x1="20" y1="8" x2="20" y2="12" stroke="${G}" stroke-width="1" opacity=".3"/></svg>`,
+// Diamond/alert
+`<svg viewBox="0 0 40 40" width="32" height="32"><rect x="12" y="12" width="16" height="16" transform="rotate(45 20 20)" fill="none" stroke="${G}" stroke-width="1.5"/><rect x="16" y="16" width="8" height="8" transform="rotate(45 20 20)" fill="${G}" opacity=".3"/></svg>`,
+// Shield
+`<svg viewBox="0 0 40 40" width="32" height="32"><path d="M20 6 L32 12 L32 24 L20 34 L8 24 L8 12 Z" fill="none" stroke="${G}" stroke-width="1.5"/><line x1="20" y1="14" x2="20" y2="28" stroke="${G}" stroke-width="1" opacity=".4"/><line x1="14" y1="18" x2="26" y2="18" stroke="${G}" stroke-width="1" opacity=".4"/></svg>`,
+// Hex bolt
+`<svg viewBox="0 0 40 40" width="32" height="32"><polygon points="20,6 32,13 32,27 20,34 8,27 8,13" fill="none" stroke="${G}" stroke-width="1.5"/><circle cx="20" cy="20" r="5" fill="none" stroke="${G}" stroke-width="1"/><circle cx="20" cy="20" r="1.5" fill="${G}"/></svg>`,
+// Arrow/vector
+`<svg viewBox="0 0 40 40" width="32" height="32"><line x1="8" y1="32" x2="32" y2="8" stroke="${G}" stroke-width="1.5"/><path d="M26 8 L32 8 L32 14" fill="none" stroke="${G}" stroke-width="1.5"/><line x1="8" y1="28" x2="12" y2="32" stroke="${G}" stroke-width="1" opacity=".3"/></svg>`,
+// Satellite dish
+`<svg viewBox="0 0 40 40" width="32" height="32"><path d="M8 28 Q8 12 24 8" fill="none" stroke="${G}" stroke-width="1.5"/><path d="M12 28 Q12 16 24 12" fill="none" stroke="${G}" stroke-width="1" opacity=".5"/><circle cx="28" cy="12" r="3" fill="${G}" opacity=".6"/><line x1="8" y1="32" x2="18" y2="22" stroke="${G}" stroke-width="1.5"/><circle cx="18" cy="22" r="2" fill="${G}"/></svg>`,
+];
+const ids=['TGT-A','SIG-B','RNK-C','ALR-D','DEF-E','HEX-F','VEC-G','COM-H'];
+
+glyphs.forEach((svg,i)=>{
+const cell=document.createElement('div');
+cell.className='glyph-cell';
+cell.dataset.id=ids[i];
+cell.innerHTML=svg;
+grid.appendChild(cell);
+});
+})();
+
+
+// ════════════════════════════════════════
+// 09. SENTINEL EMBLEM
+// ════════════════════════════════════════
+(function(){
+const tile=document.getElementById('tile-sentinel');
+const body=document.getElementById('body-sentinel');
+body.remove();
+const c=document.createElement('canvas');
+c.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1';
+tile.appendChild(c);
+
+function draw(){
+const W=c.width=c.offsetWidth, H=c.height=c.offsetHeight;
+const x=c.getContext('2d');
+x.fillStyle='#030500';x.fillRect(0,0,W,H);
+const cx=W/2,cy=H/2;
+const t=Date.now()/4000;
+
+// Outer ring
+x.save();x.translate(cx,cy);x.rotate(t*0.3);
+x.strokeStyle=G2+'.15)';x.lineWidth=1;
+x.beginPath();x.arc(0,0,120,0,TAU);x.stroke();
+// Tick marks around ring
+for(let i=0;i<36;i++){
+const a=i*TAU/36;
+const r1=i%3===0?114:117;
+x.strokeStyle=G2+(i%3===0?'.3)':'.1)');
+x.beginPath();x.moveTo(Math.cos(a)*r1,Math.sin(a)*r1);
+x.lineTo(Math.cos(a)*120,Math.sin(a)*120);x.stroke();
+}
+x.restore();
+
+// Sentinel figure — geometric/abstract guardian
+// Head
+x.fillStyle=G2+'.7)';
+x.beginPath();x.arc(cx,cy-55,12,0,TAU);x.fill();
+x.fillStyle=BG;
+x.beginPath();x.arc(cx,cy-55,8,0,TAU);x.fill();
+// Eye slit
+x.fillStyle=G;
+x.fillRect(cx-8,cy-57,16,3);
+
+// Torso — angular
+x.fillStyle=G2+'.15)';
+x.beginPath();
+x.moveTo(cx-20,cy-40);
+x.lineTo(cx+20,cy-40);
+x.lineTo(cx+30,cy+10);
+x.lineTo(cx+15,cy+30);
+x.lineTo(cx-15,cy+30);
+x.lineTo(cx-30,cy+10);
+x.closePath();x.fill();
+x.strokeStyle=G2+'.5)';x.lineWidth=1.5;x.stroke();
+
+// Chest symbol
+x.strokeStyle=G;x.lineWidth=1.5;
+x.beginPath();
+x.moveTo(cx,cy-25);x.lineTo(cx+10,cy-10);
+x.lineTo(cx,cy);x.lineTo(cx-10,cy-10);x.closePath();
+x.stroke();
+x.fillStyle=G2+'.3)';x.fill();
+
+// Arms — extended sensor arrays
+x.strokeStyle=G2+'.4)';x.lineWidth=2;
+// Left arm
+x.beginPath();x.moveTo(cx-20,cy-35);x.lineTo(cx-55,cy-15);x.lineTo(cx-60,cy-5);x.stroke();
+// Right arm
+x.beginPath();x.moveTo(cx+20,cy-35);x.lineTo(cx+55,cy-15);x.lineTo(cx+60,cy-5);x.stroke();
+// Sensor tips
+x.fillStyle=G;
+x.fillRect(cx-63,cy-8,6,6);
+x.fillRect(cx+57,cy-8,6,6);
+
+// Lower body / legs
+x.strokeStyle=G2+'.3)';x.lineWidth=1.5;
+x.beginPath();x.moveTo(cx-12,cy+30);x.lineTo(cx-18,cy+65);x.stroke();
+x.beginPath();x.moveTo(cx+12,cy+30);x.lineTo(cx+18,cy+65);x.stroke();
+// Feet
+x.fillStyle=G2+'.3)';
+x.fillRect(cx-22,cy+62,10,4);
+x.fillRect(cx+12,cy+62,10,4);
+
+// Designation text
+x.font='9px "Teko"';x.fillStyle=G2+'.3)';x.letterSpacing='3px';
+x.fillText('SENTINEL-09',cx-35,cy+90);
+x.font='7px "Share Tech Mono"';x.fillStyle=G2+'.2)';
+x.fillText('BLACK PROGRAM // RESTRICTED',cx-70,cy+104);
+
+// Slow pulse on eye
+const pulse=Math.sin(t*8)*0.3+0.7;
+x.fillStyle=G2+pulse.toFixed(2)+')';
+x.fillRect(cx-6,cy-56.5,12,2);
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+
+// ════════════════════════════════════════
+// 10. EXPLORER HEX MESH
+// ════════════════════════════════════════
+(function(){
+const tile=document.getElementById('tile-hex');
+const body=document.getElementById('body-hex');
+body.remove();
+const c=document.createElement('canvas');
+c.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1';
+tile.appendChild(c);
+
+function draw(){
+const W=c.width=c.offsetWidth, H=c.height=c.offsetHeight;
+const x=c.getContext('2d');
+x.fillStyle='#030500';x.fillRect(0,0,W,H);
+
+const t=Date.now()/2000;
+const hexR=18;
+const hexH=hexR*Math.sqrt(3);
+
+for(let row=-1;row<H/hexH+1;row++){
+for(let col=-1;col<W/(hexR*3)+1;col++){
+const cx_h=col*hexR*3+(row%2)*hexR*1.5;
+const cy_h=row*hexH*0.5;
+const dist=Math.sqrt((cx_h-W/2)**2+(cy_h-H/2)**2);
+const maxDist=Math.sqrt((W/2)**2+(H/2)**2);
+const norm=dist/maxDist;
+
+// Activation wave
+const wave=Math.sin(t-dist/80)*0.5+0.5;
+const active=dist<120&&wave>0.6;
+
+x.beginPath();
+for(let i=0;i<6;i++){
+const a=PI/6+i*PI/3;
+const hx=cx_h+Math.cos(a)*hexR*0.9;
+const hy=cy_h+Math.sin(a)*hexR*0.9;
+i===0?x.moveTo(hx,hy):x.lineTo(hx,hy);
+}
+x.closePath();
+
+if(active){
+x.fillStyle=G2+(.08+wave*.12).toFixed(3)+')';
+x.fill();
+x.strokeStyle=G2+(.3+wave*.3).toFixed(3)+')';
+}else{
+x.strokeStyle=G2+(.06+norm*.04).toFixed(3)+')';
+}
+x.lineWidth=0.5;x.stroke();
+}
+}
+
+// Center hex highlight
+x.strokeStyle=G2+'.5)';x.lineWidth=2;
+x.beginPath();
+for(let i=0;i<6;i++){
+const a=PI/6+i*PI/3;
+i===0?x.moveTo(W/2+Math.cos(a)*hexR,H/2+Math.sin(a)*hexR):
+x.lineTo(W/2+Math.cos(a)*hexR,H/2+Math.sin(a)*hexR);
+}
+x.closePath();x.stroke();
+
+x.font='7px "Share Tech Mono"';x.fillStyle=G2+'.4)';
+x.fillText('PROBE SURFACE MESH',14,20);
+x.fillText('HEX LATTICE R='+hexR,14,32);
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+
+// ════════════════════════════════════════
+// 11. ORBITAL PROBE OBJECT
+// ════════════════════════════════════════
+(function(){
+const tile=document.getElementById('tile-orbital');
+const body=document.getElementById('body-orbital');
+body.remove();
+const c=document.createElement('canvas');
+c.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1';
+tile.appendChild(c);
+
+function draw(){
+const W=c.width=c.offsetWidth, H=c.height=c.offsetHeight;
+const x=c.getContext('2d');
+x.fillStyle='#020300';x.fillRect(0,0,W,H);
+const cx=W/2,cy=H/2,R=Math.min(W,H)*0.28;
+const t=Date.now()/2000;
+
+// Globe outline
+x.strokeStyle=G2+'.3)';x.lineWidth=1;
+x.beginPath();x.arc(cx,cy,R,0,TAU);x.stroke();
+
+// Latitude lines
+for(let lat=-60;lat<=60;lat+=20){
+const r=R*Math.cos(lat*PI/180);
+const y=cy-R*Math.sin(lat*PI/180);
+x.strokeStyle=G2+'.08)';x.lineWidth=0.5;
+x.beginPath();x.ellipse(cx,y,r,r*0.15,0,0,TAU);x.stroke();
+}
+
+// Longitude lines
+for(let lon=0;lon<180;lon+=30){
+x.save();x.translate(cx,cy);x.rotate((lon+t*20)*PI/180);
+x.strokeStyle=G2+'.08)';x.lineWidth=0.5;
+x.beginPath();x.ellipse(0,0,R*0.15,R,0,0,TAU);x.stroke();
+x.restore();
+}
+
+// Dot-field land approximation
+const dotStep=6;
+for(let dy=-R;dy<=R;dy+=dotStep){
+for(let dx=-R;dx<=R;dx+=dotStep){
+if(dx*dx+dy*dy>R*R)continue;
+const lon=(Math.atan2(dx,Math.sqrt(R*R-dx*dx-dy*dy))*180/PI+t*20)%360;
+const lat=Math.asin(dy/R)*180/PI;
+// Crude continental shapes via noise-ish function
+const v=Math.sin(lon*0.05)*Math.cos(lat*0.08)+Math.sin(lon*0.03+lat*0.04)*0.5;
+if(v>0.2&&Math.abs(lat)<70){
+const bright=0.15+v*0.25;
+x.fillStyle=G2+bright.toFixed(2)+')';
+x.fillRect(cx+dx-1,cy+dy-1,2,2);
+}
+}
+}
+
+// Orbital ring
+x.save();x.translate(cx,cy);x.rotate(0.3);
+x.strokeStyle=G2+'.25)';x.lineWidth=1;
+x.beginPath();x.ellipse(0,0,R*1.5,R*0.3,0.2,0,TAU);x.stroke();
+// Satellite dot on orbit
+const satA=t*1.5;
+const sx=Math.cos(satA)*R*1.5;
+const sy=Math.sin(satA)*R*0.3;
+x.fillStyle=G;x.fillRect(sx-2,sy-2,4,4);
+// Orbit connector to label
+if(sy<0){// only when in front
+x.strokeStyle=G2+'.3)';x.setLineDash([2,4]);
+x.beginPath();x.moveTo(sx,sy);x.lineTo(sx+30,sy-20);x.stroke();
+x.setLineDash([]);
+x.font='7px "Share Tech Mono"';x.fillStyle=G2+'.6)';
+x.fillText('SAT-07',sx+32,sy-18);
+}
+x.restore();
+
+// Rim glow
+const rim=x.createRadialGradient(cx,cy,R*0.8,cx,cy,R*1.1);
+rim.addColorStop(0,'transparent');
+rim.addColorStop(0.8,G2+'.03)');
+rim.addColorStop(1,'transparent');
+x.fillStyle=rim;x.fillRect(0,0,W,H);
+
+// Telemetry readout
+x.font='8px "Share Tech Mono"';x.fillStyle=G2+'.5)';
+x.fillText('ORBITAL SCAN',12,20);
+x.fillText('PROBE: HADAL-OBJ-11',12,32);
+x.fillText('PERIOD: 92.4min',W-110,20);
+x.fillText('INC: 51.6°',W-110,32);
+
+requestAnimationFrame(draw);
+}
+draw();
+})();
+
+
+// ════════════════════════════════════════
+// 12. TELEMETRY ISLANDS
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-telemetry');
+body.style.cssText='position:absolute;inset:0;padding:50px 8px 30px;display:grid;grid-template-columns:1fr 2fr 1fr;grid-template-rows:1fr 2fr 1fr;gap:4px;';
+
+const modules=[
+{label:'FREQ',type:'wave',pos:'1/1'},
+{label:'TEMP',type:'bar',pos:'1/2'},
+{label:'PWR',type:'num',val:'847',unit:'mW',pos:'1/3'},
+{label:'MESH',type:'dots',pos:'2/1'},
+{label:'PRIMARY',type:'center',pos:'2/2'},
+{label:'RSSI',type:'num',val:'-42',unit:'dBm',pos:'2/3'},
+{label:'CNT',type:'num',val:'2847',unit:'',pos:'3/1'},
+{label:'BW',type:'bar2',pos:'3/2'},
+{label:'LAT',type:'num',val:'0.28',unit:'ms',pos:'3/3'},
+];
+
+modules.forEach(m=>{
+const div=document.createElement('div');
+div.style.cssText='background:#080a02;border:1px solid '+G2+'.1);position:relative;overflow:hidden;grid-area:'+m.pos;
+
+// Label
+const lbl=document.createElement('div');
+lbl.style.cssText='position:absolute;top:2px;left:3px;font-size:6px;letter-spacing:2px;color:'+G2+'.3)';
+lbl.textContent=m.label;
+div.appendChild(lbl);
+
+if(m.type==='wave'){
+const cv=document.createElement('canvas');
+cv.style.cssText='width:100%;height:100%';
+div.appendChild(cv);
+requestAnimationFrame(function animW(){
+cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+const xx=cv.getContext('2d');if(!xx)return;
+const t=Date.now()/200;
+xx.strokeStyle=G2+'.6)';xx.lineWidth=1;
+xx.beginPath();
+for(let i=0;i<cv.width;i++){
+const v=Math.sin(i*0.15+t)*cv.height*0.3+cv.height/2;
+i===0?xx.moveTo(i,v):xx.lineTo(i,v);
+}
+xx.stroke();
+requestAnimationFrame(animW);
+});
+}else if(m.type==='bar'||m.type==='bar2'){
+const bars=document.createElement('div');
+bars.style.cssText='position:absolute;bottom:4px;left:3px;right:3px;top:14px;display:flex;align-items:flex-end;gap:1px';
+for(let i=0;i<16;i++){
+const b=document.createElement('div');
+const h=20+Math.random()*70;
+b.style.cssText='flex:1;background:'+G2+(.2+Math.random()*.4).toFixed(2)+');height:'+h+'%';
+bars.appendChild(b);
+}
+div.appendChild(bars);
+}else if(m.type==='num'){
+const n=document.createElement('div');
+n.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column';
+n.innerHTML='<span style="font-family:Teko;font-weight:700;font-size:24px;color:'+G+';line-height:1">'+m.val+'</span><span style="font-size:6px;color:'+G2+'.3);letter-spacing:2px">'+m.unit+'</span>';
+div.appendChild(n);
+}else if(m.type==='dots'){
+const cv=document.createElement('canvas');
+cv.style.cssText='width:100%;height:100%';
+div.appendChild(cv);
+requestAnimationFrame(function animD(){
+cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+const xx=cv.getContext('2d');if(!xx)return;
+for(let r=0;r<cv.height;r+=6){
+for(let c2=0;c2<cv.width;c2+=6){
+const v=Math.sin(Date.now()/500+r*0.1+c2*0.1)*0.5+0.5;
+xx.fillStyle=G2+(v*0.3).toFixed(2)+')';
+xx.fillRect(c2,r,3,3);
+}
+}
+requestAnimationFrame(animD);
+});
+}else if(m.type==='center'){
+const cv=document.createElement('canvas');
+cv.style.cssText='width:100%;height:100%';
+div.appendChild(cv);
+requestAnimationFrame(function animC(){
+cv.width=cv.offsetWidth;cv.height=cv.offsetHeight;
+const xx=cv.getContext('2d');if(!xx)return;
+const ccx=cv.width/2,ccy=cv.height/2;
+xx.fillStyle='#030500';xx.fillRect(0,0,cv.width,cv.height);
+// Radar sweep
+const a=Date.now()/1000;
+xx.strokeStyle=G2+'.2)';xx.lineWidth=0.5;
+for(let r=15;r<Math.min(ccx,ccy);r+=15){
+xx.beginPath();xx.arc(ccx,ccy,r,0,TAU);xx.stroke();
+}
+// Sweep
+xx.fillStyle=G2+'.15)';
+xx.beginPath();xx.moveTo(ccx,ccy);
+xx.arc(ccx,ccy,Math.min(ccx,ccy),a,a+0.4);
+xx.closePath();xx.fill();
+// Blips
+for(let i=0;i<5;i++){
+const ba=i*1.3+Math.sin(i)*0.5;
+const br=20+i*12;
+xx.fillStyle=G;
+xx.fillRect(ccx+Math.cos(ba)*br-1,ccy+Math.sin(ba)*br-1,3,3);
+}
+xx.strokeStyle=G2+'.4)';xx.lineWidth=1;
+xx.beginPath();xx.moveTo(ccx,ccy);
+xx.lineTo(ccx+Math.cos(a)*Math.min(ccx,ccy),ccy+Math.sin(a)*Math.min(ccx,ccy));
+xx.stroke();
+requestAnimationFrame(animC);
+});
+}
+
+body.appendChild(div);
+});
+})();
+
+
+// ════════════════════════════════════════
+// 13. DIAGONAL GRAPHIC BANDS
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-diag');
+body.style.cssText='position:absolute;inset:0;overflow:hidden';
+
+const container=document.createElement('div');
+container.className='diag-bands';
+body.appendChild(container);
+
+const bands=[
+{text:'HADAL SYSTEMS',cls:'thick'},
+{text:'',cls:'thin'},
+{text:'THREAT INTELLIGENCE TERMINAL',cls:''},
+{text:'CLASSIFIED // RESTRICTED',cls:'amb'},
+{text:'',cls:'thin'},
+{text:'GULF THEATRE OPERATIONS',cls:''},
+{text:'',cls:'thin'},
+{text:'SIGINT ELINT GEOINT MASINT HUMINT',cls:''},
+{text:'V2.0',cls:'thick'},
+{text:'',cls:'thin'},
+{text:'REAL-TIME FUSION',cls:''},
+{text:'MILITARY GRADE',cls:''},
+{text:'',cls:'thin'},
+{text:'INSTITUTIONAL DECISION SUPPORT',cls:''},
+{text:'WARNING',cls:'amb'},
+{text:'',cls:'thin'},
+{text:'NOT FOR PUBLIC RELEASE',cls:''},
+{text:'HADAL // SENTINEL // OVERWATCH',cls:''},
+{text:'',cls:'thin'},
+{text:'OPERATIONAL SECURITY',cls:''},
+{text:'',cls:'thin'},
+{text:'ARMED FORCES INTEGRATION',cls:''},
+{text:'ZERO TRUST ARCHITECTURE',cls:'thick'},
+{text:'',cls:'thin'},
+{text:'COALITION INTEROP',cls:''},
+];
+
+bands.forEach(b=>{
+const d=document.createElement('div');
+d.className='diag-band '+b.cls;
+d.textContent=b.text;
+container.appendChild(d);
+});
+})();
+
+
+// ════════════════════════════════════════
+// 14. STRUCTURAL TYPOGRAPHY
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-structtype');
+body.style.cssText='position:absolute;inset:0;overflow:hidden';
+
+const inner=document.createElement('div');
+inner.className='struct-type';
+inner.innerHTML=`
+<div class="micro">VISUAL SYSTEMS BOARD :: 2026</div>
+<div class="mega">HAD</div>
+<div class="mega outline">AL</div>
+<div class="mega" style="font-size:60px;letter-spacing:8px;color:${G2}.4)">THREAT</div>
+<div class="mega" style="font-size:80px">INTEL</div>
+<div class="micro" style="margin-top:8px">V2 — GULF THEATRE — MILITARY GRADE</div>
+<div style="margin-top:12px;height:3px;width:60%;background:${G};opacity:.3"></div>
+<div style="height:1px;width:40%;background:${G};opacity:.15;margin-top:3px"></div>
+`;
+body.appendChild(inner);
+})();
+
+
+// ════════════════════════════════════════
+// 15. RESTRICTED AMBER LANGUAGE
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-amber');
+body.style.cssText='position:absolute;inset:0;padding:50px 12px 30px;display:flex;flex-direction:column;gap:8px;justify-content:center';
+
+// Warning header module
+const w1=document.createElement('div');
+w1.className='amber-panel';
+w1.innerHTML=`
+<div class="amber-header">
+<span>⚠ RESTRICTED</span>
+<span style="font-size:10px;font-family:'Share Tech Mono';letter-spacing:2px" class="amber-flash">ACTIVE</span>
+</div>
+<div class="amber-body" style="font-size:9px;line-height:1.8;letter-spacing:1px">
+<div>CLASSIFICATION: <span style="font-weight:700">SECRET//NOFORN</span></div>
+<div>HANDLING: <span style="font-weight:700">ARMED ENGAGEMENT ROE</span></div>
+<div>VALID: 2026-03-22T00:00Z — 2026-03-23T00:00Z</div>
+<div style="margin-top:6px;border-top:1px solid rgba(255,152,20,.2);padding-top:6px">
+<span style="color:${AMB};font-family:Teko;font-weight:700;font-size:16px;letter-spacing:4px">WEAPONS FREE — SECTOR 7</span>
+</div>
+</div>
+`;
+body.appendChild(w1);
+
+// Amber status badges
+const badges=document.createElement('div');
+badges.style.cssText='display:flex;gap:4px;flex-wrap:wrap';
+['ARMED','ESCALATION','HOSTILE','WMD ALERT','SCRAMBLE','DEFCON 2'].forEach(b=>{
+const s=document.createElement('span');
+s.style.cssText='padding:3px 10px;border:1px solid '+AMB+';color:'+AMB+';font-family:Teko;font-size:13px;font-weight:600;letter-spacing:3px;background:rgba(255,152,20,.06)';
+s.textContent=b;
+badges.appendChild(s);
+});
+body.appendChild(badges);
+
+// Amber data line
+const dl=document.createElement('div');
+dl.style.cssText='font-size:8px;color:rgba(255,152,20,.5);letter-spacing:2px;margin-top:4px';
+dl.textContent='AMBER IS RESERVED — NEVER DECORATIVE — ALWAYS OPERATIONAL STATE';
+body.appendChild(dl);
+})();
+
+
+// ════════════════════════════════════════
+// 16. RASTER MICRO MODULES
+// ════════════════════════════════════════
+(function(){
+const body=document.getElementById('body-micro');
+body.style.cssText='position:absolute;inset:0;padding:48px 6px 28px';
+
+const grid=document.createElement('div');
+grid.className='micro-grid';
+body.appendChild(grid);
+
+const microTypes=['SIGNAL','BINARY','THERMAL','SPECTRUM','PHASE','VECTOR','DENSITY','STATUS','HASH'];
+
+microTypes.forEach((label,idx)=>{
+const mod=document.createElement('div');
+mod.className='micro-mod';
+
+const lbl=document.createElement('div');
+lbl.className='micro-label';lbl.textContent=label;
+mod.appendChild(lbl);
+
+const cv=document.createElement('canvas');
+mod.appendChild(cv);
+grid.appendChild(mod);
+
+requestAnimationFrame(function anim(){
+cv.width=cv.offsetWidth||60;cv.height=cv.offsetHeight||60;
+const xx=cv.getContext('2d');if(!xx){requestAnimationFrame(anim);return;}
+xx.fillStyle='#040600';xx.fillRect(0,0,cv.width,cv.height);
+const t=Date.now()/1000;
+
+switch(idx%9){
+case 0:// Signal waveform
+xx.strokeStyle=G2+'.7)';xx.lineWidth=1;
+xx.beginPath();
+for(let i=0;i<cv.width;i++){
+const v=Math.sin(i*0.3+t*3)*cv.height*0.35+cv.height/2;
+i===0?xx.moveTo(i,v):xx.lineTo(i,v);
+}
+xx.stroke();break;
+case 1:// Binary raster
+for(let r=0;r<cv.height;r+=4){
+for(let c2=0;c2<cv.width;c2+=4){
+const on=((r*7+c2*13+Math.floor(t))%5)>2;
+xx.fillStyle=on?G2+'.5)':G2+'.05)';
+xx.fillRect(c2,r,3,3);
+}}break;
+case 2:// Thermal map
+for(let r=0;r<cv.height;r+=3){
+for(let c2=0;c2<cv.width;c2+=3){
+const v=Math.sin(c2*0.1+t)*Math.cos(r*0.1)*0.5+0.5;
+const rr=Math.floor(218*v*0.5+80*v);
+const gg=Math.floor(255*v*0.6);
+const bb=Math.floor(74*v*0.2);
+xx.fillStyle=`rgba(${rr},${gg},${bb},${v*0.7})`;
+xx.fillRect(c2,r,3,3);
+}}break;
+case 3:// Spectrum bars
+for(let c2=0;c2<cv.width;c2+=3){
+const h=(Math.sin(c2*0.2+t*2)*0.5+0.5)*cv.height*0.8;
+xx.fillStyle=G2+(.3+Math.random()*.3).toFixed(2)+')';
+xx.fillRect(c2,cv.height-h,2,h);
+}break;
+case 4:// Phase dots
+for(let r=0;r<cv.height;r+=6){
+for(let c2=0;c2<cv.width;c2+=6){
+const phase=Math.sin(t*2+r*0.2+c2*0.2)*0.5+0.5;
+xx.fillStyle=G2+(phase*0.6).toFixed(2)+')';
+xx.beginPath();xx.arc(c2+3,r+3,1.5,0,TAU);xx.fill();
+}}break;
+case 5:// Vector field
+xx.strokeStyle=G2+'.4)';xx.lineWidth=0.5;
+for(let r=4;r<cv.height;r+=8){
+for(let c2=4;c2<cv.width;c2+=8){
+const a=Math.sin(t+r*0.1)*PI;
+xx.beginPath();xx.moveTo(c2,r);
+xx.lineTo(c2+Math.cos(a)*3,r+Math.sin(a)*3);xx.stroke();
+}}break;
+case 6:// Density heatmap
+for(let r=0;r<cv.height;r+=2){
+for(let c2=0;c2<cv.width;c2+=2){
+const d=Math.sqrt((c2-cv.width/2)**2+(r-cv.height/2)**2);
+const v=Math.max(0,1-d/(cv.width*0.4))*(.5+Math.sin(t*2)*0.2);
+xx.fillStyle=G2+(v*0.8).toFixed(2)+')';
+xx.fillRect(c2,r,2,2);
+}}break;
+case 7:// Status blocks
+const states=[G2+'.6)',G2+'.15)',G2+'.6)',AMB.replace(')',',0.5)').replace('rgb','rgba')];
+for(let r=0;r<4;r++){
+for(let c2=0;c2<4;c2++){
+const si=(r*4+c2+Math.floor(t))%4;
+const bw=cv.width/4-1,bh=cv.height/4-1;
+xx.fillStyle=states[si];
+xx.fillRect(c2*(bw+1),r*(bh+1),bw,bh);
+}}break;
+case 8:// Hash/noise
+for(let i=0;i<200;i++){
+const rx=Math.random()*cv.width;
+const ry=Math.random()*cv.height;
+xx.fillStyle=G2+(Math.random()*0.4).toFixed(2)+')';
+xx.fillRect(rx,ry,2,2);
+}break;
+}
+requestAnimationFrame(anim);
+});
+});
+})();
+
+
+</script>
+</body>
+</html>

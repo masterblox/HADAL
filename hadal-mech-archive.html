@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HADAL Mech Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Teko:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #060800;
+        --bg2: #0a0d03;
+        --bg3: #101509;
+        --bg4: #151b0e;
+        --line: rgba(196, 255, 44, 0.17);
+        --grid: rgba(196, 255, 44, 0.05);
+        --g: #c4ff2c;
+        --g-soft: rgba(196, 255, 44, 0.68);
+        --g-dim: rgba(196, 255, 44, 0.44);
+        --warn: rgba(255, 153, 20, 0.92);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at 50% 0%, rgba(196, 255, 44, 0.05), transparent 26%),
+          var(--bg);
+        color: var(--g);
+      }
+
+      body {
+        padding: 14px;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      .sheet {
+        min-height: calc(100vh - 28px);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(180deg, rgba(196, 255, 44, 0.022), transparent 20%),
+          var(--bg2);
+      }
+
+      .sheet::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+
+      .masthead {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: end;
+        padding: 14px 16px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .eyebrow,
+      .meta,
+      .subcopy,
+      .small {
+        font-family: "Share Tech Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .eyebrow,
+      .meta {
+        font-size: 10px;
+        color: var(--g-soft);
+      }
+
+      h1 {
+        margin: 8px 0 0;
+        font: 600 clamp(2.8rem, 5vw, 4.8rem)/0.88 "Teko", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .subcopy {
+        margin-top: 10px;
+        max-width: 760px;
+        font-size: 11px;
+        line-height: 1.7;
+        color: var(--g-dim);
+      }
+
+      .class-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px 4px;
+        border: 1px solid rgba(255, 153, 20, 0.44);
+        color: var(--warn);
+        font: 700 10px/1 "Share Tech Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .layout {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1.12fr) minmax(340px, 0.88fr);
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(180deg, rgba(196, 255, 44, 0.02), transparent 20%),
+          var(--bg3);
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+      }
+
+      .panel-head {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .panel-title {
+        margin: 0;
+        font: 600 22px/0.9 "Teko", sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .panel-meta {
+        font: 700 10px/1 "Share Tech Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--g-dim);
+      }
+
+      .hero-body {
+        position: relative;
+        min-height: 860px;
+        padding: 14px;
+      }
+
+      .hero-asset {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        isolation: isolate;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #0b1007;
+      }
+
+      .hero-asset::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(196, 255, 44, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(196, 255, 44, 0.04) 1px, transparent 1px);
+        background-size: 24px 24px;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .hero-asset::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(34, 71, 15, 0.28), rgba(8, 15, 4, 0.46)),
+          linear-gradient(90deg, rgba(90, 132, 27, 0.14), rgba(11, 17, 7, 0.04) 42%, rgba(109, 138, 42, 0.16));
+        mix-blend-mode: multiply;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .hero-asset img {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center bottom;
+        padding: 30px 50px 18px 50px;
+        filter: grayscale(0.18) sepia(0.82) hue-rotate(32deg) saturate(3.8) brightness(0.76) contrast(1.12);
+      }
+
+      .callout-svg {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .callout-copy {
+        position: absolute;
+        z-index: 3;
+        font: 10px/1.5 "Share Tech Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--g-soft);
+      }
+
+      .c1 { left: 18px; top: 88px; }
+      .c2 { right: 18px; top: 128px; text-align: right; }
+      .c3 { right: 18px; top: 338px; text-align: right; }
+      .c4 { left: 18px; bottom: 136px; }
+      .c5 { right: 18px; bottom: 188px; text-align: right; }
+
+      .side-col {
+        display: grid;
+        grid-template-rows: 1.15fr 0.85fr;
+        gap: 12px;
+      }
+
+      .detail-body,
+      .notes-body {
+        position: relative;
+        z-index: 1;
+        padding: 12px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 180px;
+        gap: 12px;
+      }
+
+      .optic-card {
+        border: 1px solid var(--line);
+        background: #0c1007;
+        min-height: 100%;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+      }
+
+      .optic-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(196, 255, 44, 0.05), transparent 30%),
+          linear-gradient(90deg, rgba(196, 255, 44, 0.03), transparent 26%);
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      .optic-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 28% 30%, rgba(29, 140, 43, 0.32), transparent 34%),
+          linear-gradient(180deg, rgba(18, 32, 10, 0.22), rgba(10, 14, 7, 0.48));
+        mix-blend-mode: multiply;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .optic-crop {
+        width: 100%;
+        height: 100%;
+        min-height: 360px;
+        object-fit: cover;
+        object-position: 16% 16%;
+        display: block;
+        filter: grayscale(0.08) sepia(0.96) hue-rotate(26deg) saturate(5.2) brightness(0.9) contrast(1.18);
+      }
+
+      .palette {
+        display: grid;
+        gap: 10px;
+      }
+
+      .swatch {
+        border: 1px solid var(--line);
+        background: rgba(10, 13, 3, 0.88);
+        padding: 12px;
+      }
+
+      .swatch-chip {
+        width: 48px;
+        height: 48px;
+        border: 1px solid var(--line);
+        margin-bottom: 8px;
+      }
+
+      .swatch-name {
+        margin: 0 0 6px;
+        font: 600 22px/0.9 "Teko", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .swatch-note {
+        margin: 0;
+        color: var(--g-dim);
+        font: 10px/1.6 "Share Tech Mono", monospace;
+        text-transform: uppercase;
+      }
+
+      .note-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .note {
+        border: 1px solid var(--line);
+        padding: 12px;
+        background: rgba(10, 13, 3, 0.84);
+      }
+
+      .note h3 {
+        margin: 0 0 8px;
+        font: 600 22px/0.9 "Teko", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .note p {
+        margin: 0;
+        color: var(--g-dim);
+        font: 11px/1.65 "Share Tech Mono", monospace;
+      }
+
+      .bottom {
+        position: relative;
+        z-index: 1;
+        padding: 0 12px 12px;
+      }
+
+      .variants {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .variant {
+        border: 1px solid var(--line);
+        background: rgba(10, 13, 3, 0.84);
+      }
+
+      .variant-visual {
+        position: relative;
+        isolation: isolate;
+        height: 220px;
+        overflow: hidden;
+        border-bottom: 1px solid var(--line);
+        background: #0b1007;
+      }
+
+      .variant-visual::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(30, 62, 12, 0.18), rgba(8, 14, 4, 0.42)),
+          linear-gradient(90deg, rgba(87, 126, 31, 0.12), transparent 46%, rgba(87, 126, 31, 0.14));
+        mix-blend-mode: multiply;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .variant-visual img {
+        position: relative;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center 72%;
+        padding: 16px;
+        display: block;
+        filter: grayscale(0.18) sepia(0.82) hue-rotate(32deg) saturate(3.6) brightness(0.78) contrast(1.12);
+      }
+
+      .variant:nth-child(2) .variant-visual img {
+        filter: grayscale(0.08) sepia(0.94) hue-rotate(24deg) saturate(4.7) brightness(0.82) contrast(1.12);
+      }
+
+      .variant:nth-child(3) .variant-visual img {
+        filter: grayscale(0.42) sepia(0.78) hue-rotate(36deg) saturate(2.8) brightness(0.68) contrast(1.06);
+      }
+
+      .variant-body {
+        padding: 10px 12px 12px;
+      }
+
+      .variant-title {
+        margin: 0 0 8px;
+        font: 600 22px/0.9 "Teko", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .variant-copy {
+        margin: 0;
+        color: var(--g-dim);
+        font: 10px/1.6 "Share Tech Mono", monospace;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 1160px) {
+        .layout,
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .side-col {
+          grid-template-rows: auto auto;
+        }
+      }
+
+      @media (max-width: 820px) {
+        body {
+          padding: 8px;
+        }
+
+        .masthead,
+        .layout,
+        .bottom {
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+
+        .masthead {
+          grid-template-columns: 1fr;
+        }
+
+        .variants {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-body {
+          min-height: 720px;
+        }
+
+        .hero-asset img {
+          padding: 28px 18px 18px;
+        }
+
+        .c2, .c3, .c5 {
+          right: 12px;
+        }
+
+        .c1, .c4 {
+          left: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="masthead">
+        <section>
+          <div class="eyebrow">venus trap / mech archive / coded wrapper pass</div>
+          <h1>Hadal Mech Archive</h1>
+          <p class="subcopy">
+            Source art remains intact. Everything around it is rebuilt: archive grid,
+            leader-line callouts, optic detail crop, material stack, and variant rail.
+            This is the middle ground between bad tracing and lazy screenshot staging.
+          </p>
+        </section>
+        <section>
+          <div class="meta">project / hadal mech head / archive board v2</div>
+          <div style="margin-top:8px"><span class="class-tag">restricted archive</span></div>
+        </section>
+      </header>
+
+      <section class="layout">
+        <article class="panel">
+          <header class="panel-head">
+            <h2 class="panel-title">Primary Dossier View</h2>
+            <div class="panel-meta">3/4 source / custom annotation layer</div>
+          </header>
+          <div class="hero-body">
+            <div class="hero-asset">
+              <img
+                src="reference-shots/stitch/mech-source-3q.png"
+                alt="Hadal mech source artwork"
+              />
+              <svg class="callout-svg" viewBox="0 0 1000 860" preserveAspectRatio="none" aria-hidden="true">
+                <g fill="none" stroke="rgba(196,255,44,0.82)" stroke-width="1.6" stroke-linecap="square" stroke-linejoin="miter">
+                  <path d="M126 104H306L376 178" />
+                  <path d="M878 144H784L700 202" />
+                  <path d="M878 350H760L706 352" />
+                  <path d="M132 706H286L360 628" />
+                  <path d="M874 650H738L680 576" />
+                </g>
+                <g fill="rgba(196,255,44,0.9)">
+                  <circle cx="376" cy="178" r="4.5" />
+                  <circle cx="700" cy="202" r="4.5" />
+                  <circle cx="706" cy="352" r="4.5" />
+                  <circle cx="360" cy="628" r="4.5" />
+                  <circle cx="680" cy="576" r="4.5" />
+                </g>
+              </svg>
+            </div>
+            <div class="callout-copy c1">optic housing / primary sensor ring</div>
+            <div class="callout-copy c2">rear wing panel / signal fin geometry</div>
+            <div class="callout-copy c3">brass sensor joint / exposed rotary node</div>
+            <div class="callout-copy c4">chin guard plate / lower armor gate</div>
+            <div class="callout-copy c5">neck connection / internal cable sheath</div>
+          </div>
+        </article>
+
+        <aside class="side-col">
+          <article class="panel">
+            <header class="panel-head">
+              <h2 class="panel-title">Optic Detail</h2>
+              <div class="panel-meta">close crop / material lane</div>
+            </header>
+            <div class="detail-body">
+              <div class="detail-grid">
+                <div class="optic-card">
+                  <img
+                    class="optic-crop"
+                    src="reference-shots/stitch/mech-source-3q.png"
+                    alt="Optic close crop from source mech artwork"
+                  />
+                </div>
+                <div class="palette">
+                  <div class="swatch">
+                    <div class="swatch-chip" style="background:#133c1f"></div>
+                    <p class="swatch-name">deep green</p>
+                    <p class="swatch-note">armor shell / major plate field</p>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch-chip" style="background:#c6841c"></div>
+                    <p class="swatch-name">amber</p>
+                    <p class="swatch-note">sensor trim / restricted accents</p>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch-chip" style="background:#16ff43"></div>
+                    <p class="swatch-name">toxic green</p>
+                    <p class="swatch-note">emitter core / active optic state</p>
+                  </div>
+                  <div class="swatch">
+                    <div class="swatch-chip" style="background:#121412"></div>
+                    <p class="swatch-name">near black</p>
+                    <p class="swatch-note">internal cavity / neck / support mass</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <header class="panel-head">
+              <h2 class="panel-title">Archive Notes</h2>
+              <div class="panel-meta">keep art / code the wrapper</div>
+            </header>
+            <div class="notes-body">
+              <div class="note-list">
+                <section class="note">
+                  <h3>Use Case</h3>
+                  <p>
+                    Venus Trap hero, dossier opener, R&amp;D lab archive, or mech-specific
+                    workspace tile. Rare surface, not a universal mascot.
+                  </p>
+                </section>
+                <section class="note">
+                  <h3>Extraction Rule</h3>
+                  <p>
+                    Preserve the mech as source art. Rebuild the surrounding system in code:
+                    labels, drafting field, archive metadata, variants, and component modules.
+                  </p>
+                </section>
+                <section class="note">
+                  <h3>Ban List</h3>
+                  <p>
+                    No CSS tracing. No pasted full screenshots. No startup landing-page copy.
+                    No decorative card spam around the subject.
+                  </p>
+                </section>
+              </div>
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="bottom">
+        <article class="panel">
+          <header class="panel-head">
+            <h2 class="panel-title">Variant Rail</h2>
+            <div class="panel-meta">same source / alternate board states</div>
+          </header>
+          <div class="detail-body">
+            <div class="variants">
+              <article class="variant">
+                <div class="variant-visual">
+                  <img src="reference-shots/stitch/mech-source-3q.png" alt="Base mech variant" />
+                </div>
+                <div class="variant-body">
+                  <h3 class="variant-title">variant 01 / base</h3>
+                  <p class="variant-copy">standard archive plate / neutral source carry / raw concept posture</p>
+                </div>
+              </article>
+
+              <article class="variant">
+                <div class="variant-visual">
+                  <img src="reference-shots/stitch/mech-source-3q.png" alt="Active mech variant" />
+                </div>
+                <div class="variant-body">
+                  <h3 class="variant-title">variant 02 / active</h3>
+                  <p class="variant-copy">higher green energy / use in showcase or entry-state board variants</p>
+                </div>
+              </article>
+
+              <article class="variant">
+                <div class="variant-visual">
+                  <img src="reference-shots/stitch/mech-source-3q.png" alt="Archive mech variant" />
+                </div>
+                <div class="variant-body">
+                  <h3 class="variant-title">variant 03 / archive</h3>
+                  <p class="variant-copy">muted archive treatment / use in report covers or classified catalog tabs</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

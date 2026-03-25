@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HADAL Reference Extraction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --g: #c8ff1a;
+      --g9: rgba(200, 255, 26, 0.95);
+      --g7: rgba(200, 255, 26, 0.72);
+      --g5: rgba(200, 255, 26, 0.48);
+      --g3: rgba(200, 255, 26, 0.26);
+      --g15: rgba(200, 255, 26, 0.14);
+      --g07: rgba(200, 255, 26, 0.07);
+      --warn: rgba(255, 153, 26, 0.92);
+      --warn5: rgba(255, 153, 26, 0.45);
+      --bg: #040603;
+      --bg2: #0a0d06;
+      --line: rgba(200, 255, 26, 0.16);
+      --mono: "Share Tech Mono", monospace;
+      --head: "Rajdhani", sans-serif;
+      --display: "Teko", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--g7); }
+    body {
+      font-family: var(--mono);
+      background:
+        radial-gradient(circle at 14% 0%, rgba(200,255,26,0.08), transparent 20%),
+        radial-gradient(circle at 86% 10%, rgba(255,153,26,0.06), transparent 20%),
+        linear-gradient(180deg, #0a0d04 0%, #040603 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      opacity: 0.08;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+
+    body::after {
+      opacity: 0.14;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0 2px,
+        rgba(0, 0, 0, 0.22) 2px 4px
+      );
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1760px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      padding: 0 4px 18px;
+      border-bottom: 1px solid var(--g15);
+      margin-bottom: 18px;
+    }
+
+    .title {
+      font: 700 clamp(44px, 5vw, 82px)/0.84 var(--display);
+      color: var(--g);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .sub {
+      font: 700 11px/1 var(--head);
+      color: var(--g5);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .note {
+      text-align: right;
+      max-width: 420px;
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--g3);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: 1.16fr 0.84fr;
+      gap: 18px;
+    }
+
+    .column {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--g15);
+      background:
+        linear-gradient(180deg, rgba(10, 14, 5, 0.94), rgba(6, 8, 2, 0.84));
+      min-height: 280px;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 160px;
+      height: 160px;
+      background:
+        linear-gradient(90deg, transparent 0 14px, rgba(200,255,26,0.06) 14px 15px, transparent 15px),
+        linear-gradient(transparent 0 14px, rgba(200,255,26,0.06) 14px 15px, transparent 15px);
+      mask: linear-gradient(135deg, transparent 26%, black 74%);
+      opacity: 0.64;
+    }
+
+    .labelbar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px 10px;
+      border-bottom: 1px solid var(--g07);
+      font: 700 10px/1 var(--head);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .labelbar .l { color: var(--g5); }
+    .labelbar .r { color: var(--g3); }
+
+    .chip-panel {
+      min-height: 560px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+
+    .chip-stage {
+      position: relative;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,0.08), transparent 30%),
+        linear-gradient(180deg, rgba(200,255,26,0.02), transparent 40%);
+    }
+
+    .chip-card {
+      position: relative;
+      width: min(100%, 560px);
+      aspect-ratio: 1.18;
+      background:
+        linear-gradient(160deg, rgba(235,240,226,0.1), rgba(80,84,78,0.02)),
+        linear-gradient(180deg, rgba(16,20,12,0.96), rgba(9,12,8,0.98));
+      border: 1px solid rgba(200,255,26,0.18);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03) inset;
+      overflow: hidden;
+      transform: perspective(1200px) rotateX(12deg) rotateZ(-10deg);
+    }
+
+    .chip-card::before,
+    .chip-card::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.2) inset;
+    }
+
+    .chip-card::before { top: 10px; left: 10px; }
+    .chip-card::after { bottom: 10px; right: 10px; }
+
+    .chip-metal-a,
+    .chip-metal-b,
+    .chip-window,
+    .chip-etch {
+      position: absolute;
+      overflow: hidden;
+    }
+
+    .chip-metal-a {
+      left: 10%;
+      top: 12%;
+      width: 50%;
+      height: 30%;
+      background:
+        linear-gradient(135deg, rgba(205,210,200,0.88), rgba(148,154,145,0.68)),
+        linear-gradient(180deg, rgba(255,255,255,0.2), transparent 40%);
+      clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%);
+    }
+
+    .chip-metal-b {
+      right: 11%;
+      top: 16%;
+      width: 28%;
+      height: 18%;
+      background:
+        linear-gradient(135deg, rgba(232,236,229,0.92), rgba(178,182,175,0.72));
+      border-top-left-radius: 20px;
+      border-bottom-left-radius: 20px;
+    }
+
+    .chip-window {
+      right: 12%;
+      bottom: 16%;
+      width: 44%;
+      height: 30%;
+      background:
+        linear-gradient(180deg, rgba(255,153,26,0.18), rgba(255,153,26,0.1)),
+        rgba(25, 14, 4, 0.9);
+      border: 1px solid rgba(255,153,26,0.22);
+    }
+
+    .chip-window::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      background:
+        linear-gradient(90deg, transparent 0 18px, rgba(255,153,26,0.16) 18px 19px, transparent 19px),
+        linear-gradient(transparent 0 18px, rgba(255,153,26,0.14) 18px 19px, transparent 19px);
+      opacity: 0.9;
+    }
+
+    .chip-etch {
+      left: 12%;
+      bottom: 18%;
+      width: 26%;
+      height: 26%;
+      border-radius: 50%;
+      border: 1px solid rgba(220,225,216,0.3);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 40%);
+    }
+
+    .chip-copy {
+      position: absolute;
+      left: 14%;
+      top: 18%;
+      z-index: 2;
+      color: rgba(24, 28, 18, 0.85);
+      font: 700 14px/1 var(--head);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .chip-copy small {
+      display: block;
+      margin-top: 6px;
+      font: 700 9px/1.2 var(--mono);
+      letter-spacing: 0.08em;
+      color: rgba(26, 28, 20, 0.65);
+    }
+
+    .chip-trace-svg,
+    .chip-mark-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .chip-detail {
+      padding: 20px 18px;
+      border-left: 1px solid var(--g07);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 16px;
+    }
+
+    .detail-card {
+      position: relative;
+      min-height: 168px;
+      border: 1px solid var(--g07);
+      background: rgba(9, 12, 4, 0.74);
+      overflow: hidden;
+      padding: 14px;
+    }
+
+    .detail-card .ttl {
+      font: 700 10px/1 var(--head);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warn);
+      margin-bottom: 12px;
+    }
+
+    .binary {
+      position: relative;
+      min-height: 360px;
+      padding: 0;
+    }
+
+    .binary .ttl {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      margin: 0;
+      padding: 8px 10px 7px;
+      border: 1px solid rgba(255,153,26,0.26);
+      background: rgba(255,153,26,0.05);
+    }
+
+    .binary-core {
+      position: absolute;
+      inset: 56px 18px 18px;
+      border: 1px solid var(--g07);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(200,255,26,0.07), transparent 24%),
+        #081004;
+      overflow: hidden;
+    }
+
+    .binary-core::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0 8px, rgba(200,255,26,0.05) 8px 9px, transparent 9px),
+        linear-gradient(transparent 0 8px, rgba(200,255,26,0.05) 8px 9px, transparent 9px);
+      opacity: 0.5;
+    }
+
+    .binary-core pre {
+      margin: 0;
+      position: absolute;
+      inset: 14px;
+      font: 700 8px/0.84 var(--mono);
+      color: var(--g9);
+      letter-spacing: -0.04em;
+      white-space: pre-wrap;
+      word-break: break-all;
+      text-shadow: 0 0 4px rgba(200,255,26,0.18);
+    }
+
+    .lock-panel {
+      min-height: 520px;
+    }
+
+    .lock-body {
+      position: relative;
+      min-height: 470px;
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 104px 104px;
+      overflow: hidden;
+    }
+
+    .lock-body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 48% 54%, rgba(200,255,26,0.06), transparent 24%),
+        radial-gradient(circle at 50% 88%, rgba(200,255,26,0.08), transparent 40%);
+      opacity: 0.6;
+    }
+
+    .lock-frame,
+    .lock-frame::before,
+    .lock-frame::after {
+      position: absolute;
+      content: "";
+      border: 2px solid;
+    }
+
+    .lock-frame {
+      left: 6%;
+      top: 10%;
+      right: 6%;
+      bottom: 12%;
+      border-color: rgba(200,255,26,0.42);
+    }
+
+    .lock-frame::before {
+      left: 15%;
+      top: 18%;
+      right: 22%;
+      bottom: 24%;
+      border-color: rgba(200,255,26,0.24);
+    }
+
+    .lock-frame::after {
+      left: 24%;
+      top: 34%;
+      right: 30%;
+      bottom: 34%;
+      border-color: rgba(200,255,26,0.54);
+    }
+
+    .ring {
+      position: absolute;
+      left: 50%;
+      top: 56%;
+      width: 116px;
+      height: 116px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 5px solid var(--g7);
+      box-shadow: 0 0 0 10px rgba(200,255,26,0.08);
+    }
+
+    .ring::before,
+    .ring::after {
+      content: "";
+      position: absolute;
+      background: rgba(200,255,26,0.28);
+    }
+
+    .ring::before {
+      left: 50%;
+      top: -102px;
+      width: 2px;
+      height: 320px;
+      transform: translateX(-50%);
+    }
+
+    .ring::after {
+      left: -110px;
+      top: 50%;
+      width: 340px;
+      height: 2px;
+      transform: translateY(-50%);
+    }
+
+    .measure {
+      position: absolute;
+      font: 700 18px/1 var(--head);
+      letter-spacing: 0.18em;
+      color: var(--g5);
+      text-transform: uppercase;
+    }
+
+    .measure.m1 { left: 8%; top: 12%; }
+    .measure.m2 { right: 8%; top: 12%; }
+    .measure.m3 { left: 8%; bottom: 17%; color: var(--warn); }
+    .measure.m4 { right: 10%; bottom: 17%; }
+
+    .card-copy {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 22px 24px 24px;
+      border-top: 1px solid var(--g07);
+      background: linear-gradient(180deg, rgba(7,10,3,0.72), rgba(5,8,2,0.9));
+    }
+
+    .eyebrow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      font: 700 11px/1 var(--head);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--g5);
+    }
+
+    .eyebrow .badge {
+      padding: 6px 10px 5px;
+      border: 1px solid rgba(255,153,26,0.26);
+      background: rgba(255,153,26,0.05);
+      color: var(--warn);
+    }
+
+    .headline {
+      font: 700 clamp(38px, 4vw, 72px)/0.92 var(--display);
+      color: var(--g);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .copy {
+      max-width: 52ch;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--g5);
+    }
+
+    .explorer-panel {
+      min-height: 700px;
+    }
+
+    .explorer-body {
+      position: relative;
+      min-height: 648px;
+      background: #030402;
+      overflow: hidden;
+    }
+
+    .explorer-body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(255,153,26,0.08), transparent 20%),
+        linear-gradient(180deg, rgba(255,153,26,0.02), transparent 30%);
+    }
+
+    .orb {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: min(62vw, 540px);
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba(255,153,26,0.22);
+      box-shadow: inset 0 0 60px rgba(255,153,26,0.08), 0 0 24px rgba(255,153,26,0.05);
+      overflow: hidden;
+    }
+
+    .orb svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      opacity: 0.86;
+      filter: drop-shadow(0 0 10px rgba(255,153,26,0.18));
+    }
+
+    .orbit {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,153,26,0.14);
+    }
+
+    .orbit.o1 {
+      width: min(70vw, 620px);
+      height: min(70vw, 620px);
+      left: 50%;
+      top: 52%;
+      transform: translate(-50%, -50%);
+    }
+
+    .orbit.o2 {
+      width: min(84vw, 760px);
+      height: min(84vw, 760px);
+      left: 50%;
+      top: 52%;
+      transform: translate(-50%, -50%);
+    }
+
+    .tele-box {
+      position: absolute;
+      border: 1px solid rgba(255,153,26,0.18);
+      background: rgba(8, 10, 4, 0.72);
+      overflow: hidden;
+      padding: 10px;
+    }
+
+    .tele-box small {
+      display: block;
+      margin-bottom: 10px;
+      font: 700 10px/1 var(--head);
+      letter-spacing: 0.2em;
+      color: var(--warn);
+      text-transform: uppercase;
+    }
+
+    .tele-box.wave { left: 18px; top: 18px; width: 198px; height: 86px; }
+    .tele-box.mesh { right: 18px; top: 152px; width: 310px; height: 230px; color: rgba(52,255,220,0.9); }
+    .tele-box.count { left: 22px; bottom: 34px; width: 172px; height: 176px; color: rgba(52,255,220,0.9); }
+
+    .tele-box .count-num {
+      font: 700 78px/.78 var(--display);
+      color: currentColor;
+      letter-spacing: 0.02em;
+    }
+
+    .mesh-mini {
+      position: absolute;
+      width: 90px;
+      height: 60px;
+      border-top: 1px solid currentColor;
+      border-left: 1px solid currentColor;
+      transform: perspective(220px) rotateX(66deg);
+      opacity: 0.84;
+    }
+
+    .mesh-mini::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(currentColor 1px, transparent 1px),
+        linear-gradient(90deg, currentColor 1px, transparent 1px);
+      background-size: 16px 16px;
+      opacity: 0.72;
+    }
+
+    .mesh-mini.m1 { left: 18px; top: 78px; }
+    .mesh-mini.m2 { left: 112px; top: 52px; }
+    .mesh-mini.m3 { left: 202px; top: 96px; }
+    .mesh-mini.m4 { left: 84px; top: 138px; }
+
+    .hex-badge {
+      position: absolute;
+      width: 92px;
+      height: 92px;
+      border: 2px solid rgba(255,153,26,0.68);
+      clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+      opacity: 0.78;
+    }
+
+    .hex-badge.h1 { right: 62px; top: 18px; }
+    .hex-badge.h2 { right: 98px; bottom: 26px; }
+
+    .signage-panel {
+      min-height: 760px;
+      background: #040404;
+    }
+
+    .signage-body {
+      position: relative;
+      min-height: 708px;
+      background: #040404;
+      overflow: hidden;
+    }
+
+    .sign-frame {
+      position: absolute;
+      inset: 16px;
+      border: 3px solid rgba(200,255,26,0.66);
+    }
+
+    .diag-band {
+      position: absolute;
+      left: -12%;
+      width: 128%;
+      height: 84px;
+      transform: rotate(40deg);
+    }
+
+    .diag-band.g { background: var(--g); }
+    .diag-band.l { background: rgba(200,255,26,0.18); border: 3px solid rgba(200,255,26,0.72); }
+    .diag-band.a { background: rgba(255,153,26,0.9); }
+
+    .diag-band.d1 { top: 12%; }
+    .diag-band.d2 { top: 28%; }
+    .diag-band.d3 { top: 60%; }
+
+    .sign-word {
+      position: absolute;
+      font: 700 clamp(88px, 10vw, 180px)/0.84 var(--display);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transform: rotate(-34deg);
+    }
+
+    .sign-word.w1 {
+      left: 26%;
+      top: 16%;
+      color: var(--g);
+    }
+
+    .sign-word.w2 {
+      left: 50%;
+      top: 34%;
+      color: rgba(220,220,220,0.9);
+    }
+
+    .sign-word.w3 {
+      left: 12%;
+      bottom: 10%;
+      color: rgba(200,255,26,0.26);
+    }
+
+    .sign-strip {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 18px;
+      border: 3px solid currentColor;
+      background: #040404;
+      color: currentColor;
+      font: 700 44px/.9 var(--display);
+      text-transform: uppercase;
+      transform: rotate(-52deg);
+    }
+
+    .sign-strip small {
+      display: block;
+      font: 700 12px/1 var(--head);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .sign-strip.s1 { left: -4%; top: 26%; color: rgba(230,230,230,0.88); width: 46%; }
+    .sign-strip.s2 { right: -8%; top: 42%; color: var(--g); width: 46%; }
+
+    .sticker {
+      position: absolute;
+      border: 3px solid currentColor;
+      background: #040404;
+      overflow: hidden;
+      color: currentColor;
+    }
+
+    .sticker::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 8px, currentColor 8px 9px, transparent 9px 18px),
+        repeating-linear-gradient(transparent 0 8px, currentColor 8px 9px, transparent 9px 18px);
+      opacity: 0.16;
+    }
+
+    .sticker.c1 { left: 6%; top: 14%; width: 220px; height: 150px; color: rgba(230,230,230,0.9); }
+    .sticker.c2 { right: 10%; top: 12%; width: 298px; height: 148px; color: var(--g); }
+    .sticker.c3 { left: 10%; bottom: 12%; width: 348px; height: 104px; color: var(--g); }
+    .sticker.c4 { right: 12%; bottom: 12%; width: 236px; height: 110px; color: rgba(230,230,230,0.9); }
+
+    .dot-grid {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, currentColor 46%, transparent 48%) 0 0 / 12px 12px;
+      opacity: 0.9;
+    }
+
+    .dot-grid.d1 { left: 18%; top: 25%; color: rgba(230,230,230,0.9); }
+    .dot-grid.d2 { left: 58%; top: 20%; color: var(--g); }
+    .dot-grid.d3 { right: 18%; bottom: 26%; color: rgba(230,230,230,0.9); }
+    .dot-grid.d4 { left: 45%; bottom: 18%; color: var(--warn); }
+
+    .sentinel-panel {
+      min-height: 700px;
+    }
+
+    .sentinel-body {
+      position: relative;
+      min-height: 648px;
+      background:
+        radial-gradient(circle at 40% 30%, rgba(200,255,26,0.04), transparent 18%),
+        linear-gradient(180deg, rgba(255,255,255,0.02), transparent 14%),
+        #050705;
+      overflow: hidden;
+    }
+
+    .sentinel-blueprint {
+      position: absolute;
+      inset: 28px 240px 30px 26px;
+      border: 1px solid var(--g07);
+      background:
+        linear-gradient(var(--g07) 1px, transparent 1px),
+        linear-gradient(90deg, var(--g07) 1px, transparent 1px);
+      background-size: 72px 72px;
+    }
+
+    .sentinel-svg {
+      position: absolute;
+      inset: 30px 240px 30px 26px;
+      width: auto;
+      height: auto;
+    }
+
+    .sentinel-svg path,
+    .sentinel-svg circle,
+    .sentinel-svg rect,
+    .sentinel-svg line {
+      vector-effect: non-scaling-stroke;
+    }
+
+    .sentinel-side {
+      position: absolute;
+      top: 28px;
+      right: 26px;
+      bottom: 30px;
+      width: 190px;
+      display: grid;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .sentinel-side .detail-card { min-height: 0; }
+
+    .tiny-rows {
+      display: grid;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .tiny-rows div {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--g07);
+      font-size: 11px;
+    }
+
+    .tiny-rows span:first-child { color: var(--g3); }
+    .tiny-rows span:last-child { color: var(--g7); }
+
+    .small-caption {
+      margin-top: 12px;
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--g5);
+    }
+
+    @media (max-width: 1220px) {
+      .board { grid-template-columns: 1fr; }
+      .chip-panel { grid-template-columns: 1fr; }
+      .chip-detail { border-left: none; border-top: 1px solid var(--g07); }
+      .sentinel-blueprint,
+      .sentinel-svg { inset: 26px 26px 250px; }
+      .sentinel-side {
+        top: auto;
+        left: 26px;
+        right: 26px;
+        bottom: 26px;
+        width: auto;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: 1fr;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .page { padding: 10px; }
+      .top { padding: 0 2px 14px; }
+      .chip-card { transform: none; width: 100%; }
+      .sign-word { font-size: 88px; }
+      .sign-strip { font-size: 30px; }
+      .diag-band { height: 58px; }
+      .orb { width: 86vw; }
+      .orbit.o1 { width: 92vw; height: 92vw; }
+      .orbit.o2 { width: 110vw; height: 110vw; }
+      .tele-box.mesh { width: 220px; height: 180px; }
+      .tele-box.count { width: 136px; height: 140px; }
+      .tele-box.wave { width: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top">
+      <div>
+        <div class="title">Reference Extraction</div>
+        <div class="sub">Direct clone-style studies of the thread inspirations in HADAL green</div>
+      </div>
+      <div class="note">
+        This page is intentionally not a product preview. It is a stricter extraction sheet:
+        chip hardware, dense binary square, lock-on frame, orbital hex explorer, aggressive signage, and a rare sentinel machine presence.
+      </div>
+    </div>
+
+    <div class="board">
+      <div class="column">
+        <section class="panel chip-panel">
+          <div class="chip-stage">
+            <div class="chip-card">
+              <div class="chip-metal-a"></div>
+              <div class="chip-metal-b"></div>
+              <div class="chip-window"></div>
+              <div class="chip-etch"></div>
+              <div class="chip-copy">TB K31
+                <small>substrate / controller / trench array</small>
+              </div>
+              <svg class="chip-trace-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <path d="M58 58H78V86" stroke="rgba(255,153,26,0.84)" stroke-width="0.7"/>
+                <path d="M54 50H78V70" stroke="rgba(255,153,26,0.82)" stroke-width="0.9"/>
+                <path d="M50 42H78V58" stroke="rgba(255,153,26,0.76)" stroke-width="0.7"/>
+                <path d="M46 34H64L74 44V64" stroke="rgba(255,153,26,0.72)" stroke-width="0.9"/>
+                <path d="M32 22H46V34H54" stroke="rgba(24,28,20,0.3)" stroke-width="0.5"/>
+              </svg>
+              <svg class="chip-mark-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <path d="M26 56H34L38 52H44L48 56L44 60H38L34 56H26Z" stroke="rgba(24,28,20,0.58)" stroke-width="0.8"/>
+                <circle cx="28" cy="70" r="9" stroke="rgba(220,225,216,0.18)" stroke-width="0.7"/>
+                <path d="M24 70H32M28 66V74" stroke="rgba(220,225,216,0.18)" stroke-width="0.5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="chip-detail">
+            <div class="detail-card">
+              <div class="ttl">MK-07 Stamp</div>
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" style="width:100%;height:calc(100% - 24px);">
+                <path d="M20 34H62L88 60L64 86H24L20 82V34Z" stroke="rgba(255,153,26,0.86)" stroke-width="3"/>
+                <circle cx="56" cy="60" r="15" fill="rgba(255,153,26,0.76)"/>
+                <path d="M56 24V102M69 71L98 100" stroke="rgba(255,153,26,0.56)" stroke-width="2.4"/>
+              </svg>
+            </div>
+            <div class="detail-card binary">
+              <div class="ttl">Locked Square</div>
+              <div class="binary-core">
+                <pre>0011100100011001111000111111111111111000111111001111111001111110011001111111111111001111001111111100111011001111111111001100111100111100111100011101100111011100001111000011111000000110111001110010001110010001100111100011111100111111110011111100110011111111111100111100111111110011101100111111111100110011110011110011110001110110011101110000111100001111100000001110010001100111100011111100111111110011111100110011111111111100111100111111110011101100111111111100110011110011110011110001110110011101110000111100001111100</pre>
+              </div>
+            </div>
+            <div class="detail-card">
+              <div class="ttl">Satellite Reconstruction</div>
+              <div style="border:1px solid var(--g07);background:#071004;padding:10px;min-height:132px;">
+                <pre style="margin:0;font:700 7px/.82 var(--mono);color:var(--g9);letter-spacing:-0.04em;">0000011111100000
+0001111111111000
+0011110011001110
+0111100111100111
+1111001111110011
+1111111111111111
+0111101111011110
+0011110110111100
+0001110011001000</pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel explorer-panel">
+          <div class="labelbar">
+            <span class="l">Explorer / Orbital Probe</span>
+            <span class="r">Hex Shielding / Telemetry Islands</span>
+          </div>
+          <div class="explorer-body">
+            <div class="tele-box wave">
+              <small>systems</small>
+              <svg viewBox="0 0 160 46" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <path d="M0 24C18 24 18 18 36 18C54 18 56 34 72 34C92 34 88 10 112 10C134 10 136 26 160 26" stroke="rgba(52,255,220,0.88)" stroke-width="2"/>
+                <path d="M0 20C16 20 22 30 38 30C54 30 60 12 78 12C98 12 100 34 118 34C136 34 144 20 160 20" stroke="rgba(255,153,26,0.72)" stroke-width="1.6"/>
+              </svg>
+            </div>
+
+            <div class="tele-box mesh">
+              <small>field mesh</small>
+              <div class="mesh-mini m1"></div>
+              <div class="mesh-mini m2"></div>
+              <div class="mesh-mini m3"></div>
+              <div class="mesh-mini m4"></div>
+            </div>
+
+            <div class="tele-box count">
+              <small>nodes</small>
+              <div class="count-num">53</div>
+              <div class="count-num" style="font-size:56px;opacity:0.84;">53</div>
+            </div>
+
+            <div class="hex-badge h1"></div>
+            <div class="hex-badge h2"></div>
+            <div class="orbit o1"></div>
+            <div class="orbit o2"></div>
+
+            <div class="orb">
+              <svg viewBox="0 0 540 540" xmlns="http://www.w3.org/2000/svg" fill="none">
+                <defs>
+                  <pattern id="hexmesh" width="34" height="30" patternUnits="userSpaceOnUse">
+                    <path d="M8 1H24L32 15L24 29H8L0 15Z" stroke="rgba(255,153,26,0.82)" stroke-width="1.6"/>
+                  </pattern>
+                </defs>
+                <circle cx="270" cy="270" r="236" fill="url(#hexmesh)"/>
+                <circle cx="270" cy="270" r="224" stroke="rgba(255,153,26,0.22)" stroke-width="1.4"/>
+                <circle cx="198" cy="182" r="14" fill="rgba(255,153,26,0.78)"/>
+                <circle cx="314" cy="212" r="12" fill="rgba(255,153,26,0.72)"/>
+                <circle cx="286" cy="304" r="13" fill="rgba(255,153,26,0.7)"/>
+                <circle cx="228" cy="336" r="10" fill="rgba(255,153,26,0.64)"/>
+                <path d="M100 190C180 210 226 280 288 304" stroke="rgba(255,153,26,0.16)" stroke-width="2"/>
+                <path d="M314 212C354 242 382 258 442 266" stroke="rgba(255,153,26,0.16)" stroke-width="2"/>
+                <path d="M198 182C234 150 270 120 342 96" stroke="rgba(255,153,26,0.14)" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="column">
+        <section class="panel lock-panel">
+          <div class="labelbar">
+            <span class="l">Lock Geometry</span>
+            <span class="r">Acquisition / Solve State</span>
+          </div>
+          <div class="lock-body">
+            <div class="lock-frame"></div>
+            <div class="ring"></div>
+            <div class="measure m1">Track Window 02:39</div>
+            <div class="measure m2">Aim Solve 05:40</div>
+            <div class="measure m3">Escalation Corridor</div>
+            <div class="measure m4">Lock Confidence 71</div>
+            <div class="card-copy">
+              <div class="eyebrow">
+                <span>Acquisition Event</span>
+                <span class="badge">Critical</span>
+              </div>
+              <div class="headline">Target Frame Solving Over Gulf Transit</div>
+              <div class="copy">
+                This section is intentionally closer to the reference lock-on compositions: oversized nested boxes, a thick central ring,
+                measured labels, and a dense bottom command band instead of a polite dashboard card.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel signage-panel">
+          <div class="labelbar">
+            <span class="l">Graphic / Japanese Sci-Fi Signage</span>
+            <span class="r">Diagonal Bands / Structural Type</span>
+          </div>
+          <div class="signage-body">
+            <div class="sign-frame"></div>
+            <div class="diag-band g d1"></div>
+            <div class="diag-band l d2"></div>
+            <div class="diag-band a d3"></div>
+            <div class="sign-word w1">Hyper</div>
+            <div class="sign-word w2">Visor</div>
+            <div class="sign-word w3">Sector</div>
+            <div class="sign-strip s1">
+              <span>Solution 9</span>
+              <small>Subsystem / Welcome</small>
+            </div>
+            <div class="sign-strip s2">
+              <span>Dense Layer</span>
+              <small>Hypervision / Sector</small>
+            </div>
+            <div class="sticker c1"></div>
+            <div class="sticker c2"></div>
+            <div class="sticker c3"></div>
+            <div class="sticker c4"></div>
+            <div class="dot-grid d1"></div>
+            <div class="dot-grid d2"></div>
+            <div class="dot-grid d3"></div>
+            <div class="dot-grid d4"></div>
+          </div>
+        </section>
+
+        <section class="panel sentinel-panel">
+          <div class="labelbar">
+            <span class="l">Sentinel Emblem</span>
+            <span class="r">Rare Machine Presence / Not Mascot</span>
+          </div>
+          <div class="sentinel-body">
+            <div class="sentinel-blueprint"></div>
+            <svg class="sentinel-svg" viewBox="0 0 760 560" xmlns="http://www.w3.org/2000/svg" fill="none">
+              <path d="M292 48H434L506 120V234L456 286L486 412L392 512H258L230 404L262 286L212 224V118L292 48Z" stroke="rgba(200,255,26,0.78)" stroke-width="3"/>
+              <path d="M318 74H410L464 128V214L420 254H286L252 216V124L318 74Z" stroke="rgba(200,255,26,0.66)" stroke-width="2.6"/>
+              <path d="M306 154H416L448 182L418 212H302L270 182L306 154Z" stroke="rgba(255,153,26,0.88)" stroke-width="3"/>
+              <circle cx="360" cy="184" r="28" stroke="rgba(255,153,26,0.88)" stroke-width="3"/>
+              <path d="M238 130L168 226L198 262" stroke="rgba(200,255,26,0.56)" stroke-width="3"/>
+              <path d="M476 134L592 82L568 214L500 254" stroke="rgba(200,255,26,0.56)" stroke-width="3"/>
+              <path d="M300 286H420L450 390L388 470H274L250 382L300 286Z" stroke="rgba(200,255,26,0.72)" stroke-width="3"/>
+              <path d="M332 326H390" stroke="rgba(200,255,26,0.46)" stroke-width="2"/>
+              <path d="M322 354H404" stroke="rgba(200,255,26,0.34)" stroke-width="2"/>
+              <path d="M314 382H410" stroke="rgba(200,255,26,0.28)" stroke-width="2"/>
+              <rect x="116" y="116" width="74" height="74" stroke="rgba(200,255,26,0.12)" stroke-width="2"/>
+              <rect x="572" y="96" width="92" height="92" stroke="rgba(255,153,26,0.14)" stroke-width="2"/>
+              <line x1="74" y1="474" x2="688" y2="474" stroke="rgba(200,255,26,0.12)" stroke-width="1"/>
+              <line x1="360" y1="24" x2="360" y2="540" stroke="rgba(200,255,26,0.1)" stroke-width="1"/>
+            </svg>
+
+            <div class="sentinel-side">
+              <div class="detail-card">
+                <div class="ttl">black program</div>
+                <div class="small-caption">
+                  The machine figure should appear as a covert emblem or shrine-like sentinel, not as a cheerful brand mascot.
+                </div>
+              </div>
+              <div class="detail-card">
+                <div class="ttl">designation</div>
+                <div class="tiny-rows">
+                  <div><span>frame</span><span>guardian-07</span></div>
+                  <div><span>mode</span><span>watching</span></div>
+                  <div><span>authority</span><span>noforn</span></div>
+                  <div><span>phase</span><span>restricted</span></div>
+                </div>
+              </div>
+              <div class="detail-card">
+                <div class="ttl">presence</div>
+                <div class="small-caption">
+                  Use in login, boot, interstitials, and special branded moments. Keep it rare so it stays mythic.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -16,6 +16,12 @@ const PRESET_OPTIONS = [
   { id: 'custom', label: 'CUSTOM' },
 ]
 
+const PRIMARY_VIEW_OPTIONS = [
+  { id: 'capability-board', label: 'BOARD' },
+  { id: 'shift-brief', label: 'BRIEF' },
+  { id: 'analysis-stack', label: 'ANALYSIS' },
+]
+
 export function ConsoleToolbar({
   editMode,
   presetId,
@@ -27,6 +33,26 @@ export function ConsoleToolbar({
 
   return (
     <div className={`console-toolbar jp-panel${editMode ? ' is-editing' : ''}`}>
+      <div className="console-toolbar-block console-toolbar-block--views">
+        <span className="console-toolbar-label">VIEW</span>
+        <div className="console-toolbar-switch" role="tablist" aria-label="Console view presets">
+          {PRIMARY_VIEW_OPTIONS.map(option => {
+            const active = !custom && presetId === option.id
+            return (
+              <button
+                key={option.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                className={`console-toolbar-switch-btn${active ? ' active' : ''}`}
+                onClick={() => onPresetChange(option.id)}
+              >
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+      </div>
       <div className="console-toolbar-block">
         <span className="console-toolbar-label">VIEW</span>
         <div className="console-toolbar-select-wrap">
@@ -44,6 +70,7 @@ export function ConsoleToolbar({
             ))}
           </select>
         </div>
+        <span className="console-toolbar-hint">{custom ? 'CUSTOMIZED FROM PRESET' : presetLabel}</span>
       </div>
       <div className="console-toolbar-block meta">
         <span className="console-toolbar-label">MODE</span>

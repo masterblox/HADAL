@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>01 — Chip Panel Study</title>
+<style>
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #88888c;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+  }
+
+  .surface {
+    position: relative;
+    width: 960px;
+    height: 540px;
+    background: #8a8a8e;
+    overflow: hidden;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .study-label {
+    position: fixed;
+    bottom: 12px;
+    left: 16px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 500;
+    font-size: 9px;
+    color: rgba(255,255,255,.35);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="surface">
+  <canvas id="chip"></canvas>
+</div>
+
+<div class="study-label">01 — CHIP PANEL STUDY / SOURCE RECONSTRUCTION</div>
+
+<script>
+const cv = document.getElementById('chip');
+const DPR = window.devicePixelRatio || 1;
+const W = 960, H = 540;
+cv.width = W * DPR;
+cv.height = H * DPR;
+const x = cv.getContext('2d');
+x.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+// --- color constants from source ---
+const BASE = '#8a8a8e';       // silver-gray surface
+const BASE_DARK = '#6a6a6e';  // slightly darker gray
+const WHITE = '#ffffff';
+const WHITE_DIM = 'rgba(255,255,255,0.6)';
+const WHITE_FAINT = 'rgba(255,255,255,0.25)';
+const DARK_STRIP = '#1a1a1e';
+const DARK_STRIP2 = '#2a2a2e';
+
+// --- subtle surface texture ---
+function drawSurfaceNoise() {
+  const pW = W * DPR, pH = H * DPR;
+  const imgD = x.createImageData(pW, pH);
+  const d = imgD.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const n = Math.random();
+    // very subtle noise on gray base
+    const base = 138; // ~#8a
+    const v = base + (n - 0.5) * 14;
+    d[i] = Math.floor(v);
+    d[i+1] = Math.floor(v);
+    d[i+2] = Math.floor(v + 2); // very slight blue tint
+    d[i+3] = 255;
+  }
+  x.save();
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  x.putImageData(imgD, 0, 0);
+  x.restore();
+  x.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+
+// --- vertical dark strip (center trace/via) ---
+function drawCentralStrip() {
+  const stripX = 370;
+  const stripW = 65;
+
+  // dark base strip
+  x.fillStyle = DARK_STRIP;
+  x.fillRect(stripX, 0, stripW, H);
+
+  // granular texture within strip
+  const pW = stripW * DPR, pH = H * DPR;
+  const imgD = x.createImageData(pW, pH);
+  const d = imgD.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const n = Math.random();
+    let v;
+    if (n < 0.03) {
+      // bright speckle - like surface detail
+      v = 140 + Math.random() * 80;
+    } else if (n < 0.15) {
+      v = 50 + Math.random() * 40;
+    } else {
+      v = 20 + Math.random() * 25;
+    }
+    d[i] = Math.floor(v);
+    d[i+1] = Math.floor(v);
+    d[i+2] = Math.floor(v + 3);
+    d[i+3] = 255;
+  }
+  x.save();
+  x.setTransform(1, 0, 0, 1, 0, 0);
+  x.putImageData(imgD, stripX * DPR, 0);
+  x.restore();
+  x.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+  // thin bright edge lines on strip
+  x.strokeStyle = 'rgba(255,255,255,0.12)';
+  x.lineWidth = 0.5;
+  x.beginPath();
+  x.moveTo(stripX, 0); x.lineTo(stripX, H);
+  x.moveTo(stripX + stripW, 0); x.lineTo(stripX + stripW, H);
+  x.stroke();
+
+  // some horizontal detail lines within strip
+  x.strokeStyle = 'rgba(255,255,255,0.08)';
+  x.lineWidth = 0.5;
+  for (let i = 0; i < 12; i++) {
+    const sy = 30 + Math.random() * (H - 60);
+    x.beginPath();
+    x.moveTo(stripX + 5, sy);
+    x.lineTo(stripX + stripW - 5, sy);
+    x.stroke();
+  }
+
+  // bright flare spots (visible detail in source)
+  x.fillStyle = 'rgba(255,255,255,0.3)';
+  x.fillRect(stripX + 10, 380, 45, 3);
+  x.fillRect(stripX + 15, 395, 30, 2);
+  x.fillStyle = 'rgba(255,255,255,0.15)';
+  x.fillRect(stripX + 8, 120, 50, 4);
+  x.fillRect(stripX + 5, 200, 55, 2);
+
+  // secondary dark strip - slightly to right, thinner
+  const s2x = stripX + stripW + 2;
+  x.fillStyle = DARK_STRIP2;
+  x.fillRect(s2x, 20, 12, H - 40);
+  x.strokeStyle = 'rgba(255,255,255,0.06)';
+  x.lineWidth = 0.5;
+  x.strokeRect(s2x, 20, 12, H - 40);
+}
+
+// --- outer frame (large nested box) ---
+function drawOuterFrame() {
+  x.strokeStyle = WHITE;
+  x.lineWidth = 1.5;
+
+  // outer box - slightly inset from edges, asymmetric
+  x.strokeRect(220, 25, 560, 480);
+
+  // inner measurement box
+  x.strokeStyle = WHITE;
+  x.lineWidth = 1.2;
+  x.strokeRect(350, 180, 170, 120);
+
+  // corner ticks on outer box
+  const ox = 220, oy = 25, ow = 560, oh = 480;
+  x.strokeStyle = WHITE_DIM;
+  x.lineWidth = 0.8;
+  const tickLen = 8;
+
+  // top-left corner
+  x.beginPath();
+  x.moveTo(ox - tickLen, oy); x.lineTo(ox + tickLen, oy);
+  x.moveTo(ox, oy - tickLen); x.lineTo(ox, oy + tickLen);
+  x.stroke();
+
+  // top-right corner
+  x.beginPath();
+  x.moveTo(ox + ow - tickLen, oy); x.lineTo(ox + ow + tickLen, oy);
+  x.moveTo(ox + ow, oy - tickLen); x.lineTo(ox + ow, oy + tickLen);
+  x.stroke();
+
+  // bottom-left corner
+  x.beginPath();
+  x.moveTo(ox - tickLen, oy + oh); x.lineTo(ox + tickLen, oy + oh);
+  x.moveTo(ox, oy + oh - tickLen); x.lineTo(ox, oy + oh + tickLen);
+  x.stroke();
+}
+
+// --- small indicator elements scattered on surface ---
+function drawIndicators() {
+  // solid white squares (bonding pads / test points)
+  x.fillStyle = WHITE;
+
+  // upper left area - small dots
+  x.fillRect(148, 162, 5, 5);
+  x.fillRect(228, 165, 4, 4);
+
+  // left side - larger solid white square with timestamp
+  x.fillRect(95, 330, 28, 25);
+  x.font = '500 15px "Teko"';
+  x.fillStyle = WHITE;
+  x.fillText('13:54', 132, 345);
+
+  // center inner box area - timestamp
+  x.fillText('12:00', 385, 265);
+
+  // right of inner box - timestamp
+  x.fillText('11:04', 530, 228);
+
+  // upper right - timestamp
+  x.fillText('5:40', 720, 82);
+
+  // bottom right - partial timestamp
+  x.fillText('16:', 870, 520);
+
+  // upper right - small solid square with slight glow
+  x.fillStyle = WHITE;
+  x.fillRect(810, 95, 20, 18);
+  // tiny dark cutout in the square
+  x.fillStyle = BASE;
+  x.fillRect(814, 104, 8, 5);
+
+  // circle ring - upper left area
+  x.strokeStyle = WHITE;
+  x.lineWidth = 1.5;
+  x.beginPath();
+  x.arc(265, 55, 16, 0, Math.PI * 2);
+  x.stroke();
+
+  // checkerboard square - lower center-right
+  drawCheckerboard(590, 345, 80, 70, 10);
+
+  // tiny scattered dots - test points
+  x.fillStyle = WHITE;
+  x.fillRect(155, 140, 3, 3);
+  x.fillRect(310, 120, 3, 3);
+  x.fillRect(620, 130, 3, 3);
+  x.fillRect(750, 200, 3, 3);
+  x.fillRect(180, 400, 3, 3);
+  x.fillRect(680, 420, 2, 2);
+
+  // small connector line segments
+  x.strokeStyle = WHITE_FAINT;
+  x.lineWidth = 0.5;
+  x.beginPath();
+  x.moveTo(390, 90); x.lineTo(390, 110);
+  x.lineTo(410, 110); x.lineTo(410, 130);
+  x.stroke();
+
+  // small rectangular element near top center strip
+  x.strokeStyle = WHITE_DIM;
+  x.lineWidth = 1;
+  x.strokeRect(385, 95, 30, 20);
+  x.fillStyle = WHITE_FAINT;
+  x.fillRect(388, 100, 6, 10);
+}
+
+// --- checkerboard pattern (transparency indicator) ---
+function drawCheckerboard(cx, cy, w, h, cellSize) {
+  for (let row = 0; row < Math.ceil(h / cellSize); row++) {
+    for (let col = 0; col < Math.ceil(w / cellSize); col++) {
+      const isLight = (row + col) % 2 === 0;
+      x.fillStyle = isLight ? WHITE : 'rgba(255,255,255,0.25)';
+      const cw = Math.min(cellSize, w - col * cellSize);
+      const ch = Math.min(cellSize, h - row * cellSize);
+      x.fillRect(cx + col * cellSize, cy + row * cellSize, cw, ch);
+    }
+  }
+  // subtle border
+  x.strokeStyle = WHITE_FAINT;
+  x.lineWidth = 0.5;
+  x.strokeRect(cx, cy, w, h);
+}
+
+// --- thin measurement / schematic lines ---
+function drawSchematicLines() {
+  x.strokeStyle = 'rgba(255,255,255,0.1)';
+  x.lineWidth = 0.5;
+
+  // horizontal lines across surface
+  x.beginPath();
+  x.moveTo(0, 170); x.lineTo(200, 170);
+  x.stroke();
+
+  x.beginPath();
+  x.moveTo(450, 420); x.lineTo(580, 420);
+  x.stroke();
+
+  x.beginPath();
+  x.moveTo(650, 90); x.lineTo(780, 90);
+  x.stroke();
+
+  // vertical measurement lines
+  x.beginPath();
+  x.moveTo(220, 25); x.lineTo(220, 510);
+  x.stroke();
+
+  // faint grid suggestion (not full grid, just hints)
+  x.strokeStyle = 'rgba(255,255,255,0.03)';
+  for (let gx = 100; gx < W; gx += 80) {
+    x.beginPath();
+    x.moveTo(gx, 0); x.lineTo(gx, H);
+    x.stroke();
+  }
+  for (let gy = 60; gy < H; gy += 80) {
+    x.beginPath();
+    x.moveTo(0, gy); x.lineTo(W, gy);
+    x.stroke();
+  }
+
+  // diagonal line (matching the slight diagonal in source strip area)
+  x.strokeStyle = 'rgba(255,255,255,0.06)';
+  x.lineWidth = 0.8;
+  x.beginPath();
+  x.moveTo(370, 0);
+  x.lineTo(435, H);
+  x.stroke();
+}
+
+// --- vertical edge bands (left and right of surface) ---
+function drawEdgeBands() {
+  // left edge - slightly darker band
+  const grad1 = x.createLinearGradient(0, 0, 60, 0);
+  grad1.addColorStop(0, 'rgba(100,100,104,0.5)');
+  grad1.addColorStop(1, 'rgba(138,138,142,0)');
+  x.fillStyle = grad1;
+  x.fillRect(0, 0, 60, H);
+
+  // right edge - similar
+  const grad2 = x.createLinearGradient(W, 0, W - 60, 0);
+  grad2.addColorStop(0, 'rgba(100,100,104,0.4)');
+  grad2.addColorStop(1, 'rgba(138,138,142,0)');
+  x.fillStyle = grad2;
+  x.fillRect(W - 60, 0, 60, H);
+
+  // thin vertical bright line at far left (visible in source)
+  x.strokeStyle = 'rgba(255,255,255,0.15)';
+  x.lineWidth = 1;
+  x.beginPath();
+  x.moveTo(68, 0); x.lineTo(68, H);
+  x.stroke();
+
+  // bottom edge darkening
+  const grad3 = x.createLinearGradient(0, H, 0, H - 40);
+  grad3.addColorStop(0, 'rgba(80,80,84,0.4)');
+  grad3.addColorStop(1, 'rgba(138,138,142,0)');
+  x.fillStyle = grad3;
+  x.fillRect(0, H - 40, W, 40);
+}
+
+// --- small connector / IC-like element ---
+function drawICElement() {
+  // small IC package shape near top of strip
+  const ix = 388, iy = 88;
+  x.strokeStyle = WHITE_DIM;
+  x.lineWidth = 0.8;
+  x.strokeRect(ix, iy, 24, 30);
+
+  // pins
+  x.strokeStyle = WHITE_FAINT;
+  x.lineWidth = 0.5;
+  for (let p = 0; p < 4; p++) {
+    // left pins
+    x.beginPath();
+    x.moveTo(ix - 6, iy + 5 + p * 7);
+    x.lineTo(ix, iy + 5 + p * 7);
+    x.stroke();
+    // right pins
+    x.beginPath();
+    x.moveTo(ix + 24, iy + 5 + p * 7);
+    x.lineTo(ix + 30, iy + 5 + p * 7);
+    x.stroke();
+  }
+}
+
+// --- slight vignette / light falloff ---
+function drawLightFalloff() {
+  // slight radial brightness variation (source has uneven illumination)
+  const radGrad = x.createRadialGradient(450, 250, 50, 450, 250, 500);
+  radGrad.addColorStop(0, 'rgba(160,160,164,0.08)');
+  radGrad.addColorStop(0.5, 'rgba(138,138,142,0)');
+  radGrad.addColorStop(1, 'rgba(110,110,114,0.1)');
+  x.fillStyle = radGrad;
+  x.fillRect(0, 0, W, H);
+}
+
+// --- render after fonts load ---
+function render() {
+  drawSurfaceNoise();
+  drawEdgeBands();
+  drawSchematicLines();
+  drawCentralStrip();
+  drawOuterFrame();
+  drawICElement();
+  drawIndicators();
+  drawLightFalloff();
+}
+
+document.fonts.ready.then(render);
+
+</script>
+</body>
+</html>

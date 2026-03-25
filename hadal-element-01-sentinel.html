@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HADAL Sentinel Element</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Teko:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #060800;
+        --panel: #0a0d03;
+        --grid: rgba(196, 255, 44, 0.07);
+        --line: rgba(196, 255, 44, 0.18);
+        --g: #c4ff2c;
+        --g2: #a7d03d;
+        --g3: #6d8a2a;
+        --g4: #40551d;
+        --g5: #1d280b;
+        --warn: #ff9914;
+        --soft: rgba(196, 255, 44, 0.62);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          radial-gradient(circle at 50% 24%, rgba(196, 255, 44, 0.04), transparent 32%),
+          linear-gradient(180deg, rgba(196, 255, 44, 0.02), transparent 18%),
+          var(--bg);
+        color: var(--g);
+      }
+
+      body {
+        padding: 18px;
+        font-family: "Rajdhani", sans-serif;
+      }
+
+      main {
+        min-height: calc(100vh - 36px);
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(180deg, rgba(196, 255, 44, 0.025), transparent 24%),
+          var(--panel);
+        position: relative;
+        overflow: hidden;
+      }
+
+      main::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+      }
+
+      header {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+
+      .kicker {
+        font: 700 10px/1 "Rajdhani", sans-serif;
+        color: var(--soft);
+      }
+
+      .title {
+        margin-top: 6px;
+        font: 600 28px/0.9 "Teko", sans-serif;
+        letter-spacing: 0.05em;
+      }
+
+      .stage {
+        position: relative;
+        min-height: calc(100vh - 112px);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .stage svg {
+        width: min(82vw, 980px);
+        height: auto;
+        display: block;
+      }
+
+      .tag,
+      .note,
+      .stamp {
+        position: absolute;
+        z-index: 2;
+        font-family: "Share Tech Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .tag {
+        top: 86px;
+        left: 20px;
+        font-size: 10px;
+        color: var(--soft);
+      }
+
+      .note {
+        right: 20px;
+        top: 94px;
+        width: 220px;
+        font-size: 10px;
+        line-height: 1.6;
+        color: var(--soft);
+        text-align: right;
+      }
+
+      .stamp {
+        left: 20px;
+        bottom: 18px;
+        padding: 6px 8px 4px;
+        border: 1px solid rgba(255, 153, 20, 0.44);
+        color: var(--warn);
+        font-size: 10px;
+      }
+
+      .footer-note {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        color: var(--soft);
+        font: 10px/1.5 "Share Tech Mono", monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <div class="kicker">element 01 / sentinel adaptation</div>
+          <div class="title">guardian frame</div>
+        </div>
+        <div class="kicker">hadal black / green / restrained amber optic</div>
+      </header>
+
+      <div class="tag">rare subsystem emblem / not mascot</div>
+      <div class="note">
+        silhouette pulled from the mech reference:
+        optic block / rear wing / jaw plate / wheel joint / exposed neck
+      </div>
+      <div class="stamp">black program / guardian-07</div>
+      <div class="footer-note">use in login / interstitial / venus trap only</div>
+
+      <section class="stage">
+        <svg viewBox="0 0 1080 980" role="img" aria-label="Hadal green sentinel element">
+          <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M112 784H994" stroke="rgba(196,255,44,0.12)" stroke-width="2" />
+            <path d="M186 154H470" stroke="rgba(196,255,44,0.12)" stroke-width="2" />
+            <path d="M716 198H946" stroke="rgba(196,255,44,0.12)" stroke-width="2" />
+          </g>
+
+          <g opacity="0.3" fill="none" stroke="rgba(196,255,44,0.14)" stroke-width="2">
+            <path d="M200 246L338 200L404 242L404 378L236 412L176 340Z" />
+            <path d="M802 270L860 244L910 260L902 398L844 430L796 406Z" />
+          </g>
+
+          <g transform="translate(126 100)" stroke="#d8ff4d" stroke-width="5.5" stroke-linejoin="miter" stroke-linecap="butt">
+            <g transform="translate(190 516)">
+              <path d="M0 110L88 56L472 56L564 108L532 190L66 190L10 148Z" fill="#0f1706" />
+              <path d="M86 56L194 18L360 18L472 56" fill="none" stroke="#95c134" stroke-width="3.2" />
+              <path d="M30 110L116 72L110 186L34 148Z" fill="#40551d" />
+              <path d="M472 82L606 116L606 186L534 222L498 196L498 104Z" fill="#1d280b" />
+              <path d="M130 98L442 98L454 154L138 148Z" fill="none" stroke="#6d8a2a" stroke-width="3" />
+            </g>
+
+            <g transform="translate(416 398)">
+              <path d="M72 0L172 0L234 162L180 270L88 258L38 120Z" fill="#11180a" />
+              <path d="M18 24L96 0L126 76L108 246L46 226L0 110Z" fill="#151e0d" />
+              <path d="M166 22L238 50L248 144L220 248L170 234L154 88Z" fill="#18210e" />
+            </g>
+
+            <g transform="translate(270 180)">
+              <path d="M56 164L150 92L278 86L344 260L242 364L96 346L28 244Z" fill="#a7d03d" />
+              <path d="M206 348L282 256L396 274L452 438L402 526L284 508L228 430Z" fill="#9bc33a" />
+              <path d="M148 34L292 0L450 20L492 116L470 204L370 260L182 238L92 150L98 72Z" fill="#b7d86a" />
+
+              <path d="M118 128L52 182L14 304L60 474L130 416L142 248Z" fill="#40551d" />
+              <path d="M74 214L132 254L120 430L58 388L38 306Z" fill="none" stroke="#6d8a2a" stroke-width="3" />
+
+              <path d="M462 112L582 16L742 8L756 90L636 442L556 408L540 262Z" fill="#b7d86a" />
+              <path d="M506 92L570 50L648 54L628 236L558 220L522 146Z" fill="#40551d" />
+              <path d="M642 12L664 56L652 126" fill="none" stroke="#ff9914" stroke-width="4.2" />
+
+              <path d="M284 20L342 0L382 10L378 102L340 96L320 46L280 44Z" fill="#6d8a2a" />
+              <path d="M442 178L506 148L576 154L624 208L616 294L548 344L474 334L432 274Z" fill="#6d8a2a" />
+              <circle cx="526" cy="246" r="48" fill="none" stroke="#93b931" stroke-width="4" />
+              <circle cx="526" cy="246" r="20" fill="none" stroke="#93b931" stroke-width="4" />
+
+              <g transform="translate(-86 50)">
+                <path d="M0 82L154 26L182 44L188 170L38 196L0 140Z" fill="#b7d86a" />
+                <path d="M6 86L122 44L154 66L158 160L36 180L8 132Z" fill="#0c1108" stroke="#d8ff4d" stroke-width="4.2" />
+                <ellipse cx="86" cy="108" rx="60" ry="54" fill="#0b1007" stroke="#d8ff4d" stroke-width="4" />
+                <ellipse cx="86" cy="108" rx="40" ry="36" fill="none" stroke="#ff9914" stroke-width="10" />
+                <ellipse cx="86" cy="108" rx="18" ry="16" fill="none" stroke="#ffd48a" stroke-width="6" />
+                <path d="M32 108H136" fill="none" stroke="#ff9914" stroke-width="5" />
+              </g>
+
+              <path d="M156 412L244 380L278 454L228 508L160 490L132 438Z" fill="#7ea63c" />
+              <path d="M240 386L318 374L354 458L320 522L250 512L220 438Z" fill="#7ea63c" />
+
+              <path d="M164 96L212 84L264 122L254 152L188 154L152 126Z" fill="none" stroke="#6d8a2a" stroke-width="3" />
+              <path d="M216 474L366 474" fill="none" stroke="#6d8a2a" stroke-width="3" />
+              <path d="M236 494L350 494" fill="none" stroke="#6d8a2a" stroke-width="3" />
+            </g>
+
+            <path d="M392 788L466 754L558 788L524 810L426 810Z" fill="#1d280b" />
+          </g>
+
+          <g fill="#c4ff2c" font-family="Share Tech Mono" font-size="11" letter-spacing="2" opacity="0.8">
+            <text x="140" y="178">OPTIC HOUSING / LEFT DOMINANT</text>
+            <text x="760" y="222">REAR WING / SIGNAL FIN</text>
+            <text x="768" y="710">JOINT WHEEL / AUX NODE</text>
+            <text x="144" y="812">BASE SHELL / PANEL ELEMENT</text>
+          </g>
+        </svg>
+      </section>
+    </main>
+  </body>
+  </html>

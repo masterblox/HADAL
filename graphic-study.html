@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HADAL Graphic Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --g: #c8ff1a;
+      --l: #c6c5ff;
+      --b: #0a0a0a;
+      --a: #ff3f7c;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #000; }
+    body { font-family: "Rajdhani", sans-serif; }
+    .poster {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: #040404;
+    }
+    .frame {
+      position: absolute;
+      inset: 24px;
+      border: 4px solid var(--l);
+      overflow: hidden;
+      background: #050505;
+    }
+    .diag {
+      position: absolute;
+      left: -14%;
+      top: 12%;
+      width: 128%;
+      height: 110px;
+      background: var(--g);
+      transform: rotate(44deg);
+    }
+    .diag.d2 {
+      top: 64%;
+      height: 96px;
+      background: var(--l);
+      opacity: .94;
+    }
+    .word {
+      position: absolute;
+      font: 700 128px/.88 "Teko", sans-serif;
+      color: var(--g);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transform: rotate(34deg);
+      text-shadow: 0 0 0 transparent;
+    }
+    .word.w1 { left: 30%; top: 20%; }
+    .word.w2 { left: 42%; top: 38%; }
+    .band {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      border: 4px solid currentColor;
+      background: #050505;
+      color: var(--l);
+      font: 700 46px/.9 "Teko", sans-serif;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transform: rotate(-56deg);
+    }
+    .band.b1 { left: -4%; top: 24%; width: 44%; }
+    .band.b2 { right: -8%; top: 38%; width: 44%; }
+    .band small {
+      display: block;
+      font: 700 12px/1 "Rajdhani", sans-serif;
+      letter-spacing: .18em;
+    }
+    .grid-chip {
+      position: absolute;
+      border: 3px solid currentColor;
+      color: currentColor;
+      background: #050505;
+      overflow: hidden;
+    }
+    .grid-chip::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 8px, currentColor 8px 9px, transparent 9px 18px),
+        repeating-linear-gradient(transparent 0 8px, currentColor 8px 9px, transparent 9px 18px);
+      opacity: .18;
+    }
+    .grid-chip.c1 { left: 8%; top: 12%; width: 220px; height: 150px; color: var(--l); }
+    .grid-chip.c2 { right: 10%; top: 16%; width: 290px; height: 140px; color: var(--g); }
+    .grid-chip.c3 { left: 12%; bottom: 10%; width: 340px; height: 100px; color: var(--g); }
+    .grid-chip.c4 { right: 12%; bottom: 11%; width: 240px; height: 110px; color: var(--l); }
+    .meta {
+      position: absolute;
+      font: 700 11px/1 "Rajdhani", sans-serif;
+      letter-spacing: .22em;
+      color: var(--l);
+      text-transform: uppercase;
+    }
+    .meta.m1 { left: 32px; top: 28px; }
+    .meta.m2 { right: 28px; top: 28px; }
+    .meta.m3 { left: 28px; bottom: 28px; color: var(--g); }
+    .meta.m4 { right: 32px; bottom: 28px; color: var(--a); }
+    .tiny-grid {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      background:
+        radial-gradient(circle, currentColor 46%, transparent 48%) 0 0 / 12px 12px;
+      opacity: .88;
+    }
+    .tiny-grid.t1 { left: 18%; top: 26%; color: var(--l); }
+    .tiny-grid.t2 { left: 58%; top: 22%; color: var(--g); }
+    .tiny-grid.t3 { right: 18%; bottom: 24%; color: var(--l); }
+    .tiny-grid.t4 { left: 46%; bottom: 18%; color: var(--a); }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="frame">
+      <div class="diag"></div>
+      <div class="diag d2"></div>
+      <div class="word w1">Hyper</div>
+      <div class="word w2">Visor</div>
+      <div class="band b1">
+        <span>Monitor</span>
+        <small>Solution 9</small>
+      </div>
+      <div class="band b2" style="color:var(--g);">
+        <span>Signals</span>
+        <small>Dense Layer</small>
+      </div>
+      <div class="grid-chip c1"></div>
+      <div class="grid-chip c2"></div>
+      <div class="grid-chip c3"></div>
+      <div class="grid-chip c4"></div>
+      <div class="tiny-grid t1"></div>
+      <div class="tiny-grid t2"></div>
+      <div class="tiny-grid t3"></div>
+      <div class="tiny-grid t4"></div>
+      <div class="meta m1">Graphic Study / Clone Closer</div>
+      <div class="meta m2">Hadal 2026</div>
+      <div class="meta m3">Diagonal Band System</div>
+      <div class="meta m4">Do Not Generalize</div>
+    </div>
+  </div>
+</body>
+</html>

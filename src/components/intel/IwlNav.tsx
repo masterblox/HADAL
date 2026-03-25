@@ -32,7 +32,7 @@ export function IwlNav({ activeTab, onTabChange, syncStatus, aircraftCount, airc
         </svg>
       </div>
       <div style={{position:'absolute',left:'50%',transform:'translateX(-50%)',display:'flex',flexDirection:'column',alignItems:'center',pointerEvents:'none',maxWidth:'40%',overflow:'hidden'}}>
-        <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-med)',letterSpacing:'.18em',color:'var(--g7)',lineHeight:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>OPERATIONS WORKSPACE</div>
+        <div style={{fontFamily:'var(--HEAD)',fontWeight:700,fontSize:'var(--fs-med)',letterSpacing:'.18em',color:'var(--g7)',lineHeight:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>MAPS WORKSPACE</div>
         <div style={{fontFamily:'var(--MONO)',fontSize:'var(--fs-micro)',letterSpacing:'.22em',color:'var(--g15)',marginTop:'2px',whiteSpace:'nowrap'}}>HADAL INTELLIGENCE TERMINAL</div>
       </div>
       <div className="iwl-tabs">

@@ -24,6 +24,7 @@ const PRIMARY_VIEW_OPTIONS = [
 
 export function ConsoleToolbar({
   editMode,
+  presetLabel,
   presetId,
   custom,
   onPresetChange,
@@ -75,7 +76,7 @@ export function ConsoleToolbar({
       <div className="console-toolbar-block meta">
         <span className="console-toolbar-label">MODE</span>
         <span className={`console-toolbar-mode${editMode ? ' edit' : ''}`}>
-          {editMode ? 'CONSOLE EDIT MODE' : 'LOCKED OPERATIONAL VIEW'}
+          {editMode ? 'CONSOLE EDIT MODE' : 'ANALYST WORKBENCH'}
         </span>
       </div>
       <button className={`console-toolbar-edit${editMode ? ' active' : ''}`} onClick={onEditToggle}>

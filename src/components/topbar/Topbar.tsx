@@ -14,7 +14,7 @@ interface TopbarProps {
 
 const NAV_ITEMS: { id: Lane; label: string }[] = [
   { id: 'overview', label: 'OVERVIEW' },
-  { id: 'operations', label: 'OPERATIONS' },
+  { id: 'operations', label: 'MAPS' },
   { id: 'console', label: 'CONSOLE' },
 ]
 

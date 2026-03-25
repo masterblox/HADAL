@@ -116,4 +116,4 @@ export const CONSOLE_PRESETS: ConsoleLayoutPreset[] = [
   },
 ]
 
-export const DEFAULT_CONSOLE_PRESET = CONSOLE_PRESETS[0]
+export const DEFAULT_CONSOLE_PRESET = CONSOLE_PRESETS[4]

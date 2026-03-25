@@ -1,7 +1,13 @@
 # HADAL Feature Matrix
 
+Active build note:
+- `ACTIVE NOW` = GulfWatch V2 correction pass
+- `substatus` = overview hero restored / maps renamed / console workbench retained / gate removed
+- `canonical product` = GulfWatch V2
+- `donor only` = AYN / HADAL experiment branches
+
 Status legend:
-- `🟢` = new updates (canonical `ayn` direction)
+- `🟢` = new updates carried forward into GulfWatch V2
 - `⚪` = older/legacy Gulf Watch/HADAL lineage
 - `❌` = empty shell, invalid, or currently useless in latest commit
 

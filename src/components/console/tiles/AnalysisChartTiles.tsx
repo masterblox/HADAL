@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef, type ReactNode } from 'react'
+import { useMemo, useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar,
@@ -98,14 +98,43 @@ function useAnalysisData(incidents: Incident[]) {
   return { timeline, geoData, typeData, sourceData }
 }
 
-function ChartShell({ kicker, title, children }: { kicker: string; title: string; children: ReactNode }) {
+function ChartShell({
+  kicker,
+  title,
+  children,
+}: {
+  kicker: string
+  title: string
+  children: (ready: boolean) => ReactNode
+}) {
+  const stageRef = useRef<HTMLDivElement>(null)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    const node = stageRef.current
+    if (!node) return
+
+    function sync() {
+      const rect = stageRef.current?.getBoundingClientRect()
+      if (!rect) return
+      setReady(rect.width > 24 && rect.height > 24)
+    }
+
+    sync()
+    const observer = new ResizeObserver(sync)
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className="console-chart-shell">
       <div className="console-chart-bar">
         <span>{kicker}</span>
         <strong>{title}</strong>
       </div>
-      <div className="console-chart-stage">{children}</div>
+      <div className="console-chart-stage" ref={stageRef}>
+        {children(ready)}
+      </div>
     </div>
   )
 }
@@ -114,26 +143,30 @@ export function EventTimelineTile({ incidents }: { incidents: Incident[] }) {
   const { timeline } = useAnalysisData(incidents)
   return (
     <ChartShell kicker="TEMPO" title="EVENT TIMELINE">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={timeline} margin={{ top: 6, right: 8, bottom: 0, left: -24 }}>
-          <defs>
-            <linearGradient id="console-area-g" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#DAFF4A" stopOpacity={0.35} />
-              <stop offset="100%" stopColor="#DAFF4A" stopOpacity={0.03} />
-            </linearGradient>
-            <linearGradient id="console-area-w" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(255,140,0,1)" stopOpacity={0.26} />
-              <stop offset="100%" stopColor="rgba(255,140,0,1)" stopOpacity={0.02} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" />
-          <XAxis dataKey="date" tick={TICK} axisLine={{ stroke: 'rgba(218,255,74,.15)' }} tickLine={false} />
-          <YAxis tick={TICK} axisLine={false} tickLine={false} allowDecimals={false} />
-          <Tooltip content={<ChartTip />} />
-          <Area type="monotone" dataKey="events" name="All Events" stroke="#DAFF4A" strokeWidth={1.2} fill="url(#console-area-g)" dot={false} />
-          <Area type="monotone" dataKey="kinetic" name="Kinetic" stroke="rgba(255,140,0,.9)" strokeWidth={1.2} fill="url(#console-area-w)" dot={false} />
-        </AreaChart>
-      </ResponsiveContainer>
+      {ready =>
+        ready ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={timeline} margin={{ top: 6, right: 8, bottom: 0, left: -24 }}>
+              <defs>
+                <linearGradient id="console-area-g" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#DAFF4A" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#DAFF4A" stopOpacity={0.03} />
+                </linearGradient>
+                <linearGradient id="console-area-w" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgba(255,140,0,1)" stopOpacity={0.26} />
+                  <stop offset="100%" stopColor="rgba(255,140,0,1)" stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" />
+              <XAxis dataKey="date" tick={TICK} axisLine={{ stroke: 'rgba(218,255,74,.15)' }} tickLine={false} />
+              <YAxis tick={TICK} axisLine={false} tickLine={false} allowDecimals={false} />
+              <Tooltip content={<ChartTip />} />
+              <Area type="monotone" dataKey="events" name="All Events" stroke="#DAFF4A" strokeWidth={1.2} fill="url(#console-area-g)" dot={false} />
+              <Area type="monotone" dataKey="kinetic" name="Kinetic" stroke="rgba(255,140,0,.9)" strokeWidth={1.2} fill="url(#console-area-w)" dot={false} />
+            </AreaChart>
+          </ResponsiveContainer>
+        ) : null
+      }
     </ChartShell>
   )
 }
@@ -142,15 +175,19 @@ export function GeographicConcentrationTile({ incidents }: { incidents: Incident
   const { geoData } = useAnalysisData(incidents)
   return (
     <ChartShell kicker="GEOGRAPHY" title="CONCENTRATION">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={geoData} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 0 }}>
-          <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" horizontal={false} />
-          <XAxis type="number" tick={TICK} axisLine={{ stroke: 'rgba(218,255,74,.15)' }} tickLine={false} allowDecimals={false} />
-          <YAxis type="category" dataKey="country" tick={TICK} axisLine={false} tickLine={false} width={76} />
-          <Tooltip content={<ChartTip />} />
-          <Bar dataKey="count" name="Events" fill="rgba(218,255,74,.55)" radius={[0, 2, 2, 0]} maxBarSize={16} />
-        </BarChart>
-      </ResponsiveContainer>
+      {ready =>
+        ready ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={geoData} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 0 }}>
+              <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" horizontal={false} />
+              <XAxis type="number" tick={TICK} axisLine={{ stroke: 'rgba(218,255,74,.15)' }} tickLine={false} allowDecimals={false} />
+              <YAxis type="category" dataKey="country" tick={TICK} axisLine={false} tickLine={false} width={76} />
+              <Tooltip content={<ChartTip />} />
+              <Bar dataKey="count" name="Events" fill="rgba(218,255,74,.55)" radius={[0, 2, 2, 0]} maxBarSize={16} />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : null
+      }
     </ChartShell>
   )
 }
@@ -159,14 +196,18 @@ export function TypeProfileTile({ incidents }: { incidents: Incident[] }) {
   const { typeData } = useAnalysisData(incidents)
   return (
     <ChartShell kicker="INTENSITY" title="TYPE PROFILE">
-      <ResponsiveContainer width="100%" height="100%">
-        <RadarChart data={typeData} cx="50%" cy="50%" outerRadius="72%">
-          <PolarGrid stroke="rgba(218,255,74,.12)" />
-          <PolarAngleAxis dataKey="type" tick={{ ...TICK, fontSize: 9 }} />
-          <Tooltip content={<ChartTip />} />
-          <Radar name="Count" dataKey="count" stroke="#DAFF4A" strokeWidth={1.3} fill="rgba(218,255,74,.16)" fillOpacity={1} dot={{ r: 2, fill: '#DAFF4A', strokeWidth: 0 }} />
-        </RadarChart>
-      </ResponsiveContainer>
+      {ready =>
+        ready ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart data={typeData} cx="50%" cy="50%" outerRadius="72%">
+              <PolarGrid stroke="rgba(218,255,74,.12)" />
+              <PolarAngleAxis dataKey="type" tick={{ ...TICK, fontSize: 9 }} />
+              <Tooltip content={<ChartTip />} />
+              <Radar name="Count" dataKey="count" stroke="#DAFF4A" strokeWidth={1.3} fill="rgba(218,255,74,.16)" fillOpacity={1} dot={{ r: 2, fill: '#DAFF4A', strokeWidth: 0 }} />
+            </RadarChart>
+          </ResponsiveContainer>
+        ) : null
+      }
     </ChartShell>
   )
 }

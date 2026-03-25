@@ -6,6 +6,23 @@ Active build note:
 - `canonical product` = GulfWatch V2
 - `donor only` = AYN / HADAL experiment branches
 
+Migration truth order:
+- `repo truth` = handoff docs + current `main`
+- `live truth` = deploy parity check against repo truth
+- `historical docs` = README + extraction plan, reference only
+
+Tranche 1 lock:
+- `goal` = parity-and-landing pass only
+- `lane model` = Overview / Maps / Console
+- `do now` = live parity check / Overview hero sizing correction / preserve Maps naming / preserve gate removal
+- `do later` = donor extraction, new platform systems, cross-lane redesigns
+
+Feature buckets:
+- `canonical` = supports locked GulfWatch V2 direction
+- `donor-only` = AYN / MIT patterns not adopted into current product truth
+- `legacy` = older lineage references, not active direction
+- `discard` = empty shells, fake-fill surfaces, banned architecture regressions
+
 Status legend:
 - `🟢` = new updates carried forward into GulfWatch V2
 - `⚪` = older/legacy Gulf Watch/HADAL lineage

@@ -1,6 +1,23 @@
 # HADAL · COMPONENT EXTRACTION PLAN
 ## MIT → HADAL · Element-by-Element Mapping
 
+## Historical Status Note
+
+This document is a donor-strategy reference from the extraction phase.
+
+It does not override current product truth. Use this precedence order:
+- repo/Obsidian handoff docs + current `main`
+- `FEATURES.md`
+- this extraction plan
+
+Current lock for migration work:
+- `GulfWatch V2` = canonical
+- `AYN` = donor only
+- lane model = `Overview / Maps / Console`
+- no gate restore
+- no lane-role reversal
+- no broad donor migration until parity and landing are correct
+
 ---
 
 ## DUAL WORKSPACE SETUP

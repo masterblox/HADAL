@@ -1,12 +1,10 @@
 import { IntelWireSection } from '@/components/intel/IntelWireSection'
 import { SituationStrip } from '@/components/overview/SituationStrip'
 import { MissileDefenseStrip } from '@/components/missile/MissileDefenseStrip'
-import { SepBand } from '@/components/sep/SepBand'
 import { ScenarioOutlook } from '@/components/overview/ScenarioOutlook'
 import { ThreatFeed } from '@/components/feed/ThreatFeed'
 import type { Incident, AirspaceData, PriceData } from '@/hooks/useDataPipeline'
 import type { PredictionResult } from '@/lib/prediction/types'
-import { navigateTo } from '@/lib/lane-routing'
 
 interface OperationsPageProps {
   incidents: Incident[]
@@ -18,8 +16,8 @@ interface OperationsPageProps {
 
 export function OperationsPage({ incidents, airspace, prices, prediction, sandbox }: OperationsPageProps) {
   return (
-    <>
-      <section className="page-intro jp-panel">
+    <div className="maps-page">
+      <section className="page-intro jp-panel maps-intro">
         <div className="page-intro-header">
           <div>
             <div className="page-kicker">Map lane</div>
@@ -35,21 +33,15 @@ export function OperationsPage({ incidents, airspace, prices, prediction, sandbo
           Tactical map, airspace status, participant tracking, global posturing.
         </p>
       </section>
-      <SituationStrip prices={prices ?? null} airspace={airspace} prediction={prediction} />
-      <MissileDefenseStrip sandbox={sandbox} incidents={incidents} />
-      <SepBand incidents={incidents} />
+      <div className="maps-status-rail">
+        <SituationStrip prices={prices ?? null} airspace={airspace} prediction={prediction} />
+      </div>
       <IntelWireSection incidents={incidents} airspace={airspace} prices={prices} sandbox={sandbox} />
-      <ScenarioOutlook prediction={prediction} />
-      <ThreatFeed incidents={incidents} />
-      <section className="lane-footer-grid">
-        <article className="lane-footer-card jp-panel">
-          <div className="lane-cta-kicker">Console → analyst workbench</div>
-          <h2 className="lane-cta-title">Console</h2>
-          <button type="button" className="lane-cta-btn" onClick={() => navigateTo('console')}>
-            OPEN →
-          </button>
-        </article>
-      </section>
-    </>
+      <div className="maps-support-rail">
+        <MissileDefenseStrip sandbox={sandbox} incidents={incidents} />
+        <ScenarioOutlook prediction={prediction} />
+        <ThreatFeed incidents={incidents} />
+      </div>
+    </div>
   )
 }

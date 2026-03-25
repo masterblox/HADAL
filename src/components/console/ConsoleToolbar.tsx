@@ -31,6 +31,7 @@ export function ConsoleToolbar({
   onEditToggle,
 }: ConsoleToolbarProps) {
   const value = custom ? 'custom' : presetId
+  const showAdvancedViewBlock = editMode || custom
 
   return (
     <div className={`console-toolbar jp-panel${editMode ? ' is-editing' : ''}`}>
@@ -54,25 +55,27 @@ export function ConsoleToolbar({
           })}
         </div>
       </div>
-      <div className="console-toolbar-block">
-        <span className="console-toolbar-label">VIEW</span>
-        <div className="console-toolbar-select-wrap">
-          <select
-            className="console-toolbar-select"
-            value={value}
-            onChange={e => {
-              if (e.target.value !== 'custom') onPresetChange(e.target.value)
-            }}
-          >
-            {PRESET_OPTIONS.map(option => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+      {showAdvancedViewBlock && (
+        <div className="console-toolbar-block">
+          <span className="console-toolbar-label">VIEW</span>
+          <div className="console-toolbar-select-wrap">
+            <select
+              className="console-toolbar-select"
+              value={value}
+              onChange={e => {
+                if (e.target.value !== 'custom') onPresetChange(e.target.value)
+              }}
+            >
+              {PRESET_OPTIONS.map(option => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <span className="console-toolbar-hint">{custom ? 'CUSTOMIZED FROM PRESET' : presetLabel}</span>
         </div>
-        <span className="console-toolbar-hint">{custom ? 'CUSTOMIZED FROM PRESET' : presetLabel}</span>
-      </div>
+      )}
       <div className="console-toolbar-block meta">
         <span className="console-toolbar-label">MODE</span>
         <span className={`console-toolbar-mode${editMode ? ' edit' : ''}`}>

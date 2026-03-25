@@ -4,6 +4,22 @@
 
 🌐 **Live Demo**: https://gulfwatch-testing.vercel.app
 
+## Current Migration Note
+
+This README contains historical Gulf Watch and early HADAL lineage material.
+
+For current product truth, use this precedence order:
+- repo/Obsidian handoff docs + current `main`
+- `FEATURES.md`
+- this README
+
+Current locked direction:
+- `GulfWatch V2` = canonical product direction
+- `AYN` = donor only
+- lane model = `Overview / Maps / Console`
+- gate removed from normal flow
+- current tranche = parity-and-landing pass, not broad architecture changes
+
 ## HADAL
 
 HADAL is the active frontend shell — a 3-lane threat-intelligence terminal built on React 19 + TypeScript + Vite + Tailwind 4 + Canvas 2D + Leaflet. Current version: **v0.5.0**.
@@ -14,7 +30,7 @@ Canonical system model:
 - HADAL = target product UX and frontend shell
 - MIT = selective pattern donor only
 
-### Current state (v0.5.0)
+### Historical state snapshot (v0.5.0)
 
 - 3-lane shell: Overview / Operations / Analysis (hash-routed, lazy-loaded)
 - Login gate with NucleusTransition portal-to-globe reveal

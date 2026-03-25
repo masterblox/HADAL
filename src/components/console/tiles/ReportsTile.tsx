@@ -14,11 +14,11 @@ export function ReportsTile() {
       x.fillStyle = '#030500'; x.fillRect(0, 0, W, H)
       const t = Date.now() / 1000
 
-      // Giant background type — breathing
-      const br = Math.sin(t * 0.3) * 0.015 + 0.035
-      x.font = 'bold 130px "Teko"'; x.fillStyle = G2 + br.toFixed(3) + ')'; x.fillText('BRIEF', W * 0.03, H * 0.38)
-      x.strokeStyle = G2 + (br + 0.03).toFixed(3) + ')'; x.lineWidth = 1; x.strokeText('BRIEF', W * 0.03, H * 0.38)
-      x.font = 'bold 70px "Teko"'; x.fillStyle = G2 + (br * 0.7).toFixed(3) + ')'; x.fillText('INTEL', W * 0.08, H * 0.54)
+      // Background type — subdued so it supports the briefing shell without bleeding through the lane
+      const br = Math.sin(t * 0.3) * 0.008 + 0.014
+      x.font = 'bold 92px "Teko"'; x.fillStyle = G2 + br.toFixed(3) + ')'; x.fillText('BRIEF', W * 0.18, H * 0.34)
+      x.strokeStyle = G2 + (br + 0.008).toFixed(3) + ')'; x.lineWidth = 1; x.strokeText('BRIEF', W * 0.18, H * 0.34)
+      x.font = 'bold 48px "Teko"'; x.fillStyle = G2 + (br * 0.55).toFixed(3) + ')'; x.fillText('INTEL', W * 0.22, H * 0.48)
 
       // Amber bar
       const cf = Math.sin(t * 2) > 0.6 ? 0.95 : 0.7

@@ -28,10 +28,15 @@ function cursorToFrame(cx: number): number {
   return Math.round(((cx + 1) / 2) * (TOTAL_FRAMES - 1))
 }
 
-export function MekheadTile() {
+interface MekheadTileProps {
+  onReady?: () => void
+}
+
+export function MekheadTile({ onReady }: MekheadTileProps = {}) {
   const canvasRef    = useRef<HTMLCanvasElement>(null)
   const mouseTargetX = useRef(0)
   const smoothFrame  = useRef<number>(CENTER_IDX)
+  const signaledReady = useRef(false)
 
   useEffect(() => {
     const cv = canvasRef.current
@@ -128,6 +133,10 @@ export function MekheadTile() {
       }
 
       lastProcW = tw; lastProcH = th
+      if (!signaledReady.current) {
+        signaledReady.current = true
+        onReady?.()
+      }
       return true
     }
 

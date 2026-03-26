@@ -2,7 +2,7 @@ import type { PipelineHealth, PriceData, AirspaceData } from '@/hooks/useDataPip
 import type { Incident } from '@/hooks/useDataPipeline'
 import type { PredictionResult } from '@/lib/prediction/types'
 import { navigateTo } from '@/lib/lane-routing'
-import { MekheadTile } from '@/components/console/tiles/MekheadTile'
+import { ConsoleCircuitShell } from '@/components/console/ConsoleCircuitShell'
 import { DevTag } from '@/components/shared/DevTag'
 import { FeatureBar } from '@/components/shared/FeatureBar'
 
@@ -70,9 +70,7 @@ export function OverviewPage({
         </div>
       </div>
       <div className="overview-landing-hero">
-        <div className="overview-landing-frame">
-          <MekheadTile />
-        </div>
+        <ConsoleCircuitShell incidents={incidents} onEdit={() => navigateTo('console')} />
       </div>
       <FeatureBar />
       <DevTag id="B" />

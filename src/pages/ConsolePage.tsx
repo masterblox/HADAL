@@ -35,9 +35,7 @@ import {
   DEFAULT_CONSOLE_PRESET,
   type ConsoleTileId,
 } from '@/data/console-presets'
-import { ConsoleCircuitShell } from '@/components/console/ConsoleCircuitShell'
 import { DevTag } from '@/components/shared/DevTag'
-import { FeatureBar } from '@/components/shared/FeatureBar'
 
 interface ConsolePageProps {
   sandbox: boolean
@@ -67,7 +65,7 @@ const TILE_META: Record<ConsoleTileId, { title: string; icon: string; source: st
   'kinetic-data': { title: 'KINETIC DATA', icon: '▲', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'scenario-outlook': { title: 'SCENARIO OUTLOOK', icon: '△', source: 'MODEL', updated: 'LOCAL', status: 'live' },
   'threat-feed': { title: 'THREAT FEED', icon: '▣', source: 'VERIFIED / RAW', updated: '60S', status: 'live' },
-  'theatre-exchange': { title: 'THEATRE EXCHANGE', icon: '⇄', source: 'DERIVED', updated: 'LIVE', status: 'live' },
+  'theatre-exchange': { title: 'THEATRE EXCHANGE', icon: '⇄', source: 'DERIVED', updated: 'DERIVED', status: 'stale' },
   confidence: { title: 'CONFIDENCE', icon: '▥', source: 'VERIFICATION', updated: 'LIVE', status: 'stale' },
   verification: { title: 'VERIFICATION', icon: '⊞', source: 'INCIDENTS', updated: '60S', status: 'live' },
   reports: { title: 'REPORTS', icon: '▤', source: 'MODEL + INCIDENTS', updated: 'LOCAL', status: 'live' },
@@ -78,8 +76,8 @@ const TILE_META: Record<ConsoleTileId, { title: string; icon: string; source: st
   'feed-quality': { title: 'FEED QUALITY', icon: '≣', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'predictor-engine': { title: 'PREDICTOR ENGINE', icon: '⊿', source: 'SEQUENCE MODEL', updated: 'LOCAL', status: 'live' },
   argus: { title: 'ARGUS', icon: '◬', source: 'PIPELINE PROXY', updated: 'DERIVED', status: 'stale' },
-  chatter: { title: 'CHATTER', icon: '☰', source: 'PIPELINE SOURCES', updated: 'DERIVED', status: 'stale' },
-  ignite: { title: 'IGNITE', icon: '✦', source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'offline' },
+  chatter: { title: 'CHATTER', icon: '☰', source: 'PIPELINE SOURCES', updated: 'DERIVED', status: 'offline' },
+  ignite: { title: 'IGNITE', icon: '✦', source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'stale' },
   chronos: { title: 'CHRONOS', icon: '⌁', source: 'INCIDENTS', updated: 'DERIVED', status: 'stale' },
   skyline: { title: 'SKYLINE', icon: '◫', source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'offline' },
   mekhead: { title: 'MEKHEAD', icon: '◆', source: 'ARCHIVE', updated: 'STATIC', status: 'stale' },
@@ -139,14 +137,6 @@ export function ConsolePage({
       return { ...current, slots: next, custom: true }
     })
     setPickerIndex(null)
-  }
-
-  function enterBuildMode() {
-    const firstEmpty = slots.findIndex(s => s === null)
-    if (firstEmpty !== -1) {
-      setPickerIndex(firstEmpty)
-    }
-    onSandboxToggle()
   }
 
   const tilePickerOptions = CONSOLE_TILE_ORDER.map(id => ({
@@ -229,41 +219,34 @@ export function ConsolePage({
           onSandboxToggle()
         }}
       />
-      {sandbox ? (
-        <div className={`console-grid${sandbox ? ' is-editing' : ''}`}>
-          {slots.map((tileId, index) => (
-            <div key={index} className="console-slot">
-              {tileId ? (
-                <ConsoleTile
-                  icon={TILE_META[tileId].icon}
-                  title={TILE_META[tileId].title}
-                  source={TILE_META[tileId].source}
-                  updated={TILE_META[tileId].updated}
-                  status={TILE_META[tileId].status}
-                  editMode={sandbox}
-                  onRemove={sandbox ? () => removeTile(index) : undefined}
-                >
-                  {renderTile(tileId)}
-                </ConsoleTile>
-              ) : (
-                <button
-                  className={`console-empty-slot${sandbox ? ' is-visible' : ''}`}
-                  onClick={() => sandbox && setPickerIndex(index)}
-                  disabled={!sandbox}
-                >
-                  <span>+</span>
-                  <small>ADD TILE</small>
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <>
-          <FeatureBar />
-          <ConsoleCircuitShell incidents={incidents} onEdit={enterBuildMode} />
-        </>
-      )}
+      <div className={`console-grid${sandbox ? ' is-editing' : ''}`}>
+        {slots.map((tileId, index) => (
+          <div key={index} className="console-slot">
+            {tileId ? (
+              <ConsoleTile
+                icon={TILE_META[tileId].icon}
+                title={TILE_META[tileId].title}
+                source={TILE_META[tileId].source}
+                updated={TILE_META[tileId].updated}
+                status={TILE_META[tileId].status}
+                editMode={sandbox}
+                onRemove={sandbox ? () => removeTile(index) : undefined}
+              >
+                {renderTile(tileId)}
+              </ConsoleTile>
+            ) : (
+              <button
+                className={`console-empty-slot${sandbox ? ' is-visible' : ''}`}
+                onClick={() => sandbox && setPickerIndex(index)}
+                disabled={!sandbox}
+              >
+                <span>+</span>
+                <small>ADD TILE</small>
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
       <TilePicker
         open={pickerIndex !== null}
         availableTiles={tilePickerOptions}

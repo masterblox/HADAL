@@ -32,4 +32,6 @@ This directory holds the non-runtime project documents for HADAL.
 - [REPO_MAP.md](handoff/REPO_MAP.md) — repo structure and working rules
 - [ENGINEERING_JOURNAL.md](handoff/ENGINEERING_JOURNAL.md) — environment failures, repo issues, recovery notes
 - [VERSION_LINEAGE.md](handoff/VERSION_LINEAGE.md) — maturity markers (current: `v0.5.0`)
+- [HADAL_ARCHITECTURE_TRANSITION_2026-03-26.md](handoff/HADAL_ARCHITECTURE_TRANSITION_2026-03-26.md) — primary architecture engineer brief for the current migration phase
 - [ORCHESTRATION_2026-03-26.md](handoff/ORCHESTRATION_2026-03-26.md) — overnight rationale stack connecting HADAL, Gulf Watch V2, and Palantir
+- [GULFWATCH_FEATURE_MATCH_REPORT_2026-03-26.md](handoff/GULFWATCH_FEATURE_MATCH_REPORT_2026-03-26.md) — live GulfWatch feature inventory matched against current HADAL repo state

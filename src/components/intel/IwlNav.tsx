@@ -1,3 +1,5 @@
+import { DevTag } from '@/components/shared/DevTag'
+
 interface IwlNavProps {
   activeTab: string
   onTabChange: (tab: 'map' | 'airspace' | 'casualties' | 'posturing') => void
@@ -15,7 +17,7 @@ export function IwlNav({ activeTab, onTabChange, syncStatus, aircraftCount, airc
   ]
 
   return (
-    <div className="iwl-nav">
+    <div className="iwl-nav" style={{ position: 'relative' }}>
       <div className="iwl-logo">
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="iwl-logo-glyph">
           <circle cx="14" cy="14" r="12.5" stroke="rgba(218,255,74,.4)" strokeWidth="1"/>
@@ -57,6 +59,7 @@ export function IwlNav({ activeTab, onTabChange, syncStatus, aircraftCount, airc
           <span>{syncStatus}</span>
         </div>
       </div>
+      <DevTag id="O" />
     </div>
   )
 }

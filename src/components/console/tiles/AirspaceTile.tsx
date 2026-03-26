@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { G2, AMB, BG, PI, stamp, hdSetup } from '@/canvas/canvasKit'
+import { DevTag } from '@/components/shared/DevTag'
 
 export function AirspaceTile() {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -82,5 +83,10 @@ export function AirspaceTile() {
     return () => cancelAnimationFrame(rafId)
   }, [])
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <DevTag id="A.7" />
+    </div>
+  )
 }

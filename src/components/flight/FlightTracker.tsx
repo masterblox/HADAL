@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { DevTag } from '@/components/shared/DevTag'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { type DemoFlight } from '@/data/demo-flights'
@@ -166,7 +167,7 @@ export function FlightTracker() {
   }
 
   return (
-    <div className="ft-section sev-nominal">
+    <div className="ft-section sev-nominal" style={{ position: 'relative' }}>
       <div className="ft-header jp-panel-header">
         <div className="HDR-DOT jp-status-dot active" style={{
           background: openSky.status === 'LIVE' ? 'var(--g)' : openSky.status === 'STALE' ? 'var(--warn)' : 'var(--g3)',
@@ -187,6 +188,7 @@ export function FlightTracker() {
       </div>
 
       <FlightTicker flights={flights} />
+      <DevTag id="A.21" />
     </div>
   )
 }

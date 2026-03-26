@@ -1,4 +1,5 @@
 import type { AirspaceData } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface AirspaceTabProps {
   airspace: AirspaceData | null
@@ -31,7 +32,7 @@ export function AirspaceTab({ airspace }: AirspaceTabProps) {
   const hasData = rows && rows.length > 0
 
   return (
-    <div className="iwl-tabcontent active">
+    <div className="iwl-tabcontent active" style={{ position: 'relative' }}>
       <div className="iwl-section-h">REGIONAL AIRSPACE STATUS</div>
       <p className="iwl-section-intro">
         {hasData
@@ -52,6 +53,7 @@ export function AirspaceTab({ airspace }: AirspaceTabProps) {
           NO LIVE AIRSPACE DATA — AWAITING PIPELINE
         </div>
       )}
+      <DevTag id="S" />
     </div>
   )
 }

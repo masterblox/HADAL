@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface ConsoleTileProps {
   icon: string
@@ -22,7 +23,7 @@ export function ConsoleTile({
   children,
 }: ConsoleTileProps) {
   return (
-    <section className={`console-tile jp-panel${editMode ? ' is-editing' : ''}`}>
+    <section className={`console-tile jp-panel${editMode ? ' is-editing' : ''}`} style={{ position: 'relative' }}>
       <header className="console-tile-head">
         <div className="console-tile-head-main">
           <span className="console-tile-icon">{icon}</span>
@@ -48,6 +49,7 @@ export function ConsoleTile({
           <span className="console-tile-resize" aria-hidden="true" />
         </>
       )}
+      <DevTag id="A.3" />
     </section>
   )
 }

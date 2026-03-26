@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { G, G2, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { DevTag } from '@/components/shared/DevTag'
 
 export function VerificationTile() {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -74,5 +75,10 @@ export function VerificationTile() {
     return () => cancelAnimationFrame(rafId)
   }, [])
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <DevTag id="E" />
+    </div>
+  )
 }

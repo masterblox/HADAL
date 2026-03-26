@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import type { Incident } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
 export function AnalysisSummaryTile({ incidents }: { incidents: Incident[] }) {
   const stats = useMemo(() => {
@@ -23,13 +24,14 @@ export function AnalysisSummaryTile({ incidents }: { incidents: Incident[] }) {
   ]
 
   return (
-    <div className="console-analysis-summary">
+    <div className="console-analysis-summary" style={{ position: 'relative' }}>
       {items.map(item => (
         <div key={item.label} className="console-analysis-card">
           <span>{item.label}</span>
           <b>{item.value}</b>
         </div>
       ))}
+      <DevTag id="A.13" />
     </div>
   )
 }

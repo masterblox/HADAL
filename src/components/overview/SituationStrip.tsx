@@ -1,5 +1,6 @@
 import type { PriceData, AirspaceData } from '@/hooks/useDataPipeline'
 import type { PredictionResult } from '@/lib/prediction/types'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface SituationStripProps {
   prices: PriceData | null
@@ -45,7 +46,7 @@ export function SituationStrip({ prices, airspace, prediction }: SituationStripP
   const gasChg = fmtChange(gas?.change)
 
   return (
-    <div className="sit-strip jp-panel">
+    <div className="sit-strip jp-panel" style={{ position: 'relative' }}>
       <div className="sit-strip-head">
         <span className="sit-strip-title">Situation Metrics</span>
         <span className="sit-strip-source">DERIVED FROM PIPELINE</span>
@@ -124,6 +125,7 @@ export function SituationStrip({ prices, airspace, prediction }: SituationStripP
           </div>
         </div>
       </div>
+      <DevTag id="W" />
     </div>
   )
 }

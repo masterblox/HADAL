@@ -1,5 +1,6 @@
 import { useDrawMark } from '@/canvas/useDrawMark'
 import { useUtcClock } from '@/hooks/useUtcClock'
+import { DevTag } from '@/components/shared/DevTag'
 
 type Lane = 'overview' | 'operations' | 'console'
 
@@ -8,23 +9,25 @@ interface TopbarProps {
   incidentCount: number
   sandbox: boolean
   onSandboxToggle: () => void
+  devTags: boolean
+  onDevTagToggle: () => void
   activeLane: Lane
   onNavigate: (lane: Lane) => void
 }
 
 const NAV_ITEMS: { id: Lane; label: string }[] = [
   { id: 'overview', label: 'OVERVIEW' },
-  { id: 'operations', label: 'OPERATIONS' },
+  { id: 'operations', label: 'MAPS' },
   { id: 'console', label: 'CONSOLE' },
 ]
 
-export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, activeLane, onNavigate }: TopbarProps) {
+export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, devTags, onDevTagToggle, activeLane, onNavigate }: TopbarProps) {
   const markRef = useDrawMark(32)
   const { zulu, elapsed } = useUtcClock()
   const readiness = threatLevel === null ? 'DEGRADED' : threatLevel >= 60 ? 'ELEVATED' : 'GUARDED'
 
   return (
-    <div className="topbar">
+    <div className="topbar" style={{ position: 'relative' }}>
       <div className="lockup">
         <canvas ref={markRef} width={32} height={32} />
         <div>
@@ -64,11 +67,15 @@ export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, a
       <button className={`tb-sandbox${sandbox ? ' active' : ''}`} onClick={onSandboxToggle}>
         {sandbox ? 'SANDBOX ON' : 'SANDBOX'}
       </button>
+      <button className={`tb-sandbox${devTags ? ' active' : ''}`} onClick={onDevTagToggle}>
+        {devTags ? 'DEV TAGS ON' : 'DEV TAGS'}
+      </button>
       <div className="tb-stats jp-intel">
         <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">INCIDENTS</div><div className="tb-stat-v jp-intel-val">{incidentCount || '—'}</div></div>
         <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">THREAT</div><div className="tb-stat-v jp-intel-val" style={threatLevel !== null && threatLevel >= 60 ? { color: 'var(--warn)' } : undefined}>{threatLevel ?? '—'}</div></div>
         <div className="tb-stat jp-intel-cell"><div className="tb-stat-l jp-intel-lbl">UTC</div><div className="tb-stat-v jp-intel-val" style={{ fontSize: 'var(--fs-small)' }}>{zulu}</div></div>
       </div>
+      <DevTag id="A" />
     </div>
   )
 }

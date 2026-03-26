@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { KillChainTracker } from './KillChainTracker'
 import type { Incident } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface CountryStats {
   missile: number; drone: number; cruise: number; total: number
@@ -69,7 +70,7 @@ export function MissileDefenseStrip({ incidents }: MissileDefenseStripProps) {
   }
 
   return (
-    <div className="missile-section">
+    <div className="missile-section" style={{ position: 'relative' }}>
       <div className="missile-section-head">
         <h2 className="section-title">Theatre Kinetic Data</h2>
         <div className="missile-headline">
@@ -114,6 +115,7 @@ export function MissileDefenseStrip({ incidents }: MissileDefenseStripProps) {
         </tbody>
       </table>
       <KillChainTracker incidents={incidents} />
+      <DevTag id="X" />
     </div>
   )
 }

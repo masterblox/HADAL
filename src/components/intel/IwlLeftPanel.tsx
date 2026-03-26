@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { missileEvents, interceptEvents, airstrikeEvents, groundEvents, combatantEvents, diplomaticEvents } from '@/data/map-events'
 import { airspaceZones } from '@/data/airspace-zones'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface IwlLeftPanelProps {
   layerVisibility: Record<string, boolean>
@@ -28,7 +29,7 @@ export function IwlLeftPanel({ layerVisibility, onToggle, liveIncidentCount }: I
   const layers = buildLayers(liveIncidentCount)
 
   return (
-    <div className="iwl-left-inner">
+    <div className="iwl-left-inner" style={{ position: 'relative' }}>
       <div className="iwl-panel jp-panel">
         <div className="iwl-ph jp-panel-header" onClick={() => setOpen(!open)}>
           <span className="iwl-ph-t">Map Layers</span>
@@ -56,6 +57,7 @@ export function IwlLeftPanel({ layerVisibility, onToggle, liveIncidentCount }: I
           </div>
         )}
       </div>
+      <DevTag id="P" />
     </div>
   )
 }

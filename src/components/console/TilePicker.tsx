@@ -1,4 +1,5 @@
 import type { ConsoleTileId } from '@/data/console-presets'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface TilePickerProps {
   open: boolean
@@ -11,7 +12,7 @@ export function TilePicker({ open, availableTiles, onSelect, onClose }: TilePick
   if (!open) return null
 
   return (
-    <div className="console-picker-backdrop" onClick={onClose}>
+    <div className="console-picker-backdrop" onClick={onClose} style={{ position: 'relative' }}>
       <div className="console-picker jp-panel" onClick={e => e.stopPropagation()}>
         <div className="console-picker-head">ADD TILE</div>
         <div className="console-picker-grid">
@@ -29,6 +30,7 @@ export function TilePicker({ open, availableTiles, onSelect, onClose }: TilePick
           ))}
         </div>
       </div>
+      <DevTag id="A.4" />
     </div>
   )
 }

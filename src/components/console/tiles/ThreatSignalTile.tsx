@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react'
 import type { Incident } from '@/hooks/useDataPipeline'
 import { G, G2, AMB, BG, PI, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { DevTag } from '@/components/shared/DevTag'
 
-// ThreatSignalTile — ESE circuit board adapted for ul trapezoid bay
-// ul clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%)
-// The backplane diagonal (top-right → bottom-right inset) is drawn as a circuit edge
+// ThreatSignalTile — ESE circuit board adapted for ul chamfered bay
+// ul clip-path: polygon(0 0, 100% 0, 100% 65%, 82% 100%, 0 100%)
+// The backplane diagonal (right edge → 82% at bottom) is drawn as a circuit edge
 // No rectangular overlay panel — data is embedded in the circuit diagram
 
 export function ThreatSignalTile({ incidents }: { incidents: Incident[] }) {
@@ -39,33 +40,24 @@ export function ThreatSignalTile({ incidents }: { incidents: Incident[] }) {
       for (let i = 0; i < W; i += 10) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, H); x.stroke() }
       for (let i = 0; i < H; i += 10) { x.beginPath(); x.moveTo(0, i); x.lineTo(W, i); x.stroke() }
 
-      // ── BACKPLANE DIAGONAL ───────────────────────────────────────────────────
-      // ul bay: right edge goes polygon(100%,0 → 85%,100%). We represent the
-      // chip's backplane edge inside the canvas at the same trajectory.
-      // Canvas body_right=78px, so actual diagonal is near the canvas right edge.
-      // We draw it at 0.86W (top) → 0.70W (bottom) as a design reference line.
-      const fltX0 = W * 0.86   // top of fault
-      const fltX1 = W * 0.70   // bottom of fault
-      const busEnd = fltX1      // buses and IC blocks terminate here
+      // ── BACKPLANE CHAMFER ────────────────────────────────────────────────────
+      // ul bay: chamfer on bottom-right — polygon(100%,65% → 82%,100%).
+      // In body coords (body-right=90px) the diagonal maps to (W, 0.65H)→(0.86W, H).
+      // Only the bottom-right corner is cut — no fault above chamferY.
+      const chamferY = H * 0.65   // y where bay diagonal begins
+      const fltXBot  = W * 0.86   // x at bottom of chamfer (~82% element in body coords)
+      const busEnd   = W * 0.70   // buses and IC blocks terminate here (unchanged)
 
-      // Fault fill — dim zone beyond backplane
+      // Chamfer fill — bottom-right triangle only
       x.fillStyle = G2 + '.012)'
       x.beginPath()
-      x.moveTo(fltX0, 0); x.lineTo(W, 0); x.lineTo(W, H); x.lineTo(fltX1, H)
+      x.moveTo(W, chamferY); x.lineTo(W, H); x.lineTo(fltXBot, H)
       x.closePath(); x.fill()
 
-      // Fault line — dashed, representing the bay edge
+      // Chamfer edge — dashed, representing the new bay geometry
       x.strokeStyle = G2 + '.22)'; x.lineWidth = 1; x.setLineDash([3, 6])
-      x.beginPath(); x.moveTo(fltX0, 0); x.lineTo(fltX1, H); x.stroke()
+      x.beginPath(); x.moveTo(W, chamferY); x.lineTo(fltXBot, H); x.stroke()
       x.setLineDash([])
-
-      // Backplane label (rotated, inside fault zone)
-      x.save()
-      x.translate(fltX0 + (W - fltX0) * 0.4, H * 0.5)
-      x.rotate(-PI / 2)
-      x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.18)'; x.textAlign = 'center'
-      x.fillText('BACKPLANE', 0, 0)
-      x.textAlign = 'left'; x.restore()
 
       // ── THREE SIGNAL BUSES ───────────────────────────────────────────────────
       const buses = [
@@ -144,8 +136,8 @@ export function ThreatSignalTile({ incidents }: { incidents: Incident[] }) {
         x.textAlign = 'left'
       })
 
-      // ── EVT RECORD — inline in fault zone, no box ────────────────────────────
-      const rx = fltX1 + 5
+      // ── EVT RECORD — inline in right zone, no box ───────────────────────────
+      const rx = busEnd + 5
       x.font = '5px "Share Tech Mono"'
       x.fillStyle = isCrit ? 'rgba(255,152,20,.70)' : G2 + '.48)'
       x.fillText(evtId,   rx, H * 0.22)
@@ -163,5 +155,10 @@ export function ThreatSignalTile({ incidents }: { incidents: Incident[] }) {
     return () => cancelAnimationFrame(rafId)
   }, [incidents])
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <DevTag id="C" />
+    </div>
+  )
 }

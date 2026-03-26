@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { feedData, type FeedItem } from '@/data/feed-data'
 import type { Incident } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
 const regions = ['ALL', 'UAE', 'GULF', 'IRAN', 'RED SEA', 'ISRAEL']
 
@@ -48,7 +49,7 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
   const filtered = filt === 'ALL' ? allData : allData.filter(r => r.tags.includes(filt))
 
   return (
-    <div className="jp-panel">
+    <div className="jp-panel" style={{ position: 'relative' }}>
       <div className="TABS">
         {regions.map(r => (
           <div key={r} className={`TAB${filt === r ? ' on' : ''}`} onClick={() => setFilt(r)}>{r}</div>
@@ -87,6 +88,7 @@ export function ThreatFeed({ incidents }: ThreatFeedProps) {
           {expanded ? 'COLLAPSE ▲' : `EXPAND FEED ▼ (${filtered.length - 6} MORE)`}
         </div>
       )}
+      <DevTag id="Z" />
     </div>
   )
 }

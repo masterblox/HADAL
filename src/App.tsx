@@ -17,7 +17,7 @@ function useHashRoute(): Lane {
 
 const LANE_TITLES: Record<Lane, string> = {
   overview: 'Overview',
-  operations: 'Operations',
+  operations: 'Maps',
   console: 'Console',
 }
 
@@ -30,7 +30,27 @@ export function App() {
   const prediction = usePrediction(incidents, airspace, prices)
   const threatLevel = prediction?.theatreThreatLevel ?? null
   const [sandbox, setSandbox] = useState(false)
+  const [devTags, setDevTags] = useState(false)
   const activeLane = useHashRoute()
+
+  // Dev reference tag toggle (Ctrl+Shift+T or button)
+  useEffect(() => {
+    if (devTags) {
+      document.body.classList.add('dev-tags-active')
+    } else {
+      document.body.classList.remove('dev-tags-active')
+    }
+  }, [devTags])
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+        setDevTags(v => !v)
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [])
 
   // Set default hash if none present
   useEffect(() => {
@@ -84,6 +104,8 @@ export function App() {
             incidentCount={incidents.length}
             sandbox={sandbox}
             onSandboxToggle={() => setSandbox(s => !s)}
+            devTags={devTags}
+            onDevTagToggle={() => setDevTags(v => !v)}
             activeLane={activeLane}
             onNavigate={navigateTo}
           />
@@ -105,6 +127,7 @@ export function App() {
                   incidents={incidents}
                   airspace={airspace}
                   prices={prices}
+                  prediction={prediction}
                   sandbox={sandbox}
                 />
               )}

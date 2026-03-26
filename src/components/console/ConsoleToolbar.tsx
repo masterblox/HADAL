@@ -1,6 +1,7 @@
+import { DevTag } from '@/components/shared/DevTag'
+
 interface ConsoleToolbarProps {
   editMode: boolean
-  presetLabel: string
   presetId: string
   custom: boolean
   onPresetChange: (presetId: string) => void
@@ -26,34 +27,37 @@ export function ConsoleToolbar({
   const value = custom ? 'custom' : presetId
 
   return (
-    <div className={`console-toolbar jp-panel${editMode ? ' is-editing' : ''}`}>
-      <div className="console-toolbar-block">
-        <span className="console-toolbar-label">VIEW</span>
-        <div className="console-toolbar-select-wrap">
-          <select
-            className="console-toolbar-select"
-            value={value}
-            onChange={e => {
-              if (e.target.value !== 'custom') onPresetChange(e.target.value)
-            }}
-          >
-            {PRESET_OPTIONS.map(option => (
-              <option key={option.id} value={option.id}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+    <div className={`console-toolbar jp-panel${editMode ? ' is-editing' : ''}`} style={{ position: 'relative' }}>
+      {editMode && (
+        <div className="console-toolbar-block">
+          <span className="console-toolbar-label">VIEW</span>
+          <div className="console-toolbar-select-wrap">
+            <select
+              className="console-toolbar-select"
+              value={value}
+              onChange={e => {
+                if (e.target.value !== 'custom') onPresetChange(e.target.value)
+              }}
+            >
+              {PRESET_OPTIONS.map(option => (
+                <option key={option.id} value={option.id}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
+      )}
       <div className="console-toolbar-block meta">
         <span className="console-toolbar-label">MODE</span>
         <span className={`console-toolbar-mode${editMode ? ' edit' : ''}`}>
-          {editMode ? 'CONSOLE EDIT MODE' : 'LOCKED OPERATIONAL VIEW'}
+          {editMode ? 'CONSOLE EDIT MODE' : 'CIRCUIT SHELL'}
         </span>
       </div>
       <button className={`console-toolbar-edit${editMode ? ' active' : ''}`} onClick={onEditToggle}>
         {editMode ? 'SAVE / EXIT' : 'EDIT'}
       </button>
+      <DevTag id="A.2" />
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { DevTag } from '@/components/shared/DevTag'
 
 const G2 = 'rgba(218,255,74,'
 
@@ -105,6 +106,7 @@ export function MilitarySignalsTile() {
           />
         </div>
       ))}
+      <DevTag id="A.15" />
     </div>
   )
 }

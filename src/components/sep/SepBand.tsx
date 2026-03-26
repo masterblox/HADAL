@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import type { Incident } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface SepBandProps {
   incidents: Incident[]
@@ -23,7 +24,7 @@ export function SepBand({ incidents }: SepBandProps) {
     : 'NO SIGNAL'
 
   return (
-    <div className="sep-band">
+    <div className="sep-band" style={{ position: 'relative' }}>
       <div className="sep-content">
         <span className="sep-kicker">THEATRE SIGNAL EXCHANGE</span>
         <span className="sep-stat"><strong>{stats.intercepts}</strong> INTERCEPT EVENTS</span>
@@ -36,6 +37,7 @@ export function SepBand({ incidents }: SepBandProps) {
         <span className="sep-div">/</span>
         <span className="sep-stat"><strong>{freshnessLabel}</strong> LAST SIGNAL</span>
       </div>
+      <DevTag id="Y" />
     </div>
   )
 }

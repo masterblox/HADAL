@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { G, G2, TAU, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { DevTag } from '@/components/shared/DevTag'
 
 // Symmetric carousel — 61 logical frames around a center pivot
 //
@@ -315,6 +316,7 @@ export function MekheadTile() {
   return (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 10 }} />
+      <DevTag id="I" />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { G, G2, AMB, PI, stamp, hdSetup } from '@/canvas/canvasKit'
+import { DevTag } from '@/components/shared/DevTag'
 
 const vessels = [
   { mmsi: '211234567', name: 'HORMUZ SPIRIT', type: 'CRUDE', flag: 'IR', sog: 8.2, cog: 142, lat: 26.42, lon: 56.18, gap: 47, anom: 1 },
@@ -107,5 +108,10 @@ export function TheatreExchangeTile() {
     return () => cancelAnimationFrame(rafId)
   }, [])
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <DevTag id="A.11" />
+    </div>
+  )
 }

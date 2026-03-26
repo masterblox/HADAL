@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { iwlFeedSeed } from '@/data/map-events'
 import type { Incident } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface IwlRightPanelProps {
   incidents: Incident[]
@@ -63,7 +64,7 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
   }, [incidents])
 
   return (
-    <div className="iwl-right-inner">
+    <div className="iwl-right-inner" style={{ position: 'relative' }}>
       <div className="jp-intel iwl-cas-grid" style={{display:'grid'}}>
         <div className="iwl-cas jp-intel-cell"><div className="iwl-cas-v red jp-intel-val">{casualtyStats.mil.toLocaleString()}</div><div className="iwl-cas-l jp-intel-lbl">MILITARY</div></div>
         <div className="iwl-cas jp-intel-cell"><div className="iwl-cas-v oran jp-intel-val">{casualtyStats.civ.toLocaleString()}</div><div className="iwl-cas-l jp-intel-lbl">CIVILIANS</div></div>
@@ -109,6 +110,7 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
         <div className="iwl-telem-row"><span className="iwl-telem-k">LAST STRIKE</span><span className="iwl-telem-v" style={{color:'var(--g5)'}}>{lastStrike}</span></div>
       </div>
 
+      <DevTag id="R" />
     </div>
   )
 }

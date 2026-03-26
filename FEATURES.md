@@ -5,6 +5,12 @@ Status legend:
 - `⚪` = older/legacy Gulf Watch/HADAL lineage
 - `❌` = empty shell, invalid, or currently useless in latest commit
 
+Active implementation note:
+- `ACTIVE NOW: Console — Mekhead directional scrubbing stabilization`
+- `Substatus: tracking logic landed / cinematic glitch retune pending`
+- `Scope lock: keep current timestamp-window model and cursor-driven scrubbing; do not reopen Console layout during this pass`
+- `Next after stabilization: Verification bay rebuild -> Reports bay rebuild -> Chatter rework/replacement -> overlap/z-order cleanup`
+
 Core feature list:
 - ⚪ Monitor
 - ⚪ Map

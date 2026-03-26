@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import type { Incident } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
 interface CasualtiesTabProps {
   sandbox: boolean
@@ -40,7 +41,7 @@ export function CasualtiesTab({ incidents }: CasualtiesTabProps) {
   const hasLive = incidents.length > 0
 
   return (
-    <div className="iwl-tabcontent active">
+    <div className="iwl-tabcontent active" style={{ position: 'relative' }}>
       <div className="iwl-section-h">PARTICIPANTS &amp; CASUALTIES</div>
       <p className="iwl-section-intro">
         {hasLive
@@ -85,6 +86,7 @@ export function CasualtiesTab({ incidents }: CasualtiesTabProps) {
           ))}
         </tbody>
       </table>
+      <DevTag id="T" />
     </div>
   )
 }

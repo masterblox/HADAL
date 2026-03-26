@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { DevTag } from '@/components/shared/DevTag'
 import { missileEvents, interceptEvents, airstrikeEvents, groundEvents, combatantEvents, diplomaticEvents } from '@/data/map-events'
 import { trajectories } from '@/data/trajectories'
 import { thaadSites } from '@/data/thaad-sites'
@@ -316,5 +317,9 @@ export function LeafletMap({ layerVisibility, incidents, flights, onSyncUpdate, 
     }
   }, [flights, incidents.length])
 
-  return <div ref={mapRef} id="iwl-map" />
+  return (
+    <div ref={mapRef} id="iwl-map" style={{ position: 'relative' }}>
+      <DevTag id="Q" />
+    </div>
+  )
 }

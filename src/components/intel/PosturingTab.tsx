@@ -1,8 +1,9 @@
 import { postures, diplomaticSignals } from '@/data/postures'
+import { DevTag } from '@/components/shared/DevTag'
 
 export function PosturingTab() {
   return (
-    <div className="iwl-tabcontent active">
+    <div className="iwl-tabcontent active" style={{ position: 'relative' }}>
       <div className="iwl-section-h">GLOBAL POSTURING DASHBOARD</div>
       <p className="iwl-section-intro">
         Analyst-curated scenario assessment. Postures and signals are editorial judgements based on OSINT reporting, not live telemetry.
@@ -32,6 +33,7 @@ export function PosturingTab() {
           ))}
         </div>
       </div>
+      <DevTag id="U" />
     </div>
   )
 }

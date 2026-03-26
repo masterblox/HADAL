@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { DemoFlight } from '@/data/demo-flights'
+import { DevTag } from '@/components/shared/DevTag'
 
 /* ── Aircraft type labels/colors for ticker ── */
 const TYPE_COL: Record<DemoFlight['type'], string> = {
@@ -48,7 +49,7 @@ interface IwlBottomProps {
 
 export function IwlBottom({ datalinkText, onExportSitrep, flights }: IwlBottomProps) {
   return (
-    <div className="iwl-bottom">
+    <div className="iwl-bottom" style={{ position: 'relative' }}>
       <div className="iwl-datalink">
         <span className="iwl-datalink-indicator">&#9608;</span>
         <span>{datalinkText || 'PIPELINE STATUS UNKNOWN'}</span>
@@ -63,6 +64,7 @@ export function IwlBottom({ datalinkText, onExportSitrep, flights }: IwlBottomPr
       <button className="iwl-export-btn" onClick={onExportSitrep} disabled={!onExportSitrep}>
         &#11015; EXPORT TACTICAL SITREP
       </button>
+      <DevTag id="V" />
     </div>
   )
 }

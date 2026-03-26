@@ -1,4 +1,5 @@
 import { useMemo, useEffect, useRef, type ReactNode } from 'react'
+import { DevTag } from '@/components/shared/DevTag'
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar,
@@ -98,14 +99,15 @@ function useAnalysisData(incidents: Incident[]) {
   return { timeline, geoData, typeData, sourceData }
 }
 
-function ChartShell({ kicker, title, children }: { kicker: string; title: string; children: ReactNode }) {
+function ChartShell({ kicker, title, children, devTagId }: { kicker: string; title: string; children: ReactNode; devTagId?: string }) {
   return (
-    <div className="console-chart-shell">
+    <div className="console-chart-shell" style={{ position: 'relative' }}>
       <div className="console-chart-bar">
         <span>{kicker}</span>
         <strong>{title}</strong>
       </div>
       <div className="console-chart-stage">{children}</div>
+      {devTagId && <DevTag id={devTagId} />}
     </div>
   )
 }
@@ -113,7 +115,7 @@ function ChartShell({ kicker, title, children }: { kicker: string; title: string
 export function EventTimelineTile({ incidents }: { incidents: Incident[] }) {
   const { timeline } = useAnalysisData(incidents)
   return (
-    <ChartShell kicker="TEMPO" title="EVENT TIMELINE">
+    <ChartShell kicker="TEMPO" title="EVENT TIMELINE" devTagId="J">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={timeline} margin={{ top: 6, right: 8, bottom: 0, left: -24 }}>
           <defs>
@@ -141,7 +143,7 @@ export function EventTimelineTile({ incidents }: { incidents: Incident[] }) {
 export function GeographicConcentrationTile({ incidents }: { incidents: Incident[] }) {
   const { geoData } = useAnalysisData(incidents)
   return (
-    <ChartShell kicker="GEOGRAPHY" title="CONCENTRATION">
+    <ChartShell kicker="GEOGRAPHY" title="CONCENTRATION" devTagId="K">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={geoData} layout="vertical" margin={{ top: 4, right: 12, bottom: 4, left: 0 }}>
           <CartesianGrid strokeDasharray="2 6" stroke="rgba(218,255,74,.07)" horizontal={false} />
@@ -158,7 +160,7 @@ export function GeographicConcentrationTile({ incidents }: { incidents: Incident
 export function TypeProfileTile({ incidents }: { incidents: Incident[] }) {
   const { typeData } = useAnalysisData(incidents)
   return (
-    <ChartShell kicker="INTENSITY" title="TYPE PROFILE">
+    <ChartShell kicker="INTENSITY" title="TYPE PROFILE" devTagId="L">
       <ResponsiveContainer width="100%" height="100%">
         <RadarChart data={typeData} cx="50%" cy="50%" outerRadius="72%">
           <PolarGrid stroke="rgba(218,255,74,.12)" />
@@ -231,5 +233,10 @@ export function FeedQualityTile() {
     return () => cancelAnimationFrame(rafId)
   }, [])
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <DevTag id="M" />
+    </div>
+  )
 }

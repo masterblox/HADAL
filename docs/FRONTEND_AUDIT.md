@@ -1,5 +1,8 @@
 # FRONTEND AUDIT
 
+> Superseded for current runtime truth by the `Overview / Maps / Console` lane model and gate-removed flow.
+> Keep this file as historical audit context, not as the active source of routing truth.
+
 ## Active Shell Structure
 
 - 3-lane shell is active.

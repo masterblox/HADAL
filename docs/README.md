@@ -35,3 +35,4 @@ This directory holds the non-runtime project documents for HADAL.
 - [HADAL_ARCHITECTURE_TRANSITION_2026-03-26.md](handoff/HADAL_ARCHITECTURE_TRANSITION_2026-03-26.md) — primary architecture engineer brief for the current migration phase
 - [ORCHESTRATION_2026-03-26.md](handoff/ORCHESTRATION_2026-03-26.md) — overnight rationale stack connecting HADAL, Gulf Watch V2, and Palantir
 - [GULFWATCH_FEATURE_MATCH_REPORT_2026-03-26.md](handoff/GULFWATCH_FEATURE_MATCH_REPORT_2026-03-26.md) — live GulfWatch feature inventory matched against current HADAL repo state
+- [LOCALHOST_VERCEL_DEBUG_WORKFLOW.md](handoff/LOCALHOST_VERCEL_DEBUG_WORKFLOW.md) — deployment handshake for comparing local preview and Vercel safely

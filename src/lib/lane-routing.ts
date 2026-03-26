@@ -4,7 +4,7 @@ export const VALID_LANES: Lane[] = ['overview', 'operations', 'console']
 
 export function parseLane(): Lane {
   const h = window.location.hash.replace('#', '').toLowerCase()
-  // Legacy redirect: #analysis → console (Analysis demoted to Console preset)
+  // Legacy redirect: retired `analysis` route now resolves to the Console lane
   if (h === 'analysis') return 'console'
   return VALID_LANES.includes(h as Lane) ? (h as Lane) : 'overview'
 }

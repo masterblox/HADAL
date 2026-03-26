@@ -1,10 +1,13 @@
 # Repo Map
 
+> Current runtime truth for lane architecture is `Overview / Maps / Console`.
+> Any older references below to `Operations / Analysis` should be treated as historical residue until fully normalized.
+
 ## Runtime Areas
 
-- `src/` — React 19 + TypeScript + Vite application. 3-lane shell (Overview / Operations / Analysis) with hash-based routing.
+- `src/` — React 19 + TypeScript + Vite application. 3-lane shell (`Overview / Maps / Console`) with hash-based routing.
 
-- `src/pages/` — Lane page components: `OverviewPage.tsx`, `OperationsPage.tsx` (lazy), `AnalysisPage.tsx` (lazy).
+- `src/pages/` — Active lane page components: `OverviewPage.tsx`, `OperationsPage.tsx` (visible label: `Maps`, lazy), `ConsolePage.tsx` (lazy).
 
 - `src/components/` — Domain-grouped UI: `hero/`, `missile/`, `feed/`, `intel/`, `economic/`, `sep/`, `topbar/`, `login/`, `predictor/`, `analysis/`, `flight/`, `shared/`.
 

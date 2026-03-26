@@ -1,5 +1,8 @@
 # HADAL Version Lineage
 
+> This file tracks historical checkpoint meaning.
+> Current active product truth is defined by the newer transition docs and the live runtime, not by the older gate-era lane descriptions below.
+
 **Recorded:** 2026-03-18 12:49:43 +04
 **Current maturity marker:** `v0.5.0`
 **Status:** Active handoff reference
@@ -16,9 +19,9 @@ That means:
 - macro architecture is defined
 - source/reference hierarchy is defined
 - the truth-layer cleanup pass is in place
-- the app has a real 3-lane shell (Overview / Operations / Analysis)
+- the app had a real 3-lane shell extraction phase (Overview / Operations / Analysis)
 - scenario residue has been removed from active product behavior
-- login gate with NucleusTransition reveal sequence is implemented
+- login gate with NucleusTransition reveal sequence was implemented in the earlier shell phase
 - globe rendering is production-quality (clean ring, concentric markers, grain)
 - prediction engine adapted from upstream with typed interfaces
 - OpenSky hook added for live aircraft tracking
@@ -56,7 +59,7 @@ Current blockers to `v1.0`:
 The current product should be understood as:
 
 - **product structure:** 3-lane shell is real and routed (hash-based)
-- **entry experience:** login gate → NucleusTransition → globe reveal → terminal
+- **entry experience at that checkpoint:** login gate → NucleusTransition → globe reveal → terminal
 - **data authority:** improved but incomplete — prediction engine and OpenSky hook are new real-data surfaces
 - **prediction layer:** adapted from upstream with typed interfaces, 4-stage pipeline
 - **operations workspace:** real but still mixed with some static/editorial content

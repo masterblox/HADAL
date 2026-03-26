@@ -6,7 +6,7 @@ import { useDataPipeline } from './hooks/useDataPipeline'
 import { usePrediction } from './hooks/usePrediction'
 import { parseLane, subscribeHash, type Lane, navigateTo } from './lib/lane-routing'
 
-/* Lane-level code splitting — Operations and Console load on demand */
+/* Lane-level code splitting — Maps and Console load on demand */
 const OperationsPage = lazy(() => import('./pages/OperationsPage').then(m => ({ default: m.OperationsPage })))
 const ConsolePage = lazy(() => import('./pages/ConsolePage').then(m => ({ default: m.ConsolePage })))
 
@@ -49,7 +49,6 @@ export function App() {
   return (
     <ErrorBoundary>
       <div className="terminal-root terminal-visible">
-        <div className="scanlines" />
         <div className="class-banner">
           <span className="class-banner-text">// TOP SECRET // SCI // NOFORN // HADAL-GULF-THEATRE // TS/SCI //</span>
           <div className="class-banner-gauge">
@@ -63,6 +62,7 @@ export function App() {
         <Topbar
           threatLevel={threatLevel}
           incidentCount={incidents.length}
+          pipelineStatus={pipelineStatus}
           sandbox={sandbox}
           onSandboxToggle={() => setSandbox(s => !s)}
           activeLane={activeLane}

@@ -11,13 +11,15 @@ import {
 import { MekheadTile } from '@/components/console/tiles/MekheadTile'
 import type { PipelineHealth, PriceData, AirspaceData, Incident } from '@/hooks/useDataPipeline'
 
+type SurfaceStatus = 'live' | 'stale' | 'offline'
+
 const OVERVIEW_BAYS = [
-  { key: 'ul', title: 'THREAT SIGNAL', status: 'live' as const },
-  { key: 'lm', title: 'ARGUS', status: 'stale' as const },
-  { key: 'll', title: 'VERIFICATION', status: 'live' as const },
-  { key: 'ur', title: 'CHATTER', status: 'stale' as const },
-  { key: 'rm', title: 'IGNITE', status: 'offline' as const },
-  { key: 'lr', title: 'REPORTS', status: 'live' as const },
+  { key: 'ul', title: 'THREAT SIGNAL' },
+  { key: 'lm', title: 'ARGUS' },
+  { key: 'll', title: 'VERIFICATION' },
+  { key: 'ur', title: 'CHATTER' },
+  { key: 'rm', title: 'IGNITE' },
+  { key: 'lr', title: 'REPORTS' },
 ] as const
 
 interface OverviewPageProps {
@@ -48,7 +50,29 @@ function renderOverviewBay(key: (typeof OVERVIEW_BAYS)[number]['key'], incidents
   }
 }
 
-export function OverviewPage({ incidents }: OverviewPageProps) {
+export function OverviewPage({ incidents, pipelineStatus }: OverviewPageProps) {
+  function degradeShell(status: SurfaceStatus): SurfaceStatus {
+    if (status === 'offline') return 'offline'
+    return 'stale'
+  }
+
+  function getBayStatus(key: (typeof OVERVIEW_BAYS)[number]['key'], health: PipelineHealth): SurfaceStatus {
+    switch (key) {
+      case 'ul':
+        return health.incidents
+      case 'll':
+        return health.verified
+      case 'lr':
+        return health.incidents
+      case 'lm':
+      case 'ur':
+      case 'rm':
+        return degradeShell(health.incidents)
+      default:
+        return 'offline'
+    }
+  }
+
   return (
     <div className="overview-page">
       <div className="console-circuit-shell overview-hero-shell">
@@ -59,8 +83,8 @@ export function OverviewPage({ incidents }: OverviewPageProps) {
                 <div className="console-sector-kicker top-left">
                   <span className="console-sector-title">{bay.title}</span>
                 </div>
-                <div className={`console-sector-kicker top-right ${bay.status}`}>
-                  {bay.status.toUpperCase()}
+                <div className={`console-sector-kicker top-right ${getBayStatus(bay.key, pipelineStatus.health)}`}>
+                  {getBayStatus(bay.key, pipelineStatus.health).toUpperCase()}
                 </div>
                 <div className="console-sector-body">
                   {renderOverviewBay(bay.key, incidents)}

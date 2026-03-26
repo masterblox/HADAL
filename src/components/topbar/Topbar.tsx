@@ -1,4 +1,6 @@
 import { useDrawMark } from '@/canvas/useDrawMark'
+import type { PipelineHealth } from '@/hooks/useDataPipeline'
+import { BUILD_INFO, shortBuildTime } from '@/lib/build-info'
 import { useUtcClock } from '@/hooks/useUtcClock'
 
 type Lane = 'overview' | 'operations' | 'console'
@@ -6,6 +8,7 @@ type Lane = 'overview' | 'operations' | 'console'
 interface TopbarProps {
   threatLevel: number | null
   incidentCount: number
+  pipelineStatus: { incidents: boolean; prices: boolean; airspace: boolean; health: PipelineHealth }
   sandbox: boolean
   onSandboxToggle: () => void
   activeLane: Lane
@@ -18,10 +21,29 @@ const NAV_ITEMS: { id: Lane; label: string }[] = [
   { id: 'console', label: 'CONSOLE' },
 ]
 
-export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, activeLane, onNavigate }: TopbarProps) {
+function getDataMode(health: PipelineHealth) {
+  const states = [health.incidents, health.prices, health.airspace, health.verified]
+  const liveCount = states.filter(state => state === 'live').length
+  const staleCount = states.filter(state => state === 'stale').length
+  if (liveCount === states.length) return 'LIVE'
+  if (liveCount > 0 || staleCount > 0) return 'PARTIAL'
+  return 'OFFLINE'
+}
+
+function getPosture(threatLevel: number | null) {
+  if (threatLevel == null) return 'DEGRADED'
+  if (threatLevel >= 75) return 'CRITICAL'
+  if (threatLevel >= 60) return 'CONTESTED'
+  if (threatLevel >= 35) return 'WATCH'
+  return 'GUARDED'
+}
+
+export function Topbar({ threatLevel, incidentCount, pipelineStatus, sandbox, onSandboxToggle, activeLane, onNavigate }: TopbarProps) {
   const markRef = useDrawMark(32)
   const { zulu, elapsed } = useUtcClock()
   const readiness = threatLevel === null ? 'DEGRADED' : threatLevel >= 60 ? 'ELEVATED' : 'GUARDED'
+  const posture = getPosture(threatLevel)
+  const dataMode = getDataMode(pipelineStatus.health)
 
   return (
     <div className="topbar">
@@ -56,11 +78,14 @@ export function Topbar({ threatLevel, incidentCount, sandbox, onSandboxToggle, a
         </div>
         <div className="tb-status-cell">
           <span className="tb-status-label">POSTURE</span>
-          <span className="tb-status-chip">CONTESTED</span>
+          <span className={`tb-status-chip${posture === 'CRITICAL' || posture === 'CONTESTED' ? ' warn' : ''}`}>{posture}</span>
         </div>
       </div>
       <div className="tb-div" />
-      <span className="tb-data-source">DATA: FUSED LIVE/SIM</span>
+      <span className="tb-data-source">DATA: {dataMode}</span>
+      <span className="tb-build-stamp">
+        BUILD {BUILD_INFO.commitSha} · {BUILD_INFO.deployTarget.toUpperCase()} · {shortBuildTime(BUILD_INFO.buildTime)}
+      </span>
       <button className={`tb-sandbox${sandbox ? ' active' : ''}`} onClick={onSandboxToggle}>
         {sandbox ? 'SANDBOX ON' : 'SANDBOX'}
       </button>

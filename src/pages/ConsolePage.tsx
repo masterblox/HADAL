@@ -55,7 +55,9 @@ interface StoredLayoutState {
   custom: boolean
 }
 
-const TILE_META: Record<ConsoleTileId, { title: string; icon: string; source: string; updated: string; status?: 'live' | 'stale' | 'offline' }> = {
+type TileStatus = 'live' | 'stale' | 'offline'
+
+const TILE_META: Record<ConsoleTileId, { title: string; icon: string; source: string; updated: string; status?: TileStatus }> = {
   'threat-signal': { title: 'THREAT SIGNAL', icon: '◈', source: 'PIPELINE + MODEL', updated: 'LIVE', status: 'live' },
   globe: { title: 'PRESSURE GLOBE', icon: '◉', source: 'INCIDENTS', updated: '60S', status: 'live' },
   'market-impact': { title: 'MARKET IMPACT', icon: '▤', source: 'PRICES', updated: '60S', status: 'live' },
@@ -82,7 +84,78 @@ const TILE_META: Record<ConsoleTileId, { title: string; icon: string; source: st
   skyline: { title: 'SKYLINE', icon: '◫', source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'offline' },
   mekhead: { title: 'MEKHEAD', icon: '◆', source: 'ARCHIVE', updated: 'STATIC', status: 'stale' },
   satellite: { title: 'SATELLITE', icon: '◌', source: 'ORBITAL REF', updated: 'STATIC', status: 'stale' },
-  'military-signals': { title: 'MILITARY SIGNALS', icon: '▶', source: 'INCIDENTS', updated: '60S', status: 'live' },
+  'military-signals': { title: 'MILITARY SIGNALS', icon: '▶', source: 'PROCEDURAL SHELL', updated: 'NO DATA', status: 'offline' },
+}
+
+function freshnessLabel(status: TileStatus, liveLabel: string, staleLabel = 'STALE', offlineLabel = 'NO DATA') {
+  if (status === 'live') return liveLabel
+  if (status === 'stale') return staleLabel
+  return offlineLabel
+}
+
+function predictionStatus(health: PipelineHealth): TileStatus {
+  if (health.incidents === 'offline') return 'offline'
+  if (health.incidents === 'stale' || health.prices === 'stale' || health.airspace === 'stale') return 'stale'
+  return 'live'
+}
+
+function deriveShellStatus(base: TileStatus): TileStatus {
+  return base === 'offline' ? 'offline' : 'stale'
+}
+
+function resolveTileMeta(tileId: ConsoleTileId, health: PipelineHealth): { title: string; icon: string; source: string; updated: string; status?: TileStatus } {
+  const base = TILE_META[tileId]
+  switch (tileId) {
+    case 'threat-signal':
+    case 'globe':
+    case 'kinetic-data':
+    case 'analysis-summary':
+    case 'event-timeline':
+    case 'geographic-concentration':
+    case 'type-profile':
+    case 'feed-quality':
+      return { ...base, source: 'INCIDENTS', updated: freshnessLabel(health.incidents, '60S'), status: health.incidents }
+    case 'market-impact':
+      return { ...base, source: 'PRICES', updated: freshnessLabel(health.prices, '60S'), status: health.prices }
+    case 'airspace':
+      return { ...base, source: 'AIRSPACE', updated: freshnessLabel(health.airspace, '60S'), status: health.airspace }
+    case 'threat-feed':
+      return { ...base, source: health.verified === 'offline' ? 'RAW INCIDENTS' : 'VERIFIED / RAW', updated: freshnessLabel(health.incidents, '60S'), status: health.incidents }
+    case 'verification':
+      return { ...base, source: 'VERIFIED INCIDENTS', updated: freshnessLabel(health.verified, '60S'), status: health.verified }
+    case 'confidence':
+      return { ...base, source: 'VERIFICATION PROXY', updated: freshnessLabel(health.verified, '60S'), status: deriveShellStatus(health.verified) }
+    case 'tempo':
+    case 'intelligence':
+    case 'scenario-outlook':
+    case 'predictor-engine': {
+      const status = predictionStatus(health)
+      return { ...base, source: tileId === 'predictor-engine' ? 'SEQUENCE MODEL' : 'DERIVED MODEL', updated: freshnessLabel(status, 'LOCAL'), status }
+    }
+    case 'theatre-exchange':
+      return { ...base, source: 'DERIVED / INCIDENTS', updated: freshnessLabel(health.incidents, 'LOCAL'), status: health.incidents }
+    case 'reports':
+      return { ...base, source: health.incidents === 'offline' ? 'NO LIVE INPUT' : 'MODEL + INCIDENTS', updated: freshnessLabel(health.incidents, 'LOCAL'), status: health.incidents }
+    case 'argus':
+    case 'chatter':
+    case 'chronos': {
+      const status = deriveShellStatus(health.incidents)
+      return { ...base, updated: freshnessLabel(status, 'DERIVED'), status }
+    }
+    case 'ignite': {
+      const status = deriveShellStatus(health.incidents)
+      return { ...base, source: health.incidents === 'offline' ? 'UPSTREAM MODULE' : 'UPSTREAM PROXY', updated: freshnessLabel(status, 'DERIVED'), status }
+    }
+    case 'skyline':
+      return { ...base, source: 'UPSTREAM MODULE', updated: 'NO DATA', status: 'offline' }
+    case 'mekhead':
+    case 'satellite':
+      return { ...base, updated: 'STATIC', status: 'stale' }
+    case 'military-signals':
+      return { ...base, source: 'PROCEDURAL SHELL', updated: 'NO DATA', status: 'offline' }
+    default:
+      return base
+  }
 }
 
 function loadInitialState(): StoredLayoutState {
@@ -100,6 +173,8 @@ function loadInitialState(): StoredLayoutState {
 export function ConsolePage({
   sandbox,
   onSandboxToggle,
+  threatLevel: _threatLevel,
+  pipelineStatus,
   incidents,
   airspace,
   prices,
@@ -232,19 +307,22 @@ export function ConsolePage({
         <div className={`console-grid${sandbox ? ' is-editing' : ''}`}>
           {slots.map((tileId, index) => (
             <div key={index} className="console-slot">
-              {tileId ? (
-                <ConsoleTile
-                  icon={TILE_META[tileId].icon}
-                  title={TILE_META[tileId].title}
-                  source={TILE_META[tileId].source}
-                  updated={TILE_META[tileId].updated}
-                  status={TILE_META[tileId].status}
-                  editMode={sandbox}
-                  onRemove={sandbox ? () => removeTile(index) : undefined}
-                >
-                  {renderTile(tileId)}
-                </ConsoleTile>
-              ) : (
+              {tileId ? (() => {
+                const meta = resolveTileMeta(tileId, pipelineStatus.health)
+                return (
+                  <ConsoleTile
+                    icon={meta.icon}
+                    title={meta.title}
+                    source={meta.source}
+                    updated={meta.updated}
+                    status={meta.status}
+                    editMode={sandbox}
+                    onRemove={sandbox ? () => removeTile(index) : undefined}
+                  >
+                    {renderTile(tileId)}
+                  </ConsoleTile>
+                )
+              })() : (
                 <button
                   className={`console-empty-slot${sandbox ? ' is-visible' : ''}`}
                   onClick={() => sandbox && setPickerIndex(index)}
@@ -258,19 +336,29 @@ export function ConsolePage({
           ))}
         </div>
       ) : (
-        <div className="console-workbench">
-          {slots.filter((tileId): tileId is ConsoleTileId => tileId !== null).map((tileId, index) => (
-            <div key={`${tileId}-${index}`} className={`console-workbench-slot tile-${tileId}`}>
-              <ConsoleTile
-                icon={TILE_META[tileId].icon}
-                title={TILE_META[tileId].title}
-                source={TILE_META[tileId].source}
-                updated={TILE_META[tileId].updated}
-                status={TILE_META[tileId].status}
-                editMode={false}
-              >
-                {renderTile(tileId)}
-              </ConsoleTile>
+        <div className="console-grid console-grid--view">
+          {slots.map((tileId, index) => (
+            <div
+              key={tileId ? `${tileId}-${index}` : `empty-${index}`}
+              className={`console-slot${tileId ? ` console-workbench-slot tile-${tileId}` : ' console-slot--placeholder'}`}
+            >
+              {tileId ? (() => {
+                const meta = resolveTileMeta(tileId, pipelineStatus.health)
+                return (
+                  <ConsoleTile
+                    icon={meta.icon}
+                    title={meta.title}
+                    source={meta.source}
+                    updated={meta.updated}
+                    status={meta.status}
+                    editMode={false}
+                  >
+                    {renderTile(tileId)}
+                  </ConsoleTile>
+                )
+              })() : (
+                <div className="console-empty-slot" aria-hidden="true" />
+              )}
             </div>
           ))}
         </div>

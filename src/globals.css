@@ -1853,6 +1853,14 @@ body::after {
   min-height: 0;
 }
 
+.overview-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: calc(100vh - 132px);
+  overflow: hidden;
+}
+
 .overview-landing {
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);

@@ -2,6 +2,7 @@ import type { PipelineHealth, PriceData, AirspaceData } from '@/hooks/useDataPip
 import type { Incident } from '@/hooks/useDataPipeline'
 import { ConsoleCircuitShell } from '@/components/console/ConsoleCircuitShell'
 import { DevTag } from '@/components/shared/DevTag'
+import { navigateTo } from '@/lib/lane-routing'
 
 interface OverviewPageProps {
   sandbox: boolean
@@ -21,11 +22,9 @@ export function OverviewPage({
   airspace: _airspace,
 }: OverviewPageProps) {
   return (
-    <section className="overview-landing jp-panel" style={{ position: 'relative' }}>
-      <div className="overview-landing-hero">
-        <ConsoleCircuitShell incidents={incidents} />
-      </div>
+    <div className="overview-shell">
+      <ConsoleCircuitShell incidents={incidents} onEdit={() => navigateTo('console')} />
       <DevTag id="B" />
-    </section>
+    </div>
   )
 }

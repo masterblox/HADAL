@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HADAL · Console Builder Invitation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Teko:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --g:    #daff4a;
+      --g7:   rgba(218,255,74,.78);
+      --g5:   rgba(218,255,74,.56);
+      --g3:   rgba(218,255,74,.32);
+      --g15:  rgba(218,255,74,.16);
+      --g07:  rgba(218,255,74,.08);
+      --warn: rgba(255,152,20,.92);
+      --bg:   #060800;
+      --HEAD: "Rajdhani", sans-serif;
+      --MONO: "Share Tech Mono", monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; background: var(--bg); color: var(--g7); font-family: var(--MONO); overflow: hidden; }
+
+    /* ── VIEW TOGGLE ─────────────────────────────────────────────── */
+    .view { display: none; flex-direction: column; height: 100vh; }
+    .view.active { display: flex; }
+
+    /* ── TOOLBAR ─────────────────────────────────────────────────── */
+    .toolbar {
+      display: flex; align-items: center; justify-content: flex-end;
+      gap: 14px; padding: 0 12px; height: 44px; flex-shrink: 0;
+      background: linear-gradient(180deg,rgba(7,10,0,.96),rgba(5,8,0,.84));
+      border-bottom: 1px solid var(--g07);
+    }
+    .toolbar-meta { display: flex; align-items: center; gap: 7px; margin-right: auto; }
+    .toolbar-label { font-family: var(--HEAD); font-size: 7px; letter-spacing: .22em; color: var(--g3); }
+    .toolbar-mode  { font-family: var(--MONO); font-size: 7px; letter-spacing: .18em; color: var(--g5); }
+    .toolbar-mode.edit { color: rgba(255,152,20,.8); }
+    .toolbar-btn {
+      border: 1px solid var(--g15); background: rgba(218,255,74,.04);
+      color: var(--g7); font-family: var(--HEAD); font-size: 9px;
+      letter-spacing: .18em; height: 28px; padding: 0 12px; cursor: pointer;
+      transition: background 140ms, border-color 140ms;
+    }
+    .toolbar-btn:hover { background: rgba(218,255,74,.08); border-color: var(--g3); }
+    .toolbar-btn.active { background: rgba(218,255,74,.10); border-color: rgba(218,255,74,.4); color: var(--g); }
+
+    /* ── FEATURE BAR ─────────────────────────────────────────────── */
+    .feature-bar {
+      flex-shrink: 0; height: 36px;
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 10px;
+      background: rgba(5,7,0,.95);
+      border-bottom: 1px solid rgba(218,255,74,.06);
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none;
+    }
+    .feature-bar::-webkit-scrollbar { display: none; }
+    .fb-label {
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .22em;
+      color: rgba(218,255,74,.28); white-space: nowrap; flex-shrink: 0;
+    }
+    .fb-chips { display: flex; gap: 5px; }
+    .fchip {
+      display: flex; align-items: center; gap: 4px;
+      padding: 3px 7px; border: 1px solid;
+      background: rgba(5,7,0,.8); cursor: pointer;
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .16em;
+      text-transform: uppercase; white-space: nowrap;
+      transition: background 120ms ease;
+    }
+    .fchip:hover { background: rgba(218,255,74,.04); }
+    .fchip.live    { border-color: rgba(218,255,74,.28); color: rgba(218,255,74,.72); }
+    .fchip.stale   { border-color: rgba(255,152,20,.22); color: rgba(255,152,20,.60); }
+    .fchip.offline { border-color: rgba(255,255,255,.10); color: rgba(255,255,255,.25); }
+    .fchip.partial { border-color: rgba(218,255,74,.14); color: rgba(218,255,74,.40); }
+    .fchip-icon   { font-size: 9px; }
+    .fchip-name   { font-weight: 700; }
+    .fchip-source { font-size: 6px; color: rgba(218,255,74,.20); font-family: var(--MONO); letter-spacing: .06em; }
+    .fchip.stale  .fchip-source { color: rgba(255,152,20,.28); }
+    .fchip.offline .fchip-source { color: rgba(255,255,255,.12); }
+    .fchip-status { font-size: 5px; opacity: .55; }
+
+    /* ── CIRCUIT SHELL ────────────────────────────────────────────── */
+    .circuit-shell {
+      display: flex; flex-direction: column;
+      flex: 1; min-height: 0; gap: 2px;
+      background: #050700;
+    }
+    .circuit-main {
+      flex: 1; min-height: 0; position: relative;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(218,255,74,.035), transparent 26%),
+        repeating-linear-gradient(0deg,  transparent 0 78px, rgba(218,255,74,.008) 78px 79px),
+        repeating-linear-gradient(90deg, transparent 0 78px, rgba(218,255,74,.006) 78px 79px),
+        #050700;
+      overflow: hidden; padding: 14px;
+    }
+
+    /* ── RINGS ────────────────────────────────────────────────────── */
+    .ring {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%,-50%);
+      border-radius: 50%; pointer-events: none; z-index: 1;
+    }
+    .ring.far   { width: clamp(560px,58vw,820px); height: clamp(560px,58vw,820px); border: 1px solid rgba(218,255,74,.024); }
+    .ring.outer { width: clamp(440px,46vw,640px); height: clamp(440px,46vw,640px); border: 1px solid rgba(218,255,74,.05);  }
+    .ring.inner { width: clamp(300px,31vw,430px); height: clamp(300px,31vw,430px); border: 1px solid rgba(218,255,74,.1);   }
+
+    /* ── TRACES ───────────────────────────────────────────────────── */
+    .trace-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: visible; }
+    .trace-line { stroke: rgba(218,255,74,.28); stroke-width: .55; fill: none; stroke-linecap: square; }
+    .trace-pad  { fill: rgba(218,255,74,.4); }
+
+    /* ── SECTORS ──────────────────────────────────────────────────── */
+    .sector {
+      position: absolute; overflow: hidden; z-index: 2;
+      background: rgba(4,6,0,.96);
+      box-shadow: inset 0 0 0 2px rgba(218,255,74,.32);
+      transition: box-shadow 180ms ease;
+    }
+    .sector::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background:
+        linear-gradient(180deg,rgba(218,255,74,.01),transparent 24%),
+        linear-gradient(90deg,transparent 18%,rgba(218,255,74,.012) 18% 18.1%,transparent 18.1%);
+      opacity: .22;
+    }
+    .sector::after {
+      content: ""; position: absolute; inset: 7px; pointer-events: none;
+      border: 1px solid rgba(218,255,74,.08); clip-path: inherit; opacity: .9;
+    }
+    .sector:hover { box-shadow: inset 0 0 0 2px rgba(218,255,74,.52), inset 0 0 0 24px rgba(218,255,74,.03); }
+
+    .sector.ul { left:0;   top:4%;  width:41%; height:19%; clip-path: polygon(0 0,100% 0,100% 65%,82% 100%,0 100%); --bl:8px; --br:90px; }
+    .sector.ur { right:0;  top:4%;  width:41%; height:19%; clip-path: polygon(0 0,100% 0,100% 100%,18% 100%,0 65%); --bl:90px;--br:8px; }
+    .sector.lm { left:0;   top:24%; width:37%; height:28%; clip-path: polygon(0 0,80% 0,100% 50%,80% 100%,0 100%); --bl:8px; --br:72px; }
+    .sector.rm { right:0;  top:24%; width:37%; height:28%; clip-path: polygon(20% 0,100% 0,100% 100%,20% 100%,0 50%); --bl:72px;--br:8px; }
+    .sector.ll { left:0;   top:54%; width:41%; height:23%; clip-path: polygon(0 0,82% 0,100% 35%,100% 100%,0 100%); --bl:8px; --br:90px; }
+    .sector.lr { right:0;  top:54%; width:41%; height:23%; clip-path: polygon(18% 0,100% 0,100% 100%,0 100%,0 35%); --bl:90px;--br:8px; }
+
+    .kicker {
+      position: absolute; z-index: 4; pointer-events: none;
+      display: flex; align-items: center; gap: 4px;
+      font-family: var(--HEAD); font-size: 5px; letter-spacing: .16em; text-transform: uppercase;
+      padding: 0 5px; height: 10px;
+      background: rgba(5,7,0,.7); border: 1px solid rgba(218,255,74,.08);
+    }
+    .kicker.tl { top: 8px; left: 8px; }
+    .kicker.tr { top: 8px; right: 8px; }
+    .kicker.live    { color: rgba(218,255,74,.78); }
+    .kicker.stale   { color: rgba(255,152,20,.70); }
+    .kicker.offline { color: rgba(255,255,255,.30); }
+    .kicker-title   { color: rgba(218,255,74,.70); }
+
+    .stitch {
+      position: absolute; top: 50%;
+      width: 56px; height: 10px; transform: translateY(-50%); z-index: 3; pointer-events: none;
+    }
+    .stitch::before {
+      content: ""; position: absolute; top: 50%; left: 0; right: 12px; height: 1px;
+      transform: translateY(-50%); background: rgba(218,255,74,.18);
+    }
+    .stitch::after {
+      content: ""; position: absolute; top: 50%; right: 0;
+      width: 8px; height: 8px; background: rgba(218,255,74,.55);
+      transform: translateY(-50%) rotate(45deg);
+    }
+    .sector.ul .stitch, .sector.lm .stitch, .sector.ll .stitch { right: 12px; }
+    .sector.ur .stitch, .sector.rm .stitch, .sector.lr .stitch { left: 12px; transform: translateY(-50%) scaleX(-1); }
+
+    .body {
+      position: absolute; top: 18px; bottom: 10px;
+      left: var(--bl, 8px); right: var(--br, 8px);
+      overflow: hidden; z-index: 1;
+    }
+    .ph {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 6px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(218,255,74,.04), transparent 40%),
+        repeating-linear-gradient(0deg,  transparent 0 31px, rgba(218,255,74,.014) 31px 32px),
+        repeating-linear-gradient(90deg, transparent 0 31px, rgba(218,255,74,.010) 31px 32px);
+    }
+    .ph-id    { font-family: var(--HEAD); font-size: 18px; font-weight: 700; letter-spacing: .4em; color: rgba(218,255,74,.18); }
+    .ph-label { font-size: 6px; letter-spacing: .28em; color: rgba(218,255,74,.10); }
+
+    /* ── CORE ─────────────────────────────────────────────────────── */
+    .core-shell {
+      position: absolute; left: 50%; top: 50%;
+      width: 500px; height: 450px; transform: translate(-50%,-50%);
+      z-index: 3; display: flex; flex-direction: column;
+    }
+    .core-label {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 18px; height: 22px; flex-shrink: 0; z-index: 4;
+    }
+    .core-label .lbl { font-family: var(--MONO); font-size: 6px; letter-spacing: .18em; color: var(--g15); }
+    .core-label .val { font-family: var(--HEAD); font-size: 10px; font-weight: 700; letter-spacing: .42em; color: var(--g5); }
+    .core {
+      flex: 1; min-height: 0; position: relative;
+      clip-path: polygon(24% 6%,76% 6%,96% 50%,76% 94%,24% 94%,4% 50%);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(218,255,74,.10), transparent 42%),
+        linear-gradient(180deg,rgba(8,10,2,.92),rgba(2,3,0,.98));
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.35), inset 0 0 0 10px rgba(218,255,74,.04);
+    }
+    .core::before { content: ""; position: absolute; inset: 28px; clip-path: inherit; border: 1px solid rgba(218,255,74,.10); pointer-events: none; }
+    .core::after  { content: ""; position: absolute; inset: 72px; clip-path: inherit; border: 1px solid rgba(218,255,74,.18); pointer-events: none; }
+    .core-inner {
+      position: absolute; inset: 8px;
+      clip-path: polygon(24% 6%,76% 6%,96% 50%,76% 94%,24% 94%,4% 50%);
+      display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px;
+    }
+    .core-inner::before { content: ""; position: absolute; inset: 18px; border: 1px solid rgba(218,255,74,.08); clip-path: inherit; pointer-events: none; z-index: 20; }
+    .core-id  { font-family: var(--HEAD); font-size: 11px; font-weight: 700; letter-spacing: .6em; color: rgba(218,255,74,.28); }
+    .core-sub { font-size: 6px; letter-spacing: .22em; color: rgba(218,255,74,.14); }
+
+    /* ── CONFIGURE HINT ───────────────────────────────────────────── */
+    .configure-hint {
+      position: absolute; bottom: 14px; right: 18px; z-index: 4;
+      display: flex; align-items: center; gap: 5px;
+      padding: 4px 8px;
+      border: 1px solid rgba(218,255,74,.10); background: rgba(4,6,0,.72);
+      font-family: var(--MONO); font-size: 6px; letter-spacing: .20em;
+      color: rgba(218,255,74,.25); cursor: pointer; text-transform: uppercase;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+    .configure-hint:hover { color: rgba(218,255,74,.70); border-color: rgba(218,255,74,.28); background: rgba(218,255,74,.04); }
+
+    /* ── AUX STRIP ────────────────────────────────────────────────── */
+    .aux-grid {
+      display: grid; grid-template-columns: repeat(4,minmax(0,1fr));
+      gap: 2px; height: 126px; flex-shrink: 0;
+      border-top: 1px solid rgba(218,255,74,.06);
+      background: repeating-linear-gradient(90deg, transparent 0 19px, rgba(218,255,74,.018) 19px 20px), var(--bg);
+      padding: 0 8%;
+    }
+    .aux-slot {
+      position: relative; overflow: hidden;
+      background: #030500; box-shadow: inset 0 0 0 1px rgba(218,255,74,.08);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    }
+    .aux-slot::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg,rgba(218,255,74,.01),transparent 44%); }
+    .aux-slot::after  { content: ""; position: absolute; inset: 4px; pointer-events: none; border: 1px solid rgba(218,255,74,.055); }
+    .aux-id    { font-family: var(--HEAD); font-size: 9px; font-weight: 700; letter-spacing: .3em; color: rgba(218,255,74,.20); position: relative; z-index: 1; }
+    .aux-label { font-size: 5px; letter-spacing: .22em; color: rgba(218,255,74,.10); position: relative; z-index: 1; }
+
+    /* ── GHOST BUILDER SLOT ───────────────────────────────────────── */
+    .ghost-slot {
+      flex-shrink: 0; width: 100%; height: 52px; border: none;
+      border-top: 1px solid rgba(218,255,74,.55);
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.10);
+      background: #030500; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 8%; gap: 24px;
+      transition: background 160ms ease, border-top-color 160ms ease, box-shadow 160ms ease;
+    }
+    .ghost-slot:hover {
+      background: rgba(218,255,74,.025);
+      border-top-color: rgba(218,255,74,.85);
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.20);
+    }
+    .ghost-label { font-family: var(--HEAD); font-size: 11px; letter-spacing: .18em; color: rgba(218,255,74,.65); text-transform: uppercase; flex-shrink: 0; }
+    .ghost-slot:hover .ghost-label { color: var(--g); }
+    .ghost-desc { font-family: var(--MONO); font-size: 8px; letter-spacing: .12em; color: rgba(218,255,74,.28); text-transform: uppercase; flex: 1; text-align: center; }
+    .ghost-slot:hover .ghost-desc  { color: rgba(218,255,74,.48); }
+    .ghost-cta  { font-family: var(--HEAD); font-size: 9px; letter-spacing: .18em; color: rgba(218,255,74,.38); text-transform: uppercase; flex-shrink: 0; }
+    .ghost-slot:hover .ghost-cta   { color: var(--g); }
+
+    /* ── SANDBOX GRID ─────────────────────────────────────────────── */
+    .console-grid {
+      flex: 1; min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(4,minmax(0,1fr));
+      grid-template-rows: repeat(4,minmax(0,1fr));
+      gap: 2px;
+      background: #040600; padding: 6px;
+    }
+    .c-slot {
+      position: relative; overflow: hidden;
+      background: rgba(4,6,0,.95);
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.10);
+    }
+    .c-slot.empty {
+      box-shadow: none;
+      border: 1px dashed rgba(218,255,74,.18);
+      background: rgba(4,6,0,.60);
+      display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px;
+      cursor: pointer; transition: background 140ms, border-color 140ms;
+    }
+    .c-slot.empty:hover { background: rgba(218,255,74,.02); border-color: rgba(218,255,74,.30); }
+    .c-slot.empty.active {
+      border: 1px dashed rgba(218,255,74,.60);
+      background: rgba(218,255,74,.025);
+    }
+    .empty-plus  { font-size: 20px; color: rgba(218,255,74,.20); line-height: 1; }
+    .empty-label { font-family: var(--HEAD); font-size: 6px; letter-spacing: .18em; color: rgba(218,255,74,.22); text-transform: uppercase; }
+
+    .slot-header {
+      position: absolute; top: 0; left: 0; right: 0; height: 20px;
+      display: flex; align-items: center; padding: 0 6px; gap: 5px;
+      background: rgba(5,7,0,.85);
+      border-bottom: 1px solid rgba(218,255,74,.06);
+    }
+    .sh-icon  { font-size: 8px; color: rgba(218,255,74,.45); }
+    .sh-title { font-family: var(--HEAD); font-size: 6px; letter-spacing: .14em; color: rgba(218,255,74,.50); flex: 1; text-transform: uppercase; }
+    .sh-status { font-size: 5px; color: rgba(218,255,74,.25); font-family: var(--MONO); }
+    .sh-status.live  { color: rgba(218,255,74,.45); }
+    .sh-status.stale { color: rgba(255,152,20,.45); }
+    .sh-remove {
+      font-size: 9px; color: rgba(218,255,74,.18); cursor: pointer; background: none; border: none;
+      margin-left: 2px; line-height: 1; padding: 0 2px;
+      transition: color 120ms;
+    }
+    .sh-remove:hover { color: rgba(218,255,74,.60); }
+
+    .slot-body {
+      position: absolute; top: 20px; bottom: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(218,255,74,.025), transparent 55%),
+        repeating-linear-gradient(0deg, transparent 0 23px, rgba(218,255,74,.010) 23px 24px);
+    }
+    .slot-body-id { font-family: var(--HEAD); font-size: 20px; font-weight: 700; letter-spacing: .5em; color: rgba(218,255,74,.08); }
+
+    /* ── TILE PICKER ──────────────────────────────────────────────── */
+    .tile-picker-overlay {
+      position: fixed; inset: 0; z-index: 80;
+      background: rgba(4,6,0,.65);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .picker-panel {
+      width: 440px; max-height: 520px;
+      background: #05070a;
+      border: 1px solid rgba(218,255,74,.30);
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.06);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .picker-head {
+      height: 38px; display: flex; align-items: center; padding: 0 12px; gap: 8px;
+      border-bottom: 1px solid rgba(218,255,74,.10);
+      background: rgba(218,255,74,.02); flex-shrink: 0;
+    }
+    .picker-head-kicker { font-family: var(--MONO); font-size: 6px; letter-spacing: .20em; color: rgba(218,255,74,.30); }
+    .picker-head-title  { font-family: var(--HEAD); font-size: 10px; letter-spacing: .22em; color: rgba(218,255,74,.65); flex: 1; text-transform: uppercase; }
+    .picker-close {
+      font-size: 11px; color: rgba(218,255,74,.30); background: none; border: none; cursor: pointer;
+      transition: color 120ms;
+    }
+    .picker-close:hover { color: rgba(218,255,74,.75); }
+    .picker-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 2px; padding: 6px; overflow-y: auto; flex: 1;
+    }
+    .picker-grid::-webkit-scrollbar { width: 2px; }
+    .picker-grid::-webkit-scrollbar-thumb { background: rgba(218,255,74,.15); }
+    .p-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 7px; cursor: pointer;
+      background: rgba(4,6,0,.85);
+      border: 1px solid rgba(218,255,74,.07);
+      transition: background 120ms, border-color 120ms;
+    }
+    .p-item:hover { background: rgba(218,255,74,.04); border-color: rgba(218,255,74,.22); }
+    .p-item.placed { opacity: .28; cursor: default; pointer-events: none; }
+    .p-icon  { font-size: 11px; color: rgba(218,255,74,.42); flex-shrink: 0; }
+    .p-label { font-family: var(--HEAD); font-size: 7px; letter-spacing: .12em; color: rgba(218,255,74,.52); text-transform: uppercase; }
+    .p-placed-tag { font-size: 5px; color: rgba(218,255,74,.18); font-family: var(--MONO); margin-left: auto; }
+    .picker-footer {
+      height: 30px; display: flex; align-items: center; justify-content: flex-end; padding: 0 12px;
+      border-top: 1px solid rgba(218,255,74,.06);
+      background: rgba(218,255,74,.01); flex-shrink: 0;
+    }
+    .picker-hint { font-family: var(--MONO); font-size: 5px; letter-spacing: .16em; color: rgba(218,255,74,.20); text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+<!-- ━━ VIEW 1: CIRCUIT SHELL (browse mode) ━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="view active" id="view-circuit">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-meta">
+      <span class="toolbar-label">MODE</span>
+      <span class="toolbar-mode">CIRCUIT SHELL</span>
+    </div>
+    <button class="toolbar-btn" id="edit-btn-toolbar">EDIT</button>
+  </div>
+
+  <!-- Feature Bar -->
+  <div class="feature-bar">
+    <span class="fb-label">MODULES</span>
+    <div class="fb-chips">
+      <button class="fchip live"><span class="fchip-icon">▣</span><span class="fchip-name">FEED</span><span class="fchip-source">VERIFIED / RAW</span><span class="fchip-status">LIVE</span></button>
+      <button class="fchip live"><span class="fchip-icon">◉</span><span class="fchip-name">MAP</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">LIVE</span></button>
+      <button class="fchip stale"><span class="fchip-icon">◬</span><span class="fchip-name">ARGUS</span><span class="fchip-source">PIPELINE PROXY</span><span class="fchip-status">PARTIAL</span></button>
+      <button class="fchip stale"><span class="fchip-icon">☰</span><span class="fchip-name">CHATTER</span><span class="fchip-source">PIPELINE SOURCES</span><span class="fchip-status">PARTIAL</span></button>
+      <button class="fchip offline"><span class="fchip-icon">✦</span><span class="fchip-name">IGNITE</span><span class="fchip-source">UPSTREAM MODULE</span><span class="fchip-status">OFFLINE</span></button>
+      <button class="fchip stale"><span class="fchip-icon">⌁</span><span class="fchip-name">CHRONOS</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">PARTIAL</span></button>
+      <button class="fchip offline"><span class="fchip-icon">◫</span><span class="fchip-name">SKYLINE</span><span class="fchip-source">UPSTREAM MODULE</span><span class="fchip-status">OFFLINE</span></button>
+      <button class="fchip offline"><span class="fchip-icon">⊕</span><span class="fchip-name">MARITIME</span><span class="fchip-source">NO SOURCE YET</span><span class="fchip-status">OFFLINE</span></button>
+      <button class="fchip live"><span class="fchip-icon">▶</span><span class="fchip-name">SIGNALS</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">LIVE</span></button>
+      <button class="fchip partial"><span class="fchip-icon">◌</span><span class="fchip-name">VENUS TRAP</span><span class="fchip-source">PREDICTION MODEL</span><span class="fchip-status">PARTIAL</span></button>
+    </div>
+  </div>
+
+  <!-- Circuit Shell -->
+  <div class="circuit-shell">
+    <div class="circuit-main">
+
+      <div class="ring far"></div>
+      <div class="ring outer"></div>
+      <div class="ring inner"></div>
+
+      <svg class="trace-svg" aria-hidden="true">
+        <line class="trace-line" x1="41%" y1="13.5%" x2="46%" y2="13.5%" />
+        <circle class="trace-pad" cx="41%" cy="13.5%" r="1.5" />
+        <line class="trace-line" x1="37%" y1="38%" x2="43%" y2="38%" />
+        <circle class="trace-pad" cx="37%" cy="38%" r="1.5" />
+        <line class="trace-line" x1="41%" y1="65.5%" x2="46%" y2="65.5%" />
+        <circle class="trace-pad" cx="41%" cy="65.5%" r="1.5" />
+        <line class="trace-line" x1="59%" y1="13.5%" x2="54%" y2="13.5%" />
+        <circle class="trace-pad" cx="59%" cy="13.5%" r="1.5" />
+        <line class="trace-line" x1="63%" y1="38%" x2="57%" y2="38%" />
+        <circle class="trace-pad" cx="63%" cy="38%" r="1.5" />
+        <line class="trace-line" x1="59%" y1="65.5%" x2="54%" y2="65.5%" />
+        <circle class="trace-pad" cx="59%" cy="65.5%" r="1.5" />
+      </svg>
+
+      <div class="core-shell">
+        <div class="core-label">
+          <span class="lbl">HADAL // GULF THEATRE</span>
+          <span class="val">MEKHEAD CORE</span>
+          <span class="lbl">HD-07 · ISR</span>
+        </div>
+        <div class="core">
+          <div class="core-inner">
+            <div class="core-id">MEKHEAD</div>
+            <div class="core-sub">HD-07 · ISR PROTOTYPE · TRACK</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UL -->
+      <div class="sector ul">
+        <div class="kicker tl live"><span>◈</span><span class="kicker-title">THREAT SIGNAL</span></div>
+        <div class="body"><div class="ph"><div class="ph-id">UL</div><div class="ph-label">THREAT · SIGNAL</div></div></div>
+        <div class="stitch"></div>
+      </div>
+      <!-- LM -->
+      <div class="sector lm">
+        <div class="kicker tl stale"><span>◬</span><span class="kicker-title">ARGUS</span></div>
+        <div class="body"><div class="ph"><div class="ph-id">LM</div><div class="ph-label">ARGUS · PIPELINE</div></div></div>
+        <div class="stitch"></div>
+      </div>
+      <!-- LL -->
+      <div class="sector ll">
+        <div class="kicker tl live"><span>⊞</span><span class="kicker-title">VERIFICATION</span></div>
+        <div class="body"><div class="ph"><div class="ph-id">LL</div><div class="ph-label">VERIFICATION</div></div></div>
+        <div class="stitch"></div>
+      </div>
+      <!-- UR -->
+      <div class="sector ur">
+        <div class="kicker tr stale"><span>☰</span><span class="kicker-title">CHATTER</span></div>
+        <div class="body"><div class="ph"><div class="ph-id">UR</div><div class="ph-label">CHATTER · SIGNALS</div></div></div>
+        <div class="stitch"></div>
+      </div>
+      <!-- RM -->
+      <div class="sector rm">
+        <div class="kicker tr offline"><span>✦</span><span class="kicker-title">IGNITE</span></div>
+        <div class="body"><div class="ph"><div class="ph-id">RM</div><div class="ph-label">IGNITE · UPSTREAM</div></div></div>
+        <div class="stitch"></div>
+      </div>
+      <!-- LR -->
+      <div class="sector lr">
+        <div class="kicker tr live"><span>▤</span><span class="kicker-title">REPORTS</span></div>
+        <div class="body"><div class="ph"><div class="ph-id">LR</div><div class="ph-label">REPORTS</div></div></div>
+        <div class="stitch"></div>
+      </div>
+
+      <!-- Configure hint (floating, bottom-right) -->
+      <button class="configure-hint" id="edit-btn-hint">⊕ CONFIGURE LAYOUT</button>
+
+    </div>
+
+    <!-- Aux strip -->
+    <div class="aux-grid">
+      <div class="aux-slot"><div class="aux-id">EVT</div><div class="aux-label">EVENT TIMELINE</div></div>
+      <div class="aux-slot"><div class="aux-id">GEO</div><div class="aux-label">GEO CONCENTRATION</div></div>
+      <div class="aux-slot"><div class="aux-id">TYP</div><div class="aux-label">TYPE PROFILE</div></div>
+      <div class="aux-slot"><div class="aux-id">FQI</div><div class="aux-label">FEED QUALITY</div></div>
+    </div>
+
+    <!-- Ghost builder slot -->
+    <button class="ghost-slot" id="ghost-slot">
+      <span class="ghost-label">BUILD BOARD</span>
+      <span class="ghost-desc">Add modules · Rearrange layout · Save custom setup</span>
+      <span class="ghost-cta">→ CONFIGURE</span>
+    </button>
+
+  </div>
+</div>
+
+<!-- ━━ VIEW 2: SANDBOX EDIT MODE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="view" id="view-sandbox">
+
+  <!-- Toolbar (edit mode) -->
+  <div class="toolbar">
+    <div class="toolbar-meta">
+      <span class="toolbar-label">MODE</span>
+      <span class="toolbar-mode edit">CONSOLE EDIT MODE</span>
+    </div>
+    <button class="toolbar-btn active" id="exit-btn">SAVE / EXIT</button>
+  </div>
+
+  <!-- Tile grid (4×4) -->
+  <div class="console-grid">
+
+    <!-- Row 1: 4 filled -->
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">◈</span><span class="sh-title">Threat Signal</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">UL</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">◉</span><span class="sh-title">Pressure Globe</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">GL</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">▤</span><span class="sh-title">Market Impact</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">MK</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">◇</span><span class="sh-title">Airspace</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">AS</div></div>
+    </div>
+
+    <!-- Row 2: 4 filled -->
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">▣</span><span class="sh-title">Threat Feed</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">TF</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">▲</span><span class="sh-title">Kinetic Data</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">KD</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">△</span><span class="sh-title">Scenario Outlook</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">SO</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">⇄</span><span class="sh-title">Theatre Exchange</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">TX</div></div>
+    </div>
+
+    <!-- Row 3: 3 filled + 1 empty active (picker target) -->
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">▥</span><span class="sh-title">Intelligence</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">IN</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">▥</span><span class="sh-title">Confidence</span><span class="sh-status stale">PARTIAL</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">CF</div></div>
+    </div>
+    <div class="c-slot">
+      <div class="slot-header"><span class="sh-icon">⊞</span><span class="sh-title">Verification</span><span class="sh-status live">LIVE</span><button class="sh-remove">✕</button></div>
+      <div class="slot-body"><div class="slot-body-id">VF</div></div>
+    </div>
+    <!-- First empty slot — active (picker is open on this) -->
+    <div class="c-slot empty active">
+      <div class="empty-plus">+</div>
+      <div class="empty-label">ADD TILE</div>
+    </div>
+
+    <!-- Row 4: all empty -->
+    <div class="c-slot empty"><div class="empty-plus">+</div><div class="empty-label">ADD TILE</div></div>
+    <div class="c-slot empty"><div class="empty-plus">+</div><div class="empty-label">ADD TILE</div></div>
+    <div class="c-slot empty"><div class="empty-plus">+</div><div class="empty-label">ADD TILE</div></div>
+    <div class="c-slot empty"><div class="empty-plus">+</div><div class="empty-label">ADD TILE</div></div>
+
+  </div>
+
+  <!-- Tile Picker overlay (opens on first empty slot) -->
+  <div class="tile-picker-overlay" id="tile-picker">
+    <div class="picker-panel">
+      <div class="picker-head">
+        <span class="picker-head-kicker">SLOT 3–4 ·</span>
+        <span class="picker-head-title">Select Module</span>
+        <button class="picker-close" id="picker-close-btn">✕</button>
+      </div>
+      <div class="picker-grid">
+        <div class="p-item"><span class="p-icon">▦</span><span class="p-label">Tempo</span></div>
+        <div class="p-item"><span class="p-icon">▧</span><span class="p-label">Analysis Summary</span></div>
+        <div class="p-item"><span class="p-icon">▨</span><span class="p-label">Event Timeline</span></div>
+        <div class="p-item"><span class="p-icon">▩</span><span class="p-label">Geo Concentration</span></div>
+        <div class="p-item"><span class="p-icon">◎</span><span class="p-label">Type Profile</span></div>
+        <div class="p-item"><span class="p-icon">≣</span><span class="p-label">Feed Quality</span></div>
+        <div class="p-item"><span class="p-icon">⊿</span><span class="p-label">Predictor Engine</span></div>
+        <div class="p-item"><span class="p-icon">◬</span><span class="p-label">Argus</span></div>
+        <div class="p-item"><span class="p-icon">☰</span><span class="p-label">Chatter</span></div>
+        <div class="p-item"><span class="p-icon">✦</span><span class="p-label">Ignite</span></div>
+        <div class="p-item"><span class="p-icon">⌁</span><span class="p-label">Chronos</span></div>
+        <div class="p-item"><span class="p-icon">◫</span><span class="p-label">Skyline</span></div>
+        <div class="p-item"><span class="p-icon">◆</span><span class="p-label">Mekhead</span></div>
+        <div class="p-item"><span class="p-icon">◌</span><span class="p-label">Satellite</span></div>
+        <div class="p-item"><span class="p-icon">▶</span><span class="p-label">Military Signals</span></div>
+        <!-- Placed tiles (grayed) -->
+        <div class="p-item placed"><span class="p-icon">◈</span><span class="p-label">Threat Signal</span><span class="p-placed-tag">PLACED</span></div>
+        <div class="p-item placed"><span class="p-icon">◉</span><span class="p-label">Pressure Globe</span><span class="p-placed-tag">PLACED</span></div>
+        <div class="p-item placed"><span class="p-icon">▣</span><span class="p-label">Threat Feed</span><span class="p-placed-tag">PLACED</span></div>
+      </div>
+      <div class="picker-footer">
+        <span class="picker-hint">12 of 27 modules placed</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /view-sandbox -->
+
+<script>
+  const viewCircuit = document.getElementById('view-circuit')
+  const viewSandbox  = document.getElementById('view-sandbox')
+  const tilePicker   = document.getElementById('tile-picker')
+
+  function enterEdit() {
+    viewCircuit.classList.remove('active')
+    viewSandbox.classList.add('active')
+  }
+  function exitEdit() {
+    viewSandbox.classList.remove('active')
+    viewCircuit.classList.add('active')
+    tilePicker.style.display = ''
+  }
+
+  document.getElementById('ghost-slot').addEventListener('click', enterEdit)
+  document.getElementById('edit-btn-hint').addEventListener('click', enterEdit)
+  document.getElementById('edit-btn-toolbar').addEventListener('click', enterEdit)
+  document.getElementById('exit-btn').addEventListener('click', exitEdit)
+  document.getElementById('picker-close-btn').addEventListener('click', () => {
+    tilePicker.style.display = 'none'
+  })
+</script>
+</body>
+</html>

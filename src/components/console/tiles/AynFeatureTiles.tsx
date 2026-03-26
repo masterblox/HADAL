@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react'
 import type { Incident } from '@/hooks/useDataPipeline'
 import { G, G2, AMB, BG, PI, TAU, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { DevTag } from '@/components/shared/DevTag'
 
 // --- ArgusTile: entity/pipeline/corroboration — adapted for lm arrow bay
-// lm clip-path: polygon(0 0, 78% 0, 100% 50%, 78% 100%, 0 100%)
+// lm clip-path: polygon(0 0, 80% 0, 100% 50%, 80% 100%, 0 100%)
 // Arrow points RIGHT. Content flows: arc (left) → pipeline → factor output (right).
 // Factor bars EMANATE from arc right edge — no rectangular panel header.
 
@@ -15,10 +16,18 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
     const DPR = window.devicePixelRatio || 1
     let rafId: number
 
-    const verified = incidents.filter(i => (i as any).verificationBadge === 'VERIFIED').length
-    const total = incidents.length || 1
-    const resTarget = Math.min(0.96, Math.max(0.42, verified / total * 0.6 + 0.42))
-    const actorCount = Math.min(total, 24)
+    const total       = incidents.length || 1
+    const verified    = incidents.filter(i => (i as any).verificationBadge === 'VERIFIED').length
+    const likely      = incidents.filter(i => (i as any).verificationBadge === 'LIKELY').length
+    const unconfirmed = incidents.filter(i => (i as any).verificationBadge === 'UNCONFIRMED' || i.status === 'unconfirmed').length
+    const credAvg     = Math.round(incidents.reduce((s, i) => s + (i.credibility ?? 50), 0) / total)
+    const geoTagged   = incidents.filter(i => i.location?.country).length
+    const withTs      = incidents.filter(i => i.published).length
+    const srcCount    = new Set(incidents.map(i => i.source).filter(Boolean)).size
+    const multiSrc    = incidents.filter(i => ((i as any).numSources ?? 1) > 1 || (i as any).verificationBadge === 'VERIFIED').length
+    const govSrc      = incidents.filter(i => i.is_government).length
+    const resTarget   = Math.min(0.96, Math.max(0.42, verified / total * 0.6 + 0.42))
+    const actorCount  = Math.min(total, 24)
 
     function draw() {
       const r = hdSetup(cv!, DPR); if (!r) { rafId = requestAnimationFrame(draw); return }
@@ -75,32 +84,53 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
       const pktX = arcRight + 5 + (factorStartX - arcRight - 10) * pktP
       x.fillStyle = G; x.fillRect(pktX - 3, cy - 3, 6, 6)
 
-      // ── ENTITY FACTOR BARS — emanate from arc, no panel header ────────────
-      // Bars flow rightward from arc edge. Labels left of track, values right.
-      const factors: [string, number, number][] = [
-        ['ENT GRAPH', 76, 0], ['SRC LINK',  88, 0], ['GEO ANCH', 71, 0],
-        ['TEMPORAL',  82, 0], ['CREDIBIL',  79, 0], ['VERIFIED', 65, 0],
-        ['CORROB',    88, 0], ['PIPELINE',  72, 0], ['CONTRA',   14, 1],
+      // ── ENTITY FACTOR BARS — computed from live incident data ─────────────
+      const srcDivPct   = Math.min(98, Math.round(srcCount / Math.max(10, total) * 200))
+      const geoPct      = Math.round(geoTagged / total * 100)
+      const tsPct       = Math.round(withTs / total * 100)
+      const vfyPct      = Math.round((verified + likely) / total * 100)
+      const corrobPct   = Math.round(multiSrc / total * 100)
+      const contraPct   = Math.round(unconfirmed / total * 100)
+      const pipelinePct = Math.min(96, 65 + Math.round(verified / total * 30))
+      const entPct      = Math.min(98, actorCount * 4)
+      // Groups: identity | geo-temporal | verification | system (sep after indices 1, 3, 6)
+      const factors: [string, number, number, boolean][] = [
+        ['ENT GRAPH', entPct,      0, false],
+        ['SRC LINK',  srcDivPct,   0, true],   // sep after
+        ['GEO ANCH',  geoPct,      0, false],
+        ['TEMPORAL',  tsPct,       0, true],   // sep after
+        ['CREDIBIL',  credAvg,     credAvg < 60 ? 1 : 0, false],
+        ['VERIFIED',  vfyPct,      0, false],
+        ['CORROB',    corrobPct,   0, true],   // sep after
+        ['PIPELINE',  pipelinePct, 0, false],
+        ['CONTRA',    contraPct,   contraPct > 30 ? 1 : 0, false],
       ]
-      const fh = Math.min(16, (H * 0.85) / factors.length)
-      const fyStart = cy - (factors.length * fh) / 2
+      const fh = Math.min(14, (H * 0.78) / factors.length)
+      const fyStart = cy - (factors.length * fh) / 2 - 8
 
-      factors.forEach(([label, val, warn], i) => {
+      // Section header
+      x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.18)'
+      x.fillText('RESOLUTION FACTORS', factorStartX, fyStart - 4)
+
+      factors.forEach(([label, val, warn, sepAfter], i) => {
         const y = fyStart + i * fh
         const fillDelay = i * 0.08
         const fillP = Math.min(1, Math.max(0, ((t * 0.2) % 1.4 - fillDelay) * 2))
 
-        // Label (5px mono, left of track)
         x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.28)'; x.fillText(label, factorStartX, y + 8)
-        // Bar track
-        x.fillStyle = G2 + '.04)'; x.fillRect(trackStartX, y + 2, trackW, 7)
-        // Bar fill
+        x.fillStyle = G2 + '.04)'; x.fillRect(trackStartX, y + 2, trackW, 6)
         x.fillStyle = warn ? 'rgba(255,152,20,.55)' : G2 + '.50)'
-        x.fillRect(trackStartX, y + 2, trackW * (val / 100) * fillP, 7)
-        // Value (right of track)
+        x.fillRect(trackStartX, y + 2, trackW * (val / 100) * fillP, 6)
         x.font = '5px "Share Tech Mono"'
         x.fillStyle = G2 + (fillP > 0.7 ? '.38)' : '.12)')
         x.fillText(String(Math.floor(val * fillP)), trackStartX + trackW + 3, y + 8)
+
+        // Group separator
+        if (sepAfter) {
+          const sepY = y + fh - 1
+          x.strokeStyle = G2 + '.06)'; x.lineWidth = 0.5
+          x.beginPath(); x.moveTo(factorStartX, sepY); x.lineTo(trackStartX + trackW, sepY); x.stroke()
+        }
       })
 
       // ── ARROW FLOW INDICATOR — near canvas right edge → pointing to tip ───
@@ -112,9 +142,22 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
         x.fillText('→', arrowX, ay)
       })
 
-      // Source glyphs — bottom of arc zone
-      x.font = '7px "Share Tech Mono"'; x.fillStyle = G2 + '.14)'
-      ;['◆' + actorCount, '◈4', '◇6', '▣3'].forEach((s, i) => x.fillText(s, cx - rad + i * 28, H - 18))
+      // Source glyphs — bottom of arc zone with labels (ENTITIES/GOV/NON-GOV/VERIF)
+      const glyphs = [
+        { icon: '◆', val: actorCount,       lbl: 'ENT' },
+        { icon: '◈', val: govSrc,            lbl: 'GOV' },
+        { icon: '◇', val: total - govSrc,    lbl: 'NGV' },
+        { icon: '▣', val: verified,          lbl: 'VFD' },
+      ]
+      glyphs.forEach(({ icon, val, lbl }, i) => {
+        const gx = cx - rad + i * 28
+        x.font = '7px "Share Tech Mono"'; x.fillStyle = G2 + '.22)'
+        x.fillText(icon, gx, H - 26)
+        x.font = '500 9px "Teko"'; x.fillStyle = G2 + '.55)'
+        x.fillText(String(val), gx, H - 17)
+        x.font = '4px "Share Tech Mono"'; x.fillStyle = G2 + '.18)'
+        x.fillText(lbl, gx, H - 9)
+      })
 
       stamp(x, 4, H - 8, 'SYS:ARGUS-ENT')
       rafId = requestAnimationFrame(draw)
@@ -123,320 +166,220 @@ export function ArgusTile({ incidents }: { incidents: Incident[] }) {
     return () => cancelAnimationFrame(rafId)
   }, [incidents])
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <DevTag id="D" />
+    </div>
+  )
 }
 
-// --- ChatterTile: SatelliteTile visual body — source/indicator/social pulse language ---
+// --- ChatterTile: honest offline state — DOM layout ---
 
-const _satArt = [
-  '         ▓▓         ',
-  '        ▓▓▓▓        ',
-  '   ░░░░▓▓▓▓▓▓░░░░   ',
-  '  ░░░░░▓▓▓▓▓▓░░░░░  ',
-  ' ░░░░░░▓▓▓▓▓▓░░░░░░ ',
-  '  ░░░░░░▓▓▓▓░░░░░░  ',
-  '    ░░░░░░░░░░░░    ',
-  '      ▓▓▓▓▓▓▓▓      ',
-  '       ▓▓▓▓▓▓       ',
-  '        ▓▓▓▓        ',
-  '         ▓▓         ',
+const CHATTER_SOURCES = [
+  { name: 'Telegram',       status: 'planned' },
+  { name: 'X / Twitter',    status: 'planned' },
+  { name: 'VK',             status: 'planned' },
+  { name: 'Forum Monitor',  status: 'planned' },
+  { name: 'IRC',            status: 'off',     label: '---' },
+  { name: 'Signal Intercept', status: 'off',  label: 'OFFLINE' },
 ]
 
 export function ChatterTile() {
-  const ref = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const cv = ref.current; if (!cv) return
-    const DPR = window.devicePixelRatio || 1
-    let rafId: number
-
-    function draw() {
-      const r = hdSetup(cv!, DPR); if (!r) { rafId = requestAnimationFrame(draw); return }
-      const { W, H, x } = r
-      rasterBase(x, W, H, 0.06, DPR)
-      const t = Date.now() / 1000
-
-      // Lock frame
-      const fcx = W * 0.36, fcy = H * 0.48, fw = 175, fh = 155
-      x.strokeStyle = G2 + '.12)'; x.lineWidth = 1.5; x.strokeRect(fcx - fw / 2, fcy - fh / 2, fw, fh)
-      const cm = 16
-      ;([[fcx - fw / 2, fcy - fh / 2, 1, 1], [fcx + fw / 2, fcy - fh / 2, -1, 1], [fcx - fw / 2, fcy + fh / 2, 1, -1], [fcx + fw / 2, fcy + fh / 2, -1, -1]] as [number, number, number, number][]).forEach(([bx, by, dx, dy]) => {
-        x.strokeStyle = G; x.lineWidth = 3
-        x.beginPath(); x.moveTo(bx, by + dy * cm); x.lineTo(bx, by); x.lineTo(bx + dx * cm, by); x.stroke()
-      })
-
-      // Char art — signal collection platform
-      const charW = 7, charH = 10
-      const artW = _satArt[0].length * charW, artH = _satArt.length * charH
-      const ox = fcx - artW / 2, oy = fcy - artH / 2
-      x.font = '9px "Share Tech Mono"'
-      _satArt.forEach((line, row) => {
-        ;[...line].forEach((ch, col) => {
-          if (ch === ' ') return
-          const bright = ch === '▓' ? 0.7 : 0.22
-          const flick = Math.sin(t * 4 + row * 0.6 + col * 0.5) * 0.2 + Math.sin(t * 7 + col) * 0.05
-          x.fillStyle = G2 + (bright + flick).toFixed(2) + ')'
-          x.fillText(ch, ox + col * charW, oy + row * charH)
-        })
-      })
-
-      // In-frame labels
-      x.font = '6px "Share Tech Mono"'; x.fillStyle = G2 + '.4)'
-      x.fillText('SRC:6 PLATFORM', fcx - fw / 2 + 4, fcy - fh / 2 + 14)
-      x.fillText('TG+X+VK+FORUM', fcx - fw / 2 + 4, fcy - fh / 2 + 26)
-      x.fillText('VOL:' + (320 + Math.floor(Math.sin(t * 0.5) * 30)) + ' SIG/H', fcx - fw / 2 + 4, fcy + fh / 2 - 8)
-
-      // Source panel (right)
-      const rx = W * 0.62
-      x.fillStyle = 'rgba(5,7,0,.75)'; x.fillRect(rx, 48, W - rx - 4, H - 76)
-      x.strokeStyle = G2 + '.1)'; x.lineWidth = 1.5; x.strokeRect(rx, 48, W - rx - 4, H - 76)
-      x.fillStyle = G2 + '.2)'; x.fillRect(rx, 48, W - rx - 4, 3)
-      x.font = '7px "Teko"'; x.fillStyle = G2 + '.45)'; x.fillText('SOURCE PANEL', rx + 6, 66)
-      x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.35)'
-      ;['SRCS:6 ACTIVE', 'TG:HIGH', 'X:MED', 'VK:LOW', 'FORUM:MED', 'IRC:LOW', 'SIGNAL:OFF', 'VOL:ELEVATED', 'THREAT%:34'].forEach((s, i) => x.fillText(s, rx + 6, 82 + i * 16))
-
-      // Signal propagation arc
-      x.save(); x.translate(rx + 50, H - 55)
-      x.strokeStyle = G2 + '.15)'; x.lineWidth = 1
-      x.beginPath(); x.ellipse(0, 0, 42, 13, 0, 0, PI); x.stroke()
-      x.fillStyle = G
-      x.fillRect(Math.cos(t * 1.2) * 42 - 3, -Math.sin(t * 1.2) * 13 - 3, 6, 6)
-      x.restore()
-
-      stamp(x, 4, H - 28, 'SYS:CHATTER-SOCL')
-      rafId = requestAnimationFrame(draw)
-    }
-    draw()
-    return () => cancelAnimationFrame(rafId)
-  }, [])
-
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div className="chatter-body">
+      <div className="chatter-left">
+        <div className="chatter-offline-icon">☰</div>
+        <div className="chatter-offline-label">CHATTER</div>
+        <div className="chatter-offline-badge">NO SOURCES LIVE</div>
+        <div className="chatter-purpose">
+          Social signal monitoring<br />
+          across open-source<br />
+          platform channels
+        </div>
+        <div className="chatter-proxy">
+          PIPELINE SOURCES<br />
+          0 CONNECTED
+        </div>
+      </div>
+      <div className="chatter-right">
+        <div className="chatter-panel-title">PLANNED INTEGRATIONS</div>
+        {CHATTER_SOURCES.map(src => (
+          <div key={src.name} className="chatter-src-row">
+            <span className="csr-name">{src.name}</span>
+            <span className={`csr-status ${src.status}`}>{src.label ?? 'PLANNED'}</span>
+          </div>
+        ))}
+        <div className="chatter-total">
+          <span className="ct-num">0</span>
+          <span className="ct-label">LIVE PIPELINE SOURCES</span>
+        </div>
+      </div>
+      <DevTag id="F" />
+    </div>
+  )
 }
 
-// --- IgniteTile: ScenarioOutlookTile visual body — thermal/hotspot/scan language ---
+// --- IgniteTile: kinetic hotspot scan — DOM layout ---
+
+const IGNITE_KINETIC = ['missile', 'drone', 'attack', 'airstrike', 'ground']
+const isKineticInc = (inc: Incident) => IGNITE_KINETIC.some(k => (inc.type || '').toLowerCase().includes(k))
+
+function heatClass(heat: string) {
+  if (heat === 'ELEVATED') return 'elevated'
+  if (heat === 'ACTIVE') return 'active'
+  if (heat === 'NORMAL') return 'normal'
+  return 'quiet'
+}
+function zoneHeatClass(n: number) {
+  if (n > 10) return 'crit'
+  if (n > 5) return 'high'
+  if (n > 2) return 'med'
+  return 'low'
+}
+function zoneHeatLabel(n: number) {
+  if (n > 10) return 'CRIT'
+  if (n > 5) return 'HIGH'
+  if (n > 2) return 'MED'
+  return 'LOW'
+}
 
 export function IgniteTile({ incidents }: { incidents: Incident[] }) {
-  const ref = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const cv = ref.current; if (!cv) return
-    const DPR = window.devicePixelRatio || 1
-    let rafId: number
-
-    // Compute hotspot proxy from incidents
-    const kineticCounts: Record<string, number> = {}
-    incidents.forEach(inc => {
-      const type = (inc.type || '').toLowerCase()
-      if (['missile', 'drone', 'attack', 'airstrike', 'ground'].some(k => type.includes(k))) {
-        const country = (inc.location?.country || 'UNKNOWN').trim()
-        kineticCounts[country] = (kineticCounts[country] || 0) + 1
-      }
-    })
-    const zones = Object.entries(kineticCounts).sort((a, b) => b[1] - a[1]).slice(0, 5)
-    const totalZones = zones.length
-
-    function draw() {
-      const r = hdSetup(cv!, DPR); if (!r) { rafId = requestAnimationFrame(draw); return }
-      const { W, H, x } = r
-      x.fillStyle = '#030500'; x.fillRect(0, 0, W, H)
-      const t = Date.now() / 1000
-
-
-      // Left panel
-      x.fillStyle = 'rgba(5,7,0,.82)'; x.fillRect(18, 52, W * 0.48, H - 80)
-      x.strokeStyle = G2 + '.1)'; x.lineWidth = 1.5; x.strokeRect(18, 52, W * 0.48, H - 80)
-      x.fillStyle = G2 + '.2)'; x.fillRect(18, 52, W * 0.48, 3)
-
-      x.font = '7px "Teko"'; x.fillStyle = G2 + '.4)'; x.fillText('IGNITE SCAN ZONES', 26, 68)
-      x.font = 'bold 56px "Teko"'; x.fillStyle = G; x.fillText(String(totalZones || '---'), 26, 126)
-      x.font = '6px "Share Tech Mono"'; x.fillStyle = G2 + '.3)'; x.fillText('ACTIVE HOT ZONES', 90, 112)
-      x.fillStyle = G2 + '.35)'; x.fillText('SOURCE:', 26, 142); x.fillStyle = AMB; x.fillText('INCIDENT PROXY', 58, 142)
-      x.fillStyle = G2 + '.2)'; x.font = '5px "Share Tech Mono"'; x.fillText('NO FIRMS FEED — UPSTREAM MODULE', 26, 154)
-
-      // Hotspot table
-      x.fillStyle = G2 + '.05)'; x.fillRect(22, 164, W * 0.46, 14)
-      x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.25)'
-      x.fillText('ZONE', 26, 174); x.fillText('EVT', 132, 174); x.fillText('HEAT', 152, 174); x.fillText('SRC', 180, 174)
-      const aRow = Math.floor(t * 0.5) % Math.max(zones.length, 1)
-      const rows: [string, number, string, string][] = zones.length
-        ? zones.map(([c, n]) => [c.slice(0, 11), n, n > 5 ? 'CRIT' : n > 2 ? 'HIGH' : 'MED', 'PROXY'] as [string, number, string, string])
-        : [['NO DATA', 0, '---', 'NONE'], ['UPSTREAM', 0, '---', 'NONE'], ['MODULE', 0, '---', 'NONE'], ['AWAITING', 0, '---', 'NONE'], ['FIRMS', 0, '---', 'NONE']]
-      rows.forEach(([n, p, s, w], i) => {
-        const sy = 186 + i * 14; const isA = i === aRow
-        if (isA) { x.fillStyle = G2 + '.04)'; x.fillRect(22, sy - 9, W * 0.46, 14) }
-        const al = isA ? 0.7 : 0.45 - 0.04 * i
-        x.fillStyle = G2 + al.toFixed(2) + ')'; x.font = '5px "Share Tech Mono"'
-        x.fillText(n, 26, sy); x.fillText(String(p || '0'), 132, sy)
-        x.fillStyle = s === 'CRIT' || s === 'HIGH' ? AMB : G2 + al.toFixed(2) + ')'; x.fillText(s, 152, sy)
-        x.fillStyle = G2 + al.toFixed(2) + ')'; x.fillText(w, 180, sy)
-      })
-
-      // Right panel — scan windows
-      x.fillStyle = 'rgba(5,7,0,.82)'; x.fillRect(W * 0.52, 52, W * 0.46, H - 80)
-      x.strokeStyle = G2 + '.1)'; x.lineWidth = 1.5; x.strokeRect(W * 0.52, 52, W * 0.46, H - 80)
-      x.fillStyle = G2 + '.2)'; x.fillRect(W * 0.52, 52, W * 0.46, 3)
-      x.font = '7px "Teko"'; x.fillStyle = G2 + '.4)'; x.fillText('SCAN WINDOWS', W * 0.52 + 8, 68)
-
-      ;([{ n: '24H', s: 'NO DATA', d: 'UPSTREAM' }, { n: '72H', s: 'NO DATA', d: 'MODULE' }, { n: '7D', s: 'NO DATA', d: 'AWAITING' }]).forEach((w, i) => {
-        const wy = 80 + i * 72, wx = W * 0.52 + 8, ww = W * 0.46 - 16
-        x.fillStyle = G2 + '.015)'; x.fillRect(wx, wy, ww, 60)
-        x.strokeStyle = G2 + '.06)'; x.strokeRect(wx, wy, ww, 60)
-        x.font = '6px "Share Tech Mono"'; x.fillStyle = G2 + '.4)'; x.fillText(w.n + ' SCAN', wx + 6, wy + 14)
-        x.fillStyle = AMB; x.fillText(w.s, wx + ww - 50, wy + 14)
-        x.fillStyle = G2 + '.3)'; x.fillText('EVT:---', wx + 6, wy + 30)
-        x.fillStyle = G2 + '.2)'; x.fillText(w.d, wx + 6, wy + 42)
-        const prog = ((t * 0.08 + i * 0.3) % 1)
-        x.fillStyle = G2 + '.05)'; x.fillRect(wx + 6, wy + 52, ww - 12, 4)
-        x.fillStyle = 'rgba(255,152,20,.15)'; x.fillRect(wx + 6, wy + 52, (ww - 12) * prog, 4)
-      })
-
-      x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.2)'
-      x.fillText('FIRMS:OFFLINE SENTINEL:PROXY', W * 0.52 + 8, H - 34)
-
-      stamp(x, 4, H - 28, 'SYS:IGNITE-SCAN')
-      rafId = requestAnimationFrame(draw)
+  const kineticCounts: Record<string, number> = {}
+  incidents.forEach(inc => {
+    if (isKineticInc(inc)) {
+      const country = (inc.location?.country || 'UNKNOWN').trim()
+      kineticCounts[country] = (kineticCounts[country] || 0) + 1
     }
-    draw()
-    return () => cancelAnimationFrame(rafId)
-  }, [incidents])
+  })
+  const zones = Object.entries(kineticCounts).sort((a, b) => b[1] - a[1]).slice(0, 5)
+  const totalZones = zones.length
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  const nowMs = Date.now()
+  const inWindow = (ms: number) => (inc: Incident) =>
+    isKineticInc(inc) && !!inc.published && (nowMs - new Date(inc.published).getTime()) < ms
+  const scan24H = incidents.filter(inWindow(86400000)).length
+  const scan72H = incidents.filter(inWindow(259200000)).length
+  const scan7D  = incidents.filter(inWindow(604800000)).length
+  const scanWindows = [
+    { n: '24H', evt: scan24H, heat: scan24H > 8 ? 'ELEVATED' : scan24H > 3 ? 'ACTIVE' : scan24H > 0 ? 'NORMAL' : 'QUIET', max: 20 },
+    { n: '72H', evt: scan72H, heat: scan72H > 20 ? 'ELEVATED' : scan72H > 8 ? 'ACTIVE' : scan72H > 0 ? 'NORMAL' : 'QUIET', max: 50 },
+    { n: '7D',  evt: scan7D,  heat: scan7D  > 40 ? 'ELEVATED' : scan7D  > 15 ? 'ACTIVE' : scan7D  > 0 ? 'NORMAL' : 'QUIET', max: 100 },
+  ]
+
+  return (
+    <div className="ignite-body">
+      <div className="ignite-left">
+        <div className="ignite-zones-title">ACTIVE HOT ZONES</div>
+        <div className="ignite-zones-hero">
+          <span className="ignite-hero-num">{totalZones || '---'}</span>
+          <span className="ignite-hero-sub">countries<br />with kinetic<br />activity</span>
+        </div>
+        <div className="ignite-proxy-tag">▲ INCIDENT PROXY — NO FIRMS FEED</div>
+        <div className="ignite-zone-table">
+          <div className="ignite-zone-head">
+            <span className="izh">COUNTRY</span>
+            <span className="izh">EVT</span>
+            <span className="izh">HEAT</span>
+          </div>
+          {zones.length > 0 ? zones.map(([country, count]) => (
+            <div key={country} className="ignite-zone-row">
+              <span className="izr-name">{country.slice(0, 12)}</span>
+              <span className="izr-evt">{count}</span>
+              <span className={`izr-heat ${zoneHeatClass(count)}`}>{zoneHeatLabel(count)}</span>
+            </div>
+          )) : (
+            <div className="ignite-zone-row">
+              <span className="izr-name" style={{ color: 'rgba(218,255,74,.20)' }}>NO DATA</span>
+              <span className="izr-evt">—</span>
+              <span className="izr-heat quiet">---</span>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="ignite-right">
+        <div className="ignite-scan-title">SCAN WINDOWS</div>
+        {scanWindows.map(w => (
+          <div key={w.n} className={`scan-window${w.evt > 0 ? ' has-data' : ''}`}>
+            <div className="scan-win-head">
+              <span className="scan-win-period">{w.n}</span>
+              <span className={`scan-win-heat ${heatClass(w.heat)}`}>{w.heat}</span>
+            </div>
+            <div className={`scan-win-evt${w.evt === 0 ? ' no-data' : ''}`}>
+              {w.evt > 0 ? w.evt : '---'}
+            </div>
+            <div className="scan-win-sub">KINETIC EVENTS</div>
+            <div className="scan-win-bar">
+              <div
+                className={`scan-win-bar-fill${w.heat === 'ELEVATED' ? ' elevated' : ''}`}
+                style={{ width: `${Math.min(100, Math.round(w.evt / w.max * 100))}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+      <DevTag id="G" />
+    </div>
+  )
 }
 
-// --- ChronosTile: IntelligenceTile visual body — delta/change/comparison language ---
+// --- ChronosTile: temporal delta grid — DOM layout ---
 
 export function ChronosTile({ incidents }: { incidents: Incident[] }) {
-  const ref = useRef<HTMLCanvasElement>(null)
+  const now = Date.now()
+  const countW = (from: number, to: number) => incidents.filter(inc => {
+    const pub = inc.published ? new Date(inc.published).getTime() : 0
+    return pub >= from && pub < to
+  }).length
+  const last24  = countW(now - 86400000, now)
+  const prev24  = countW(now - 172800000, now - 86400000)
+  const last7d  = countW(now - 604800000, now)
+  const prev7d  = countW(now - 1209600000, now - 604800000)
+  const delta24 = prev24 === 0 ? (last24 > 0 ? 100 : 0) : Math.round((last24 - prev24) / prev24 * 100)
+  const delta7d = prev7d === 0 ? (last7d > 0 ? 100 : 0) : Math.round((last7d - prev7d) / prev7d * 100)
+  const velocity = Math.max(0, last24 - prev24)
+  const kinetic  = incidents.filter(inc => ['missile', 'drone', 'attack', 'airstrike'].some(k => (inc.type || '').toLowerCase().includes(k))).length
+  const hotZones = new Set(
+    incidents
+      .filter(inc => ['missile', 'drone', 'attack', 'airstrike'].some(k => (inc.type || '').toLowerCase().includes(k))
+        && !!inc.published && (now - new Date(inc.published).getTime()) < 86400000)
+      .map(inc => inc.location?.country)
+      .filter(Boolean)
+  ).size
 
-  useEffect(() => {
-    const cv = ref.current; if (!cv) return
-    const DPR = window.devicePixelRatio || 1
-    let rafId: number
+  function fmtDelta(v: number) { return v === 0 ? '0%' : (v > 0 ? '+' : '') + v + '%' }
+  function dCls(v: number) { return v > 0 ? 'up' : v < 0 ? 'dn' : 'flat' }
 
-    // Temporal delta computation
-    const now = Date.now()
-    const countW = (from: number, to: number) => incidents.filter(inc => {
-      const pub = inc.published ? new Date(inc.published).getTime() : 0
-      return pub >= from && pub < to
-    }).length
-    const last24 = countW(now - 86400000, now)
-    const prev24 = countW(now - 172800000, now - 86400000)
-    const last7d = countW(now - 604800000, now)
-    const prev7d = countW(now - 1209600000, now - 604800000)
-    const delta24 = prev24 === 0 ? last24 * 100 : Math.round((last24 - prev24) / prev24 * 100)
-    const delta7d = prev7d === 0 ? last7d * 100 : Math.round((last7d - prev7d) / prev7d * 100)
-    const velocity = Math.max(0, last24 - prev24)
-    const kinetic = incidents.filter(inc => ['missile', 'drone', 'attack', 'airstrike'].some(k => ((inc.type || '').toLowerCase()).includes(k))).length
+  const cells: { label: string; val: number | string; warn: boolean; dim: boolean; hero: boolean; delta: string; dCls: string }[] = [
+    { label: '24H EVENTS', val: last24,          warn: false,           dim: false, hero: true,  delta: '',                                  dCls: '' },
+    { label: '24H SHIFT',  val: fmtDelta(delta24),warn: delta24 > 50,  dim: false, hero: false, delta: delta24 > 0 ? '↑ ACCEL' : delta24 < 0 ? '↓ DECLINE' : '→ STABLE', dCls: dCls(delta24) },
+    { label: '7D EVENTS',  val: last7d,           warn: false,          dim: true,  hero: false, delta: '',                                  dCls: '' },
+    { label: '7D DELTA',   val: fmtDelta(delta7d),warn: delta7d > 40,  dim: false, hero: false, delta: delta7d > 0 ? '↑ TREND UP' : delta7d < 0 ? '↓ TREND DN' : '→ STABLE', dCls: dCls(delta7d) },
+    { label: 'BASELINE',   val: prev24,           warn: false,          dim: true,  hero: false, delta: 'PREV 24H',                          dCls: 'flat' },
+    { label: 'VELOCITY',   val: velocity,         warn: false,          dim: true,  hero: false, delta: velocity > 0 ? '↑ EVT/DAY' : '→ NONE', dCls: velocity > 0 ? 'up' : 'flat' },
+    { label: 'KINETIC',    val: kinetic,          warn: kinetic > 5,    dim: false, hero: false, delta: 'TOTAL IN FEED',                     dCls: 'flat' },
+    { label: 'HOT ZONES',  val: hotZones,         warn: hotZones > 4,  dim: false, hero: false, delta: '↑ COUNTRIES / 24H',                 dCls: hotZones > 0 ? 'up' : 'flat' },
+  ]
 
-    const cellData = [
-      { l: '24H EVT', b: last24, w: 0 },
-      { l: '24H SHIFT', b: delta24, w: delta24 > 50 ? 1 : 0 },
-      { l: '7D DELTA', b: delta7d, w: delta7d > 40 ? 1 : 0 },
-      { l: 'VELOCITY', b: velocity, w: 0 },
-      { l: 'KINETIC', b: kinetic, w: kinetic > 5 ? 1 : 0 },
-      { l: '7D EVT', b: last7d, w: 0 },
-      { l: 'BASELINE', b: prev24, w: 0 },
-      { l: 'CASCADE', b: 62, w: 1 },
-    ]
-
-    function draw() {
-      const r = hdSetup(cv!, DPR); if (!r) { rafId = requestAnimationFrame(draw); return }
-      const { W, H, x } = r
-      const t = Date.now() / 1000
-      rasterBase(x, W, H, 0.06, DPR)
-
-      // Faint grid hints
-      x.strokeStyle = G2 + '.03)'; x.lineWidth = 0.5
-      for (let gx = 40; gx < W; gx += 50) { x.beginPath(); x.moveTo(gx, 0); x.lineTo(gx, H); x.stroke() }
-      for (let gy = 40; gy < H; gy += 50) { x.beginPath(); x.moveTo(0, gy); x.lineTo(W, gy); x.stroke() }
-
-      // Central PCB trace strip
-      const stripX = W * 0.38, stripW = W * 0.08
-      x.fillStyle = 'rgba(218,255,74,.03)'; x.fillRect(stripX, 0, stripW, H)
-      x.strokeStyle = G2 + '.12)'; x.lineWidth = 0.5
-      x.beginPath(); x.moveTo(stripX, 0); x.lineTo(stripX, H); x.moveTo(stripX + stripW, 0); x.lineTo(stripX + stripW, H); x.stroke()
-      x.fillStyle = G2 + '.2)'; x.fillRect(stripX + 4, H * 0.7, stripW - 8, 3)
-      x.fillStyle = G2 + '.1)'; x.fillRect(stripX + 3, H * 0.22, stripW - 6, 2)
-      for (let i = 0; i < 8; i++) { x.fillStyle = G2 + '.04)'; x.fillRect(stripX + 2, H * 0.1 + i * H * 0.1, stripW - 4, 1) }
-
-      // Outer measurement frame
-      const ox = W * 0.2, oy = H * 0.08, ow = W * 0.62, oh = H * 0.82
-      x.strokeStyle = G; x.lineWidth = 1.5; x.strokeRect(ox, oy, ow, oh)
-      x.strokeStyle = G2 + '.4)'; x.lineWidth = 1.2; x.strokeRect(W * 0.34, H * 0.32, W * 0.22, H * 0.22)
-
-      // Corner brackets
-      const tk = 10
-      x.strokeStyle = G2 + '.6)'; x.lineWidth = 0.8
-      ;([[ox, oy, 1, 1], [ox + ow, oy, -1, 1], [ox, oy + oh, 1, -1], [ox + ow, oy + oh, -1, -1]] as [number, number, number, number][]).forEach(([bx, by, dx, dy]) => {
-        x.beginPath(); x.moveTo(bx - dx * tk, by); x.lineTo(bx + dx * tk, by); x.moveTo(bx, by - dy * tk); x.lineTo(bx, by + dy * tk); x.stroke()
-      })
-
-      // Circle ring
-      x.strokeStyle = G2 + '.5)'; x.lineWidth = 1.5
-      x.beginPath(); x.arc(W * 0.26, H * 0.14, W * 0.02, 0, TAU); x.stroke()
-
-      // IC element
-      const ix = stripX + 2, iy = H * 0.12
-      x.strokeStyle = G2 + '.4)'; x.lineWidth = 0.8; x.strokeRect(ix, iy, stripW - 4, H * 0.06)
-      x.strokeStyle = G2 + '.2)'; x.lineWidth = 0.5
-      for (let p = 0; p < 3; p++) {
-        x.beginPath(); x.moveTo(ix - 4, iy + 4 + p * 6); x.lineTo(ix, iy + 4 + p * 6); x.stroke()
-        x.beginPath(); x.moveTo(ix + stripW - 4, iy + 4 + p * 6); x.lineTo(ix + stripW, iy + 4 + p * 6); x.stroke()
-      }
-
-      // Stat cells — temporal deltas
-      const cells = [
-        { ...cellData[0], wx: W * 0.05, wy: H * 0.18 },
-        { ...cellData[1], wx: W * 0.05, wy: H * 0.34 },
-        { ...cellData[2], wx: W * 0.05, wy: H * 0.50 },
-        { ...cellData[3], wx: W * 0.05, wy: H * 0.66 },
-        { ...cellData[4], wx: W * 0.66, wy: H * 0.18 },
-        { ...cellData[5], wx: W * 0.66, wy: H * 0.34 },
-        { ...cellData[6], wx: W * 0.66, wy: H * 0.50 },
-        { ...cellData[7], wx: W * 0.66, wy: H * 0.66 },
-      ]
-      const activeP = Math.floor(t * 1.2) % cells.length
-      cells.forEach((cell, i) => {
-        const isA = i === activeP
-        const padS = W * 0.04
-        x.fillStyle = isA ? G : G2 + '.5)'; x.fillRect(cell.wx, cell.wy, padS, padS * 0.85)
-        if (!isA) { x.fillStyle = BG; x.fillRect(cell.wx + padS * 0.2, cell.wy + padS * 0.25, padS * 0.6, padS * 0.35) }
-        const jit = isA ? Math.floor(Math.sin(t * 8) * 2) : 0
-        x.font = '500 11px "Teko"'; x.fillStyle = cell.w ? AMB : G
-        x.fillText(String(cell.b + jit), cell.wx + padS + 6, cell.wy + padS * 0.65)
-        x.font = '5px "Rajdhani"'; x.fillStyle = G2 + '.3)'; x.fillText(cell.l, cell.wx + padS + 6, cell.wy + padS * 0.95)
-        x.strokeStyle = G2 + '.08)'; x.lineWidth = 0.5
-        x.beginPath()
-        if (cell.wx < W * 0.5) { x.moveTo(cell.wx + padS, cell.wy + padS * 0.4); x.lineTo(ox, cell.wy + padS * 0.4) }
-        else { x.moveTo(cell.wx, cell.wy + padS * 0.4); x.lineTo(ox + ow, cell.wy + padS * 0.4) }
-        x.stroke()
-      })
-
-      // Checkerboard test pattern
-      const ckx = W * 0.62, cky = H * 0.6, ckw = W * 0.12, ckh = H * 0.12, cs = W * 0.02
-      for (let row = 0; row < Math.ceil(ckh / cs); row++) for (let cl = 0; cl < Math.ceil(ckw / cs); cl++) {
-        x.fillStyle = (row + cl) % 2 === 0 ? G : G2 + '.15)'
-        x.fillRect(ckx + cl * cs, cky + row * cs, Math.min(cs, ckw - cl * cs), Math.min(cs, ckh - row * cs))
-      }
-
-      // Test-point dots
-      x.fillStyle = G2 + '.5)'
-      ;([[W * 0.12, H * 0.15], [W * 0.28, H * 0.28], [W * 0.72, H * 0.15], [W * 0.15, H * 0.85], [W * 0.75, H * 0.85], [W * 0.5, H * 0.9]] as [number, number][]).forEach(([dx, dy]) => { x.fillRect(dx, dy, 3, 3) })
-
-      // Temporal labels (replace timestamps)
-      x.font = '500 11px "Teko"'; x.fillStyle = G2 + '.5)'
-      x.fillText('24H', W * 0.36, H * 0.55)
-      x.fillText('7D', W * 0.72, H * 0.12)
-      x.fillText('DELTA', W * 0.1, H * 0.7)
-
-      stamp(x, 4, H - 28, 'SYS:CHRONOS-DELTA')
-      rafId = requestAnimationFrame(draw)
-    }
-    document.fonts.ready.then(draw)
-    return () => cancelAnimationFrame(rafId)
-  }, [incidents])
-
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div className="chronos-body">
+      <div className="chronos-cells">
+        {cells.map((cell, i) => (
+          <div key={i} className={`chron-cell${cell.hero ? ' hero' : cell.warn ? ' warn' : ''}`}>
+            <span className={`cc-label${cell.warn ? ' warn' : ''}`}>{cell.label}</span>
+            <span className={`cc-val${cell.warn ? ' warn' : cell.dim ? ' dim' : ''}`}>{cell.val}</span>
+            {cell.delta && <span className={`cc-delta ${cell.dCls}`}>{cell.delta}</span>}
+          </div>
+        ))}
+      </div>
+      <div className="chronos-footer">
+        <span className="cf-item">WINDOW: <b>7D LOOKBACK</b></span>
+        <span className="cf-item">SOURCE: <b>INCIDENT PIPELINE</b></span>
+        <span className="cf-item">DERIVED: <b>CLIENT-SIDE</b></span>
+      </div>
+      <DevTag id="A.18" />
+    </div>
+  )
 }
 
 // --- SkylineTile: ReportsTile visual body — operational weather/condition language ---
@@ -520,5 +463,10 @@ export function SkylineTile() {
     return () => cancelAnimationFrame(rafId)
   }, [])
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0 }}>
+      <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <DevTag id="A.19" />
+    </div>
+  )
 }

@@ -1,100 +1,102 @@
-import { useEffect, useRef } from 'react'
-import { G, G2, BG, PI, TAU, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import type { Incident } from '@/hooks/useDataPipeline'
+import { DevTag } from '@/components/shared/DevTag'
 
-export function ThreatFeedTile() {
-  const ref = useRef<HTMLCanvasElement>(null)
+interface Props { incidents: Incident[] }
 
-  useEffect(() => {
-    const cv = ref.current; if (!cv) return
-    const DPR = window.devicePixelRatio || 1
-    let rafId: number
-    function draw() {
-      const r = hdSetup(cv!, DPR); if (!r) { rafId = requestAnimationFrame(draw); return }
-      const { W, H, x } = r
-      const t = Date.now() / 1000
-      rasterBase(x, W, H, 0.05, DPR)
+function fmtTime(pub: string | undefined): string {
+  if (!pub) return '---'
+  try {
+    return new Date(pub).toISOString().slice(11, 16) + 'Z'
+  } catch {
+    return '---'
+  }
+}
 
-      // Measurement frame
-      x.strokeStyle = G; x.lineWidth = 1.5; x.strokeRect(W * 0.12, H * 0.06, W * 0.76, H * 0.86)
-      const ox2 = W * 0.12, oy2 = H * 0.06, ow2 = W * 0.76, oh2 = H * 0.86
-      ;([[ox2, oy2, 1, 1], [ox2 + ow2, oy2, -1, 1], [ox2, oy2 + oh2, 1, -1], [ox2 + ow2, oy2 + oh2, -1, -1]] as [number, number, number, number][]).forEach(([bx, by, dx, dy]) => {
-        x.strokeStyle = G; x.lineWidth = 2
-        x.beginPath(); x.moveTo(bx, by + dy * 14); x.lineTo(bx, by); x.lineTo(bx + dx * 14, by); x.stroke()
-      })
+function typeCode(type: string | undefined): string {
+  switch ((type || '').toLowerCase()) {
+    case 'missile':   return 'MSL'
+    case 'drone':     return 'UAS'
+    case 'airstrike': return 'AIR'
+    case 'attack':    return 'ATK'
+    case 'intercept': return 'ICT'
+    case 'naval':     return 'NAV'
+    case 'ground':    return 'GND'
+    case 'security':  return 'SEC'
+    default:          return 'EVT'
+  }
+}
 
-      // Two vertical PCB bus traces
-      const bus1X = W * 0.38, bus2X = W * 0.62, busW = W * 0.04
-      ;[bus1X, bus2X].forEach(bx => {
-        x.fillStyle = G2 + '.03)'; x.fillRect(bx, H * 0.08, busW, H * 0.82)
-        x.strokeStyle = G2 + '.12)'; x.lineWidth = 0.5
-        x.beginPath(); x.moveTo(bx, H * 0.08); x.lineTo(bx, H * 0.9); x.moveTo(bx + busW, H * 0.08); x.lineTo(bx + busW, H * 0.9); x.stroke()
-        for (let f = 0; f < 6; f++) { x.fillStyle = G2 + '.08)'; x.fillRect(bx + 2, H * 0.12 + f * (H * 0.12), busW - 4, 2) }
-        for (let p = 0; p < 3; p++) {
-          const py = ((t * 50 + p * 120) % (H * 0.82)) + H * 0.08
-          x.fillStyle = G; x.fillRect(bx + 1, py, busW - 2, 6)
-        }
-      })
+function badgeCode(inc: Incident): string {
+  const b = (inc as { verificationBadge?: string }).verificationBadge
+  if (b === 'VERIFIED')   return 'vfd'
+  if (b === 'LIKELY')     return 'lky'
+  if (b === 'PARTIAL')    return 'ptl'
+  return 'unc'
+}
 
-      // Service IC packages
-      const statuses = ['ACTIVE', 'ACTIVE', 'ACTIVE', 'IDLE', 'ACTIVE', 'IDLE']
-      const cycleIdx = Math.floor(t * 0.5) % 6
-      const svcs = [
-        { sx: W * 0.22, sy: H * 0.2, l: 'GEOCODER' }, { sx: W * 0.72, sy: H * 0.2, l: 'NER' },
-        { sx: W * 0.22, sy: H * 0.48, l: 'DEDUP' }, { sx: W * 0.72, sy: H * 0.48, l: 'CLASSIFY' },
-        { sx: W * 0.22, sy: H * 0.76, l: 'ENRICH' }, { sx: W * 0.72, sy: H * 0.76, l: 'VALIDATE' },
-      ]
-      svcs.forEach((s, i) => {
-        const isP = i === cycleIdx
-        const isA = statuses[i] === 'ACTIVE' || isP
-        const cw2 = W * 0.12, ch2 = H * 0.08
-        x.fillStyle = isP ? G : G2 + '.35)'; x.fillRect(s.sx - cw2 / 2, s.sy - ch2 / 2, cw2, ch2)
-        x.fillStyle = BG; x.fillRect(s.sx - cw2 / 2 + cw2 * 0.15, s.sy - ch2 / 2 + ch2 * 0.2, cw2 * 0.7, ch2 * 0.6)
-        x.font = '600 7px "Teko"'; x.fillStyle = isP ? G : G2 + '.6)'; x.textAlign = 'center'; x.fillText(s.l, s.sx, s.sy + 2); x.textAlign = 'left'
-        const dotOn = isP ? (Math.sin(t * 8) > 0) : isA
-        x.fillStyle = dotOn ? G : G2 + '.1)'; x.fillRect(s.sx + cw2 / 2 - 6, s.sy - ch2 / 2 + 2, 4, 4)
-        x.strokeStyle = G2 + '.15)'; x.lineWidth = 0.5
-        for (let p = 0; p < 3; p++) {
-          const py = s.sy - ch2 / 2 + ch2 * 0.2 + p * (ch2 * 0.3)
-          x.beginPath(); x.moveTo(s.sx - cw2 / 2 - W * 0.02, py); x.lineTo(s.sx - cw2 / 2, py); x.stroke()
-          x.fillStyle = G2 + '.3)'; x.fillRect(s.sx - cw2 / 2 - W * 0.02 - 1, py - 1, 3, 3)
-          x.beginPath(); x.moveTo(s.sx + cw2 / 2, py); x.lineTo(s.sx + cw2 / 2 + W * 0.02, py); x.stroke()
-          x.fillRect(s.sx + cw2 / 2 + W * 0.02 - 1, py - 1, 3, 3)
-        }
-        x.font = '500 9px "Teko"'; x.fillStyle = G2 + '.4)'
-        const ts2 = ['5:40', '11:04', '12:00', '13:54', '8:22', '16:05'][i]
-        x.fillText(ts2, s.sx + cw2 / 2 + W * 0.03, s.sy + 3)
-      })
+const KINETIC = ['missile', 'drone', 'airstrike', 'attack']
 
-      // Horizontal traces to buses
-      svcs.forEach(s => {
-        const nearBus = s.sx < W * 0.5 ? bus1X : bus2X
-        x.strokeStyle = G2 + '.06)'; x.lineWidth = 1
-        x.beginPath()
-        if (s.sx < W * 0.5) { x.moveTo(s.sx + W * 0.06, s.sy); x.lineTo(nearBus, s.sy) }
-        else { x.moveTo(nearBus + busW, s.sy); x.lineTo(s.sx - W * 0.06, s.sy) }
-        x.stroke()
-      })
+export function ThreatFeedTile({ incidents }: Props) {
+  const sorted = [...incidents]
+    .sort((a, b) => {
+      const ta = a.published ? new Date(a.published).getTime() : 0
+      const tb = b.published ? new Date(b.published).getTime() : 0
+      return tb - ta
+    })
+    .slice(0, 60)
 
-      // Test points
-      x.fillStyle = G2 + '.5)'
-      ;([[W * 0.15, H * 0.12], [W * 0.85, H * 0.12], [W * 0.5, H * 0.5], [W * 0.15, H * 0.9], [W * 0.85, H * 0.9], [W * 0.5, H * 0.15]] as [number, number][]).forEach(([dx, dy]) => { x.fillRect(dx, dy, 3, 3) })
+  const total       = incidents.length
+  const verifiedCt  = incidents.filter(i => (i as { verificationBadge?: string }).verificationBadge === 'VERIFIED').length
+  const likelyCt    = incidents.filter(i => (i as { verificationBadge?: string }).verificationBadge === 'LIKELY').length
+  const kineticCt   = incidents.filter(i => KINETIC.some(k => (i.type || '').toLowerCase().includes(k))).length
+  const uniqueSrcs  = new Set(incidents.map(i => i.source).filter(Boolean)).size
 
-      // Circle alignment mark
-      x.strokeStyle = G2 + '.4)'; x.lineWidth = 1.2
-      x.beginPath(); x.arc(W * 0.5, H * 0.06 + 8, 6, 0, TAU); x.stroke()
+  if (sorted.length === 0) {
+    return (
+      <div style={{ position: 'absolute', inset: 0, background: '#030500' }}>
+        <div className="feed-tile-empty">NO FEED DATA</div>
+        <DevTag id="A.6" />
+      </div>
+    )
+  }
 
-      // Bus labels
-      x.font = '5px "Share Tech Mono"'; x.fillStyle = G2 + '.15)'
-      x.save(); x.translate(bus1X - 5, H * 0.5); x.rotate(-PI / 2); x.fillText('SERVICE BUS A', 0, 0); x.restore()
-      x.save(); x.translate(bus2X + busW + 8, H * 0.5); x.rotate(-PI / 2); x.fillText('SERVICE BUS B', 0, 0); x.restore()
-      x.fillStyle = G2 + '.25)'; x.fillText((7 + Math.floor(Math.sin(t) * 2)) + ' ops/s', W * 0.41 - 18, H * 0.92)
-
-      stamp(x, 4, H - 28, 'SYS:MICROSVC')
-      rafId = requestAnimationFrame(draw)
-    }
-    document.fonts.ready.then(draw)
-    return () => cancelAnimationFrame(rafId)
-  }, [])
-
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+  return (
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', background: '#030500' }}>
+      <div className="feed-status-bar">
+        <span className="fsb-item"><b>{total}</b> EVENTS</span>
+        <span className="fsb-item"><b>{verifiedCt}</b> VERIFIED</span>
+        <span className="fsb-item"><b>{likelyCt}</b> LIKELY</span>
+        <span className={`fsb-item${kineticCt > 0 ? ' warn' : ''}`}><b>{kineticCt}</b> KINETIC</span>
+        <span className="fsb-item fsb-spacer"><b>{uniqueSrcs}</b> SOURCES</span>
+      </div>
+      <div className="feed-tile-head">
+        <span className="feed-tile-head-label">TIME</span>
+        <span className="feed-tile-head-label">TYPE</span>
+        <span className="feed-tile-head-label">EVENT</span>
+        <span className="feed-tile-head-label">SOURCE</span>
+        <span className="feed-tile-head-label">VFY</span>
+      </div>
+      <div className="feed-tile-rows">
+        {sorted.map((inc, i) => {
+          const typeRaw = (inc.type || '').toLowerCase()
+          const isKinetic = KINETIC.some(k => typeRaw.includes(k))
+          const badge = badgeCode(inc)
+          const isVerified = badge === 'vfd'
+          const id = (inc as { id?: number }).id ?? i
+          return (
+            <div key={id} className={`feed-tile-row${isKinetic ? ' kinetic' : isVerified ? ' verified-row' : ''}`}>
+              <span className="feed-row-time">{fmtTime(inc.published)}</span>
+              <span className={`feed-row-type type-${typeRaw}`}>{typeCode(inc.type)}</span>
+              <span className="feed-row-title" title={inc.title ?? ''}>
+                {inc.title ? inc.title.slice(0, 64) : '—'}
+              </span>
+              <span className="feed-row-src">{(inc.source ?? '---').slice(0, 14)}</span>
+              <span className={`feed-row-cred badge-${badge}`}>{badge.toUpperCase()}</span>
+            </div>
+          )
+        })}
+      </div>
+      <DevTag id="A.6" />
+    </div>
+  )
 }

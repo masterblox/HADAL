@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HADAL · Module Presentation Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Teko:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --g:    #daff4a;
+      --g7:   rgba(218,255,74,.78);
+      --g5:   rgba(218,255,74,.56);
+      --g3:   rgba(218,255,74,.32);
+      --g15:  rgba(218,255,74,.15);
+      --g08:  rgba(218,255,74,.08);
+      --warn: rgba(255,152,20,.92);
+      --bg:   #060800;
+      --HEAD: "Rajdhani", sans-serif;
+      --MONO: "Share Tech Mono", monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #030400;
+      color: var(--g7);
+      font-family: var(--MONO);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    /* ── PAGE HEADER ─────────────────────────────────────── */
+    .page-header {
+      display: flex; align-items: baseline; gap: 16px;
+      border-bottom: 1px solid rgba(218,255,74,.10);
+      padding-bottom: 12px; margin-bottom: 24px;
+    }
+    .page-title { font-family: var(--HEAD); font-size: 13px; letter-spacing: .30em; color: rgba(218,255,74,.55); text-transform: uppercase; }
+    .page-note  { font-size: 8px; letter-spacing: .14em; color: rgba(218,255,74,.22); }
+
+    /* ── MODULE GRID ─────────────────────────────────────── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .module-grid .wide { grid-column: span 2; }
+
+    /* ── TILE SHELL ──────────────────────────────────────── */
+    .tile {
+      background: rgba(4,6,0,.95);
+      border: 1px solid rgba(218,255,74,.12);
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.04);
+      display: flex; flex-direction: column;
+      height: 320px; overflow: hidden; position: relative;
+    }
+    .tile-header {
+      display: flex; align-items: center; gap: 7px;
+      padding: 0 10px; height: 26px; flex-shrink: 0;
+      background: rgba(5,7,0,.82);
+      border-bottom: 1px solid rgba(218,255,74,.08);
+    }
+    .tile-icon    { font-size: 10px; color: var(--g5); }
+    .tile-name    { font-family: var(--HEAD); font-size: 9px; letter-spacing: .20em; color: rgba(218,255,74,.65); text-transform: uppercase; flex: 1; }
+    .tile-source  { font-size: 6px; letter-spacing: .14em; color: rgba(218,255,74,.22); text-transform: uppercase; }
+    .tile-badge   { font-family: var(--HEAD); font-size: 6px; letter-spacing: .12em; padding: 1px 5px; border: 1px solid; text-transform: uppercase; }
+    .badge-live   { color: rgba(218,255,74,.60); border-color: rgba(218,255,74,.22); }
+    .badge-stale  { color: rgba(255,152,20,.55); border-color: rgba(255,152,20,.20); }
+    .badge-off    { color: rgba(255,255,255,.25); border-color: rgba(255,255,255,.10); }
+    .tile-body    { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+    .tile-footer  {
+      height: 18px; flex-shrink: 0;
+      display: flex; align-items: center; padding: 0 10px;
+      border-top: 1px solid rgba(218,255,74,.05);
+      background: rgba(5,7,0,.5);
+    }
+    .tile-footer-text { font-size: 5px; letter-spacing: .14em; color: rgba(218,255,74,.18); text-transform: uppercase; }
+
+    /* ═══════════════════════════════════════════════════════
+       MODULE 1 — THREAT FEED (improved DOM list)
+    ═══════════════════════════════════════════════════════ */
+    .feed-status-bar {
+      display: flex; align-items: center; gap: 12px; padding: 3px 10px;
+      background: rgba(218,255,74,.02); border-bottom: 1px solid rgba(218,255,74,.06);
+      flex-shrink: 0;
+    }
+    .fsb-item { font-size: 6px; letter-spacing: .12em; color: rgba(218,255,74,.32); }
+    .fsb-item b { color: rgba(218,255,74,.60); font-weight: 400; }
+    .fsb-item.warn { color: rgba(255,152,20,.50); }
+    .fsb-item.warn b { color: rgba(255,152,20,.80); }
+
+    .feed-col-head {
+      display: grid;
+      grid-template-columns: 44px 28px 1fr 66px 28px;
+      padding: 2px 10px; height: 14px; flex-shrink: 0;
+      border-bottom: 1px solid rgba(218,255,74,.06);
+      background: rgba(5,7,0,.5);
+    }
+    .fch-label { font-size: 5px; letter-spacing: .14em; color: rgba(218,255,74,.20); text-transform: uppercase; }
+
+    .feed-rows { flex: 1; overflow-y: auto; }
+    .feed-rows::-webkit-scrollbar { width: 2px; }
+    .feed-rows::-webkit-scrollbar-thumb { background: rgba(218,255,74,.10); }
+
+    .feed-row {
+      display: grid;
+      grid-template-columns: 44px 28px 1fr 66px 28px;
+      padding: 3px 10px; min-height: 16px;
+      border-bottom: 1px solid rgba(218,255,74,.025);
+      border-left: 2px solid transparent;
+      align-items: center;
+    }
+    .feed-row.kinetic { border-left-color: rgba(255,152,20,.45); background: rgba(255,152,20,.012); }
+    .feed-row.verified-row { background: rgba(218,255,74,.008); }
+    .feed-row:hover { background: rgba(218,255,74,.018); }
+
+    .fr-time  { font-size: 5px; letter-spacing: .04em; color: rgba(218,255,74,.30); }
+    .fr-type  { font-family: var(--HEAD); font-size: 6px; letter-spacing: .08em; color: rgba(218,255,74,.42); }
+    .fr-type.k { color: rgba(255,152,20,.72); }
+    .fr-title { font-size: 6px; letter-spacing: .02em; color: rgba(218,255,74,.58); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+    .fr-title.k { color: rgba(218,255,74,.72); }
+    .fr-src   { font-size: 4px; letter-spacing: .04em; color: rgba(218,255,74,.25); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fr-vfy   { font-family: var(--HEAD); font-size: 5px; letter-spacing: .08em; text-align: right; text-transform: uppercase; }
+    .fr-vfy.vfd { color: rgba(218,255,74,.68); }
+    .fr-vfy.lky { color: rgba(218,255,74,.44); }
+    .fr-vfy.ptl { color: rgba(255,152,20,.50); }
+    .fr-vfy.unc { color: rgba(255,255,255,.18); }
+
+    /* ═══════════════════════════════════════════════════════
+       MODULE 2 — ARGUS (improved factor layout)
+    ═══════════════════════════════════════════════════════ */
+    .argus-body {
+      display: flex; height: 100%;
+    }
+    .argus-arc-zone {
+      width: 130px; flex-shrink: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 12px 8px;
+      border-right: 1px solid rgba(218,255,74,.06);
+      gap: 8px;
+    }
+    .argus-arc-wrap { position: relative; width: 96px; height: 96px; flex-shrink: 0; }
+    .argus-arc-wrap canvas { position: absolute; inset: 0; }
+    .argus-arc-val {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .argus-arc-num  { font-family: var(--HEAD); font-size: 32px; font-weight: 700; color: var(--g); line-height: 1; }
+    .argus-arc-unit { font-size: 5px; letter-spacing: .18em; color: rgba(218,255,74,.35); text-transform: uppercase; margin-top: 2px; }
+
+    .argus-glyphs {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    }
+    .argus-glyph-item { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+    .arglyph-icon  { font-size: 8px; color: rgba(218,255,74,.25); }
+    .arglyph-val   { font-size: 6px; letter-spacing: .06em; color: rgba(218,255,74,.45); }
+    .arglyph-label { font-size: 4px; letter-spacing: .10em; color: rgba(218,255,74,.18); text-transform: uppercase; }
+
+    .argus-factors {
+      flex: 1; min-width: 0; padding: 14px 12px 10px 10px;
+      display: flex; flex-direction: column; gap: 0; overflow: hidden;
+    }
+    .argus-factors-title {
+      font-size: 5px; letter-spacing: .18em; color: rgba(218,255,74,.20);
+      text-transform: uppercase; margin-bottom: 8px; flex-shrink: 0;
+    }
+    .factor-row {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 5px; flex-shrink: 0;
+    }
+    .factor-label {
+      width: 52px; font-size: 5px; letter-spacing: .10em;
+      color: rgba(218,255,74,.30); flex-shrink: 0; text-transform: uppercase;
+    }
+    .factor-track {
+      flex: 1; height: 4px; background: rgba(218,255,74,.04); position: relative;
+    }
+    .factor-fill  { height: 100%; background: rgba(218,255,74,.40); }
+    .factor-fill.warn { background: rgba(255,152,20,.50); }
+    .factor-val {
+      width: 22px; font-size: 5px; letter-spacing: .06em;
+      color: rgba(218,255,74,.38); text-align: right; flex-shrink: 0;
+    }
+    .factor-val.warn { color: rgba(255,152,20,.60); }
+    /* Separator between factor groups */
+    .factor-sep { height: 1px; background: rgba(218,255,74,.04); margin: 3px 0 5px; }
+
+    /* ═══════════════════════════════════════════════════════
+       MODULE 3 — IGNITE (improved scan windows)
+    ═══════════════════════════════════════════════════════ */
+    .ignite-body { display: flex; height: 100%; }
+
+    .ignite-left {
+      width: 48%; border-right: 1px solid rgba(218,255,74,.06);
+      display: flex; flex-direction: column; padding: 12px 10px;
+    }
+    .ignite-zones-title {
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .18em;
+      color: rgba(218,255,74,.40); text-transform: uppercase; margin-bottom: 4px; flex-shrink: 0;
+    }
+    .ignite-zones-hero { display: flex; align-items: baseline; gap: 6px; margin-bottom: 2px; flex-shrink: 0; }
+    .ignite-hero-num { font-family: var(--HEAD); font-size: 42px; font-weight: 700; color: var(--g); line-height: 1; }
+    .ignite-hero-sub { font-size: 6px; letter-spacing: .12em; color: rgba(218,255,74,.30); text-transform: uppercase; }
+    .ignite-proxy-tag {
+      font-size: 5px; letter-spacing: .10em; color: rgba(255,152,20,.50);
+      text-transform: uppercase; margin-bottom: 8px; flex-shrink: 0;
+    }
+
+    .ignite-zone-table { flex: 1; overflow: hidden; }
+    .ignite-zone-head {
+      display: grid; grid-template-columns: 1fr 28px 44px;
+      padding: 2px 0; border-bottom: 1px solid rgba(218,255,74,.06); margin-bottom: 3px;
+    }
+    .izh { font-size: 5px; letter-spacing: .12em; color: rgba(218,255,74,.20); text-transform: uppercase; }
+    .ignite-zone-row {
+      display: grid; grid-template-columns: 1fr 28px 44px;
+      padding: 3px 0; border-bottom: 1px solid rgba(218,255,74,.025);
+      align-items: center;
+    }
+    .izr-name { font-size: 6px; letter-spacing: .06em; color: rgba(218,255,74,.55); }
+    .izr-evt  { font-size: 6px; letter-spacing: .06em; color: rgba(218,255,74,.45); }
+    .izr-heat { font-family: var(--HEAD); font-size: 6px; letter-spacing: .08em; text-transform: uppercase; }
+    .izr-heat.crit { color: rgba(255,152,20,.80); }
+    .izr-heat.high { color: rgba(255,152,20,.60); }
+    .izr-heat.med  { color: rgba(218,255,74,.55); }
+    .izr-heat.low  { color: rgba(218,255,74,.28); }
+
+    .ignite-right {
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; padding: 12px 10px; gap: 6px;
+    }
+    .ignite-scan-title {
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .18em;
+      color: rgba(218,255,74,.40); text-transform: uppercase; flex-shrink: 0;
+    }
+    .scan-window {
+      flex: 1; min-height: 0;
+      border: 1px solid rgba(218,255,74,.07);
+      background: rgba(218,255,74,.01);
+      padding: 6px 8px; display: flex; flex-direction: column; gap: 3px;
+    }
+    .scan-window.has-data { border-color: rgba(218,255,74,.14); }
+    .scan-win-head {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .scan-win-period {
+      font-family: var(--HEAD); font-size: 8px; letter-spacing: .16em;
+      color: rgba(218,255,74,.45); text-transform: uppercase;
+    }
+    .scan-win-heat {
+      font-family: var(--HEAD); font-size: 6px; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .scan-win-heat.elevated { color: rgba(255,152,20,.80); }
+    .scan-win-heat.active   { color: rgba(255,152,20,.55); }
+    .scan-win-heat.normal   { color: rgba(218,255,74,.50); }
+    .scan-win-heat.quiet    { color: rgba(218,255,74,.22); }
+    .scan-win-evt {
+      font-family: var(--HEAD); font-size: 20px; font-weight: 700; line-height: 1;
+      color: var(--g);
+    }
+    .scan-win-evt.no-data { color: rgba(218,255,74,.20); font-size: 14px; }
+    .scan-win-sub {
+      font-size: 5px; letter-spacing: .10em; color: rgba(218,255,74,.20); text-transform: uppercase;
+    }
+    .scan-win-bar { height: 2px; background: rgba(218,255,74,.06); position: relative; margin-top: auto; }
+    .scan-win-bar-fill { height: 100%; background: rgba(218,255,74,.30); }
+    .scan-win-bar-fill.elevated { background: rgba(255,152,20,.40); }
+
+    /* ═══════════════════════════════════════════════════════
+       MODULE 4 — CHRONOS (improved stat cells)
+    ═══════════════════════════════════════════════════════ */
+    .chronos-body { display: flex; flex-direction: column; height: 100%; padding: 12px; gap: 8px; }
+    .chronos-cells {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; flex: 1;
+    }
+    .chron-cell {
+      background: rgba(5,7,0,.8);
+      border: 1px solid rgba(218,255,74,.07);
+      padding: 8px 7px; display: flex; flex-direction: column; gap: 4px;
+    }
+    .chron-cell.warn { border-color: rgba(255,152,20,.20); background: rgba(255,152,20,.015); }
+    .chron-cell.hero { border-color: rgba(218,255,74,.20); background: rgba(218,255,74,.015); }
+    .cc-label { font-size: 5px; letter-spacing: .14em; color: rgba(218,255,74,.25); text-transform: uppercase; }
+    .cc-label.warn { color: rgba(255,152,20,.35); }
+    .cc-val   { font-family: var(--HEAD); font-size: 22px; font-weight: 700; line-height: 1; color: var(--g); }
+    .cc-val.warn { color: rgba(255,152,20,.80); }
+    .cc-val.dim  { color: rgba(218,255,74,.40); font-size: 18px; }
+    .cc-delta { font-size: 6px; letter-spacing: .08em; }
+    .cc-delta.up   { color: rgba(255,152,20,.65); }
+    .cc-delta.dn   { color: rgba(218,255,74,.45); }
+    .cc-delta.flat { color: rgba(218,255,74,.22); }
+
+    .chronos-footer {
+      display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+      border-top: 1px solid rgba(218,255,74,.05); padding-top: 6px;
+    }
+    .cf-item { font-size: 5px; letter-spacing: .12em; color: rgba(218,255,74,.22); }
+    .cf-item b { color: rgba(218,255,74,.45); font-weight: 400; }
+
+    /* ═══════════════════════════════════════════════════════
+       MODULE 5 — CHATTER (honest offline state)
+    ═══════════════════════════════════════════════════════ */
+    .chatter-body { display: flex; height: 100%; }
+
+    .chatter-left {
+      width: 44%; border-right: 1px solid rgba(218,255,74,.06);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 16px 12px; gap: 10px;
+    }
+    .chatter-offline-icon {
+      font-size: 36px; color: rgba(255,255,255,.08); line-height: 1;
+    }
+    .chatter-offline-label {
+      font-family: var(--HEAD); font-size: 8px; letter-spacing: .22em;
+      color: rgba(255,255,255,.25); text-transform: uppercase;
+    }
+    .chatter-offline-badge {
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .18em;
+      padding: 2px 8px; border: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.20); text-transform: uppercase;
+    }
+    .chatter-purpose {
+      font-size: 6px; letter-spacing: .08em; color: rgba(218,255,74,.20);
+      text-align: center; line-height: 1.7;
+    }
+    .chatter-proxy {
+      font-size: 5px; letter-spacing: .10em; color: rgba(218,255,74,.28);
+      text-align: center;
+      border-top: 1px solid rgba(218,255,74,.06); padding-top: 8px; width: 100%;
+    }
+    .chatter-proxy b { color: rgba(218,255,74,.50); font-weight: 400; }
+
+    .chatter-right {
+      flex: 1; min-width: 0; padding: 14px 12px;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .chatter-panel-title {
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .18em;
+      color: rgba(218,255,74,.35); text-transform: uppercase;
+      margin-bottom: 6px; flex-shrink: 0;
+    }
+    .chatter-src-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 4px 7px; border: 1px solid rgba(218,255,74,.05);
+      background: rgba(5,7,0,.6);
+    }
+    .csr-name { font-family: var(--HEAD); font-size: 7px; letter-spacing: .12em; color: rgba(218,255,74,.35); text-transform: uppercase; }
+    .csr-status { font-size: 5px; letter-spacing: .14em; text-transform: uppercase; }
+    .csr-status.planned { color: rgba(218,255,74,.22); }
+    .csr-status.off     { color: rgba(255,255,255,.18); }
+    .csr-status.live    { color: rgba(218,255,74,.65); }
+
+    .chatter-total {
+      margin-top: auto; padding-top: 8px; border-top: 1px solid rgba(218,255,74,.05);
+      display: flex; align-items: baseline; gap: 6px;
+    }
+    .ct-num   { font-family: var(--HEAD); font-size: 18px; font-weight: 700; color: rgba(255,255,255,.20); }
+    .ct-label { font-size: 6px; letter-spacing: .10em; color: rgba(218,255,74,.20); text-transform: uppercase; }
+
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <span class="page-title">HADAL · Module Presentation Prototype</span>
+  <span class="page-note">Static representative data · Not live · For visual review only</span>
+</div>
+
+<div class="module-grid">
+
+  <!-- ━━ THREAT FEED ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tile wide">
+    <div class="tile-header">
+      <span class="tile-icon">▣</span>
+      <span class="tile-name">Threat Feed</span>
+      <span class="tile-source">VERIFIED / RAW · ⟳ 60S</span>
+      <span class="tile-badge badge-live">LIVE</span>
+    </div>
+    <div class="tile-body" style="display:flex;flex-direction:column;">
+      <!-- Status bar: aggregate counts at a glance -->
+      <div class="feed-status-bar">
+        <span class="fsb-item"><b>224</b> EVENTS</span>
+        <span class="fsb-item"><b>15</b> VERIFIED</span>
+        <span class="fsb-item"><b>47</b> LIKELY</span>
+        <span class="fsb-item warn"><b>23</b> KINETIC</span>
+        <span class="fsb-item" style="margin-left:auto;"><b>47</b> UNIQUE SOURCES</span>
+      </div>
+      <!-- Column labels -->
+      <div class="feed-col-head">
+        <span class="fch-label">TIME</span>
+        <span class="fch-label">TYPE</span>
+        <span class="fch-label">EVENT</span>
+        <span class="fch-label">SOURCE</span>
+        <span class="fch-label">VFY</span>
+      </div>
+      <!-- Rows -->
+      <div class="feed-rows">
+
+        <div class="feed-row kinetic">
+          <span class="fr-time">15:18Z</span>
+          <span class="fr-type k">MSL</span>
+          <span class="fr-title k">LEBANON: Strikes against Hezbollah infrastructure sites continue</span>
+          <span class="fr-src">Israel Defense Forces</span>
+          <span class="fr-vfy lky">LKY</span>
+        </div>
+        <div class="feed-row kinetic">
+          <span class="fr-time">14:52Z</span>
+          <span class="fr-type k">AIR</span>
+          <span class="fr-title k">IDF confirms airstrike on Hezbollah logistics compound near Tyre</span>
+          <span class="fr-src">IDF Spokesperson</span>
+          <span class="fr-vfy vfd">VFD</span>
+        </div>
+        <div class="feed-row verified-row">
+          <span class="fr-time">15:26Z</span>
+          <span class="fr-type">SEC</span>
+          <span class="fr-title">Theyab bin Mohamed bin Zayed bids farewell to King of Jordan in UAE</span>
+          <span class="fr-src">WAM English</span>
+          <span class="fr-vfy lky">LKY</span>
+        </div>
+        <div class="feed-row">
+          <span class="fr-time">15:28Z</span>
+          <span class="fr-type">SEC</span>
+          <span class="fr-title">For Israeli consumers, Iran war will likely fuel price hikes beyond the pump</span>
+          <span class="fr-src">Times of Israel</span>
+          <span class="fr-vfy ptl">PTL</span>
+        </div>
+        <div class="feed-row kinetic">
+          <span class="fr-time">14:33Z</span>
+          <span class="fr-type k">UAS</span>
+          <span class="fr-title k">Houthi drone intercepted over Red Sea corridor, USS Carney reports</span>
+          <span class="fr-src">US CENTCOM</span>
+          <span class="fr-vfy vfd">VFD</span>
+        </div>
+        <div class="feed-row">
+          <span class="fr-time">14:11Z</span>
+          <span class="fr-type">SEC</span>
+          <span class="fr-title">IRGC naval exercises in Strait of Hormuz, third day of maneuvers</span>
+          <span class="fr-src">IRNA</span>
+          <span class="fr-vfy ptl">PTL</span>
+        </div>
+        <div class="feed-row kinetic">
+          <span class="fr-time">13:47Z</span>
+          <span class="fr-type k">ATK</span>
+          <span class="fr-title k">PMF faction claims attack on US logistics base in western Iraq</span>
+          <span class="fr-src">Telegram / PMF</span>
+          <span class="fr-vfy unc">UNC</span>
+        </div>
+        <div class="feed-row">
+          <span class="fr-time">13:22Z</span>
+          <span class="fr-type">SEC</span>
+          <span class="fr-title">UAE foreign minister holds talks with US Secretary of State in Abu Dhabi</span>
+          <span class="fr-src">MoFA UAE</span>
+          <span class="fr-vfy lky">LKY</span>
+        </div>
+        <div class="feed-row kinetic">
+          <span class="fr-time">12:58Z</span>
+          <span class="fr-type k">MSL</span>
+          <span class="fr-title k">Houthi ballistic missile launch toward southern Israel — sirens triggered</span>
+          <span class="fr-src">IDF / CENTCOM</span>
+          <span class="fr-vfy vfd">VFD</span>
+        </div>
+        <div class="feed-row">
+          <span class="fr-time">12:41Z</span>
+          <span class="fr-type">SEC</span>
+          <span class="fr-title">Saudi Aramco denies pipeline incident in Eastern Province</span>
+          <span class="fr-src">Aramco Official</span>
+          <span class="fr-vfy lky">LKY</span>
+        </div>
+        <div class="feed-row">
+          <span class="fr-time">12:17Z</span>
+          <span class="fr-type">SEC</span>
+          <span class="fr-title">Egypt, Jordan issue joint statement on Gaza corridor negotiations</span>
+          <span class="fr-src">Al Jazeera</span>
+          <span class="fr-vfy ptl">PTL</span>
+        </div>
+        <div class="feed-row kinetic">
+          <span class="fr-time">11:55Z</span>
+          <span class="fr-type k">UAS</span>
+          <span class="fr-title k">Three commercial vessels report drone overflight in Gulf of Oman</span>
+          <span class="fr-src">UKMTO</span>
+          <span class="fr-vfy lky">LKY</span>
+        </div>
+        <div class="feed-row">
+          <span class="fr-time">11:30Z</span>
+          <span class="fr-type">SEC</span>
+          <span class="fr-title">Iran parliament approves supplementary defence budget motion</span>
+          <span class="fr-src">Press TV</span>
+          <span class="fr-vfy unc">UNC</span>
+        </div>
+
+      </div>
+    </div>
+    <div class="tile-footer">
+      <span class="tile-footer-text">SOURCE: incidents.json · PIPELINE VERIFIED + RAW · UPDATED 60S</span>
+    </div>
+  </div>
+
+  <!-- ━━ ARGUS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tile">
+    <div class="tile-header">
+      <span class="tile-icon">◬</span>
+      <span class="tile-name">Argus</span>
+      <span class="tile-source">ENTITY RESOLUTION · PIPELINE</span>
+      <span class="tile-badge badge-stale">PARTIAL</span>
+    </div>
+    <div class="tile-body">
+      <div class="argus-body">
+        <!-- Arc zone -->
+        <div class="argus-arc-zone">
+          <div class="argus-arc-wrap">
+            <canvas id="argus-arc" width="96" height="96"></canvas>
+            <div class="argus-arc-val">
+              <span class="argus-arc-num">78</span>
+              <span class="argus-arc-unit">RESOLUTION</span>
+            </div>
+          </div>
+          <div class="argus-glyphs">
+            <div class="argus-glyph-item">
+              <span class="arglyph-icon">◆</span>
+              <span class="arglyph-val">24</span>
+              <span class="arglyph-label">ENTITIES</span>
+            </div>
+            <div class="argus-glyph-item">
+              <span class="arglyph-icon">◈</span>
+              <span class="arglyph-val">31</span>
+              <span class="arglyph-label">GOV</span>
+            </div>
+            <div class="argus-glyph-item">
+              <span class="arglyph-icon">◇</span>
+              <span class="arglyph-val">193</span>
+              <span class="arglyph-label">NON-GOV</span>
+            </div>
+            <div class="argus-glyph-item">
+              <span class="arglyph-icon">▣</span>
+              <span class="arglyph-val">15</span>
+              <span class="arglyph-label">VERIF</span>
+            </div>
+          </div>
+        </div>
+        <!-- Factor bars -->
+        <div class="argus-factors">
+          <div class="argus-factors-title">RESOLUTION FACTORS — LIVE PIPELINE</div>
+
+          <!-- Identity group -->
+          <div class="factor-row">
+            <span class="factor-label">ENT GRAPH</span>
+            <div class="factor-track"><div class="factor-fill" style="width:96%"></div></div>
+            <span class="factor-val">96</span>
+          </div>
+          <div class="factor-row">
+            <span class="factor-label">SRC LINK</span>
+            <div class="factor-track"><div class="factor-fill" style="width:67%"></div></div>
+            <span class="factor-val">67</span>
+          </div>
+          <div class="factor-sep"></div>
+
+          <!-- Geo + temporal -->
+          <div class="factor-row">
+            <span class="factor-label">GEO ANCH</span>
+            <div class="factor-track"><div class="factor-fill" style="width:88%"></div></div>
+            <span class="factor-val">88</span>
+          </div>
+          <div class="factor-row">
+            <span class="factor-label">TEMPORAL</span>
+            <div class="factor-track"><div class="factor-fill" style="width:94%"></div></div>
+            <span class="factor-val">94</span>
+          </div>
+          <div class="factor-sep"></div>
+
+          <!-- Verification group -->
+          <div class="factor-row">
+            <span class="factor-label">CREDIBIL</span>
+            <div class="factor-track"><div class="factor-fill" style="width:82%"></div></div>
+            <span class="factor-val">82</span>
+          </div>
+          <div class="factor-row">
+            <span class="factor-label">VERIFIED</span>
+            <div class="factor-track"><div class="factor-fill" style="width:27%"></div></div>
+            <span class="factor-val">27</span>
+          </div>
+          <div class="factor-row">
+            <span class="factor-label">CORROB</span>
+            <div class="factor-track"><div class="factor-fill" style="width:43%"></div></div>
+            <span class="factor-val">43</span>
+          </div>
+          <div class="factor-sep"></div>
+
+          <!-- System -->
+          <div class="factor-row">
+            <span class="factor-label">PIPELINE</span>
+            <div class="factor-track"><div class="factor-fill" style="width:67%"></div></div>
+            <span class="factor-val">67</span>
+          </div>
+          <div class="factor-row">
+            <span class="factor-label">CONTRA</span>
+            <div class="factor-track"><div class="factor-fill warn" style="width:38%"></div></div>
+            <span class="factor-val warn">38</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tile-footer">
+      <span class="tile-footer-text">SOURCE: INCIDENT PIPELINE · DERIVED · ⟳ ON FEED UPDATE</span>
+    </div>
+  </div>
+
+  <!-- ━━ IGNITE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tile">
+    <div class="tile-header">
+      <span class="tile-icon">✦</span>
+      <span class="tile-name">Ignite</span>
+      <span class="tile-source">KINETIC · INCIDENT PROXY</span>
+      <span class="tile-badge badge-stale">PARTIAL</span>
+    </div>
+    <div class="tile-body">
+      <div class="ignite-body">
+        <!-- Left: hot zones -->
+        <div class="ignite-left">
+          <div class="ignite-zones-title">Active Hot Zones</div>
+          <div class="ignite-zones-hero">
+            <span class="ignite-hero-num">5</span>
+            <span class="ignite-hero-sub">countries<br>with kinetic<br>activity</span>
+          </div>
+          <div class="ignite-proxy-tag">▲ INCIDENT PROXY — NO FIRMS FEED</div>
+
+          <div class="ignite-zone-table">
+            <div class="ignite-zone-head">
+              <span class="izh">COUNTRY</span>
+              <span class="izh">EVT</span>
+              <span class="izh">HEAT</span>
+            </div>
+            <div class="ignite-zone-row">
+              <span class="izr-name">Lebanon</span>
+              <span class="izr-evt">18</span>
+              <span class="izr-heat crit">CRIT</span>
+            </div>
+            <div class="ignite-zone-row">
+              <span class="izr-name">Iraq</span>
+              <span class="izr-evt">12</span>
+              <span class="izr-heat high">HIGH</span>
+            </div>
+            <div class="ignite-zone-row">
+              <span class="izr-name">Yemen</span>
+              <span class="izr-evt">8</span>
+              <span class="izr-heat high">HIGH</span>
+            </div>
+            <div class="ignite-zone-row">
+              <span class="izr-name">Iran</span>
+              <span class="izr-evt">5</span>
+              <span class="izr-heat med">MED</span>
+            </div>
+            <div class="ignite-zone-row">
+              <span class="izr-name">Syria</span>
+              <span class="izr-evt">3</span>
+              <span class="izr-heat low">LOW</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: scan windows -->
+        <div class="ignite-right">
+          <div class="ignite-scan-title">Scan Windows</div>
+
+          <div class="scan-window has-data">
+            <div class="scan-win-head">
+              <span class="scan-win-period">24H</span>
+              <span class="scan-win-heat elevated">ELEVATED</span>
+            </div>
+            <div class="scan-win-evt">6</div>
+            <div class="scan-win-sub">KINETIC EVENTS</div>
+            <div class="scan-win-bar">
+              <div class="scan-win-bar-fill elevated" style="width:30%"></div>
+            </div>
+          </div>
+
+          <div class="scan-window has-data">
+            <div class="scan-win-head">
+              <span class="scan-win-period">72H</span>
+              <span class="scan-win-heat active">ACTIVE</span>
+            </div>
+            <div class="scan-win-evt">14</div>
+            <div class="scan-win-sub">KINETIC EVENTS</div>
+            <div class="scan-win-bar">
+              <div class="scan-win-bar-fill" style="width:28%"></div>
+            </div>
+          </div>
+
+          <div class="scan-window has-data">
+            <div class="scan-win-head">
+              <span class="scan-win-period">7D</span>
+              <span class="scan-win-heat active">ACTIVE</span>
+            </div>
+            <div class="scan-win-evt">31</div>
+            <div class="scan-win-sub">KINETIC EVENTS</div>
+            <div class="scan-win-bar">
+              <div class="scan-win-bar-fill" style="width:31%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tile-footer">
+      <span class="tile-footer-text">SOURCE: INCIDENT PROXY · NO FIRMS FEED · UPSTREAM OFFLINE</span>
+    </div>
+  </div>
+
+  <!-- ━━ CHRONOS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tile">
+    <div class="tile-header">
+      <span class="tile-icon">⌁</span>
+      <span class="tile-name">Chronos</span>
+      <span class="tile-source">TEMPORAL DELTA · INCIDENTS</span>
+      <span class="tile-badge badge-stale">PARTIAL</span>
+    </div>
+    <div class="tile-body">
+      <div class="chronos-body">
+        <div class="chronos-cells">
+
+          <div class="chron-cell hero">
+            <span class="cc-label">24H EVENTS</span>
+            <span class="cc-val">18</span>
+            <span class="cc-delta up">↑ vs prev 24H</span>
+          </div>
+
+          <div class="chron-cell warn">
+            <span class="cc-label warn">24H SHIFT</span>
+            <span class="cc-val warn">+50%</span>
+            <span class="cc-delta up">↑ ACCELERATING</span>
+          </div>
+
+          <div class="chron-cell">
+            <span class="cc-label">7D EVENTS</span>
+            <span class="cc-val dim">81</span>
+            <span class="cc-delta up">↑ vs prev 7D</span>
+          </div>
+
+          <div class="chron-cell warn">
+            <span class="cc-label warn">7D DELTA</span>
+            <span class="cc-val warn">+21%</span>
+            <span class="cc-delta up">↑ TREND UP</span>
+          </div>
+
+          <div class="chron-cell">
+            <span class="cc-label">BASELINE</span>
+            <span class="cc-val dim">12</span>
+            <span class="cc-delta flat">PREV 24H</span>
+          </div>
+
+          <div class="chron-cell">
+            <span class="cc-label">VELOCITY</span>
+            <span class="cc-val dim">6</span>
+            <span class="cc-delta up">↑ EVT/DAY GAIN</span>
+          </div>
+
+          <div class="chron-cell warn">
+            <span class="cc-label warn">KINETIC</span>
+            <span class="cc-val warn">23</span>
+            <span class="cc-delta flat">TOTAL IN FEED</span>
+          </div>
+
+          <div class="chron-cell warn">
+            <span class="cc-label warn">HOT ZONES</span>
+            <span class="cc-val warn">5</span>
+            <span class="cc-delta up">↑ COUNTRIES / 24H</span>
+          </div>
+
+        </div>
+        <div class="chronos-footer">
+          <span class="cf-item">WINDOW: <b>7D LOOKBACK</b></span>
+          <span class="cf-item">SOURCE: <b>INCIDENT PIPELINE</b></span>
+          <span class="cf-item">DERIVED: <b>CLIENT-SIDE</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="tile-footer">
+      <span class="tile-footer-text">SOURCE: INCIDENT TIMESTAMPS · DERIVED FROM PIPELINE · ⟳ 60S</span>
+    </div>
+  </div>
+
+  <!-- ━━ CHATTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tile">
+    <div class="tile-header">
+      <span class="tile-icon">☰</span>
+      <span class="tile-name">Chatter</span>
+      <span class="tile-source">PIPELINE SOURCES</span>
+      <span class="tile-badge badge-off">OFFLINE</span>
+    </div>
+    <div class="tile-body">
+      <div class="chatter-body">
+        <!-- Left: offline identity -->
+        <div class="chatter-left">
+          <div class="chatter-offline-icon">☰</div>
+          <div class="chatter-offline-label">CHATTER</div>
+          <div class="chatter-offline-badge">NO SOURCES LIVE</div>
+          <div class="chatter-purpose">
+            Social signal monitoring<br>
+            across open-source<br>
+            platform channels
+          </div>
+          <div class="chatter-proxy">
+            <b>47</b> NON-GOV SOURCES<br>IN CURRENT PIPELINE
+          </div>
+        </div>
+
+        <!-- Right: source status -->
+        <div class="chatter-right">
+          <div class="chatter-panel-title">Planned Integrations</div>
+
+          <div class="chatter-src-row">
+            <span class="csr-name">Telegram</span>
+            <span class="csr-status planned">PLANNED</span>
+          </div>
+          <div class="chatter-src-row">
+            <span class="csr-name">X / Twitter</span>
+            <span class="csr-status planned">PLANNED</span>
+          </div>
+          <div class="chatter-src-row">
+            <span class="csr-name">VK</span>
+            <span class="csr-status planned">PLANNED</span>
+          </div>
+          <div class="chatter-src-row">
+            <span class="csr-name">Forum Monitor</span>
+            <span class="csr-status planned">PLANNED</span>
+          </div>
+          <div class="chatter-src-row">
+            <span class="csr-name">IRC</span>
+            <span class="csr-status off">---</span>
+          </div>
+          <div class="chatter-src-row">
+            <span class="csr-name">Signal Intercept</span>
+            <span class="csr-status off">OFFLINE</span>
+          </div>
+
+          <div class="chatter-total">
+            <span class="ct-num">0</span>
+            <span class="ct-label">LIVE PIPELINE SOURCES</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tile-footer">
+      <span class="tile-footer-text">SOURCE: PIPELINE SOURCES · 0 CONNECTED · PENDING INTEGRATION</span>
+    </div>
+  </div>
+
+</div><!-- /module-grid -->
+
+<script>
+  // Draw Argus resolution arc
+  const cv = document.getElementById('argus-arc')
+  const ctx = cv.getContext('2d')
+  const W = 96, H = 96, cx = W/2, cy = H/2, r = 36
+  const TAU = Math.PI * 2, PI = Math.PI
+  const res = 0.78  // 78% resolution
+
+  ctx.strokeStyle = 'rgba(218,255,74,.08)'; ctx.lineWidth = 8
+  ctx.beginPath(); ctx.arc(cx, cy, r, -PI*.8, PI*.8); ctx.stroke()
+
+  ctx.strokeStyle = '#daff4a'; ctx.lineWidth = 8
+  ctx.beginPath(); ctx.arc(cx, cy, r, -PI*.8, -PI*.8 + PI*1.6*res); ctx.stroke()
+
+  // Tick marks
+  for (let i = 0; i <= 16; i++) {
+    const a = -PI*.8 + PI*1.6*(i/16)
+    const i1 = r+5, i2 = r + (i%4===0?11:8)
+    ctx.strokeStyle = 'rgba(218,255,74,' + (i%4===0?'.28)':'.10)')
+    ctx.lineWidth = i%4===0?1.2:0.8
+    ctx.beginPath()
+    ctx.moveTo(cx+Math.cos(a)*i1, cy+Math.sin(a)*i1)
+    ctx.lineTo(cx+Math.cos(a)*i2, cy+Math.sin(a)*i2)
+    ctx.stroke()
+  }
+
+  // Tip dot
+  const tipA = -PI*.8 + PI*1.6*res
+  ctx.fillStyle = '#daff4a'
+  ctx.beginPath(); ctx.arc(cx+Math.cos(tipA)*r, cy+Math.sin(tipA)*r, 3, 0, TAU); ctx.fill()
+</script>
+</body>
+</html>

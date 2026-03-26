@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ConsoleToolbar } from '@/components/console/ConsoleToolbar'
 import { ConsoleTile } from '@/components/console/ConsoleTile'
 import { TilePicker } from '@/components/console/TilePicker'
@@ -35,6 +35,9 @@ import {
   DEFAULT_CONSOLE_PRESET,
   type ConsoleTileId,
 } from '@/data/console-presets'
+import { ConsoleCircuitShell } from '@/components/console/ConsoleCircuitShell'
+import { DevTag } from '@/components/shared/DevTag'
+import { FeatureBar } from '@/components/shared/FeatureBar'
 
 interface ConsolePageProps {
   sandbox: boolean
@@ -47,50 +50,7 @@ interface ConsolePageProps {
   prediction: PredictionResult | null
 }
 
-const STORAGE_KEY = 'hadal-console-layout-v5'
-const TRACE_PATHS = [
-  '0,16 18,16 31,29',
-  '0,50 24,50 34,50',
-  '0,84 18,84 31,71',
-  '100,16 82,16 69,29',
-  '100,50 76,50 66,50',
-  '100,84 82,84 69,71',
-] as const
-
-const BOND_PADS: [number, number][] = [
-  [18, 16], [31, 29],
-  [24, 50], [34, 50],
-  [18, 84], [31, 71],
-  [82, 16], [69, 29],
-  [76, 50], [66, 50],
-  [82, 84], [69, 71],
-]
-
-const SECTOR_BAYS = [
-  { key: 'ul', id: 'A', label: 'UPPER LEFT'  },
-  { key: 'lm', id: 'B', label: 'LEFT MID'    },
-  { key: 'll', id: 'C', label: 'LOWER LEFT'  },
-  { key: 'ur', id: 'D', label: 'UPPER RIGHT' },
-  { key: 'rm', id: 'E', label: 'RIGHT MID'   },
-  { key: 'lr', id: 'F', label: 'LOWER RIGHT' },
-] as const
-
-const LOCKED_SECTOR_ORDER: ConsoleTileId[] = [
-  'threat-signal',
-  'argus',
-  'verification',
-  'chatter',
-  'ignite',
-  'reports',
-]
-
-const LOCKED_AUX_ORDER: ConsoleTileId[] = [
-  'event-timeline',
-  'geographic-concentration',
-  'type-profile',
-  'feed-quality',
-]
-
+const STORAGE_KEY = 'hadal-console-layout-v6'
 interface StoredLayoutState {
   presetId: string
   slots: Array<ConsoleTileId | null>
@@ -139,28 +99,6 @@ function loadInitialState(): StoredLayoutState {
   }
 }
 
-function renderSectorTile(
-  tileId: ConsoleTileId,
-  renderTile: (tileId: ConsoleTileId) => React.ReactNode,
-) {
-  const meta = TILE_META[tileId]
-  return (
-    <section className="console-sector-shell">
-      <div className="console-sector-kicker top-left">
-        <span className="console-sector-icon">{meta.icon}</span>
-        <span className="console-sector-title">{meta.title}</span>
-      </div>
-      <div className={`console-sector-kicker top-right ${meta.status ?? 'live'}`}>
-        {(meta.status ?? 'live').toUpperCase()}
-      </div>
-      <div className="console-sector-stitch" aria-hidden="true" />
-      <div className="console-sector-body">
-        {renderTile(tileId)}
-      </div>
-    </section>
-  )
-}
-
 export function ConsolePage({
   sandbox,
   onSandboxToggle,
@@ -175,14 +113,6 @@ export function ConsolePage({
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ presetId, slots, custom }))
   }, [presetId, slots, custom])
-
-  const presetLabel = useMemo(() => {
-    if (custom) return 'CUSTOM'
-    return CONSOLE_PRESETS.find(preset => preset.id === presetId)?.label ?? DEFAULT_CONSOLE_PRESET.label
-  }, [custom, presetId])
-
-  const effectivePresetId = sandbox ? presetId : DEFAULT_CONSOLE_PRESET.id
-  const effectivePresetLabel = sandbox ? presetLabel : DEFAULT_CONSOLE_PRESET.label
 
   const placedTiles = new Set(slots.filter(Boolean) as ConsoleTileId[])
 
@@ -211,15 +141,20 @@ export function ConsolePage({
     setPickerIndex(null)
   }
 
+  function enterBuildMode() {
+    const firstEmpty = slots.findIndex(s => s === null)
+    if (firstEmpty !== -1) {
+      setPickerIndex(firstEmpty)
+    }
+    onSandboxToggle()
+  }
+
   const tilePickerOptions = CONSOLE_TILE_ORDER.map(id => ({
     id,
     label: TILE_META[id].title,
     icon: TILE_META[id].icon,
     placed: placedTiles.has(id),
   }))
-
-  const sectorTiles = LOCKED_SECTOR_ORDER
-  const auxTiles = LOCKED_AUX_ORDER
 
   function renderTile(tileId: ConsoleTileId) {
     switch (tileId) {
@@ -234,7 +169,7 @@ export function ConsolePage({
       case 'intelligence':
         return <IntelligenceTile />
       case 'threat-feed':
-        return <ThreatFeedTile />
+        return <ThreatFeedTile incidents={incidents} />
       case 'scenario-outlook':
         return <ScenarioOutlookTile />
       case 'airspace':
@@ -283,12 +218,11 @@ export function ConsolePage({
   }
 
   return (
-    <div className="console-page">
+    <div className="console-page" style={{ position: 'relative' }}>
       <ConsoleToolbar
         editMode={sandbox}
-        presetLabel={effectivePresetLabel}
-        presetId={effectivePresetId}
-        custom={sandbox ? custom : false}
+        presetId={presetId}
+        custom={custom}
         onPresetChange={applyPreset}
         onEditToggle={() => {
           setPickerIndex(null)
@@ -325,78 +259,10 @@ export function ConsolePage({
           ))}
         </div>
       ) : (
-        <div className="console-circuit-shell">
-          <div className="console-circuit-main jp-panel">
-            {/* Decorative substrate rings — behind all content */}
-            <div className="console-circuit-ring far"   aria-hidden="true" />
-            <div className="console-circuit-ring outer" aria-hidden="true" />
-            <div className="console-circuit-ring inner" aria-hidden="true" />
-
-            {/* SVG conductor traces — visible only in gap channels */}
-            <svg
-              className="console-trace-svg"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              {TRACE_PATHS.map((points, i) => (
-                <polyline key={i} points={points} className="console-trace-line" />
-              ))}
-              {BOND_PADS.map(([cx, cy], i) => (
-                <rect
-                  key={i}
-                  x={cx - 1.8}
-                  y={cy - 1.8}
-                  width="3.6"
-                  height="3.6"
-                  rx="0"
-                  ry="0"
-                  transform={`rotate(45 ${cx} ${cy})`}
-                  className="console-trace-pad"
-                />
-              ))}
-            </svg>
-
-            {/* 6 loaded sector bays */}
-            {SECTOR_BAYS.map(({ key, id, label }, index) => (
-              <div key={key} className={`console-sector ${key}`}>
-                {sectorTiles[index]
-                  ? renderSectorTile(sectorTiles[index], renderTile)
-                  : (
-                    <div className="console-bay-placeholder">
-                      <div className="console-bay-crosshair" aria-hidden="true" />
-                      <span className="console-bay-id">{id}</span>
-                      <span className="console-bay-label">{label}</span>
-                    </div>
-                  )}
-              </div>
-            ))}
-
-            {/* Mekhead — persistent archive nucleus */}
-            <div className="console-core-shell">
-              <div className="console-core-label">
-                <span className="kicker">ARCHIVE CORE // PERSISTENT</span>
-                <span className="value">MEKHEAD</span>
-              </div>
-              <div className="console-core">
-                <div className="console-core-viewport">
-                  <MekheadTile />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Lower support rail — secondary */}
-          <div className="console-aux-grid">
-            {Array.from({ length: 4 }, (_, i) => (
-              <div key={i} className="console-aux-slot">
-                {auxTiles[i]
-                  ? renderTile(auxTiles[i])
-                  : <div className="console-aux-empty" />}
-              </div>
-            ))}
-          </div>
-        </div>
+        <>
+          <FeatureBar />
+          <ConsoleCircuitShell incidents={incidents} onEdit={enterBuildMode} />
+        </>
       )}
       <TilePicker
         open={pickerIndex !== null}
@@ -404,6 +270,7 @@ export function ConsolePage({
         onSelect={addTile}
         onClose={() => setPickerIndex(null)}
       />
+      <DevTag id="A.1" />
     </div>
   )
 }

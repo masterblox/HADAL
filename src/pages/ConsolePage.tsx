@@ -222,7 +222,6 @@ export function ConsolePage({
       <ConsoleToolbar
         editMode={sandbox}
         presetId={presetId}
-        presetLabel={custom ? 'CUSTOM' : (CONSOLE_PRESETS.find(p => p.id === presetId)?.label ?? presetId.toUpperCase())}
         custom={custom}
         onPresetChange={applyPreset}
         onEditToggle={() => {

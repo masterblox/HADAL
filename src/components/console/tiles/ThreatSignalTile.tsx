@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { Incident } from '@/hooks/useDataPipeline'
-import { G, G2, AMB, BG, PI, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
+import { G, G2, AMB, BG, rasterBase, stamp, hdSetup } from '@/canvas/canvasKit'
 import { DevTag } from '@/components/shared/DevTag'
 
 // ThreatSignalTile — ESE circuit board adapted for ul chamfered bay

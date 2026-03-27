@@ -1467,6 +1467,8 @@ function initConsoleCanvases() {
 
     let mouseX = null, mouseY = null
     let smX = null, smY = null
+    let brackAlpha = 0.15
+    let sockFlash = { type: 'idle', timer: 0 }
     const circuitMain = document.getElementById('circuit-main')
     if (circuitMain) {
       circuitMain.addEventListener('mousemove', e => {
@@ -1523,12 +1525,12 @@ function initConsoleCanvases() {
           // Directional scan
           const proj = ((px - faceCX) * curDirX + (py - faceCY) * curDirY) / (faceW * 0.6)
           const scanPhase = (tick * 0.04 + proj * Math.PI * 2) % (Math.PI * 2)
-          const scanBoost = Math.sin(scanPhase) * 0.32
+          const scanBoost = Math.sin(scanPhase) * 0.38
           // Proximity glow
           let proxBoost = 0
           if (smX !== null) {
             const dist = Math.sqrt((px - smX) ** 2 + (py - smY) ** 2)
-            proxBoost = Math.max(0, 1 - dist / 110) * 0.55
+            proxBoost = Math.pow(Math.max(0, 1 - dist / 110), 1.4) * 0.55
           }
           const base = cell === 2 ? 0.72 : cell === 3 ? 0.48 : 0.25
           const alpha = Math.max(0.05, base + scanBoost + proxBoost)
@@ -1540,17 +1542,80 @@ function initConsoleCanvases() {
             const dist = Math.sqrt(dx * dx + dy * dy) || 1
             const nx = dx / dist, ny = dy / dist
             const influence = Math.min(1, dist / (faceW * 0.8))
-            const maxShift = cell === 3 ? 4.5 : cell === 2 ? 1.2 : 0.4
+            const maxShift = cell === 3 ? 9.5 : cell === 2 ? 5.5 : 1.8
             offX = nx * maxShift * influence
             offY = ny * maxShift * influence
+            if (proxBoost > 0.05) {
+              const shimmer = Math.sin(tick * 0.09 + ci * 3.7 + ri * 2.3) * proxBoost * 0.4
+              offX += shimmer; offY += shimmer
+            }
           }
           ctx.fillRect(faceOX + ci * cellSz + 0.5 + offX, faceOY + ri * cellSz + 0.5 + offY, cellSz - 1, cellSz - 1)
         })
       })
 
+      // ── Corner brackets — face bounding box ──
+      brackAlpha += ((smX !== null ? 0.28 : 0.15) - brackAlpha) * 0.06
+      if (sockFlash.timer > 0) brackAlpha = Math.max(brackAlpha, 0.35 * (sockFlash.timer / 45))
+      const armLen = 8
+      const bContr = smX !== null ? Math.min(3, Math.sqrt((smX-faceCX)**2+(smY-faceCY)**2)/80) : 0
+      const corners = [
+        [faceOX,       faceOY,        1, 1],
+        [faceOX+faceW, faceOY,       -1, 1],
+        [faceOX,       faceOY+faceH,  1,-1],
+        [faceOX+faceW, faceOY+faceH, -1,-1],
+      ]
+      ctx.fillStyle = GA(brackAlpha)
+      corners.forEach(([x, y, sx, sy]) => {
+        const ox = x + sx * bContr, oy = y + sy * bContr
+        ctx.fillRect(ox, oy, sx * armLen, 1)
+        ctx.fillRect(ox, oy, 1, sy * armLen)
+      })
+
+      // ── Socket perimeter notches ──
+      ctx.fillStyle = GA(0.12)
+      ;[faceOX + 4*cellSz, faceOX + 8*cellSz].forEach(sx => {
+        [[sx, faceOY+4*cellSz], [sx+2*cellSz, faceOY+4*cellSz],
+         [sx, faceOY+6*cellSz], [sx+2*cellSz, faceOY+6*cellSz]].forEach(([nx,ny]) => {
+          ctx.fillRect(nx, ny, 1, 1)
+        })
+      })
+
+      // ── Sidebar ruler ticks ──
+      for (let ri = 0; ri <= 16; ri++) {
+        const ty = faceOY + ri * cellSz
+        const len = ri % 4 === 0 ? 5 : 3
+        ctx.fillStyle = ri % 4 === 0
+          ? GA(0.10 + Math.sin(tick * 0.04 - ri * 0.45) * 0.05)
+          : GA(0.10)
+        ctx.fillRect(faceOX - len - 2, ty, len, 1)
+        ctx.fillRect(faceOX + faceW + 2, ty, len, 1)
+      }
+
+      // ── Socket flash state system ──
+      if (sockFlash.timer > 0) {
+        const fadeRatio = sockFlash.timer / (sockFlash.type === 'error' ? 90 : 45)
+        const sockColor =
+          sockFlash.type === 'intel' ? GA(0.35 * fadeRatio) :
+          sockFlash.type === 'warn'  ? `rgba(255,152,20,${0.35 * fadeRatio})` :
+                                       `rgba(255,60,40,${0.30 * fadeRatio})`
+        ctx.fillStyle = sockColor
+        ;[faceOX + 4*cellSz, faceOX + 8*cellSz].forEach(sx => {
+          ctx.fillRect(sx, faceOY + 4*cellSz, 2*cellSz, 2*cellSz)
+        })
+        sockFlash.timer--
+      } else if (tick % 600 === 0 && tick > 0) {
+        sockFlash = { type: 'intel', timer: 45 }
+      } else if (tick % 900 === 150) {
+        sockFlash = { type: 'warn', timer: 45 }
+      }
+
       tick++
       requestAnimationFrame(draw)
     }
+    window.addEventListener('error', () => {
+      sockFlash = { type: 'error', timer: 90 }
+    }, { capture: true })
     draw()
   })()
 
@@ -1620,6 +1685,8 @@ function initConsoleCanvases() {
     ctx.beginPath(); ctx.arc(OCX, OCY, R, start, start + sweep); ctx.stroke()
     ctx.strokeStyle = GC; ctx.lineWidth = 3
     ctx.beginPath(); ctx.arc(OCX, OCY, R, start, start + sweep * pct); ctx.stroke()
+    ctx.strokeStyle = GA(0.06); ctx.lineWidth = 0.5
+    ctx.beginPath(); ctx.arc(OCX, OCY, R * 0.75, start, start + sweep); ctx.stroke()
     for (let i = 0; i <= 10; i++) {
       const a = start + sweep * (i / 10)
       const len = i % 5 === 0 ? 6 : 3
@@ -1695,9 +1762,9 @@ function initConsoleCanvases() {
         ctx.fillText(f.cnt, mw - 2, my + 9)
         ctx.textAlign = 'left'
         const cy = my + mh / 2
-        const pulse = Math.sin(tick * 0.04 + i * 0.9) * 0.5 + 0.5
-        ctx.fillStyle = GA(0.18 + pulse * 0.40); ctx.fillRect(mw + 2, cy - 2, 4, 4)
-        ctx.strokeStyle = GA(0.06 + pulse * 0.06); ctx.lineWidth = 0.5
+        ctx.fillStyle = GA(0.35 + Math.sin(tick * 0.025 + i * 1.2) * 0.15)
+        ctx.fillRect(mw + 2, cy - 2, 4, 4)
+        ctx.strokeStyle = GA(0.09); ctx.lineWidth = 0.5
         ctx.beginPath(); ctx.moveTo(mw + 6, cy); ctx.lineTo(rx - 2, cy); ctx.stroke()
       })
       ctx.strokeStyle = GA(0.10); ctx.lineWidth = 0.5

@@ -31,30 +31,30 @@
 
     /* ── TOPBAR ───────────────────────────────────────────────── */
     .topbar {
-      height: 32px; display: flex; align-items: center;
+      height: 38px; display: flex; align-items: center;
       padding: 0 10px; gap: 8px; flex-shrink: 0;
       background: rgba(4,6,0,.97);
       border-bottom: 1px solid rgba(218,255,74,.08);
     }
     .tb-brand {
       display: flex; align-items: center; gap: 5px;
-      width: 120px; flex-shrink: 0;
+      width: 120px; flex-shrink: 0; cursor: pointer;
     }
     .tb-nucleus {
       width: 12px; height: 12px; position: relative; flex-shrink: 0;
     }
     .tb-nucleus svg { width: 100%; height: 100%; }
     .tb-wordmark {
-      font-family: var(--C2); font-size: 14px; letter-spacing: .085em;
+      font-family: var(--C2); font-size: 16px; letter-spacing: .085em;
       color: rgba(218,255,74,.72); font-weight: 400; line-height: 1;
     }
     .tb-nav {
       display: flex; align-items: center; gap: 4px; flex: 1;
     }
     .tb-crumb {
-      display: flex; align-items: center; height: 20px;
+      display: flex; align-items: center; height: 26px;
       padding: 0 8px; border: 1px solid transparent;
-      font-family: var(--HEAD); font-size: 7px; letter-spacing: .18em;
+      font-family: var(--HEAD); font-size: 9px; letter-spacing: .18em;
       cursor: pointer; text-transform: uppercase; white-space: nowrap;
       transition: color 120ms, border-color 120ms;
       color: rgba(218,255,74,.40);
@@ -63,7 +63,7 @@
     .tb-crumb.active {
       color: var(--g); border-bottom: 1px solid var(--g);
     }
-    .tb-sep { color: rgba(218,255,74,.18); font-size: 9px; }
+    .tb-sep { color: rgba(218,255,74,.18); font-size: 11px; }
     .tb-status {
       display: flex; align-items: center; gap: 6px;
       flex-shrink: 0;
@@ -72,32 +72,32 @@
       display: flex; align-items: center; gap: 3px;
     }
     .tb-meta-lbl {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .18em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .18em;
       color: rgba(218,255,74,.22); text-transform: uppercase;
     }
     .tb-meta-val {
-      font-family: var(--MONO); font-size: 7px; letter-spacing: .10em;
+      font-family: var(--MONO); font-size: 9px; letter-spacing: .10em;
       color: rgba(218,255,74,.55);
     }
-    .tb-dot-sep { color: rgba(218,255,74,.25); font-size: 8px; }
+    .tb-dot-sep { color: rgba(218,255,74,.25); font-size: 9px; }
     .tb-pipeline {
       display: flex; align-items: center; gap: 3px;
     }
     .tb-pip-dot {
-      font-size: 8px; color: rgba(100,220,80,.85);
+      font-size: 10px; color: rgba(100,220,80,.85);
     }
     .tb-clock {
-      font-family: var(--MONO); font-size: 7px; letter-spacing: .08em;
+      font-family: var(--MONO); font-size: 9px; letter-spacing: .08em;
       color: rgba(218,255,74,.72); min-width: 58px; text-align: right;
     }
 
     /* ── CLASSIFICATION BANNER ────────────────────────────────── */
     .class-banner {
-      height: 20px; display: flex; align-items: center; justify-content: center;
+      height: 26px; display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       background: rgba(255,152,20,.08);
       border-bottom: 1px solid rgba(255,152,20,.25);
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .18em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .18em;
       color: rgba(255,152,20,.80); text-transform: uppercase;
     }
 
@@ -107,8 +107,17 @@
       padding: 8px; gap: 8px;
     }
     .ov-hero {
-      display: flex; gap: 8px; height: 380px; flex-shrink: 0;
+      flex: 1; min-height: 0; display: flex;
     }
+    .ov-cta-strip {
+      height: 60px; display: flex; align-items: center; justify-content: center; gap: 20px;
+      flex-shrink: 0; border-top: 1px solid rgba(218,255,74,.08);
+    }
+    .ov-cta {
+      height: 34px; padding: 0 36px; font-size: 11px; letter-spacing: .24em;
+      border-color: rgba(218,255,74,.22); color: rgba(218,255,74,.60);
+    }
+    .ov-cta:hover { border-color: var(--g3); color: rgba(218,255,74,.88); }
 
     /* Pipeline sidebar */
     .ov-sidebar {
@@ -118,16 +127,16 @@
       padding: 8px 10px; display: flex; flex-direction: column; gap: 10px;
     }
     .ov-section-lbl {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .22em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .22em;
       color: rgba(218,255,74,.28); text-transform: uppercase; padding-bottom: 5px;
       border-bottom: 1px solid var(--g07);
     }
     .pipeline-rows { display: flex; flex-direction: column; gap: 3px; }
     .pipe-row {
-      display: flex; align-items: center; gap: 4px; height: 16px;
+      display: flex; align-items: center; gap: 4px; height: 20px;
     }
     .pipe-name {
-      font-family: var(--MONO); font-size: 6px; letter-spacing: .10em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .10em;
       color: rgba(218,255,74,.55); width: 70px; flex-shrink: 0;
     }
     .pipe-bar-wrap {
@@ -138,11 +147,11 @@
       background: rgba(218,255,74,.42);
     }
     .pipe-count {
-      font-family: var(--C2); font-size: 9px; color: rgba(218,255,74,.65);
+      font-family: var(--C2); font-size: 11px; color: rgba(218,255,74,.65);
       width: 22px; text-align: right; flex-shrink: 0;
     }
     .pipe-badge {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .10em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .10em;
       width: 46px; text-align: right; flex-shrink: 0;
     }
     .pipe-badge.live   { color: rgba(100,220,80,.85); }
@@ -151,18 +160,18 @@
 
     .threat-rows { display: flex; flex-direction: column; gap: 4px; }
     .threat-row {
-      display: flex; align-items: center; gap: 4px; height: 14px;
+      display: flex; align-items: center; gap: 4px; height: 18px;
     }
     .threat-label {
-      font-family: var(--MONO); font-size: 6px; letter-spacing: .06em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .06em;
       color: rgba(218,255,74,.45); flex: 1;
     }
     .threat-val {
-      font-family: var(--C2); font-size: 11px; color: rgba(218,255,74,.80);
+      font-family: var(--C2); font-size: 13px; color: rgba(218,255,74,.80);
       min-width: 22px; text-align: right;
     }
     .threat-tag {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .10em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .10em;
       width: 52px; text-align: right; color: rgba(218,255,74,.35);
     }
     .threat-tag.active { color: rgba(255,152,20,.75); }
@@ -179,7 +188,7 @@
 
     /* Intel strip */
     .intel-strip {
-      display: flex; gap: 2px; height: 90px; flex-shrink: 0;
+      display: flex; gap: 2px; height: 110px; flex-shrink: 0;
     }
     .intel-panel {
       flex: 1; background: rgba(4,6,0,.96);
@@ -188,15 +197,15 @@
       align-items: center; justify-content: center; gap: 3px;
     }
     .intel-lbl {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .18em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .18em;
       color: rgba(218,255,74,.28); text-transform: uppercase;
     }
     .intel-val {
-      font-family: var(--C2); font-size: 28px; font-weight: 400;
+      font-family: var(--C2); font-size: 32px; font-weight: 400;
       color: rgba(218,255,74,.82); line-height: 1;
     }
     .intel-sub {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .12em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .12em;
       color: rgba(218,255,74,.22); text-transform: uppercase;
     }
 
@@ -211,25 +220,25 @@
       display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
     }
     .maps-section-lbl {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .22em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .22em;
       color: rgba(218,255,74,.28); padding-bottom: 5px;
       border-bottom: 1px solid var(--g07);
     }
     .az-rows { display: flex; flex-direction: column; gap: 3px; }
     .az-row {
-      display: flex; align-items: center; gap: 6px; height: 18px;
+      display: flex; align-items: center; gap: 6px; height: 22px;
       padding: 0 4px; border: 1px solid var(--g07);
     }
     .az-id {
-      font-family: var(--MONO); font-size: 6px; color: rgba(218,255,74,.35);
+      font-family: var(--MONO); font-size: 10px; color: rgba(218,255,74,.35);
       width: 36px; flex-shrink: 0;
     }
     .az-name {
-      font-family: var(--HEAD); font-size: 8px; letter-spacing: .12em;
+      font-family: var(--HEAD); font-size: 9px; letter-spacing: .12em;
       color: rgba(218,255,74,.60); flex: 1;
     }
     .az-status {
-      font-family: var(--MONO); font-size: 5px; letter-spacing: .12em;
+      font-family: var(--MONO); font-size: 10px; letter-spacing: .12em;
     }
     .az-status.restricted { color: rgba(255,152,20,.80); }
     .az-status.closed     { color: rgba(255,60,60,.70); }
@@ -239,13 +248,13 @@
 
     .trj-rows { display: flex; flex-direction: column; gap: 3px; }
     .trj-row {
-      display: flex; align-items: center; gap: 6px; height: 18px;
+      display: flex; align-items: center; gap: 6px; height: 22px;
       padding: 0 4px; border: 1px solid var(--g07);
     }
-    .trj-id    { font-family: var(--MONO); font-size: 6px; color: rgba(218,255,74,.35); width: 46px; flex-shrink: 0; }
-    .trj-type  { font-family: var(--HEAD); font-size: 8px; letter-spacing: .10em; color: rgba(218,255,74,.55); width: 48px; flex-shrink: 0; }
-    .trj-route { font-family: var(--MONO); font-size: 5px; color: rgba(218,255,74,.38); flex: 1; }
-    .trj-st    { font-family: var(--MONO); font-size: 5px; letter-spacing: .10em; }
+    .trj-id    { font-family: var(--MONO); font-size: 10px; color: rgba(218,255,74,.35); width: 46px; flex-shrink: 0; }
+    .trj-type  { font-family: var(--HEAD); font-size: 9px; letter-spacing: .10em; color: rgba(218,255,74,.55); width: 48px; flex-shrink: 0; }
+    .trj-route { font-family: var(--MONO); font-size: 10px; color: rgba(218,255,74,.38); flex: 1; }
+    .trj-st    { font-family: var(--MONO); font-size: 10px; letter-spacing: .10em; }
     .trj-st.active  { color: rgba(255,152,20,.80); }
     .trj-st.pending { color: rgba(218,255,74,.40); }
 
@@ -262,7 +271,7 @@
 
     /* Feature Bar */
     .feature-bar {
-      flex-shrink: 0; height: 36px;
+      flex-shrink: 0; height: 46px;
       display: flex; align-items: center; gap: 10px;
       padding: 0 12px;
       background: rgba(5,7,0,.95);
@@ -272,7 +281,7 @@
     }
     .feature-bar::-webkit-scrollbar { display: none; }
     .fb-label {
-      font-family: var(--HEAD); font-size: 7px; letter-spacing: .22em;
+      font-family: var(--HEAD); font-size: 9px; letter-spacing: .22em;
       color: rgba(218,255,74,.28); white-space: nowrap; flex-shrink: 0;
     }
     .fb-chips { display: flex; gap: 5px; }
@@ -280,7 +289,7 @@
       display: flex; align-items: center; gap: 4px;
       padding: 3px 7px; border: 1px solid;
       background: rgba(5,7,0,.8); cursor: pointer;
-      font-family: var(--HEAD); font-size: 7px; letter-spacing: .16em;
+      font-family: var(--HEAD); font-size: 9px; letter-spacing: .16em;
       text-transform: uppercase; white-space: nowrap;
       transition: background 120ms ease;
     }
@@ -289,12 +298,12 @@
     .fchip.stale   { border-color: rgba(255,152,20,.22); color: rgba(255,152,20,.60); }
     .fchip.offline { border-color: rgba(255,255,255,.10); color: rgba(255,255,255,.25); }
     .fchip.partial { border-color: rgba(218,255,74,.14); color: rgba(218,255,74,.40); }
-    .fchip-icon   { font-size: 9px; }
+    .fchip-icon   { font-size: 11px; }
     .fchip-name   { font-weight: 700; }
-    .fchip-source { font-size: 6px; color: rgba(218,255,74,.20); font-family: var(--MONO); letter-spacing: .06em; }
+    .fchip-source { font-size: 10px; color: rgba(218,255,74,.20); font-family: var(--MONO); letter-spacing: .06em; }
     .fchip.stale  .fchip-source { color: rgba(255,152,20,.28); }
     .fchip.offline .fchip-source { color: rgba(255,255,255,.12); }
-    .fchip-status { font-size: 5px; opacity: .55; }
+    .fchip-status { font-size: 10px; opacity: .55; }
     .fchip.selected {
       background: rgba(218,255,74,.10);
       border-color: rgba(218,255,74,.55);
@@ -361,11 +370,24 @@
     .sector.ll { left:0;   top:54%; width:41%; height:23%; clip-path: polygon(0 0,82% 0,100% 35%,100% 100%,0 100%); --bl:8px; --br:90px; }
     .sector.lr { right:0;  top:54%; width:41%; height:23%; clip-path: polygon(18% 0,100% 0,100% 100%,0 100%,0 35%); --bl:90px;--br:8px; }
 
+    /* Strip CONSOLE center elements — WORKBENCH is a blank builder */
+    #view-workbench .ring,
+    #view-workbench .trace-svg,
+    #view-workbench .core-shell { display: none !important; }
+
+    /* WORKBENCH — 2-column grid, no clip-path, no center obstruction */
+    #view-workbench .sector.ul { left:1%;  top:2%;  width:48%; height:30%; clip-path:none; --bl:8px; --br:8px; }
+    #view-workbench .sector.ur { right:1%; top:2%;  width:48%; height:30%; clip-path:none; --bl:8px; --br:8px; }
+    #view-workbench .sector.lm { left:1%;  top:34%; width:48%; height:30%; clip-path:none; --bl:8px; --br:8px; }
+    #view-workbench .sector.rm { right:1%; top:34%; width:48%; height:30%; clip-path:none; --bl:8px; --br:8px; }
+    #view-workbench .sector.ll { left:1%;  top:66%; width:48%; height:30%; clip-path:none; --bl:8px; --br:8px; }
+    #view-workbench .sector.lr { right:1%; top:66%; width:48%; height:30%; clip-path:none; --bl:8px; --br:8px; }
+
     .kicker {
       position: absolute; z-index: 4; pointer-events: none;
       display: flex; align-items: center; gap: 4px;
-      font-family: var(--HEAD); font-size: 5px; letter-spacing: .16em; text-transform: uppercase;
-      padding: 0 5px; height: 10px;
+      font-family: var(--HEAD); font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+      padding: 0 6px; height: 14px;
       background: rgba(5,7,0,.7); border: 1px solid rgba(218,255,74,.08);
     }
     .kicker.tl { top: 8px; left: 8px; }
@@ -400,8 +422,8 @@
       width: 100%; height: 100%; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 6px;
     }
-    .ph-id    { font-family: var(--HEAD); font-size: 18px; font-weight: 700; letter-spacing: .4em; color: rgba(218,255,74,.18); }
-    .ph-label { font-size: 6px; letter-spacing: .28em; color: rgba(218,255,74,.10); }
+    .ph-id    { font-family: var(--HEAD); font-size: 22px; font-weight: 700; letter-spacing: .4em; color: rgba(218,255,74,.18); }
+    .ph-label { font-size: 10px; letter-spacing: .28em; color: rgba(218,255,74,.10); }
 
     /* Core shell */
     .core-shell {
@@ -413,8 +435,8 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 18px; height: 22px; flex-shrink: 0; z-index: 4;
     }
-    .core-label .lbl { font-family: var(--MONO); font-size: 6px; letter-spacing: .18em; color: rgba(218,255,74,.22); }
-    .core-label .val { font-family: var(--HEAD); font-size: 10px; font-weight: 700; letter-spacing: .42em; color: rgba(218,255,74,.72); }
+    .core-label .lbl { font-family: var(--MONO); font-size: 10px; letter-spacing: .18em; color: rgba(218,255,74,.22); }
+    .core-label .val { font-family: var(--HEAD); font-size: 11px; font-weight: 700; letter-spacing: .42em; color: rgba(218,255,74,.72); }
     .core {
       flex: 1; min-height: 0; position: relative;
       clip-path: polygon(24% 6%,76% 6%,96% 50%,76% 94%,24% 94%,4% 50%);
@@ -438,7 +460,7 @@
     /* Aux strip */
     .aux-grid {
       display: grid; grid-template-columns: repeat(4,minmax(0,1fr));
-      gap: 2px; height: 100px; flex-shrink: 0;
+      gap: 2px; height: 130px; flex-shrink: 0;
       border-top: 1px solid rgba(218,255,74,.06);
       background: repeating-linear-gradient(90deg, transparent 0 19px, rgba(218,255,74,.018) 19px 20px), var(--bg);
       padding: 0 12px;
@@ -450,12 +472,12 @@
     }
     .aux-slot::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg,rgba(218,255,74,.01),transparent 44%); }
     .aux-slot::after  { content: ""; position: absolute; inset: 4px; pointer-events: none; border: 1px solid rgba(218,255,74,.055); }
-    .aux-id    { font-family: var(--HEAD); font-size: 9px; font-weight: 700; letter-spacing: .3em; color: rgba(218,255,74,.20); position: relative; z-index: 1; }
-    .aux-label { font-size: 5px; letter-spacing: .22em; color: rgba(218,255,74,.10); position: relative; z-index: 1; }
+    .aux-id    { font-family: var(--HEAD); font-size: 11px; font-weight: 700; letter-spacing: .3em; color: rgba(218,255,74,.20); position: relative; z-index: 1; }
+    .aux-label { font-size: 10px; letter-spacing: .22em; color: rgba(218,255,74,.10); position: relative; z-index: 1; }
 
     /* Ghost slot */
     .ghost-slot {
-      flex-shrink: 0; width: 100%; height: 44px; border: none;
+      flex-shrink: 0; width: 100%; height: 54px; border: none;
       border-top: 1px solid rgba(218,255,74,.14);
       box-shadow: inset 0 0 0 1px rgba(218,255,74,.10);
       background: #030500; cursor: pointer;
@@ -464,17 +486,17 @@
       transition: background 160ms ease, border-top-color 160ms ease;
     }
     .ghost-slot:hover { background: rgba(218,255,74,.025); border-top-color: rgba(218,255,74,.32); }
-    .ghost-label { font-family: var(--HEAD); font-size: 11px; letter-spacing: .18em; color: rgba(218,255,74,.35); flex-shrink: 0; }
+    .ghost-label { font-family: var(--HEAD); font-size: 13px; letter-spacing: .18em; color: rgba(218,255,74,.35); flex-shrink: 0; }
     .ghost-slot:hover .ghost-label { color: rgba(218,255,74,.65); }
-    .ghost-desc { font-family: var(--MONO); font-size: 8px; letter-spacing: .12em; color: rgba(218,255,74,.28); flex: 1; text-align: center; }
-    .ghost-cta  { font-family: var(--HEAD); font-size: 9px; letter-spacing: .18em; color: rgba(218,255,74,.38); flex-shrink: 0; }
+    .ghost-desc { font-family: var(--MONO); font-size: 9px; letter-spacing: .12em; color: rgba(218,255,74,.28); flex: 1; text-align: center; }
+    .ghost-cta  { font-family: var(--HEAD); font-size: 11px; letter-spacing: .18em; color: rgba(218,255,74,.38); flex-shrink: 0; }
     .ghost-slot:hover .ghost-cta { color: rgba(218,255,74,.55); }
 
     /* Chatter tile */
     .chatter-wrap { padding: 4px 6px; height: 100%; display: flex; flex-direction: column; gap: 3px; }
     .chatter-offline-badge {
       background: rgba(255,30,30,.10); border: 1px solid rgba(255,60,60,.25);
-      padding: 2px 5px; font-family: var(--MONO); font-size: 5px; letter-spacing: .18em;
+      padding: 2px 5px; font-family: var(--MONO); font-size: 10px; letter-spacing: .18em;
       color: rgba(255,80,80,.85); text-align: center; flex-shrink: 0;
     }
     .chatter-sources { display: flex; flex-direction: column; gap: 2px; flex: 1; overflow: hidden; }
@@ -483,39 +505,114 @@
     .chatter-dot.live    { background: var(--g); }
     .chatter-dot.stale   { background: rgba(255,152,20,.80); }
     .chatter-dot.offline { background: rgba(255,255,255,.16); }
-    .chatter-src-name   { font-family: var(--MONO); font-size: 5px; letter-spacing: .10em; color: rgba(218,255,74,.55); flex: 1; }
-    .chatter-src-status { font-family: var(--MONO); font-size: 5px; color: rgba(255,255,255,.22); }
+    .chatter-src-name   { font-family: var(--MONO); font-size: 10px; letter-spacing: .10em; color: rgba(218,255,74,.55); flex: 1; }
+    .chatter-src-status { font-family: var(--MONO); font-size: 10px; color: rgba(255,255,255,.22); }
     .chatter-src-status.stale { color: rgba(255,152,20,.55); }
 
     /* Ignite tile */
     .ignite-wrap { padding: 4px 6px; height: 100%; display: flex; flex-direction: column; gap: 2px; }
-    .ignite-header { font-family: var(--MONO); font-size: 5px; letter-spacing: .18em; color: rgba(218,255,74,.35); border-bottom: 1px solid rgba(218,255,74,.08); padding-bottom: 2px; flex-shrink: 0; }
+    .ignite-header { font-family: var(--MONO); font-size: 10px; letter-spacing: .18em; color: rgba(218,255,74,.35); border-bottom: 1px solid rgba(218,255,74,.08); padding-bottom: 2px; flex-shrink: 0; }
     .ignite-table  { display: flex; flex-direction: column; gap: 1px; flex: 1; overflow: hidden; }
     .ignite-row    { display: flex; align-items: center; gap: 3px; }
-    .izh      { font-family: var(--MONO); font-size: 5px; letter-spacing: .06em; color: rgba(218,255,74,.50); width: 58px; flex-shrink: 0; }
-    .izr-val  { font-family: var(--MONO); font-size: 5px; color: rgba(218,255,74,.80); width: 14px; text-align: right; flex-shrink: 0; }
+    .izh      { font-family: var(--MONO); font-size: 10px; letter-spacing: .06em; color: rgba(218,255,74,.50); width: 58px; flex-shrink: 0; }
+    .izr-val  { font-family: var(--MONO); font-size: 10px; color: rgba(218,255,74,.80); width: 14px; text-align: right; flex-shrink: 0; }
     .izr-bar-wrap { flex: 1; height: 3px; background: rgba(218,255,74,.07); }
     .izr-bar  { height: 100%; background: rgba(218,255,74,.42); }
     .ignite-scans { display: flex; gap: 3px; padding-top: 3px; border-top: 1px solid rgba(218,255,74,.06); flex-shrink: 0; }
     .scan-win { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2px 0; border: 1px solid rgba(218,255,74,.10); }
-    .scan-win-lbl { font-family: var(--MONO); font-size: 5px; letter-spacing: .12em; color: rgba(218,255,74,.30); }
-    .scan-win-val { font-family: var(--HEAD); font-size: 9px; font-weight: 700; color: rgba(218,255,74,.72); line-height: 1.1; }
+    .scan-win-lbl { font-family: var(--MONO); font-size: 10px; letter-spacing: .12em; color: rgba(218,255,74,.30); }
+    .scan-win-val { font-family: var(--HEAD); font-size: 11px; font-weight: 700; color: rgba(218,255,74,.72); line-height: 1.1; }
 
     /* Bottom action strip */
     .action-strip {
-      height: 36px; display: flex; align-items: center; gap: 8px;
+      height: 44px; display: flex; align-items: center; gap: 8px;
       padding: 0 12px; flex-shrink: 0;
       background: rgba(3,4,0,.98);
       border-top: 1px solid var(--g07);
     }
     .action-btn {
       border: 1px solid var(--g15); background: var(--g07);
-      color: rgba(218,255,74,.56); font-family: var(--HEAD); font-size: 7px;
-      letter-spacing: .18em; height: 22px; padding: 0 12px; cursor: pointer;
+      color: rgba(218,255,74,.56); font-family: var(--HEAD); font-size: 9px;
+      letter-spacing: .18em; height: 28px; padding: 0 14px; cursor: pointer;
       text-transform: uppercase; transition: border-color 140ms, background 140ms, color 140ms;
     }
     .action-btn:hover { border-color: var(--g3); background: rgba(218,255,74,.06); color: rgba(218,255,74,.78); }
     .action-btn.lock  { margin-left: auto; }
+    .action-btn.wb-edit-active {
+      color: rgba(218,255,74,.9);
+      border-color: rgba(218,255,74,.4);
+      background: rgba(218,255,74,.07);
+    }
+
+    /* WORKBENCH inline module picker */
+    .wb-picker {
+      position: absolute; z-index: 200;
+      background: rgba(3,4,0,.97); border: 1px solid rgba(218,255,74,.25);
+      min-width: 180px; padding: 4px 0;
+      pointer-events: all;
+    }
+    .wb-picker-row {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 10px; cursor: pointer;
+      font-family: var(--HEAD); font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(218,255,74,.55);
+    }
+    .wb-picker-row:hover { background: rgba(218,255,74,.07); color: rgba(218,255,74,.9); }
+    .wb-picker-icon { font-size: 10px; width: 14px; text-align: center; }
+    .wb-picker-status {
+      margin-left: auto; font-size: 6px; letter-spacing: .18em;
+    }
+    .wb-picker-status.live    { color: rgba(218,255,74,.55); }
+    .wb-picker-status.stale   { color: rgba(255,152,20,.70); }
+    .wb-picker-status.offline { color: rgba(255,255,255,.25); }
+    .wb-picker-status.partial { color: rgba(255,152,20,.50); }
+
+    /* WORKBENCH aux board-status tiles */
+    .wb-aux-tile {
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+      padding: 6px 8px; gap: 3px;
+      background: #030500; border: 1px solid rgba(218,255,74,.055);
+      overflow: hidden;
+    }
+    .wat-label {
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .22em;
+      color: rgba(218,255,74,.30); text-transform: uppercase; flex-shrink: 0;
+    }
+    .wat-val {
+      font-family: var(--HEAD); font-size: 13px; letter-spacing: .12em;
+      color: rgba(218,255,74,.75); line-height: 1;
+    }
+    .wat-sub {
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .16em;
+      color: rgba(218,255,74,.28); text-transform: uppercase;
+    }
+    .wat-dots {
+      display: flex; gap: 3px; flex-wrap: wrap; max-width: 60px;
+    }
+    .wat-dot {
+      width: 6px; height: 6px;
+      border: 1px solid rgba(218,255,74,.25);
+    }
+    .wat-dot.filled { background: rgba(218,255,74,.65); border-color: rgba(218,255,74,.65); }
+    .wat-rows {
+      display: flex; flex-direction: column; gap: 2px; width: 100%;
+    }
+    .wat-row {
+      display: flex; align-items: center; gap: 4px;
+      font-family: var(--HEAD); font-size: 7px; letter-spacing: .10em;
+      color: rgba(218,255,74,.55); text-transform: uppercase; white-space: nowrap;
+    }
+    .wat-row .dot { width: 5px; height: 5px; flex-shrink: 0; }
+    .wat-row .dot.live    { background: rgba(218,255,74,.70); }
+    .wat-row .dot.partial { background: rgba(255,152,20,.65); }
+    .wat-row .dot.offline { background: rgba(255,255,255,.18); }
+    .wat-empty { font-family: var(--HEAD); font-size: 9px; color: rgba(218,255,74,.20); }
+
+    /* WORKBENCH slot placeholder — readable position names */
+    #view-workbench .ph-id {
+      font-size: 13px;
+      letter-spacing: .22em;
+    }
 
     /* Edit Mode */
     .edit-mode .sector.drag-over { box-shadow: inset 0 0 0 1px rgba(218,255,74,.55) !important; }
@@ -560,7 +657,7 @@
     .edit-mode .sector .slot-remove {
       display: flex; position: absolute; top: 4px;
       width: 12px; height: 12px; align-items: center; justify-content: center;
-      font-size: 8px; color: rgba(218,255,74,.45); cursor: pointer; z-index: 10;
+      font-size: 10px; color: rgba(218,255,74,.45); cursor: pointer; z-index: 10;
       border: 1px solid rgba(218,255,74,.22); background: rgba(3,4,0,.9);
     }
     .sector.ul .slot-remove, .sector.lm .slot-remove, .sector.ll .slot-remove { right: 18px; }
@@ -578,7 +675,6 @@
     }
 
     /* Edit mode action strip overrides */
-    .edit-mode .action-strip .btn-edit-enter { display: none; }
     .action-strip .btn-edit-save,
     .action-strip .btn-edit-cancel,
     .action-strip .btn-edit-export { display: none; }
@@ -589,10 +685,10 @@
     /* Edit mode indicator banner */
     .edit-banner {
       display: none; align-items: center; justify-content: center;
-      height: 20px; flex-shrink: 0;
+      height: 26px; flex-shrink: 0;
       background: rgba(218,255,74,.06);
       border-bottom: 1px solid rgba(218,255,74,.18);
-      font-family: var(--HEAD); font-size: 6px; letter-spacing: .22em;
+      font-family: var(--HEAD); font-size: 10px; letter-spacing: .22em;
       color: rgba(218,255,74,.55);
     }
     .edit-mode .edit-banner { display: flex; }
@@ -620,26 +716,32 @@
       margin-left: 12px; padding-left: 12px;
       border-left: 1px solid rgba(218,255,74,.2);
     }
-    .sp-label { font: 9px 'Share Tech Mono',monospace; color: rgba(218,255,74,.4); }
-    .sp-slot  { font: 9px 'Share Tech Mono',monospace; color: rgba(218,255,74,.7); min-width: 22px; }
+    .sp-label { font: 11px 'Share Tech Mono',monospace; color: rgba(218,255,74,.4); }
+    .sp-slot  { font: 11px 'Share Tech Mono',monospace; color: rgba(218,255,74,.7); min-width: 22px; }
     .sp-field {
       display: flex; align-items: center; gap: 3px;
-      font: 9px 'Share Tech Mono',monospace; color: rgba(218,255,74,.5);
+      font: 11px 'Share Tech Mono',monospace; color: rgba(218,255,74,.5);
     }
     .sp-field input {
       width: 44px; padding: 2px 4px;
       background: rgba(218,255,74,.05); border: 1px solid rgba(218,255,74,.2);
-      color: rgba(218,255,74,.9); font: 9px 'Share Tech Mono',monospace;
+      color: rgba(218,255,74,.9); font: 11px 'Share Tech Mono',monospace;
       outline: none; text-align: right;
     }
     .sp-field input:focus { border-color: rgba(218,255,74,.55); background: rgba(218,255,74,.08); }
     .sp-btn {
-      padding: 2px 6px; font: 9px 'Share Tech Mono',monospace;
+      padding: 2px 6px; font: 11px 'Share Tech Mono',monospace;
       background: rgba(218,255,74,.06); border: 1px solid rgba(218,255,74,.22);
       color: rgba(218,255,74,.7); cursor: pointer;
     }
     .sp-btn:hover { background: rgba(218,255,74,.14); color: rgba(218,255,74,1); }
     .sector.sp-selected { box-shadow: inset 0 0 0 1px rgba(218,255,74,.55) !important; }
+
+    /* WORKBENCH multi-select highlight */
+    #view-workbench .sector.wb-selected {
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.7) !important;
+      background: rgba(218,255,74,.04) !important;
+    }
 
     /* Export JSON panel */
     .layout-export-panel {
@@ -650,11 +752,11 @@
     .layout-export-panel.visible { display: block; }
     .layout-export-panel textarea {
       width: 100%; height: 80px; background: #000; border: 1px solid rgba(218,255,74,.18);
-      color: rgba(218,255,74,.65); font-family: var(--MONO); font-size: 7px;
+      color: rgba(218,255,74,.65); font-family: var(--MONO); font-size: 9px;
       letter-spacing: .06em; resize: none; padding: 6px;
     }
     .layout-export-panel .ep-label {
-      font-family: var(--HEAD); font-size: 6px; letter-spacing: .22em;
+      font-family: var(--HEAD); font-size: 10px; letter-spacing: .22em;
       color: rgba(218,255,74,.35); margin-bottom: 4px; display: block;
     }
   </style>
@@ -665,7 +767,7 @@
   <!-- ── TOPBAR ──────────────────────────────────────────────────── -->
   <div class="topbar">
     <!-- Brand -->
-    <div class="tb-brand">
+    <div class="tb-brand" onclick="switchView('overview')" title="← HOME">
       <div class="tb-nucleus">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="12" cy="12" r="3" stroke="rgba(218,255,74,.65)" stroke-width="1.2"/>
@@ -705,99 +807,15 @@
   <div class="view active" id="view-overview">
     <div class="class-banner">⚠&nbsp;&nbsp;SECRET // GULF THEATRE // HADAL-OSINT // EYES ONLY</div>
     <div class="ov-body">
-      <!-- Hero row -->
       <div class="ov-hero">
-        <!-- Sidebar -->
-        <div class="ov-sidebar">
-          <div>
-            <div class="ov-section-lbl">PIPELINE STATUS</div>
-            <div class="pipeline-rows" style="margin-top:6px">
-              <div class="pipe-row">
-                <span class="pipe-name">INCIDENTS</span>
-                <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:82%"></div></div>
-                <span class="pipe-count">47</span>
-                <span class="pipe-badge live">● LIVE</span>
-              </div>
-              <div class="pipe-row">
-                <span class="pipe-name">PRICES</span>
-                <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:60%"></div></div>
-                <span class="pipe-count">19</span>
-                <span class="pipe-badge live">● LIVE</span>
-              </div>
-              <div class="pipe-row">
-                <span class="pipe-name">AIRSPACE</span>
-                <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:38%"></div></div>
-                <span class="pipe-count">12</span>
-                <span class="pipe-badge stale">● STALE</span>
-              </div>
-              <div class="pipe-row">
-                <span class="pipe-name">OPEN SRCS</span>
-                <div class="pipe-bar-wrap"><div class="pipe-bar-fill" style="width:20%"></div></div>
-                <span class="pipe-count">8</span>
-                <span class="pipe-badge off">○ OFFLINE</span>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="ov-section-lbl">THREAT METRICS</div>
-            <div class="threat-rows" style="margin-top:6px">
-              <div class="threat-row">
-                <span class="threat-label">KINETIC EVENTS</span>
-                <span class="threat-val">18</span>
-                <span class="threat-tag active">↑ +3</span>
-              </div>
-              <div class="threat-row">
-                <span class="threat-label">AIRSTRIKE</span>
-                <span class="threat-val">07</span>
-                <span class="threat-tag"></span>
-              </div>
-              <div class="threat-row">
-                <span class="threat-label">DRONE OPS</span>
-                <span class="threat-val">3</span>
-                <span class="threat-tag active">ACTIVE</span>
-              </div>
-              <div class="threat-row">
-                <span class="threat-label">MISSILE TRACK</span>
-                <span class="threat-val">1</span>
-                <span class="threat-tag monitor">MONITOR</span>
-              </div>
-              <div class="threat-row">
-                <span class="threat-label">CREDIB AVG</span>
-                <span class="threat-val">68%</span>
-                <span class="threat-tag"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Globe canvas -->
         <div class="ov-globe-wrap">
           <canvas id="cv-globe"></canvas>
         </div>
       </div>
-
-      <!-- Intel strip -->
-      <div class="intel-strip">
-        <div class="intel-panel">
-          <span class="intel-lbl">CORROBORATION</span>
-          <span class="intel-val">14</span>
-          <span class="intel-sub">MULTI-SOURCE</span>
-        </div>
-        <div class="intel-panel">
-          <span class="intel-lbl">GOV VERIFIED</span>
-          <span class="intel-val">08</span>
-          <span class="intel-sub">INCIDENTS</span>
-        </div>
-        <div class="intel-panel">
-          <span class="intel-lbl">THEATRE EVENTS</span>
-          <span class="intel-val">18</span>
-          <span class="intel-sub">KINETIC</span>
-        </div>
-        <div class="intel-panel">
-          <span class="intel-lbl">CREDIBILITY</span>
-          <span class="intel-val">68%</span>
-          <span class="intel-sub">CRED AVG</span>
-        </div>
+      <div class="ov-cta-strip">
+        <button class="action-btn ov-cta" onclick="switchView('console')">CONSOLE</button>
+        <button class="action-btn ov-cta" onclick="switchView('maps')">MAPS</button>
+        <button class="action-btn ov-cta" onclick="switchView('workbench')">WORKBENCH</button>
       </div>
     </div>
   </div><!-- /view-overview -->
@@ -1050,18 +1068,10 @@
           <div class="aux-slot"><canvas id="cv-fqi"></canvas></div>
         </div>
 
-        <!-- Ghost slot -->
-        <button class="ghost-slot">
-          <span class="ghost-label">BUILD BOARD</span>
-          <span class="ghost-desc">Add modules · Rearrange layout · Save custom setup</span>
-          <span class="ghost-cta">→ CONFIGURE</span>
-        </button>
-
       </div><!-- /circuit-shell -->
 
       <!-- Bottom action strip -->
       <div class="action-strip">
-        <button class="action-btn btn-edit-enter" id="btn-edit-enter">EDIT LAYOUT</button>
         <button class="action-btn btn-edit-save"  id="btn-edit-save">SAVE</button>
         <button class="action-btn btn-edit-export" id="btn-edit-export">EXPORT JSON</button>
         <button class="action-btn btn-edit-cancel" id="btn-edit-cancel">CANCEL</button>
@@ -1086,54 +1096,210 @@
     </div>
   </div><!-- /view-console -->
 
+  <!-- ── VIEW: WORKBENCH ────────────────────────────────────────── -->
+  <div class="view" id="view-workbench">
+    <div class="console-view-body">
+
+      <!-- Circuit Shell — always in edit mode -->
+      <div class="circuit-shell edit-mode" id="wb-circuit-shell">
+        <div class="edit-banner">⬡ WORKBENCH · <span id="wb-banner-count">0 / 6 MODULES ASSIGNED</span> · CLICK SLOT TO ASSIGN · LOCK TO SAVE</div>
+        <div class="circuit-main" id="circuit-main-wb">
+
+          <div class="ring far"></div>
+          <div class="ring outer"></div>
+          <div class="ring inner"></div>
+
+          <svg class="trace-svg" aria-hidden="true">
+            <line class="trace-line" x1="41%" y1="15.5%" x2="46%" y2="15.5%" />
+            <circle class="trace-pad" cx="41%" cy="15.5%" r="1.5" />
+            <line class="trace-line" x1="41%" y1="46.5%" x2="46%" y2="46.5%" />
+            <circle class="trace-pad" cx="41%" cy="46.5%" r="1.5" />
+            <line class="trace-line" x1="41%" y1="77.5%" x2="46%" y2="77.5%" />
+            <circle class="trace-pad" cx="41%" cy="77.5%" r="1.5" />
+            <line class="trace-line" x1="59%" y1="15.5%" x2="54%" y2="15.5%" />
+            <circle class="trace-pad" cx="59%" cy="15.5%" r="1.5" />
+            <line class="trace-line" x1="59%" y1="46.5%" x2="54%" y2="46.5%" />
+            <circle class="trace-pad" cx="59%" cy="46.5%" r="1.5" />
+            <line class="trace-line" x1="59%" y1="77.5%" x2="54%" y2="77.5%" />
+            <circle class="trace-pad" cx="59%" cy="77.5%" r="1.5" />
+          </svg>
+
+          <div class="core-shell">
+            <div class="core-label">
+              <span class="lbl">HADAL // GULF THEATRE</span>
+              <span class="val">MEKHEAD CORE</span>
+              <span class="lbl">HD-07 · ISR</span>
+            </div>
+            <div class="core">
+              <div class="core-inner">
+                <canvas id="cv-core-wb"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sectors -->
+          <div class="sector ul">
+            <div class="kicker tl offline"><span>○</span><span class="kicker-title">EMPTY SLOT</span></div>
+            <div class="body"><div class="ph"><span class="ph-id">TOP LEFT</span><span class="ph-label">CLICK TO ASSIGN</span></div></div>
+            <div class="stitch"></div>
+            <div class="resize-handle" data-dir="nw"></div>
+            <div class="resize-handle" data-dir="ne"></div>
+            <div class="resize-handle" data-dir="sw"></div>
+            <div class="resize-handle" data-dir="se"></div>
+            <div class="resize-handle" data-dir="n"></div>
+            <div class="resize-handle" data-dir="s"></div>
+            <div class="resize-handle" data-dir="e"></div>
+            <div class="resize-handle" data-dir="w"></div>
+            <div class="slot-remove">✕</div>
+          </div>
+          <div class="sector lm">
+            <div class="kicker tl offline"><span>○</span><span class="kicker-title">EMPTY SLOT</span></div>
+            <div class="body"><div class="ph"><span class="ph-id">MID LEFT</span><span class="ph-label">CLICK TO ASSIGN</span></div></div>
+            <div class="stitch"></div>
+            <div class="resize-handle" data-dir="nw"></div>
+            <div class="resize-handle" data-dir="ne"></div>
+            <div class="resize-handle" data-dir="sw"></div>
+            <div class="resize-handle" data-dir="se"></div>
+            <div class="resize-handle" data-dir="n"></div>
+            <div class="resize-handle" data-dir="s"></div>
+            <div class="resize-handle" data-dir="e"></div>
+            <div class="resize-handle" data-dir="w"></div>
+            <div class="slot-remove">✕</div>
+          </div>
+          <div class="sector ll">
+            <div class="kicker tl offline"><span>○</span><span class="kicker-title">EMPTY SLOT</span></div>
+            <div class="body"><div class="ph"><span class="ph-id">BOT LEFT</span><span class="ph-label">CLICK TO ASSIGN</span></div></div>
+            <div class="stitch"></div>
+            <div class="resize-handle" data-dir="nw"></div>
+            <div class="resize-handle" data-dir="ne"></div>
+            <div class="resize-handle" data-dir="sw"></div>
+            <div class="resize-handle" data-dir="se"></div>
+            <div class="resize-handle" data-dir="n"></div>
+            <div class="resize-handle" data-dir="s"></div>
+            <div class="resize-handle" data-dir="e"></div>
+            <div class="resize-handle" data-dir="w"></div>
+            <div class="slot-remove">✕</div>
+          </div>
+          <div class="sector ur">
+            <div class="kicker tr offline"><span>○</span><span class="kicker-title">EMPTY SLOT</span></div>
+            <div class="body"><div class="ph"><span class="ph-id">TOP RIGHT</span><span class="ph-label">CLICK TO ASSIGN</span></div></div>
+            <div class="stitch"></div>
+            <div class="resize-handle" data-dir="nw"></div>
+            <div class="resize-handle" data-dir="ne"></div>
+            <div class="resize-handle" data-dir="sw"></div>
+            <div class="resize-handle" data-dir="se"></div>
+            <div class="resize-handle" data-dir="n"></div>
+            <div class="resize-handle" data-dir="s"></div>
+            <div class="resize-handle" data-dir="e"></div>
+            <div class="resize-handle" data-dir="w"></div>
+            <div class="slot-remove">✕</div>
+          </div>
+          <div class="sector rm">
+            <div class="kicker tr offline"><span>○</span><span class="kicker-title">EMPTY SLOT</span></div>
+            <div class="body"><div class="ph"><span class="ph-id">MID RIGHT</span><span class="ph-label">CLICK TO ASSIGN</span></div></div>
+            <div class="stitch"></div>
+            <div class="resize-handle" data-dir="nw"></div>
+            <div class="resize-handle" data-dir="ne"></div>
+            <div class="resize-handle" data-dir="sw"></div>
+            <div class="resize-handle" data-dir="se"></div>
+            <div class="resize-handle" data-dir="n"></div>
+            <div class="resize-handle" data-dir="s"></div>
+            <div class="resize-handle" data-dir="e"></div>
+            <div class="resize-handle" data-dir="w"></div>
+            <div class="slot-remove">✕</div>
+          </div>
+          <div class="sector lr">
+            <div class="kicker tr offline"><span>○</span><span class="kicker-title">EMPTY SLOT</span></div>
+            <div class="body"><div class="ph"><span class="ph-id">BOT RIGHT</span><span class="ph-label">CLICK TO ASSIGN</span></div></div>
+            <div class="stitch"></div>
+            <div class="resize-handle" data-dir="nw"></div>
+            <div class="resize-handle" data-dir="ne"></div>
+            <div class="resize-handle" data-dir="sw"></div>
+            <div class="resize-handle" data-dir="se"></div>
+            <div class="resize-handle" data-dir="n"></div>
+            <div class="resize-handle" data-dir="s"></div>
+            <div class="resize-handle" data-dir="e"></div>
+            <div class="resize-handle" data-dir="w"></div>
+            <div class="slot-remove">✕</div>
+          </div>
+
+          <div id="guide-layer-wb"></div>
+        </div><!-- /circuit-main-wb -->
+
+        <!-- Aux strip -->
+        <div class="aux-grid">
+          <div class="wb-aux-tile" id="wba-slots">
+            <div class="wat-label">SLOTS</div>
+            <div class="wat-dots" id="wba-dots"></div>
+            <div class="wat-val" id="wba-count">0 / 6</div>
+          </div>
+          <div class="wb-aux-tile" id="wba-sources">
+            <div class="wat-label">SOURCES</div>
+            <div class="wat-rows" id="wba-src-rows"><span class="wat-empty">—</span></div>
+          </div>
+          <div class="wb-aux-tile" id="wba-saved">
+            <div class="wat-label">LAST SAVE</div>
+            <div class="wat-val" id="wba-saved-val">—</div>
+            <div class="wat-sub" id="wba-saved-sub">LOCK TO COMMIT</div>
+          </div>
+          <div class="wb-aux-tile" id="wba-health">
+            <div class="wat-label">STATUS</div>
+            <div class="wat-rows" id="wba-health-rows"><span class="wat-empty">—</span></div>
+          </div>
+        </div>
+
+      </div><!-- /wb-circuit-shell -->
+
+      <!-- Workbench action strip -->
+      <div class="action-strip">
+        <button class="action-btn" id="btn-wb-edit">EDIT</button>
+        <button class="action-btn lock" id="btn-wb-lock">⊟ LOCK</button>
+      </div>
+
+      <div class="layout-export-panel" id="layout-export-panel-wb">
+        <span class="ep-label">LAYOUT JSON — copy and save as docs/console-layout.json for CLI commit</span>
+        <textarea id="layout-export-txt-wb" readonly></textarea>
+      </div>
+    </div>
+  </div><!-- /view-workbench -->
+
 </div><!-- /app -->
 
 <script>
 // ── TOPBAR NAV ─────────────────────────────────────────────────────
-const VIEWS = ['overview','maps','console']
-const LABELS = { overview:'OVERVIEW', maps:'MAPS', console:'CONSOLE' }
+const VIEWS = ['overview','maps','console','workbench']
+const LABELS = { overview:'', maps:'MAPS', console:'CONSOLE', workbench:'WORKBENCH' }
 let currentView = 'overview'
 
 function switchView(id) {
+  if (currentView === 'workbench') window._clearWbSelection?.()
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'))
   document.getElementById('view-' + id).classList.add('active')
   currentView = id
   renderNav()
-  // Init canvases for views that need it on first show
   if (id === 'maps') initMapCanvas()
-  if (id === 'console') initConsoleCanvases()
+  if (id === 'console') initConsoleCanvases('')
+  if (id === 'workbench') { enterEdit(); document.getElementById('btn-wb-edit')?.classList.add('wb-edit-active') }
 }
 
 function renderNav() {
   const nav = document.getElementById('tb-nav')
   nav.innerHTML = ''
-  if (currentView === 'overview') {
-    nav.innerHTML = `<span class="tb-crumb active">OVERVIEW ▸</span>`
-  } else {
-    const back = document.createElement('span')
-    back.className = 'tb-crumb'
-    back.textContent = '← OVERVIEW'
-    back.onclick = () => switchView('overview')
-    const sep = document.createElement('span')
-    sep.className = 'tb-sep'
-    sep.textContent = '/'
-    const active = document.createElement('span')
-    active.className = 'tb-crumb active'
-    active.textContent = LABELS[currentView] + ' ▸'
-    nav.appendChild(back)
-    nav.appendChild(sep)
-    nav.appendChild(active)
-  }
+  if (currentView === 'overview') return
+  const back = document.createElement('span')
+  back.className = 'tb-crumb'
+  back.textContent = '← BACK'
+  back.onclick = () => switchView('overview')
+  const sep = document.createElement('span')
+  sep.className = 'tb-sep'
+  sep.textContent = '/'
+  const active = document.createElement('span')
+  active.className = 'tb-crumb active'
+  active.textContent = LABELS[currentView] + ' ▸'
+  nav.appendChild(back)
+  nav.appendChild(sep)
+  nav.appendChild(active)
 }
-
-// MAPS / CONSOLE nav buttons injected via topbar chips — no, use overview panel click
-// Wire up via keyboard shortcuts or direct view switching from other nav elements
-// For now, provide a simple way to get to MAPS and CONSOLE: clicking overview items
-// and the topbar active crumb cycles? Let's just allow tab-style from overview buttons.
-// Actually the spec says breadcrumb only shows current. We need nav triggers.
-// We'll wire the topbar brand click to overview, and add invisible nav targets
-// on the class-banner (click anywhere on OVERVIEW banner to go to maps, etc.)
-// Simpler: add two clickable zone hints at the top of overview.
 
 renderNav()
 
@@ -1148,44 +1314,24 @@ function tickClock() {
 tickClock()
 setInterval(tickClock, 1000)
 
-// Add nav shortcut buttons to overview sidebar (hidden from view design but accessible)
-// Per spec: clicking MAPS/CONSOLE from OVERVIEW — we'll add a thin nav strip below class-banner
+// Feature bar chip clicks — highlight + flash sector in active view
 ;(function() {
-  const ov = document.getElementById('view-overview')
-  const strip = document.createElement('div')
-  strip.style.cssText = 'display:flex;gap:2px;padding:4px 8px;flex-shrink:0;border-bottom:1px solid rgba(218,255,74,.06);background:rgba(4,6,0,.96);'
-  const lbl = document.createElement('span')
-  lbl.style.cssText = 'font-family:"Share Tech Mono",monospace;font-size:5px;letter-spacing:.18em;color:rgba(218,255,74,.22);margin-right:6px;align-self:center;'
-  lbl.textContent = 'NAVIGATE'
-  strip.appendChild(lbl)
-  ;['maps','console'].forEach(id => {
-    const btn = document.createElement('button')
-    btn.style.cssText = 'border:1px solid rgba(218,255,74,.14);background:rgba(218,255,74,.04);color:rgba(218,255,74,.50);font-family:"Rajdhani",sans-serif;font-size:7px;letter-spacing:.18em;height:18px;padding:0 10px;cursor:pointer;text-transform:uppercase;'
-    btn.textContent = LABELS[id]
-    btn.onmouseover  = () => { btn.style.borderColor = 'rgba(218,255,74,.35)'; btn.style.color = 'rgba(218,255,74,.80)' }
-    btn.onmouseout   = () => { btn.style.borderColor = 'rgba(218,255,74,.14)'; btn.style.color = 'rgba(218,255,74,.50)' }
-    btn.onclick = () => switchView(id)
-    strip.appendChild(btn)
-  })
-  ov.insertBefore(strip, ov.querySelector('.ov-body'))
-})()
-
-// Feature bar chip clicks — highlight + flash sector
-;(function() {
-  const chips = document.querySelectorAll('.fchip')
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('selected'))
-      chip.classList.add('selected')
-      const sectorClass = chip.dataset.sector
-      if (sectorClass) {
-        const sector = document.querySelector('.sector.' + sectorClass)
-        if (sector) {
-          sector.classList.add('sector-pulse')
-          setTimeout(() => sector.classList.remove('sector-pulse'), 800)
-        }
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('.fchip')
+    if (!chip) return
+    const bar = chip.closest('.feature-bar')
+    if (!bar) return
+    bar.querySelectorAll('.fchip').forEach(c => c.classList.remove('selected'))
+    chip.classList.add('selected')
+    const sectorClass = chip.dataset.sector
+    if (sectorClass) {
+      const view = chip.closest('.view')
+      const sector = view?.querySelector('.sector.' + sectorClass)
+      if (sector) {
+        sector.classList.add('sector-pulse')
+        setTimeout(() => sector.classList.remove('sector-pulse'), 800)
       }
-    })
+    }
   })
 })()
 
@@ -1423,11 +1569,12 @@ function initMapCanvas() {
   ctx.textAlign = 'left'
 }
 
-// ── CONSOLE CANVASES ───────────────────────────────────────────────
-let consoleInitialized = false
-function initConsoleCanvases() {
-  if (consoleInitialized) return
-  consoleInitialized = true
+// ── CONSOLE / WORKBENCH CANVASES ───────────────────────────────────
+const _canvasInited = {}
+function initConsoleCanvases(sfx) {
+  if (sfx === undefined) sfx = ''
+  if (_canvasInited[sfx]) return
+  _canvasInited[sfx] = true
 
   const DEMO = {
     total:47, verified:12, likely:8, unconfirmed:6, kinetic:18,
@@ -1438,7 +1585,7 @@ function initConsoleCanvases() {
 
   // ── CORE: MEKHEAD with full-canvas hex ──
   ;(function() {
-    const cv = document.getElementById('cv-core')
+    const cv = document.getElementById('cv-core' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1469,7 +1616,7 @@ function initConsoleCanvases() {
     let smX = null, smY = null
     let brackAlpha = 0.15
     let sockFlash = { type: 'idle', timer: 0 }
-    const circuitMain = document.getElementById('circuit-main')
+    const circuitMain = document.getElementById('circuit-main' + sfx)
     if (circuitMain) {
       circuitMain.addEventListener('mousemove', e => {
         const r = cv.getBoundingClientRect()
@@ -1613,15 +1760,17 @@ function initConsoleCanvases() {
       tick++
       requestAnimationFrame(draw)
     }
-    window.addEventListener('error', () => {
-      sockFlash = { type: 'error', timer: 90 }
-    }, { capture: true })
+    if (sfx === '') {
+      window.addEventListener('error', () => {
+        sockFlash = { type: 'error', timer: 90 }
+      }, { capture: true })
+    }
     draw()
   })()
 
   // ── UL: THREAT SIGNAL ──
   ;(function() {
-    const cv = document.getElementById('cv-ul')
+    const cv = document.getElementById('cv-ul' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1673,7 +1822,7 @@ function initConsoleCanvases() {
 
   // ── LM: ARGUS ──
   ;(function() {
-    const cv = document.getElementById('cv-lm')
+    const cv = document.getElementById('cv-lm' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1723,7 +1872,7 @@ function initConsoleCanvases() {
 
   // ── LL: VERIFICATION ──
   ;(function() {
-    const cv = document.getElementById('cv-ll')
+    const cv = document.getElementById('cv-ll' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1792,7 +1941,7 @@ function initConsoleCanvases() {
 
   // ── LR: REPORTS ──
   ;(function() {
-    const cv = document.getElementById('cv-lr')
+    const cv = document.getElementById('cv-lr' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1843,7 +1992,7 @@ function initConsoleCanvases() {
 
   // ── AUX: EVT TIMELINE ──
   ;(function() {
-    const cv = document.getElementById('cv-evt')
+    const cv = document.getElementById('cv-evt' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1868,7 +2017,7 @@ function initConsoleCanvases() {
 
   // ── AUX: GEO CONCENTRATION ──
   ;(function() {
-    const cv = document.getElementById('cv-geo')
+    const cv = document.getElementById('cv-geo' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1890,7 +2039,7 @@ function initConsoleCanvases() {
 
   // ── AUX: TYPE PROFILE ──
   ;(function() {
-    const cv = document.getElementById('cv-typ')
+    const cv = document.getElementById('cv-typ' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1925,7 +2074,7 @@ function initConsoleCanvases() {
 
   // ── AUX: FEED QUALITY ──
   ;(function() {
-    const cv = document.getElementById('cv-fqi')
+    const cv = document.getElementById('cv-fqi' + sfx)
     if (!cv) return
     const ctx = fitCV(cv)
     const CW = cv.width, CH = cv.height
@@ -1968,10 +2117,24 @@ function initConsoleCanvases() {
     aux: ['EVENTS','GEO','TYPE','FQI']
   }
 
+  const DEFAULT_WORKBENCH_LAYOUT = {
+    sectors: {
+      ul: { module: null, icon: '○', status: 'offline' },
+      ur: { module: null, icon: '○', status: 'offline' },
+      lm: { module: null, icon: '○', status: 'offline' },
+      rm: { module: null, icon: '○', status: 'offline' },
+      ll: { module: null, icon: '○', status: 'offline' },
+      lr: { module: null, icon: '○', status: 'offline' },
+    },
+    aux: ['EVENTS','GEO','TYPE','FQI']
+  }
+
   // ── State ──
   let state = loadState()
+  let wbState = loadWbState()
   let editMode = false
   let dragSlot = null  // slot key being dragged
+  function isEditActive() { return editMode || currentView === 'workbench' }
 
   function loadState() {
     try {
@@ -1979,6 +2142,29 @@ function initConsoleCanvases() {
       if (saved) return JSON.parse(saved)
     } catch(e) {}
     return JSON.parse(JSON.stringify(DEFAULT_LAYOUT))
+  }
+
+  function loadWbState() {
+    try {
+      const saved = localStorage.getItem('hadal-wb-layout-v1')
+      if (saved) return JSON.parse(saved)
+    } catch(e) {}
+    return JSON.parse(JSON.stringify(DEFAULT_WORKBENCH_LAYOUT))
+  }
+
+  function saveWbState() {
+    document.querySelectorAll('#view-workbench .sector[data-slot]').forEach(el => {
+      const slot = el.dataset.slot
+      if (wbState.sectors[slot]) {
+        if (el.style.width)  wbState.sectors[slot].width  = el.style.width
+        if (el.style.height) wbState.sectors[slot].height = el.style.height
+        if (el.style.top)    wbState.sectors[slot].top    = el.style.top
+        if (el.style.left)   wbState.sectors[slot].left   = el.style.left
+      }
+    })
+    wbState.saved = new Date().toISOString()
+    localStorage.setItem('hadal-wb-layout-v1', JSON.stringify(wbState))
+    updateWbAux()
   }
 
   function saveState() {
@@ -2002,16 +2188,101 @@ function initConsoleCanvases() {
   function applyKickers() {
     document.querySelectorAll('.sector[data-slot]').forEach(el => {
       const slot = el.dataset.slot
-      const m = state.sectors[slot]
+      const inWb = !!el.closest('#view-workbench')
+      const m = inWb ? wbState.sectors[slot] : state.sectors[slot]
       if (!m) return
       const kicker = el.querySelector('.kicker')
       if (!kicker) return
+      if (!m.module) {
+        kicker.className = kicker.className.replace(/\b(live|stale|offline|partial)\b/g, '') + ' offline'
+        const icon  = kicker.querySelector('span:first-child')
+        const title = kicker.querySelector('.kicker-title')
+        if (icon)  icon.textContent  = '○'
+        if (title) title.textContent = 'EMPTY SLOT'
+        return
+      }
       kicker.className = kicker.className.replace(/\b(live|stale|offline|partial)\b/g, '') + ' ' + m.status
-      const icon = kicker.querySelector('span:first-child')
+      const icon  = kicker.querySelector('span:first-child')
       const title = kicker.querySelector('.kicker-title')
-      if (icon)  icon.textContent = m.icon
+      if (icon)  icon.textContent  = m.icon
       if (title) title.textContent = m.module
     })
+    updateWbBanner()
+    updateWbAux()
+  }
+
+  // ── Live assignment counter in edit-banner ──
+  function updateWbBanner() {
+    const assigned = Object.values(wbState.sectors).filter(s => s && s.module).length
+    const el = document.getElementById('wb-banner-count')
+    if (el) el.textContent = assigned + ' / 6 MODULES ASSIGNED'
+  }
+
+  // ── Board-status aux tiles ──
+  const WB_MODULE_SOURCES = {
+    'FEED':       'VERIFIED / RAW',
+    'MAP':        'INCIDENTS',
+    'ARGUS':      'PIPELINE PROXY',
+    'CHATTER':    'PIPELINE SOURCES',
+    'IGNITE':     'UPSTREAM MODULE',
+    'CHRONOS':    'INCIDENTS',
+    'SKYLINE':    'UPSTREAM MODULE',
+    'SIGNALS':    'INCIDENTS',
+    'VENUS TRAP': 'PREDICTION MODEL',
+  }
+
+  function updateWbAux() {
+    const sectors = wbState.sectors
+    const slots   = ['ul','ur','lm','rm','ll','lr']
+    const assigned = slots.map(s => sectors[s]).filter(s => s && s.module)
+
+    // Tile 1 — slot dots + count
+    const dotsEl  = document.getElementById('wba-dots')
+    const countEl = document.getElementById('wba-count')
+    if (dotsEl) {
+      dotsEl.innerHTML = slots.map(s =>
+        `<div class="wat-dot${sectors[s]?.module ? ' filled' : ''}"></div>`
+      ).join('')
+    }
+    if (countEl) countEl.textContent = assigned.length + ' / 6'
+
+    // Tile 2 — unique sources
+    const srcEl = document.getElementById('wba-src-rows')
+    if (srcEl) {
+      const sources = [...new Set(assigned.map(m => WB_MODULE_SOURCES[m.module] || 'UNKNOWN'))]
+      srcEl.innerHTML = sources.length
+        ? sources.map(s => `<div class="wat-row">${s}</div>`).join('')
+        : '<span class="wat-empty">—</span>'
+    }
+
+    // Tile 3 — last save time
+    const savedEl  = document.getElementById('wba-saved-val')
+    const savedSub = document.getElementById('wba-saved-sub')
+    if (savedEl) {
+      if (wbState.saved) {
+        const d = new Date(wbState.saved)
+        savedEl.textContent = d.toISOString().slice(11,16) + 'Z'
+        if (savedSub) savedSub.textContent = d.toISOString().slice(0,10)
+      } else {
+        savedEl.textContent = '—'
+        if (savedSub) savedSub.textContent = 'LOCK TO COMMIT'
+      }
+    }
+
+    // Tile 4 — status breakdown
+    const healthEl = document.getElementById('wba-health-rows')
+    if (healthEl) {
+      const counts = { live:0, partial:0, offline:0 }
+      assigned.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++ })
+      if (assigned.length === 0) {
+        healthEl.innerHTML = '<span class="wat-empty">—</span>'
+      } else {
+        healthEl.innerHTML = Object.entries(counts)
+          .filter(([,n]) => n > 0)
+          .map(([s,n]) => `<div class="wat-row"><div class="dot ${s}"></div>${n} ${s.toUpperCase()}</div>`)
+          .join('')
+      }
+    }
   }
 
   // ── Apply sizes from state ──
@@ -2057,7 +2328,7 @@ function initConsoleCanvases() {
       let startX, startY, startL, startT, hasMoved = false
 
       el.addEventListener('pointerdown', e => {
-        if (!editMode) return
+        if (!isEditActive()) return
         if (e.target.closest('.resize-handle') || e.target.closest('.slot-remove')) return
         e.preventDefault()
         const r  = el.getBoundingClientRect()
@@ -2122,7 +2393,7 @@ function initConsoleCanvases() {
         let startX, startY, startW, startH, startL, startT
 
         handle.addEventListener('pointerdown', e => {
-          if (!editMode) return
+          if (!isEditActive()) return
           e.stopPropagation(); e.preventDefault()
           const r  = el.getBoundingClientRect()
           const pr = el.parentElement.getBoundingClientRect()
@@ -2198,19 +2469,99 @@ function initConsoleCanvases() {
     document.querySelectorAll('.sector[data-slot] .slot-remove').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation()
-        const slot = btn.closest('.sector').dataset.slot
-        removeModule(slot)
+        const el   = btn.closest('.sector')
+        const slot = el.dataset.slot
+        const inWb = !!el.closest('#view-workbench')
+        if (inWb) {
+          if (!wbState.sectors[slot]) return
+          wbState.sectors[slot] = { module: null, icon: '○', status: 'offline',
+            width: wbState.sectors[slot].width, height: wbState.sectors[slot].height,
+            top: wbState.sectors[slot].top, left: wbState.sectors[slot].left }
+          applyKickers()
+        } else {
+          removeModule(slot)
+        }
       })
     })
   }
 
+  // ── Available modules for workbench slot picker ──
+  const WB_MODULES = [
+    { module:'FEED',       icon:'▣', source:'VERIFIED / RAW',   status:'live'    },
+    { module:'MAP',        icon:'◉', source:'INCIDENTS',         status:'live'    },
+    { module:'ARGUS',      icon:'◬', source:'PIPELINE PROXY',    status:'partial' },
+    { module:'CHATTER',    icon:'☰', source:'PIPELINE SOURCES',  status:'partial' },
+    { module:'IGNITE',     icon:'✦', source:'UPSTREAM MODULE',   status:'offline' },
+    { module:'CHRONOS',    icon:'⌁', source:'INCIDENTS',         status:'partial' },
+    { module:'SKYLINE',    icon:'◫', source:'UPSTREAM MODULE',   status:'offline' },
+    { module:'SIGNALS',    icon:'▶', source:'INCIDENTS',         status:'live'    },
+    { module:'VENUS TRAP', icon:'◌', source:'PREDICTION MODEL',  status:'partial' },
+  ]
+
+  // ── Slot picker DOM ──
+  const wbPicker = document.createElement('div')
+  wbPicker.className = 'wb-picker'
+  wbPicker.style.display = 'none'
+  document.getElementById('view-workbench').appendChild(wbPicker)
+
+  let pickerTargetSlots = []
+
+  function showWbPicker(anchorEl, slots) {
+    pickerTargetSlots = slots
+    const rect   = anchorEl.getBoundingClientRect()
+    const vbRect = document.getElementById('view-workbench').getBoundingClientRect()
+    wbPicker.style.left = (rect.left - vbRect.left) + 'px'
+    wbPicker.style.top  = (rect.bottom - vbRect.top + 4) + 'px'
+    wbPicker.innerHTML = WB_MODULES.map(m =>
+      `<div class="wb-picker-row" data-mod="${m.module}">
+        <span class="wb-picker-icon">${m.icon}</span>
+        <span>${m.module}</span>
+        <span class="wb-picker-status ${m.status}">${m.status.toUpperCase()}</span>
+      </div>`
+    ).join('')
+    wbPicker.style.display = 'block'
+  }
+
+  function hideWbPicker() {
+    wbPicker.style.display = 'none'
+    pickerTargetSlots = []
+  }
+
+  wbPicker.addEventListener('click', e => {
+    const row = e.target.closest('.wb-picker-row')
+    if (!row) return
+    const modName = row.dataset.mod
+    const mod = WB_MODULES.find(m => m.module === modName)
+    if (!mod) return
+    pickerTargetSlots.forEach(s => {
+      const prev = wbState.sectors[s]
+      wbState.sectors[s] = { module: mod.module, icon: mod.icon, status: mod.status,
+        width: prev?.width, height: prev?.height, top: prev?.top, left: prev?.left }
+    })
+    applyKickers()
+    clearWbSelection()
+    hideWbPicker()
+  })
+
+  document.addEventListener('click', e => {
+    if (wbPicker.style.display !== 'none' && !wbPicker.contains(e.target)) hideWbPicker()
+  }, true)
+
   // ── Feature chip → assign to slot in edit mode ──
   // Click chip → chip becomes "pending assignment" → click slot → assign
   let pendingChip = null
+  let wbSelected = new Set()
+
+  function clearWbSelection() {
+    wbSelected.clear()
+    document.querySelectorAll('#view-workbench .sector.wb-selected').forEach(el => el.classList.remove('wb-selected'))
+  }
+  window._clearWbSelection = clearWbSelection
+
   function initChipAssign() {
     document.querySelectorAll('.fchip').forEach(chip => {
       chip.addEventListener('click', e => {
-        if (!editMode) return
+        if (!isEditActive()) return
         e.stopPropagation()
         document.querySelectorAll('.fchip').forEach(c => c.classList.remove('pending'))
         pendingChip = {
@@ -2223,39 +2574,59 @@ function initConsoleCanvases() {
     })
     document.querySelectorAll('.sector[data-slot]').forEach(el => {
       el.addEventListener('click', e => {
-        if (!editMode || !pendingChip || _moveSuppressClick) return
+        if (!isEditActive() || _moveSuppressClick) return
         const slot = el.dataset.slot
-        const prev = state.sectors[slot]
-        state.sectors[slot] = { ...pendingChip, width: prev.width, height: prev.height, top: prev.top, left: prev.left }
+        const inWb = !!el.closest('#view-workbench')
+
+        // WORKBENCH: no pending chip → open picker for clicked slot
+        if (inWb && !pendingChip) {
+          clearWbSelection()
+          wbSelected.add(slot); el.classList.add('wb-selected')
+          showWbPicker(el, [slot])
+          return
+        }
+
+        if (!pendingChip) return
+
+        // Chip pending: assign to all selected WB slots (or just clicked)
+        const target = inWb ? wbState : state
+        const slotsToAssign = (inWb && wbSelected.size > 0) ? [...wbSelected] : [slot]
+        slotsToAssign.forEach(s => {
+          const prev = target.sectors[s]
+          target.sectors[s] = { ...pendingChip, width: prev?.width, height: prev?.height, top: prev?.top, left: prev?.left }
+        })
         applyKickers()
         document.querySelectorAll('.fchip').forEach(c => c.classList.remove('pending'))
         pendingChip = null
+        if (inWb) clearWbSelection()
       })
     })
   }
 
-  // ── Ghost slot triggers edit mode ──
+  // ── Ghost slot triggers edit mode (CONSOLE only — WORKBENCH is always in edit mode) ──
   function initGhostSlot() {
-    const gs = document.querySelector('.ghost-slot')
+    const gs = document.querySelector('#view-console .ghost-slot')
     if (gs) gs.addEventListener('click', () => { if (!editMode) enterEdit() })
   }
 
   // ── Edit mode toggle ──
   function enterEdit() {
     editMode = true
-    document.querySelector('.circuit-shell')?.classList.add('edit-mode')
-    document.querySelector('#view-console')?.classList.add('edit-mode')
+    document.querySelector('.view.active .circuit-shell')?.classList.add('edit-mode')
+    document.querySelector('.view.active')?.classList.add('edit-mode')
   }
   function exitEdit(save) {
     editMode = false
     pendingChip = null
     document.querySelectorAll('.fchip').forEach(c => c.classList.remove('pending'))
-    document.querySelector('.circuit-shell')?.classList.remove('edit-mode')
-    document.querySelector('#view-console')?.classList.remove('edit-mode')
+    document.querySelectorAll('.circuit-shell.edit-mode').forEach(el => el.classList.remove('edit-mode'))
+    document.querySelectorAll('.view.edit-mode').forEach(el => el.classList.remove('edit-mode'))
+    // Re-apply edit-mode to WORKBENCH shell if it exists (always in edit mode)
+    document.querySelector('#wb-circuit-shell')?.classList.add('edit-mode')
     document.getElementById('layout-export-panel')?.classList.remove('visible')
+    document.getElementById('layout-export-panel-wb')?.classList.remove('visible')
     document.dispatchEvent(new Event('hadal-edit-exit'))
     if (!save) {
-      // Restore sizes from saved state
       state = loadState()
       applyKickers()
       applySizes()
@@ -2273,13 +2644,16 @@ function initConsoleCanvases() {
 
   // ── Ghost alignment guidelines ──
   function initGuides() {
-    const layer = document.getElementById('guide-layer')
-    if (!layer) return
+    function getLayer() {
+      return document.querySelector('.view.active .circuit-main [id^="guide-layer"]')
+    }
 
     function getEdges(excludeSlot) {
+      const layer = getLayer()
+      if (!layer) return { hs: [50], vs: [50] }
       const parent = layer.parentElement.getBoundingClientRect()
       const hs = [], vs = []
-      document.querySelectorAll('.sector[data-slot]').forEach(s => {
+      document.querySelectorAll('.view.active .sector[data-slot]').forEach(s => {
         if (s.dataset.slot === excludeSlot) return
         const r = s.getBoundingClientRect()
         const t  = (r.top    - parent.top)  / parent.height * 100
@@ -2297,6 +2671,8 @@ function initConsoleCanvases() {
     }
 
     window._showGuides = function(excludeSlot, activeEdges) {
+      const layer = getLayer()
+      if (!layer) return {}
       layer.innerHTML = ''
       const { hs, vs } = getEdges(excludeSlot)
       const THRESH = 1.5
@@ -2326,7 +2702,10 @@ function initConsoleCanvases() {
       }
     }
 
-    window._clearGuides = function() { layer.innerHTML = '' }
+    window._clearGuides = function() {
+      const layer = getLayer()
+      if (layer) layer.innerHTML = ''
+    }
   }
 
   // ── Precision property panel ──
@@ -2342,7 +2721,8 @@ function initConsoleCanvases() {
 
     document.querySelectorAll('.sector[data-slot]').forEach(el => {
       el.addEventListener('click', () => {
-        if (!editMode || _moveSuppressClick) return
+        if (!isEditActive() || _moveSuppressClick) return
+        if (currentView === 'workbench') return // no prop panel in workbench
         select(el)
       })
     })
@@ -2403,7 +2783,6 @@ function initConsoleCanvases() {
 
   // ── Wire action strip buttons ──
   function initButtons() {
-    document.getElementById('btn-edit-enter')?.addEventListener('click', () => enterEdit())
     document.getElementById('btn-edit-save')?.addEventListener('click', () => {
       saveState()
       exitEdit(true)
@@ -2413,13 +2792,29 @@ function initConsoleCanvases() {
       saveState()
       showExport()
     })
+    // Workbench buttons
+    const btnEdit = document.getElementById('btn-wb-edit')
+    const btnLock = document.getElementById('btn-wb-lock')
+    if (btnEdit) {
+      btnEdit.addEventListener('click', () => {
+        enterEdit()
+        btnEdit.classList.add('wb-edit-active')
+      })
+    }
+    if (btnLock) {
+      btnLock.addEventListener('click', () => {
+        saveWbState()
+        exitEdit(true)
+        btnEdit?.classList.remove('wb-edit-active')
+        hideWbPicker()
+      })
+    }
   }
 
   // ── Bootstrap ──
-  // Add data-slot attributes to sectors (they have CSS class already)
+  // Add data-slot attributes to ALL sectors in both CONSOLE and WORKBENCH views
   ;['ul','ur','lm','rm','ll','lr'].forEach(slot => {
-    const el = document.querySelector(`.sector.${slot}`)
-    if (el) el.dataset.slot = slot
+    document.querySelectorAll(`.sector.${slot}`).forEach(el => { el.dataset.slot = slot })
   })
 
   applyKickers()

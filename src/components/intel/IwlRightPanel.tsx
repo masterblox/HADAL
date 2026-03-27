@@ -63,12 +63,28 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
     return latest.published ? new Date(latest.published).toISOString().slice(0, 16).replace('T', ' ') + 'Z' : '—'
   }, [incidents])
 
+  // Signal integrity: 5 bars filled based on sources count (0–5 scale)
+  const sigBars = Math.min(5, Math.max(0, Math.round((casualtyStats.entities / 5) * 5)))
+
   return (
     <div className="iwl-right-inner" style={{ position: 'relative' }}>
-      <div className="jp-intel iwl-cas-grid" style={{display:'grid'}}>
-        <div className="iwl-cas jp-intel-cell"><div className="iwl-cas-v red jp-intel-val">{casualtyStats.mil.toLocaleString()}</div><div className="iwl-cas-l jp-intel-lbl">MILITARY</div></div>
-        <div className="iwl-cas jp-intel-cell"><div className="iwl-cas-v oran jp-intel-val">{casualtyStats.civ.toLocaleString()}</div><div className="iwl-cas-l jp-intel-lbl">CIVILIANS</div></div>
-        <div className="iwl-cas jp-intel-cell"><div className="iwl-cas-v jp-intel-val">{casualtyStats.entities}</div><div className="iwl-cas-l jp-intel-lbl">SOURCES</div></div>
+      <div className="iwl-panel-head">
+        <span className="iwl-panel-head-label">Intel Core</span>
+      </div>
+
+      <div className="iwl-cas-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr'}}>
+        <div className="iwl-stat-cell">
+          <div className="iwl-stat-num red">{casualtyStats.mil.toLocaleString()}</div>
+          <div className="iwl-stat-lbl">Military</div>
+        </div>
+        <div className="iwl-stat-cell">
+          <div className="iwl-stat-num amber">{casualtyStats.civ.toLocaleString()}</div>
+          <div className="iwl-stat-lbl">Civilians</div>
+        </div>
+        <div className="iwl-stat-cell">
+          <div className="iwl-stat-num">{casualtyStats.entities}</div>
+          <div className="iwl-stat-lbl">Sources</div>
+        </div>
       </div>
 
       <div className="jp-panel iwl-feed-wrap">
@@ -103,11 +119,21 @@ export function IwlRightPanel({ incidents }: IwlRightPanelProps) {
       </div>
 
       <div className="jp-panel iwl-telem">
-        <div className="iwl-telem-h jp-panel-header">&#9670; TACTICAL TELEMETRY</div>
-        <div className="iwl-telem-row"><span className="iwl-telem-k">ACTIVE EVENTS</span><span className="iwl-telem-v" style={{color: incidents.length > 0 ? 'var(--g)' : 'var(--g3)'}}>{incidents.length || '—'}</span></div>
-        <div className="iwl-telem-row"><span className="iwl-telem-k">KINETIC EVENTS</span><span className="iwl-telem-v" style={{color:'var(--warn)'}}>{incidents.filter(i => ['missile','airstrike','drone'].some(t => new RegExp(`\\b${t}\\b`, 'i').test(i.type || ''))).length || '—'}</span></div>
-        <div className="iwl-telem-row"><span className="iwl-telem-k">SOURCES ACTIVE</span><span className="iwl-telem-v" style={{color:'var(--g)'}}>{casualtyStats.entities || '—'}</span></div>
-        <div className="iwl-telem-row"><span className="iwl-telem-k">LAST STRIKE</span><span className="iwl-telem-v" style={{color:'var(--g5)'}}>{lastStrike}</span></div>
+        <div className="iwl-telem-accent">
+          <span className="iwl-telem-accent-label">Tactical Telemetry</span>
+        </div>
+        <div className="iwl-telem-row"><span className="iwl-telem-k">Active Events</span><span className="iwl-telem-v" style={{color: incidents.length > 0 ? 'var(--g)' : 'rgba(218,255,74,.35)'}}>{incidents.length || '—'}</span></div>
+        <div className="iwl-telem-row"><span className="iwl-telem-k">Kinetic Events</span><span className="iwl-telem-v" style={{color:'var(--warn)'}}>{incidents.filter(i => ['missile','airstrike','drone'].some(t => new RegExp(`\\b${t}\\b`, 'i').test(i.type || ''))).length || '—'}</span></div>
+        <div className="iwl-telem-row"><span className="iwl-telem-k">Sources Active</span><span className="iwl-telem-v" style={{color:'rgba(218,255,74,.80)'}}>{casualtyStats.entities || '—'}</span></div>
+        <div className="iwl-telem-row"><span className="iwl-telem-k">Last Strike</span><span className="iwl-telem-v" style={{color:'rgba(218,255,74,.60)'}}>{lastStrike}</span></div>
+        <div className="iwl-sig-row">
+          <span className="iwl-sig-k">Signal Integrity</span>
+          <div className="iwl-sig-bars">
+            {[0,1,2,3,4].map(i => (
+              <div key={i} className={`iwl-sig-bar${i < sigBars ? ' on' : ''}`} />
+            ))}
+          </div>
+        </div>
       </div>
 
       <DevTag id="R" />

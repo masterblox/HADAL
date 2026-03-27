@@ -28,12 +28,17 @@ export function IwlLeftPanel({ layerVisibility, onToggle, liveIncidentCount }: I
   const [open, setOpen] = useState(true)
   const layers = buildLayers(liveIncidentCount)
 
+  // Threat breakdown counts derived from layer data
+  const kineticCount = missileEvents.length + airstrikeEvents.length + groundEvents.length
+  const airspaceCount = airspaceZones.length + interceptEvents.length
+  const diplomaticCount = diplomaticEvents.length + combatantEvents.length
+
   return (
     <div className="iwl-left-inner" style={{ position: 'relative' }}>
       <div className="iwl-panel jp-panel">
-        <div className="iwl-ph jp-panel-header" onClick={() => setOpen(!open)}>
-          <span className="iwl-ph-t">Map Layers</span>
-          <span className={`iwl-ph-arrow${open ? ' open' : ''}`}>&#9662;</span>
+        <div className="iwl-panel-head">
+          <span className="iwl-panel-head-label">Layer Control</span>
+          <span className={`iwl-ph-arrow${open ? ' open' : ''}`} style={{marginLeft:'auto',cursor:'pointer'}} onClick={() => setOpen(!open)}>&#9662;</span>
         </div>
         {open && (
           <div className="iwl-layer-body">
@@ -50,13 +55,34 @@ export function IwlLeftPanel({ layerVisibility, onToggle, liveIncidentCount }: I
                 <span className="iwl-lyr-t" style={l.special ? {color:'rgba(200,130,255,.8)',letterSpacing:'.12em'} : {}}>
                   {l.label}
                 </span>
-                {l.ct && <span className="iwl-lyr-ct" style={{color: l.special ? 'rgba(210,140,255,.95)' : 'var(--g5)'}}>{l.ct}</span>}
+                {l.ct && <span className="iwl-lyr-ct" style={l.special ? {color:'rgba(210,140,255,.95)'} : {}}>{l.ct}</span>}
                 <div className={`iwl-toggle${layerVisibility[l.id] !== false ? '' : ' off'}`} />
               </div>
             ))}
           </div>
         )}
       </div>
+
+      <div className="iwl-panel jp-panel" style={{marginTop:0}}>
+        <div className="iwl-panel-head">
+          <span className="iwl-panel-head-label">Threat Breakdown</span>
+        </div>
+        <div className="iwl-threat-grid">
+          <div className="iwl-threat-cell">
+            <span className={`iwl-threat-n${kineticCount > 0 ? ' hot' : ''}`}>{kineticCount}</span>
+            <span className="iwl-threat-lbl">Kinetic</span>
+          </div>
+          <div className="iwl-threat-cell">
+            <span className="iwl-threat-n">{airspaceCount}</span>
+            <span className="iwl-threat-lbl">Airspace</span>
+          </div>
+          <div className="iwl-threat-cell">
+            <span className="iwl-threat-n">{diplomaticCount}</span>
+            <span className="iwl-threat-lbl">Diplom.</span>
+          </div>
+        </div>
+      </div>
+
       <DevTag id="P" />
     </div>
   )

@@ -81,6 +81,15 @@
     .fchip.stale  .fchip-source { color: rgba(255,152,20,.28); }
     .fchip.offline .fchip-source { color: rgba(255,255,255,.12); }
     .fchip-status { font-size: 5px; opacity: .55; }
+    .fchip.selected {
+      background: rgba(218,255,74,.10);
+      border-color: rgba(218,255,74,.75);
+      color: var(--g);
+      box-shadow: inset 0 0 0 1px rgba(218,255,74,.20);
+    }
+    .sector-pulse {
+      box-shadow: inset 0 0 0 2px rgba(218,255,74,.85), inset 0 0 0 32px rgba(218,255,74,.06) !important;
+    }
 
     /* ── CIRCUIT SHELL ────────────────────────────────────────────── */
     .circuit-shell {
@@ -374,6 +383,42 @@
       background: rgba(218,255,74,.01); flex-shrink: 0;
     }
     .picker-hint { font-family: var(--MONO); font-size: 5px; letter-spacing: .16em; color: rgba(218,255,74,.20); text-transform: uppercase; }
+
+    /* ── CANVAS TILES ─────────────────────────────────────────── */
+    .body canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .core-inner canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .aux-slot canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+    /* ── CHATTER TILE (DOM) ───────────────────────────────────── */
+    .chatter-wrap { padding: 4px 6px; height: 100%; display: flex; flex-direction: column; gap: 3px; }
+    .chatter-offline-badge {
+      background: rgba(255,30,30,.10); border: 1px solid rgba(255,60,60,.25);
+      padding: 2px 5px; font-family: var(--MONO); font-size: 5px; letter-spacing: .18em;
+      color: rgba(255,80,80,.85); text-transform: uppercase; text-align: center; flex-shrink: 0;
+    }
+    .chatter-sources { display: flex; flex-direction: column; gap: 2px; flex: 1; overflow: hidden; }
+    .chatter-src { display: flex; align-items: center; gap: 4px; padding: 1px 2px; }
+    .chatter-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+    .chatter-dot.live    { background: var(--g); }
+    .chatter-dot.stale   { background: rgba(255,152,20,.80); }
+    .chatter-dot.offline { background: rgba(255,255,255,.16); }
+    .chatter-src-name   { font-family: var(--MONO); font-size: 5px; letter-spacing: .10em; color: rgba(218,255,74,.55); flex: 1; }
+    .chatter-src-status { font-family: var(--MONO); font-size: 5px; color: rgba(255,255,255,.22); }
+    .chatter-src-status.stale { color: rgba(255,152,20,.55); }
+
+    /* ── IGNITE TILE (DOM) ────────────────────────────────────── */
+    .ignite-wrap { padding: 4px 6px; height: 100%; display: flex; flex-direction: column; gap: 2px; }
+    .ignite-header { font-family: var(--MONO); font-size: 5px; letter-spacing: .18em; color: rgba(218,255,74,.35); border-bottom: 1px solid rgba(218,255,74,.08); padding-bottom: 2px; flex-shrink: 0; }
+    .ignite-table  { display: flex; flex-direction: column; gap: 1px; flex: 1; overflow: hidden; }
+    .ignite-row    { display: flex; align-items: center; gap: 3px; }
+    .izh      { font-family: var(--MONO); font-size: 5px; letter-spacing: .06em; color: rgba(218,255,74,.50); width: 58px; flex-shrink: 0; }
+    .izr-val  { font-family: var(--MONO); font-size: 5px; color: rgba(218,255,74,.80); width: 14px; text-align: right; flex-shrink: 0; }
+    .izr-bar-wrap { flex: 1; height: 3px; background: rgba(218,255,74,.07); }
+    .izr-bar  { height: 100%; background: rgba(218,255,74,.42); }
+    .ignite-scans   { display: flex; gap: 3px; padding-top: 3px; border-top: 1px solid rgba(218,255,74,.06); flex-shrink: 0; }
+    .scan-win       { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2px 0; border: 1px solid rgba(218,255,74,.10); }
+    .scan-win-lbl   { font-family: var(--MONO); font-size: 5px; letter-spacing: .12em; color: rgba(218,255,74,.30); }
+    .scan-win-val   { font-family: var(--HEAD); font-size: 9px; font-weight: 700; color: rgba(218,255,74,.72); line-height: 1.1; }
   </style>
 </head>
 <body>
@@ -394,16 +439,16 @@
   <div class="feature-bar">
     <span class="fb-label">MODULES</span>
     <div class="fb-chips">
-      <button class="fchip live"><span class="fchip-icon">▣</span><span class="fchip-name">FEED</span><span class="fchip-source">VERIFIED / RAW</span><span class="fchip-status">LIVE</span></button>
-      <button class="fchip live"><span class="fchip-icon">◉</span><span class="fchip-name">MAP</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">LIVE</span></button>
-      <button class="fchip stale"><span class="fchip-icon">◬</span><span class="fchip-name">ARGUS</span><span class="fchip-source">PIPELINE PROXY</span><span class="fchip-status">PARTIAL</span></button>
-      <button class="fchip stale"><span class="fchip-icon">☰</span><span class="fchip-name">CHATTER</span><span class="fchip-source">PIPELINE SOURCES</span><span class="fchip-status">PARTIAL</span></button>
-      <button class="fchip offline"><span class="fchip-icon">✦</span><span class="fchip-name">IGNITE</span><span class="fchip-source">UPSTREAM MODULE</span><span class="fchip-status">OFFLINE</span></button>
-      <button class="fchip stale"><span class="fchip-icon">⌁</span><span class="fchip-name">CHRONOS</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">PARTIAL</span></button>
-      <button class="fchip offline"><span class="fchip-icon">◫</span><span class="fchip-name">SKYLINE</span><span class="fchip-source">UPSTREAM MODULE</span><span class="fchip-status">OFFLINE</span></button>
-      <button class="fchip offline"><span class="fchip-icon">⊕</span><span class="fchip-name">MARITIME</span><span class="fchip-source">NO SOURCE YET</span><span class="fchip-status">OFFLINE</span></button>
-      <button class="fchip live"><span class="fchip-icon">▶</span><span class="fchip-name">SIGNALS</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">LIVE</span></button>
-      <button class="fchip partial"><span class="fchip-icon">◌</span><span class="fchip-name">VENUS TRAP</span><span class="fchip-source">PREDICTION MODEL</span><span class="fchip-status">PARTIAL</span></button>
+      <button class="fchip live" data-module="FEED" data-sector="ll"><span class="fchip-icon">▣</span><span class="fchip-name">FEED</span><span class="fchip-source">VERIFIED / RAW</span><span class="fchip-status">LIVE</span></button>
+      <button class="fchip live" data-module="MAP"><span class="fchip-icon">◉</span><span class="fchip-name">MAP</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">LIVE</span></button>
+      <button class="fchip stale" data-module="ARGUS" data-sector="lm"><span class="fchip-icon">◬</span><span class="fchip-name">ARGUS</span><span class="fchip-source">PIPELINE PROXY</span><span class="fchip-status">PARTIAL</span></button>
+      <button class="fchip stale" data-module="CHATTER" data-sector="ur"><span class="fchip-icon">☰</span><span class="fchip-name">CHATTER</span><span class="fchip-source">PIPELINE SOURCES</span><span class="fchip-status">PARTIAL</span></button>
+      <button class="fchip offline" data-module="IGNITE" data-sector="rm"><span class="fchip-icon">✦</span><span class="fchip-name">IGNITE</span><span class="fchip-source">UPSTREAM MODULE</span><span class="fchip-status">OFFLINE</span></button>
+      <button class="fchip stale" data-module="CHRONOS"><span class="fchip-icon">⌁</span><span class="fchip-name">CHRONOS</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">PARTIAL</span></button>
+      <button class="fchip offline" data-module="SKYLINE"><span class="fchip-icon">◫</span><span class="fchip-name">SKYLINE</span><span class="fchip-source">UPSTREAM MODULE</span><span class="fchip-status">OFFLINE</span></button>
+      <button class="fchip offline" data-module="MARITIME"><span class="fchip-icon">⊕</span><span class="fchip-name">MARITIME</span><span class="fchip-source">NO SOURCE YET</span><span class="fchip-status">OFFLINE</span></button>
+      <button class="fchip live" data-module="SIGNALS" data-sector="ul"><span class="fchip-icon">▶</span><span class="fchip-name">SIGNALS</span><span class="fchip-source">INCIDENTS</span><span class="fchip-status">LIVE</span></button>
+      <button class="fchip partial" data-module="VENUS_TRAP" data-sector="lr"><span class="fchip-icon">◌</span><span class="fchip-name">VENUS TRAP</span><span class="fchip-source">PREDICTION MODEL</span><span class="fchip-status">PARTIAL</span></button>
     </div>
   </div>
 
@@ -438,46 +483,72 @@
         </div>
         <div class="core">
           <div class="core-inner">
-            <div class="core-id">MEKHEAD</div>
-            <div class="core-sub">HD-07 · ISR PROTOTYPE · TRACK</div>
+            <canvas id="cv-core"></canvas>
           </div>
         </div>
       </div>
 
-      <!-- UL -->
+      <!-- UL: ThreatSignalTile -->
       <div class="sector ul">
         <div class="kicker tl live"><span>◈</span><span class="kicker-title">THREAT SIGNAL</span></div>
-        <div class="body"><div class="ph"><div class="ph-id">UL</div><div class="ph-label">THREAT · SIGNAL</div></div></div>
+        <div class="body"><canvas id="cv-ul"></canvas></div>
         <div class="stitch"></div>
       </div>
-      <!-- LM -->
+      <!-- LM: ArgusTile -->
       <div class="sector lm">
         <div class="kicker tl stale"><span>◬</span><span class="kicker-title">ARGUS</span></div>
-        <div class="body"><div class="ph"><div class="ph-id">LM</div><div class="ph-label">ARGUS · PIPELINE</div></div></div>
+        <div class="body"><canvas id="cv-lm"></canvas></div>
         <div class="stitch"></div>
       </div>
-      <!-- LL -->
+      <!-- LL: VerificationTile -->
       <div class="sector ll">
         <div class="kicker tl live"><span>⊞</span><span class="kicker-title">VERIFICATION</span></div>
-        <div class="body"><div class="ph"><div class="ph-id">LL</div><div class="ph-label">VERIFICATION</div></div></div>
+        <div class="body"><canvas id="cv-ll"></canvas></div>
         <div class="stitch"></div>
       </div>
-      <!-- UR -->
+      <!-- UR: ChatterTile (DOM — offline state) -->
       <div class="sector ur">
         <div class="kicker tr stale"><span>☰</span><span class="kicker-title">CHATTER</span></div>
-        <div class="body"><div class="ph"><div class="ph-id">UR</div><div class="ph-label">CHATTER · SIGNALS</div></div></div>
+        <div class="body">
+          <div class="chatter-wrap">
+            <div class="chatter-offline-badge">⚠ NO SOURCES LIVE</div>
+            <div class="chatter-sources">
+              <div class="chatter-src"><div class="chatter-dot offline"></div><span class="chatter-src-name">TELEGRAM</span><span class="chatter-src-status">OFFLINE</span></div>
+              <div class="chatter-src"><div class="chatter-dot stale"></div><span class="chatter-src-name">X / TWITTER</span><span class="chatter-src-status stale">STALE</span></div>
+              <div class="chatter-src"><div class="chatter-dot offline"></div><span class="chatter-src-name">VK</span><span class="chatter-src-status">OFFLINE</span></div>
+              <div class="chatter-src"><div class="chatter-dot offline"></div><span class="chatter-src-name">DISCORD</span><span class="chatter-src-status">OFFLINE</span></div>
+              <div class="chatter-src"><div class="chatter-dot offline"></div><span class="chatter-src-name">REDDIT</span><span class="chatter-src-status">OFFLINE</span></div>
+            </div>
+          </div>
+        </div>
         <div class="stitch"></div>
       </div>
-      <!-- RM -->
+      <!-- RM: IgniteTile (DOM) -->
       <div class="sector rm">
         <div class="kicker tr offline"><span>✦</span><span class="kicker-title">IGNITE</span></div>
-        <div class="body"><div class="ph"><div class="ph-id">RM</div><div class="ph-label">IGNITE · UPSTREAM</div></div></div>
+        <div class="body">
+          <div class="ignite-wrap">
+            <div class="ignite-header">KINETIC ZONES · HEAT</div>
+            <div class="ignite-table">
+              <div class="ignite-row"><span class="izh">IRAQ</span><span class="izr-val">12</span><div class="izr-bar-wrap"><div class="izr-bar" style="width:100%"></div></div></div>
+              <div class="ignite-row"><span class="izh">IRAN</span><span class="izr-val">9</span><div class="izr-bar-wrap"><div class="izr-bar" style="width:75%"></div></div></div>
+              <div class="ignite-row"><span class="izh">YEMEN</span><span class="izr-val">8</span><div class="izr-bar-wrap"><div class="izr-bar" style="width:67%"></div></div></div>
+              <div class="ignite-row"><span class="izh">SAUDI ARABIA</span><span class="izr-val">7</span><div class="izr-bar-wrap"><div class="izr-bar" style="width:58%"></div></div></div>
+              <div class="ignite-row"><span class="izh">UAE</span><span class="izr-val">6</span><div class="izr-bar-wrap"><div class="izr-bar" style="width:50%"></div></div></div>
+            </div>
+            <div class="ignite-scans">
+              <div class="scan-win"><span class="scan-win-lbl">24H</span><span class="scan-win-val">4</span></div>
+              <div class="scan-win"><span class="scan-win-lbl">72H</span><span class="scan-win-val">11</span></div>
+              <div class="scan-win"><span class="scan-win-lbl">7D</span><span class="scan-win-val">18</span></div>
+            </div>
+          </div>
+        </div>
         <div class="stitch"></div>
       </div>
-      <!-- LR -->
+      <!-- LR: ReportsTile -->
       <div class="sector lr">
         <div class="kicker tr live"><span>▤</span><span class="kicker-title">REPORTS</span></div>
-        <div class="body"><div class="ph"><div class="ph-id">LR</div><div class="ph-label">REPORTS</div></div></div>
+        <div class="body"><canvas id="cv-lr"></canvas></div>
         <div class="stitch"></div>
       </div>
 
@@ -488,10 +559,10 @@
 
     <!-- Aux strip -->
     <div class="aux-grid">
-      <div class="aux-slot"><div class="aux-id">EVT</div><div class="aux-label">EVENT TIMELINE</div></div>
-      <div class="aux-slot"><div class="aux-id">GEO</div><div class="aux-label">GEO CONCENTRATION</div></div>
-      <div class="aux-slot"><div class="aux-id">TYP</div><div class="aux-label">TYPE PROFILE</div></div>
-      <div class="aux-slot"><div class="aux-id">FQI</div><div class="aux-label">FEED QUALITY</div></div>
+      <div class="aux-slot"><canvas id="cv-evt"></canvas></div>
+      <div class="aux-slot"><canvas id="cv-geo"></canvas></div>
+      <div class="aux-slot"><canvas id="cv-typ"></canvas></div>
+      <div class="aux-slot"><canvas id="cv-fqi"></canvas></div>
     </div>
 
     <!-- Ghost builder slot -->
@@ -641,6 +712,725 @@
   document.getElementById('picker-close-btn').addEventListener('click', () => {
     tilePicker.style.display = 'none'
   })
+
+  // ── CANVAS TILE RENDERERS ───────────────────────────────────
+
+  const DEMO = {
+    total:47, verified:12, likely:8, unconfirmed:6, kinetic:18,
+    zones:[['Iraq',12],['Iran',9],['Yemen',8],['Saudi Arabia',7],['UAE',6],['Syria',3],['Kuwait',2]],
+    credAvg:68, srcCount:5, geoTagged:38, withTs:44, multiSrc:14, govSrc:8,
+    scan24H:4, scan72H:11, scan7D:18
+  }
+  const GC  = '#daff4a'
+  const GA  = a => `rgba(218,255,74,${a})`
+  const AM  = a => `rgba(255,152,20,${a})`
+  const MF  = "'Share Tech Mono', monospace"
+
+  function fitCV(cv) {
+    const r = cv.parentElement.getBoundingClientRect()
+    cv.width  = Math.max(1, Math.floor(r.width))
+    cv.height = Math.max(1, Math.floor(r.height))
+    return cv.getContext('2d')
+  }
+
+  // ── UL: THREAT SIGNAL ────────────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-ul')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+
+    const buses = [
+      { label:'SIG', y: CH*0.26, blocks:[0.10,0.28,0.48,0.66,0.84] },
+      { label:'EVT', y: CH*0.52, blocks:[0.06,0.26,0.47,0.65,0.82] },
+      { label:'ENT', y: CH*0.78, blocks:[0.12,0.32,0.54,0.72,0.90] },
+    ]
+    const pulses = buses.map((b, i) => ({ x: i * 0.33, bi: i, spd: 0.0020 + i * 0.0005 }))
+
+    function drawFrame() {
+      ctx.clearRect(0, 0, CW, CH)
+      // PCB dot grid
+      ctx.fillStyle = GA(0.07)
+      for (let y = 4; y < CH; y += 8)
+        for (let x = 4; x < CW; x += 8)
+          ctx.fillRect(x, y, 1, 1)
+
+      buses.forEach((b, bi) => {
+        // bus trace
+        ctx.strokeStyle = GA(0.18); ctx.lineWidth = 1
+        ctx.beginPath(); ctx.moveTo(22, b.y); ctx.lineTo(CW - 4, b.y); ctx.stroke()
+        // label
+        ctx.fillStyle = GA(0.45); ctx.font = `7px ${MF}`
+        ctx.fillText(b.label, 2, b.y + 2.5)
+        // IC blocks
+        b.blocks.forEach(bx => {
+          const x = 22 + bx * (CW - 26)
+          ctx.fillStyle = GA(0.07)
+          ctx.fillRect(x - 9, b.y - 3.5, 18, 7)
+          ctx.strokeStyle = GA(0.28); ctx.lineWidth = 0.5
+          ctx.strokeRect(x - 9, b.y - 3.5, 18, 7)
+          // pin dots
+          ctx.fillStyle = GA(0.35)
+          for (let p = -1; p <= 1; p += 2) {
+            ctx.fillRect(x - 9, b.y + p * 2, 2, 1)
+            ctx.fillRect(x + 7, b.y + p * 2, 2, 1)
+          }
+        })
+      })
+      // vertical vias
+      for (let i = 1; i <= 4; i++) {
+        const vx = 22 + i * (CW - 26) / 5
+        ctx.strokeStyle = GA(0.10); ctx.lineWidth = 0.5
+        ctx.beginPath(); ctx.moveTo(vx, buses[0].y); ctx.lineTo(vx, buses[2].y); ctx.stroke()
+        ctx.fillStyle = GA(0.18); ctx.fillRect(vx - 1.5, buses[1].y - 1.5, 3, 3)
+      }
+      // pulses
+      pulses.forEach(p => {
+        const b = buses[p.bi]
+        const px = 22 + p.x * (CW - 26)
+        ctx.fillStyle = GC
+        ctx.fillRect(px - 2, b.y - 2, 4, 4)
+        ctx.fillStyle = GA(0.18)
+        ctx.fillRect(px - 10, b.y - 1.5, 8, 3)
+        p.x = (p.x + p.spd) % 1
+      })
+      requestAnimationFrame(drawFrame)
+    }
+    drawFrame()
+  })()
+
+  // ── LM: ARGUS ────────────────────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-lm')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    const OCX = CW * 0.38, OCY = CH * 0.52
+    const R = Math.min(CW * 0.26, CH * 0.36)
+    const pct = DEMO.credAvg / 100
+    const start = Math.PI * 0.75, sweep = Math.PI * 1.5
+
+    // background arc
+    ctx.strokeStyle = GA(0.12); ctx.lineWidth = 3
+    ctx.beginPath(); ctx.arc(OCX, OCY, R, start, start + sweep); ctx.stroke()
+    // value arc
+    ctx.strokeStyle = GC; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.arc(OCX, OCY, R, start, start + sweep * pct); ctx.stroke()
+    // tick marks
+    for (let i = 0; i <= 10; i++) {
+      const a = start + sweep * (i / 10)
+      const len = i % 5 === 0 ? 6 : 3
+      ctx.strokeStyle = GA(i % 5 === 0 ? 0.35 : 0.18); ctx.lineWidth = 0.75
+      ctx.beginPath()
+      ctx.moveTo(OCX + Math.cos(a) * (R - len), OCY + Math.sin(a) * (R - len))
+      ctx.lineTo(OCX + Math.cos(a) * (R + 2),   OCY + Math.sin(a) * (R + 2))
+      ctx.stroke()
+    }
+    // big value
+    ctx.fillStyle = GA(0.92); ctx.font = `bold 20px ${MF}`
+    ctx.textAlign = 'center'
+    ctx.fillText(DEMO.credAvg, OCX, OCY + 7)
+    ctx.font = `6px ${MF}`; ctx.fillStyle = GA(0.38)
+    ctx.fillText('CRED AVG', OCX, OCY + 17)
+    ctx.fillStyle = GA(0.28); ctx.fillText('%', OCX + R * 0.52, OCY + 4)
+
+    // factor bars
+    const factors = [
+      { lbl:'GEO_TAG', val: DEMO.geoTagged / DEMO.total },
+      { lbl:'WITH_TS', val: DEMO.withTs    / DEMO.total },
+      { lbl:'MULTI',   val: DEMO.multiSrc  / DEMO.total },
+      { lbl:'GOV_SRC', val: DEMO.govSrc    / DEMO.total },
+    ]
+    const bx0 = CW * 0.60, bw = CW * 0.36, BH = 3
+    const rowH = (CH - 16) / factors.length
+    factors.forEach((f, i) => {
+      const fy = 8 + i * rowH + rowH * 0.28
+      ctx.fillStyle = GA(0.32); ctx.font = `5px ${MF}`; ctx.textAlign = 'left'
+      ctx.fillText(f.lbl, bx0, fy)
+      ctx.fillStyle = GA(0.08); ctx.fillRect(bx0, fy + 3, bw, BH)
+      ctx.fillStyle = GA(0.55); ctx.fillRect(bx0, fy + 3, bw * f.val, BH)
+      ctx.fillStyle = GA(0.55); ctx.textAlign = 'right'
+      ctx.fillText(Math.round(f.val * 100) + '%', bx0 + bw, fy)
+    })
+    ctx.textAlign = 'left'
+  })()
+
+  // ── LL: VERIFICATION ─────────────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-ll')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+
+    const families = [
+      { name:'GOVERNMENT',    rel:0.95, sigs:4, cnt:8  },
+      { name:'NEWS WIRE',     rel:0.82, sigs:3, cnt:19 },
+      { name:'CHATTER/SOC',   rel:0.48, sigs:2, cnt:11 },
+      { name:'SENSOR/SIGINT', rel:0.98, sigs:5, cnt:5  },
+      { name:'COMMERCIAL',    rel:0.72, sigs:3, cnt:9  },
+      { name:'UNIFIED FEED',  rel:0.74, sigs:4, cnt:DEMO.verified },
+    ]
+
+    const mw = CW * 0.48
+    const rx = CW * 0.60
+    const rw = CW * 0.38
+    const rowH = (CH - 16) / 6
+    let tick = 0
+
+    function draw() {
+      ctx.clearRect(0, 0, CW, CH)
+
+      // header
+      ctx.fillStyle = GA(0.22); ctx.font = `5px ${MF}`
+      ctx.fillText('SOURCE FAMILIES', 2, 8)
+
+      // ── LEFT PANEL: source family rows ──
+      families.forEach((f, i) => {
+        const mx = 4
+        const my = 14 + i * rowH
+        const mh = rowH - 1
+
+        // left edge accent bar (3px)
+        const edgeAlpha = f.rel > 0.9 ? 0.40 : f.rel > 0.7 ? 0.22 : 0.10
+        ctx.fillStyle = GA(edgeAlpha)
+        ctx.fillRect(mx, my, 3, mh)
+
+        // family name
+        ctx.fillStyle = GA(0.60); ctx.font = `bold 7px ${MF}`
+        ctx.fillText(f.name, mx + 6, my + 9)
+
+        // signal boxes
+        for (let s = 0; s < f.sigs; s++) {
+          const sx = mx + 6 + s * 10
+          const active = s < Math.round(f.sigs * f.rel)
+          ctx.fillStyle = active ? GA(0.55) : GA(0.10)
+          ctx.fillRect(sx, my + 10, 8, 5)
+        }
+
+        // reliability bar
+        const bx = mx + 6, bw2 = mw - 20, by2 = my + 13
+        ctx.fillStyle = GA(0.08); ctx.fillRect(bx, by2, bw2, 4)
+        ctx.fillStyle = GA(f.rel > 0.9 ? 0.72 : f.rel > 0.7 ? 0.50 : 0.28)
+        ctx.fillRect(bx, by2, bw2 * f.rel, 4)
+
+        // count right-aligned
+        ctx.fillStyle = GA(0.40); ctx.font = `5px ${MF}`; ctx.textAlign = 'right'
+        ctx.fillText(f.cnt, mw - 2, my + 9)
+        ctx.textAlign = 'left'
+
+        // animated connector dot
+        const cy = my + mh / 2
+        const pulse = Math.sin(tick * 0.04 + i * 0.9) * 0.5 + 0.5
+        ctx.fillStyle = GA(0.18 + pulse * 0.40)
+        ctx.fillRect(mw + 2, cy - 2, 4, 4)
+
+        // connector line to right panel
+        ctx.strokeStyle = GA(0.06 + pulse * 0.06); ctx.lineWidth = 0.5
+        ctx.beginPath(); ctx.moveTo(mw + 6, cy); ctx.lineTo(rx - 2, cy); ctx.stroke()
+      })
+
+      // panel divider
+      ctx.strokeStyle = GA(0.10); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(mw, 10); ctx.lineTo(mw, CH - 2); ctx.stroke()
+
+      // ── RIGHT PANEL: CORROBORATION ──
+      ctx.fillStyle = GA(0.04); ctx.fillRect(rx, 2, rw, CH - 4)
+      ctx.strokeStyle = GA(0.14); ctx.lineWidth = 1
+      ctx.strokeRect(rx, 2, rw, CH - 4)
+
+      // top accent bar
+      ctx.fillStyle = GA(0.28); ctx.fillRect(rx, 2, rw, 3)
+
+      // label
+      ctx.fillStyle = GA(0.60); ctx.font = `bold 6px ${MF}`
+      ctx.fillText('CORROBORATION', rx + 5, 22)
+
+      // stats
+      const stats = ['AGREE  5/6', 'XSRC   0.78', 'INDEP  0.88', 'CONV   7MIN', 'UNIFIED YES']
+      ctx.font = `5px ${MF}`
+      stats.forEach((s, i) => {
+        ctx.fillStyle = GA(0.48)
+        ctx.fillText(s, rx + 5, 30 + i * 12)
+      })
+
+      // VERIFIED banner (pulsing)
+      const bannerPulse = Math.sin(tick * 0.05) * 0.15 + 0.55
+      const bannerY = CH - 14
+      ctx.fillStyle = GA(bannerPulse * 0.15)
+      ctx.fillRect(rx, bannerY, rw, 12)
+      ctx.strokeStyle = GA(bannerPulse * 0.30); ctx.lineWidth = 0.5
+      ctx.strokeRect(rx, bannerY, rw, 12)
+      ctx.fillStyle = GA(bannerPulse)
+      ctx.font = `bold 6px ${MF}`; ctx.textAlign = 'center'
+      ctx.fillText('VERIFIED — 6 FAMILIES', rx + rw / 2, bannerY + 8)
+      ctx.textAlign = 'left'
+
+      tick++
+      requestAnimationFrame(draw)
+    }
+    draw()
+  })()
+
+  // ── LR: REPORTS ──────────────────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-lr')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    let tick = 0
+
+    const lines = [
+      '> FLASH INTEL // GULF THEATRE',
+      '> DATE: 2026-03-27 // 0347Z',
+      '',
+      'KINETIC: 18 EVENTS LOGGED',
+      'AIRSTRIKE [IRAQ]: TGT CONFIRMED',
+      'DRONE OPS [YEMEN]: 3 ACTIVE',
+      'MISSILE TRACK [IRAN]: MONITOR',
+      '',
+      'CREDIBILITY AVG: 68%',
+      'SOURCES ACTIVE: 5',
+      '',
+      '> MULTI-SRC CORROBORATION: 14',
+      '> GOV SOURCED: 8 INCIDENTS',
+      '',
+      ':: END OF BRIEF ::',
+    ]
+    const LH = 8, TY = 17
+
+    function draw() {
+      ctx.clearRect(0, 0, CW, CH)
+      // CLASSIFIED bar
+      ctx.fillStyle = AM(0.88)
+      ctx.fillRect(0, 0, CW, 10)
+      ctx.fillStyle = 'rgba(0,0,0,.72)'; ctx.font = `bold 6px ${MF}`
+      ctx.textAlign = 'center'
+      ctx.fillText('CLASSIFIED · BRIEF INTEL', CW / 2, 7.5)
+      ctx.textAlign = 'left'
+      // BG watermark
+      ctx.save(); ctx.globalAlpha = 0.04
+      ctx.fillStyle = GC; ctx.font = `bold 28px ${MF}`
+      ctx.fillText('BRIEF', 2, CH * 0.52)
+      ctx.fillText('INTEL', 2, CH * 0.82)
+      ctx.restore()
+      // scan lines
+      for (let y = 12; y < CH; y += 4) {
+        ctx.fillStyle = GA(0.015); ctx.fillRect(0, y, CW, 1)
+      }
+      // typewriter lines
+      const vis = Math.min(Math.floor(tick / 3), lines.length)
+      lines.slice(0, vis).forEach((l, i) => {
+        ctx.fillStyle = l.startsWith('>')  ? GA(0.88)
+                      : l.startsWith('::') ? AM(0.82)
+                      : l === ''           ? GA(0)
+                      : GA(0.58)
+        ctx.font = `6px ${MF}`
+        ctx.fillText(l, 4, TY + i * LH)
+      })
+      // cursor
+      if (vis < lines.length && Math.floor(tick / 7) % 2 === 0) {
+        ctx.fillStyle = GA(0.90)
+        ctx.fillRect(4, TY + vis * LH - 6, 4, 6)
+      }
+      tick++
+      if (tick > lines.length * 3 + 80) tick = 0
+      requestAnimationFrame(draw)
+    }
+    draw()
+  })()
+
+  // ── CORE: MEKHEAD ────────────────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-core')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    let tick = 0
+
+    const FACE = [
+      [0,0,0,0,0,1,1,1,1,0,0,0,0,0],
+      [0,0,0,1,1,2,2,2,2,1,1,0,0,0],
+      [0,0,1,1,2,2,2,2,2,2,1,1,0,0],
+      [0,1,1,2,2,2,2,2,2,2,2,1,1,0],
+      [0,1,1,2,0,0,2,2,0,0,2,1,1,0],
+      [0,1,1,2,0,0,2,2,0,0,2,1,1,0],
+      [0,1,1,2,2,2,2,2,2,2,2,1,1,0],
+      [0,1,1,1,2,2,2,2,2,2,1,1,1,0],
+      [0,1,1,1,1,3,3,3,3,1,1,1,1,0],
+      [0,1,1,1,3,3,1,1,3,3,1,1,1,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,0],
+      [0,0,1,1,1,1,1,1,1,1,1,1,0,0],
+      [0,0,0,0,1,1,1,1,1,1,0,0,0,0],
+      [0,0,0,0,1,1,0,0,1,1,0,0,0,0],
+      [1,1,0,0,0,0,0,0,0,0,0,0,1,1],
+      [1,1,1,0,0,0,0,0,0,0,0,1,1,1],
+    ]
+
+    // panel bounds
+    const lpW = CW * 0.28
+    const cpX = CW * 0.28, cpW = CW * 0.44
+    const rpX = CW * 0.72, rpW = CW * 0.28
+    const cpCX = cpX + cpW / 2, cpCY = CH / 2
+
+    const cellSz = (cpW / 14) * 0.85
+    const faceW = cellSz * 14, faceH = cellSz * 16
+    const faceOX = cpCX - faceW / 2
+    const faceOY = cpCY - faceH / 2
+
+    const TW = '# SYS.CHATTER.SOUL · HD-07 · ACTIVE'
+
+    function draw() {
+      ctx.clearRect(0, 0, CW, CH)
+
+      // scan lines
+      for (let y = 0; y < CH; y += 3) {
+        ctx.fillStyle = GA(0.006); ctx.fillRect(0, y, CW, 1)
+      }
+
+      // panel dividers
+      ctx.strokeStyle = GA(0.10); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(lpW, 4); ctx.lineTo(lpW, CH - 4); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(rpX, 4); ctx.lineTo(rpX, CH - 4); ctx.stroke()
+
+      // ── LEFT PANEL ──
+      ctx.fillStyle = GA(0.28); ctx.font = `5px ${MF}`
+      ctx.fillText('# SYS.CHATTER.SOUL', 6, 18)
+
+      ctx.fillStyle = GA(0.52); ctx.font = `bold 14px ${MF}`
+      ctx.fillText('HD-07', 6, 38)
+
+      ctx.fillStyle = GA(0.84); ctx.font = `bold 16px "Rajdhani", sans-serif`
+      ctx.fillText('MEKHEAD', 6, 58)
+
+      // left callout lines
+      const lCallouts = [
+        { y: CH * 0.30, lbl:'OPTICAL' },
+        { y: CH * 0.46, lbl:'INTERNALS' },
+        { y: CH * 0.62, lbl:'COMBAT AI' },
+      ]
+      lCallouts.forEach(c => {
+        ctx.strokeStyle = GA(0.12); ctx.lineWidth = 0.5
+        ctx.beginPath(); ctx.moveTo(lpW - 4, c.y); ctx.lineTo(lpW - 16, c.y); ctx.stroke()
+        ctx.fillStyle = GA(0.35); ctx.font = `5px ${MF}`; ctx.textAlign = 'right'
+        ctx.fillText(c.lbl, lpW - 18, c.y + 1.5)
+        ctx.textAlign = 'left'
+      })
+
+      // status bottom bar
+      const sbarY = CH - 26
+      ctx.fillStyle = GA(0.05); ctx.fillRect(4, sbarY, lpW - 8, 22)
+      ctx.strokeStyle = GA(0.12); ctx.lineWidth = 0.5
+      ctx.strokeRect(4, sbarY, lpW - 8, 22)
+      ctx.font = `5px ${MF}`
+      ctx.fillStyle = 'rgba(255,152,20,.80)'; ctx.fillText('THREAT:ELEVATED', 8, sbarY + 7)
+      ctx.fillStyle = GA(0.50); ctx.fillText('INTEG:0.74', 8, sbarY + 14)
+      ctx.fillStyle = GA(0.38); ctx.fillText('CLASS:ISR-MECH', 8, sbarY + 21)
+
+      // ── CENTER PANEL ──
+      // hex outline
+      const hexR = Math.min(cpW, CH) * 0.42
+      ctx.strokeStyle = GA(0.18); ctx.lineWidth = 1
+      ctx.beginPath()
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2 - Math.PI / 2
+        i === 0
+          ? ctx.moveTo(cpCX + Math.cos(a) * hexR, cpCY + Math.sin(a) * hexR)
+          : ctx.lineTo(cpCX + Math.cos(a) * hexR, cpCY + Math.sin(a) * hexR)
+      }
+      ctx.closePath(); ctx.stroke()
+
+      // reticle circle
+      const R = Math.min(cpW, CH) * 0.20
+      ctx.strokeStyle = GA(0.22); ctx.lineWidth = 1
+      ctx.beginPath(); ctx.arc(cpCX, cpCY, R, 0, Math.PI * 2); ctx.stroke()
+
+      // crosshair with gap
+      const GAP = 8
+      ctx.strokeStyle = GA(0.28); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(cpX + 4, cpCY);     ctx.lineTo(cpCX - GAP, cpCY); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(cpCX + GAP, cpCY);  ctx.lineTo(cpX + cpW - 4, cpCY); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(cpCX, 4);            ctx.lineTo(cpCX, cpCY - GAP); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(cpCX, cpCY + GAP);  ctx.lineTo(cpCX, CH - 4); ctx.stroke()
+
+      // center panel corner brackets
+      const BX = cpX + 8, BY = 8, BL = 10
+      ctx.strokeStyle = GA(0.35); ctx.lineWidth = 1
+      ctx.beginPath(); ctx.moveTo(BX, BY + BL); ctx.lineTo(BX, BY); ctx.lineTo(BX + BL, BY); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(cpX + cpW - BL - 8, BY); ctx.lineTo(cpX + cpW - 8, BY); ctx.lineTo(cpX + cpW - 8, BY + BL); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(BX, CH - BY - BL); ctx.lineTo(BX, CH - BY); ctx.lineTo(BX + BL, CH - BY); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(cpX + cpW - BL - 8, CH - BY); ctx.lineTo(cpX + cpW - 8, CH - BY); ctx.lineTo(cpX + cpW - 8, CH - BY - BL); ctx.stroke()
+
+      // pixel face with scan brightness pulse
+      FACE.forEach((row, ri) => {
+        const scanPhase = (tick * 0.04 - ri * 0.4) % (Math.PI * 2)
+        const scanBoost = Math.sin(scanPhase) * 0.15
+        row.forEach((cell, ci) => {
+          if (cell === 0) return
+          const base = cell === 2 ? 0.72 : cell === 3 ? 0.48 : 0.25
+          const alpha = Math.max(0.05, base + scanBoost)
+          ctx.fillStyle = GA(alpha)
+          ctx.fillRect(
+            faceOX + ci * cellSz + 0.5,
+            faceOY + ri * cellSz + 0.5,
+            cellSz - 1, cellSz - 1
+          )
+        })
+      })
+
+      // callout from reticle edge
+      const rCallouts = [
+        { a: Math.PI * 0.12, lbl:'SENSOR ARRAY' },
+        { a: Math.PI * 0.88, lbl:'EAR FINS' },
+      ]
+      rCallouts.forEach(c => {
+        const lx = cpCX + Math.cos(c.a) * (R + 14)
+        const ly = cpCY + Math.sin(c.a) * (R + 14)
+        ctx.strokeStyle = GA(0.15); ctx.lineWidth = 0.5
+        ctx.beginPath()
+        ctx.moveTo(cpCX + Math.cos(c.a) * R, cpCY + Math.sin(c.a) * R)
+        ctx.lineTo(lx, ly); ctx.stroke()
+        ctx.fillStyle = GA(0.38); ctx.font = `5px ${MF}`
+        ctx.textAlign = lx > cpCX ? 'left' : 'right'
+        ctx.fillText(c.lbl, lx + (lx > cpCX ? 2 : -2), ly + 1.5)
+      })
+      ctx.textAlign = 'left'
+
+      // ── RIGHT PANEL ──
+      ctx.fillStyle = GA(0.22); ctx.font = `5px ${MF}`
+      ctx.fillText('SOURCE PANEL', rpX + 5, 14)
+
+      // sonar arc
+      const arcCX = rpX + rpW * 0.35
+      const arcR  = CH * 0.36
+      const arcStart = -Math.PI * 0.6, arcEnd = Math.PI * 0.6
+      ctx.strokeStyle = GA(0.20); ctx.lineWidth = 1
+      ctx.beginPath(); ctx.arc(arcCX, CH / 2, arcR, arcStart, arcEnd); ctx.stroke()
+
+      // arc ticks
+      for (let t = 0; t <= 8; t++) {
+        const a = arcStart + (arcEnd - arcStart) * (t / 8)
+        const cosA = Math.cos(a), sinA = Math.sin(a)
+        ctx.strokeStyle = GA(0.12); ctx.lineWidth = 0.5
+        ctx.beginPath()
+        ctx.moveTo(arcCX + cosA * (arcR - 3), CH / 2 + sinA * (arcR - 3))
+        ctx.lineTo(arcCX + cosA * (arcR + 3), CH / 2 + sinA * (arcR + 3))
+        ctx.stroke()
+      }
+
+      // animated dot on arc
+      const dotFrac = (tick * 0.008) % 1
+      const dotA = arcStart + (arcEnd - arcStart) * dotFrac
+      const dotX = arcCX + Math.cos(dotA) * arcR
+      const dotY = CH / 2 + Math.sin(dotA) * arcR
+      ctx.fillStyle = GA(0.85)
+      ctx.fillRect(dotX - 2, dotY - 2, 4, 4)
+
+      // STALE vertical badge
+      ctx.save()
+      ctx.translate(rpX + rpW - 8, CH / 2)
+      ctx.rotate(-Math.PI / 2)
+      ctx.fillStyle = GA(0.20); ctx.font = `5px ${MF}`; ctx.textAlign = 'center'
+      ctx.fillText('STALE', 0, 0)
+      ctx.restore()
+      ctx.textAlign = 'left'
+
+      // typewriter bottom
+      const shown = TW.slice(0, Math.floor(tick / 2) % (TW.length + 30))
+      ctx.fillStyle = GA(0.40); ctx.font = `5px ${MF}`; ctx.textAlign = 'center'
+      ctx.fillText(shown, CW / 2, CH - 6)
+      ctx.textAlign = 'left'
+
+      tick++
+      requestAnimationFrame(draw)
+    }
+    draw()
+  })()
+
+  // ── AUX: EVT TIMELINE ────────────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-evt')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    const bars = [2, 4, 1, 3, 6, 8, 5, 4, 7, 9, 6, 8, 11, 7]
+    const maxB = Math.max(...bars)
+    const bw = Math.max(1, Math.floor((CW - 20) / bars.length) - 1)
+    const TOP = 14, BOT = 10
+
+    ctx.fillStyle = GA(0.30); ctx.font = `5px ${MF}`
+    ctx.fillText('EVENT TIMELINE · 14D', 2, 8)
+
+    bars.forEach((v, i) => {
+      const x = 10 + i * (bw + 1)
+      const bh = (v / maxB) * (CH - TOP - BOT)
+      ctx.fillStyle = GA(v > 8 ? 0.55 : 0.28)
+      ctx.fillRect(x, CH - BOT - bh, bw, bh)
+    })
+
+    const kVals = [1, 2, 1, 1, 3, 4, 2, 2, 3, 5, 3, 4, 6, 4]
+    ctx.strokeStyle = AM(0.82); ctx.lineWidth = 1.5
+    ctx.beginPath()
+    kVals.forEach((v, i) => {
+      const x = 10 + i * (bw + 1) + bw / 2
+      const y = CH - BOT - (v / maxB) * (CH - TOP - BOT)
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+    })
+    ctx.stroke()
+
+    ctx.fillStyle = AM(0.62); ctx.font = `5px ${MF}`
+    ctx.fillText('── KINETIC', CW - 46, CH - 2)
+  })()
+
+  // ── AUX: GEO CONCENTRATION ───────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-geo')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    const maxV = DEMO.zones[0][1]
+    const LW = 50, BX = LW + 2, BW = CW - LW - 18, BH = 4
+    const rowH = (CH - 14) / DEMO.zones.length
+
+    ctx.fillStyle = GA(0.30); ctx.font = `5px ${MF}`
+    ctx.fillText('GEO CONCENTRATION', 2, 8)
+
+    DEMO.zones.forEach(([name, val], i) => {
+      const fy = 12 + i * rowH + rowH * 0.15
+      ctx.fillStyle = GA(0.42); ctx.font = `5px ${MF}`; ctx.textAlign = 'left'
+      ctx.fillText(name, 2, fy + BH / 2 + 1.5)
+      ctx.fillStyle = GA(0.07); ctx.fillRect(BX, fy, BW, BH)
+      ctx.fillStyle = GA(val === maxV ? 0.80 : 0.40)
+      ctx.fillRect(BX, fy, BW * (val / maxV), BH)
+      ctx.fillStyle = GA(0.55); ctx.textAlign = 'right'
+      ctx.fillText(val, CW - 2, fy + BH / 2 + 1.5)
+      ctx.textAlign = 'left'
+    })
+  })()
+
+  // ── AUX: TYPE PROFILE ────────────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-typ')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    const OCX = CW / 2, OCY = CH / 2 + 5
+    const R = Math.min(CW * 0.30, CH * 0.36)
+    const axes = ['MISSILE','AIRSTRIKE','DRONE','GROUND','NAVAL','CYBER']
+    const vals = [7, 5, 4, 3, 2, 2]
+    const maxV = 7, N = axes.length
+
+    ctx.fillStyle = GA(0.30); ctx.font = `5px ${MF}`
+    ctx.fillText('TYPE PROFILE', 2, 8)
+
+    for (let ring = 1; ring <= 3; ring++) {
+      ctx.beginPath()
+      for (let i = 0; i < N; i++) {
+        const a = (i / N) * Math.PI * 2 - Math.PI / 2
+        const rx = OCX + Math.cos(a) * R * (ring / 3)
+        const ry = OCY + Math.sin(a) * R * (ring / 3)
+        i === 0 ? ctx.moveTo(rx, ry) : ctx.lineTo(rx, ry)
+      }
+      ctx.closePath(); ctx.strokeStyle = GA(0.10); ctx.lineWidth = 0.5; ctx.stroke()
+    }
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2 - Math.PI / 2
+      ctx.strokeStyle = GA(0.12); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(OCX, OCY)
+      ctx.lineTo(OCX + Math.cos(a) * R, OCY + Math.sin(a) * R); ctx.stroke()
+    }
+    ctx.beginPath()
+    vals.forEach((v, i) => {
+      const a = (i / N) * Math.PI * 2 - Math.PI / 2
+      const r = R * (v / maxV)
+      const x = OCX + Math.cos(a) * r, y = OCY + Math.sin(a) * r
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+    })
+    ctx.closePath()
+    ctx.fillStyle = GA(0.12); ctx.fill()
+    ctx.strokeStyle = GA(0.72); ctx.lineWidth = 1; ctx.stroke()
+
+    ctx.font = `4px ${MF}`
+    axes.forEach((lbl, i) => {
+      const a = (i / N) * Math.PI * 2 - Math.PI / 2
+      const lx = OCX + Math.cos(a) * (R + 10)
+      const ly = OCY + Math.sin(a) * (R + 10)
+      ctx.fillStyle = GA(0.42); ctx.textAlign = 'center'
+      ctx.fillText(lbl, lx, ly + 1.5)
+    })
+    ctx.textAlign = 'left'
+  })()
+
+  // ── AUX: FEED QUALITY INDEX ──────────────────────────────────
+  ;(function() {
+    const cv = document.getElementById('cv-fqi')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    const buses = [
+      { lbl:'GEO',  x: 0.10 },
+      { lbl:'TS',   x: 0.30 },
+      { lbl:'MSRC', x: 0.55 },
+      { lbl:'GOV',  x: 0.72 },
+      { lbl:'CRED', x: 0.22 },
+      { lbl:'RAW',  x: 0.88 },
+    ]
+    const pkts = buses.map((b, i) => ({ x: b.x, bi: i, spd: 0.0014 + i * 0.0003 }))
+    const LW2 = 28, BX2 = LW2 + 2, BW2 = CW - LW2 - 16
+    const rowH = (CH - 16) / buses.length
+
+    function draw() {
+      ctx.clearRect(0, 0, CW, CH)
+      ctx.fillStyle = GA(0.30); ctx.font = `5px ${MF}`
+      ctx.fillText('FEED QUALITY INDEX', 2, 8)
+
+      // queue column
+      const QX = CW - 12, QH = CH - 14
+      ctx.fillStyle = GA(0.06); ctx.fillRect(QX, 12, 8, QH)
+      ctx.fillStyle = GA(0.42); ctx.fillRect(QX, 12 + QH * 0.28, 8, QH * 0.72)
+      ctx.strokeStyle = GA(0.18); ctx.lineWidth = 0.5; ctx.strokeRect(QX, 12, 8, QH)
+      ctx.fillStyle = GA(0.32); ctx.font = `4px ${MF}`; ctx.textAlign = 'center'
+      ctx.fillText('Q', QX + 4, 10)
+      ctx.textAlign = 'left'
+
+      buses.forEach((b, i) => {
+        const fy = 12 + i * rowH + rowH * 0.2
+        ctx.fillStyle = GA(0.32); ctx.font = `5px ${MF}`
+        ctx.fillText(b.lbl, 2, fy + 3)
+        ctx.strokeStyle = GA(0.12); ctx.lineWidth = 1
+        ctx.beginPath(); ctx.moveTo(BX2, fy + 2); ctx.lineTo(BX2 + BW2, fy + 2); ctx.stroke()
+      })
+
+      pkts.forEach(p => {
+        const fy = 12 + p.bi * rowH + rowH * 0.2
+        const px = BX2 + p.x * BW2
+        ctx.fillStyle = GC; ctx.fillRect(px - 2, fy, 4, 4)
+        ctx.fillStyle = GA(0.20); ctx.fillRect(px - 10, fy + 1, 8, 2)
+        p.x = (p.x + p.spd) % 1
+      })
+
+      requestAnimationFrame(draw)
+    }
+    draw()
+  })()
+
+  // ── FEATURE BAR INTERACTIVITY ─────────────────────────────────
+  ;(function() {
+    const chips = document.querySelectorAll('.fchip')
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('selected'))
+        chip.classList.add('selected')
+        const sector = chip.dataset.sector
+        if (sector) {
+          const sectorEl = document.querySelector(`.sector.${sector}`)
+          if (sectorEl) {
+            sectorEl.classList.add('sector-pulse')
+            setTimeout(() => sectorEl.classList.remove('sector-pulse'), 300)
+          }
+        }
+      })
+    })
+  })()
 </script>
 </body>
 </html>

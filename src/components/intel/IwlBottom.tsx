@@ -48,22 +48,33 @@ interface IwlBottomProps {
 }
 
 export function IwlBottom({ datalinkText, onExportSitrep, flights }: IwlBottomProps) {
+  // Determine pipeline liveness from datalinkText content
+  const isLive = datalinkText ? !datalinkText.toLowerCase().includes('unknown') && !datalinkText.toLowerCase().includes('stale') : false
+
   return (
     <div className="iwl-bottom" style={{ position: 'relative' }}>
-      <div className="iwl-datalink">
-        <span className="iwl-datalink-indicator">&#9608;</span>
-        <span>{datalinkText || 'PIPELINE STATUS UNKNOWN'}</span>
+      <span className="iwl-bottom-label">Datalink // Theatre Watch</span>
+      <div className="iwl-bottom-content">
+        {/* LEFT: pipeline status */}
+        <div className="iwl-pipeline-status">
+          <div className={`iwl-pipeline-dot ${isLive ? 'live' : 'stale'}`} />
+          <span>{datalinkText || 'Pipeline Status Unknown'}</span>
+        </div>
+
+        {/* CENTER: flight ticker */}
+        {flights && flights.length > 0 && (
+          <>
+            <div className="iwl-bottom-div" />
+            <FlightTicker flights={flights} />
+            <div className="iwl-bottom-div" />
+          </>
+        )}
+
+        {/* RIGHT: export button */}
+        <button className="iwl-export-btn" style={{marginLeft:'auto'}} onClick={onExportSitrep} disabled={!onExportSitrep}>
+          &#11015; Export Sitrep
+        </button>
       </div>
-      <div className="iwl-bot-div" />
-      {flights && flights.length > 0 && (
-        <>
-          <FlightTicker flights={flights} />
-          <div className="iwl-bot-div" />
-        </>
-      )}
-      <button className="iwl-export-btn" onClick={onExportSitrep} disabled={!onExportSitrep}>
-        &#11015; EXPORT TACTICAL SITREP
-      </button>
       <DevTag id="V" />
     </div>
   )

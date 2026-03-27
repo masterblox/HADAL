@@ -1,6 +1,7 @@
 import type { PipelineHealth, PriceData, AirspaceData } from '@/hooks/useDataPipeline'
 import type { Incident } from '@/hooks/useDataPipeline'
 import { ConsoleCircuitShell } from '@/components/console/ConsoleCircuitShell'
+import { LandingHero } from '@/components/overview/LandingHero'
 import { DevTag } from '@/components/shared/DevTag'
 import { navigateTo } from '@/lib/lane-routing'
 
@@ -23,6 +24,7 @@ export function OverviewPage({
 }: OverviewPageProps) {
   return (
     <div className="overview-shell">
+      <LandingHero incidents={incidents} />
       <ConsoleCircuitShell incidents={incidents} onEdit={() => navigateTo('console')} />
       <DevTag id="B" />
     </div>

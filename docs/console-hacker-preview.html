@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HADAL · Gulf Theatre Intelligence Core</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:   #070a05;
+      --bg1:  #0c0f08;
+      --bg2:  #101408;
+      --g:    #daff4a;
+      --gd:   rgba(218,255,74,.65);
+      --gm:   rgba(218,255,74,.35);
+      --gf:   rgba(218,255,74,.12);
+      --txt:  rgba(200,215,160,.80);
+      --txt2: rgba(200,215,160,.45);
+      --bdr:  rgba(218,255,74,.10);
+      --am:   rgba(255,152,20,.80);
+      --MF:   'Share Tech Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--txt);
+      font-family: var(--MF);
+      overflow: hidden;
+      font-size: 10px;
+    }
+
+    .app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    /* ── TITLE BAR ─────────────────────────────── */
+    .title-bar {
+      height: 28px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--bdr);
+    }
+    .title-main {
+      font-size: 12px;
+      letter-spacing: .22em;
+      color: var(--gd);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .title-meta {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .tm-item {
+      font-size: 9px;
+      letter-spacing: .14em;
+      color: var(--txt2);
+      text-transform: uppercase;
+    }
+    .tm-item span { color: var(--gm); }
+    .tm-clock {
+      font-size: 11px;
+      letter-spacing: .10em;
+      color: var(--gd);
+    }
+
+    /* ── MAIN LAYOUT ───────────────────────────── */
+    .main { flex: 1; min-height: 0; display: flex; }
+
+    /* ── SIDE COLUMNS ──────────────────────────── */
+    .col {
+      width: 210px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--bdr);
+      overflow: hidden;
+    }
+    .col.right { border-right: none; border-left: 1px solid var(--bdr); }
+
+    /* Panel */
+    .panel {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid var(--bdr);
+      overflow: hidden;
+    }
+    .panel:last-child { border-bottom: none; flex: 1; }
+    .panel-hdr {
+      height: 18px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7px;
+      background: var(--bg1);
+      border-bottom: 1px solid var(--bdr);
+    }
+    .ph-title {
+      font-size: 8px;
+      letter-spacing: .22em;
+      color: var(--gm);
+      text-transform: uppercase;
+    }
+    .ph-status {
+      font-size: 8px;
+      letter-spacing: .10em;
+      color: var(--txt2);
+    }
+    .ph-status.live { color: rgba(100,200,80,.75); }
+    .ph-status.warn { color: var(--am); }
+    .panel-body {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel-body canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: block;
+    }
+
+    /* ── CENTER MAP COLUMN ─────────────────────── */
+    .center-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-zone {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .map-zone canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: block;
+    }
+
+    /* Map overlays */
+    .map-tl {
+      position: absolute;
+      top: 8px; left: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      pointer-events: none;
+    }
+    .map-br {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      pointer-events: none;
+    }
+    .map-tag {
+      font-size: 8px;
+      letter-spacing: .14em;
+      color: var(--gm);
+      text-transform: uppercase;
+      background: rgba(7,10,5,.7);
+      padding: 1px 5px;
+    }
+    .map-tag.hi { color: var(--gd); }
+
+    /* Stat strip under map */
+    .stat-strip {
+      height: 44px;
+      flex-shrink: 0;
+      display: flex;
+      border-top: 1px solid var(--bdr);
+      background: var(--bg1);
+    }
+    .stat-cell {
+      flex: 1;
+      border-right: 1px solid var(--bdr);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    .stat-cell:last-child { border-right: none; }
+    .sc-val {
+      font-size: 16px;
+      letter-spacing: .06em;
+      color: var(--gd);
+      line-height: 1;
+    }
+    .sc-lbl {
+      font-size: 7px;
+      letter-spacing: .18em;
+      color: var(--txt2);
+      text-transform: uppercase;
+    }
+
+    /* ── INLINE CONTENT (non-canvas panels) ─── */
+    .tbl-wrap {
+      padding: 4px 6px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+    .tbl-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 14px;
+    }
+    .tr-label {
+      font-size: 8px;
+      letter-spacing: .06em;
+      color: var(--txt2);
+      width: 62px;
+      flex-shrink: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tr-bar-wrap {
+      flex: 1;
+      height: 3px;
+      background: var(--gf);
+      position: relative;
+    }
+    .tr-bar {
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%;
+      background: var(--gm);
+    }
+    .tr-bar.hi { background: var(--gd); }
+    .tr-bar.am { background: var(--am); }
+    .tr-val {
+      font-size: 9px;
+      color: var(--gm);
+      width: 18px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Coord block */
+    .coord-block {
+      padding: 5px 7px;
+      border-bottom: 1px solid var(--bdr);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .cb-lbl { font-size: 7px; letter-spacing: .14em; color: var(--txt2); text-transform: uppercase; }
+    .cb-val { font-size: 11px; letter-spacing: .06em; color: var(--gd); }
+
+    /* Feed lines */
+    .feed-wrap {
+      padding: 4px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      height: 100%;
+      overflow: hidden;
+    }
+    .feed-item {
+      display: flex;
+      gap: 5px;
+      align-items: flex-start;
+    }
+    .fi-marker {
+      font-size: 8px;
+      color: var(--gm);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .fi-text {
+      font-size: 8px;
+      letter-spacing: .04em;
+      color: var(--txt);
+      line-height: 1.4;
+    }
+    .fi-text.hi { color: var(--gd); }
+    .fi-text.warn { color: var(--am); }
+
+    /* Source matrix */
+    .matrix-wrap {
+      padding: 4px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      height: 100%;
+      overflow: hidden;
+    }
+    .mx-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 13px;
+    }
+    .mx-src {
+      font-size: 7px;
+      letter-spacing: .06em;
+      color: var(--txt2);
+      width: 54px;
+      flex-shrink: 0;
+    }
+    .mx-dots {
+      display: flex;
+      gap: 2px;
+      flex: 1;
+    }
+    .mx-dot {
+      width: 7px;
+      height: 7px;
+      border: 1px solid rgba(218,255,74,.15);
+    }
+    .mx-dot.on { background: var(--gm); border-color: var(--gm); }
+    .mx-dot.hi { background: var(--gd); border-color: var(--gd); }
+    .mx-cnt {
+      font-size: 8px;
+      color: var(--gm);
+      width: 16px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Entity block */
+    .entity-wrap {
+      padding: 4px 6px;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ent-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .ent-avatar {
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--bdr);
+      flex-shrink: 0;
+      background: var(--bg2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--gm);
+    }
+    .ent-info { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+    .ent-name { font-size: 8px; letter-spacing: .06em; color: var(--gd); }
+    .ent-detail { font-size: 7px; letter-spacing: .04em; color: var(--txt2); }
+    .ent-tag {
+      font-size: 7px;
+      letter-spacing: .08em;
+      padding: 1px 4px;
+      border: 1px solid;
+      flex-shrink: 0;
+    }
+    .ent-tag.high { color: var(--am); border-color: rgba(255,152,20,.30); }
+    .ent-tag.med  { color: var(--gm); border-color: var(--bdr); }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── TITLE BAR ──────────────────────────────────── -->
+  <div class="title-bar">
+    <div class="title-main">HADAL · GULF THEATRE INTELLIGENCE CORE</div>
+    <div class="title-meta">
+      <span class="tm-item">SESSION <span>SES-4721</span></span>
+      <span class="tm-item">ANALYST <span>ANA-07</span></span>
+      <span class="tm-item">CLASS <span>TS//SCI</span></span>
+      <span class="tm-item">PIPELINE <span style="color:rgba(100,200,80,.75)">● LIVE</span></span>
+      <span class="tm-clock" id="tb-clock">00:00:00Z</span>
+    </div>
+  </div>
+
+  <!-- ── MAIN ───────────────────────────────────────── -->
+  <div class="main">
+
+    <!-- LEFT COLUMN -->
+    <div class="col">
+
+      <!-- Panel 1: Threat Network -->
+      <div class="panel" style="height:28%">
+        <div class="panel-hdr">
+          <span class="ph-title">THREAT NETWORK // ACTIVE NODES</span>
+          <span class="ph-status live">● LIVE</span>
+        </div>
+        <div class="panel-body"><canvas id="cv-net"></canvas></div>
+      </div>
+
+      <!-- Panel 2: Kinetic Events -->
+      <div class="panel" style="height:24%">
+        <div class="panel-hdr">
+          <span class="ph-title">KINETIC EVENTS // 72H</span>
+          <span class="ph-status warn">⚠ 18</span>
+        </div>
+        <div class="panel-body">
+          <div class="tbl-wrap">
+            <div class="tbl-row"><span class="tr-label">IRAQ</span><div class="tr-bar-wrap"><div class="tr-bar hi" style="width:100%"></div></div><span class="tr-val">12</span></div>
+            <div class="tbl-row"><span class="tr-label">IRAN</span><div class="tr-bar-wrap"><div class="tr-bar am" style="width:75%"></div></div><span class="tr-val">9</span></div>
+            <div class="tbl-row"><span class="tr-label">YEMEN</span><div class="tr-bar-wrap"><div class="tr-bar" style="width:67%"></div></div><span class="tr-val">8</span></div>
+            <div class="tbl-row"><span class="tr-label">SAUDI ARABIA</span><div class="tr-bar-wrap"><div class="tr-bar" style="width:58%"></div></div><span class="tr-val">7</span></div>
+            <div class="tbl-row"><span class="tr-label">UAE</span><div class="tr-bar-wrap"><div class="tr-bar" style="width:50%"></div></div><span class="tr-val">6</span></div>
+            <div class="tbl-row"><span class="tr-label">SYRIA</span><div class="tr-bar-wrap"><div class="tr-bar" style="width:25%"></div></div><span class="tr-val">3</span></div>
+            <div class="tbl-row"><span class="tr-label">KUWAIT</span><div class="tr-bar-wrap"><div class="tr-bar" style="width:17%"></div></div><span class="tr-val">2</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3: OSINT Feed -->
+      <div class="panel" style="height:26%">
+        <div class="panel-hdr">
+          <span class="ph-title">FLASH INTEL // GULF THEATRE</span>
+          <span class="ph-status">0347Z</span>
+        </div>
+        <div class="panel-body">
+          <div class="feed-wrap">
+            <div class="feed-item"><span class="fi-marker">▸</span><span class="fi-text hi">DATE: 2026-03-27 // 0347Z</span></div>
+            <div class="feed-item"><span class="fi-marker">▸</span><span class="fi-text warn">AIRSTRIKE [IRQ]: TGT CONFIRMED</span></div>
+            <div class="feed-item"><span class="fi-marker">▸</span><span class="fi-text">DRONE OPS [YEM]: 3 UNITS ACTIVE</span></div>
+            <div class="feed-item"><span class="fi-marker">▸</span><span class="fi-text">MISSILE TRACK [IRN]: MONITOR</span></div>
+            <div class="feed-item"><span class="fi-marker">▸</span><span class="fi-text">CREDIBILITY AVG: 68% · SRC: 5</span></div>
+            <div class="feed-item"><span class="fi-marker">▸</span><span class="fi-text">MULTI-SRC CORROBORATION: 14</span></div>
+            <div class="feed-item"><span class="fi-marker">▸</span><span class="fi-text">GOV SOURCED: 8 INCIDENTS</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4: Situational -->
+      <div class="panel">
+        <div class="panel-hdr">
+          <span class="ph-title">SITUATIONAL AWARENESS</span>
+          <span class="ph-status live">● LIVE</span>
+        </div>
+        <div class="panel-body"><canvas id="cv-situational"></canvas></div>
+      </div>
+
+    </div><!-- /col left -->
+
+    <!-- CENTER COLUMN -->
+    <div class="center-col">
+      <div class="map-zone">
+        <canvas id="cv-map"></canvas>
+        <!-- Corner overlays -->
+        <div class="map-tl">
+          <div class="map-tag hi">GULF THEATRE · HD-87 · ISR</div>
+          <div class="map-tag">ACTIVE INCIDENTS: 47</div>
+          <div class="map-tag">TRAJECTORIES: 3 TRACKED</div>
+        </div>
+        <div class="map-br">
+          <div class="map-tag">SIGINT COVERAGE: 94%</div>
+          <div class="map-tag">LAST REFRESH: 0347Z</div>
+        </div>
+      </div>
+      <div class="stat-strip">
+        <div class="stat-cell"><span class="sc-val">47</span><span class="sc-lbl">TOTAL EVENTS</span></div>
+        <div class="stat-cell"><span class="sc-val">18</span><span class="sc-lbl">KINETIC</span></div>
+        <div class="stat-cell"><span class="sc-val">68<span style="font-size:9px;color:var(--gm)">%</span></span><span class="sc-lbl">CRED AVG</span></div>
+        <div class="stat-cell"><span class="sc-val">5</span><span class="sc-lbl">SRC ACTIVE</span></div>
+        <div class="stat-cell"><span class="sc-val">3</span><span class="sc-lbl">TRAJECTORIES</span></div>
+        <div class="stat-cell"><span class="sc-val" style="color:var(--am)">HIGH</span><span class="sc-lbl">THREAT LVL</span></div>
+      </div>
+    </div><!-- /center-col -->
+
+    <!-- RIGHT COLUMN -->
+    <div class="col right">
+
+      <!-- Panel 1: Source Intelligence -->
+      <div class="panel" style="height:26%">
+        <div class="panel-hdr">
+          <span class="ph-title">SOURCE INTELLIGENCE // MATRIX</span>
+          <span class="ph-status live">● 5 LIVE</span>
+        </div>
+        <div class="panel-body">
+          <div class="matrix-wrap">
+            <div class="mx-row"><span class="mx-src">GOVT FEED</span><div class="mx-dots"><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div></div><span class="mx-cnt">8</span></div>
+            <div class="mx-row"><span class="mx-src">NEWS WIRE</span><div class="mx-dots"><div class="mx-dot on"></div><div class="mx-dot on"></div><div class="mx-dot on"></div><div class="mx-dot on"></div><div class="mx-dot"></div></div><span class="mx-cnt">19</span></div>
+            <div class="mx-row"><span class="mx-src">SIGINT</span><div class="mx-dots"><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div></div><span class="mx-cnt">5</span></div>
+            <div class="mx-row"><span class="mx-src">SOC/CHATTER</span><div class="mx-dots"><div class="mx-dot on"></div><div class="mx-dot on"></div><div class="mx-dot"></div><div class="mx-dot"></div><div class="mx-dot"></div></div><span class="mx-cnt">11</span></div>
+            <div class="mx-row"><span class="mx-src">COMMERCIAL</span><div class="mx-dots"><div class="mx-dot on"></div><div class="mx-dot on"></div><div class="mx-dot on"></div><div class="mx-dot"></div><div class="mx-dot"></div></div><span class="mx-cnt">9</span></div>
+            <div class="mx-row"><span class="mx-src">DRONE/ISR</span><div class="mx-dots"><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot hi"></div><div class="mx-dot"></div></div><span class="mx-cnt">6</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2: Signal analysis chart -->
+      <div class="panel" style="height:24%">
+        <div class="panel-hdr">
+          <span class="ph-title">SIGNAL ANALYSIS // 14D</span>
+          <span class="ph-status">TREND ↑</span>
+        </div>
+        <div class="panel-body"><canvas id="cv-signal"></canvas></div>
+      </div>
+
+      <!-- Panel 3: Entity recognition -->
+      <div class="panel" style="height:26%">
+        <div class="panel-hdr">
+          <span class="ph-title">ENTITY RECOGNITION // TRACKED</span>
+          <span class="ph-status warn">7 FLAGGED</span>
+        </div>
+        <div class="panel-body">
+          <div class="entity-wrap">
+            <div class="ent-row">
+              <div class="ent-avatar">⊛</div>
+              <div class="ent-info">
+                <div class="ent-name">IRGC-QF UNIT-12</div>
+                <div class="ent-detail">IRN · PROXY FORCE · ACTIVE</div>
+              </div>
+              <div class="ent-tag high">HIGH</div>
+            </div>
+            <div class="ent-row">
+              <div class="ent-avatar">⊛</div>
+              <div class="ent-info">
+                <div class="ent-name">HOUTHI MISSILE DIV</div>
+                <div class="ent-detail">YEM · MISSILE OPS · ACTIVE</div>
+              </div>
+              <div class="ent-tag high">HIGH</div>
+            </div>
+            <div class="ent-row">
+              <div class="ent-avatar">◉</div>
+              <div class="ent-info">
+                <div class="ent-name">KH MILITIA CELL-4</div>
+                <div class="ent-detail">IRQ · GROUND · MONITOR</div>
+              </div>
+              <div class="ent-tag med">MED</div>
+            </div>
+            <div class="ent-row">
+              <div class="ent-avatar">◉</div>
+              <div class="ent-info">
+                <div class="ent-name">UNKNOWN TRJ-001</div>
+                <div class="ent-detail">IRN→IRQ · SCUD-B · TRACK</div>
+              </div>
+              <div class="ent-tag high">HIGH</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4: Activity detection -->
+      <div class="panel">
+        <div class="panel-hdr">
+          <span class="ph-title">ACTIVITY DETECTION // SIGINT</span>
+          <span class="ph-status live">● LIVE</span>
+        </div>
+        <div class="panel-body"><canvas id="cv-activity"></canvas></div>
+      </div>
+
+    </div><!-- /col right -->
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ── CLOCK ───────────────────────────────────────────────────
+function tickClock() {
+  const now = new Date()
+  const pad = n => String(n).padStart(2,'0')
+  document.getElementById('tb-clock').textContent =
+    `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}Z`
+}
+tickClock(); setInterval(tickClock, 1000)
+
+// ── CANVAS UTILITIES ─────────────────────────────────────────
+const GC = '#daff4a'
+const GA = a => `rgba(218,255,74,${a})`
+const AM = a => `rgba(255,152,20,${a})`
+const MF = "'Share Tech Mono', monospace"
+
+function fitCV(cv) {
+  const r = cv.parentElement.getBoundingClientRect()
+  cv.width  = Math.max(1, Math.floor(r.width))
+  cv.height = Math.max(1, Math.floor(r.height))
+  return cv.getContext('2d')
+}
+
+// ── GULF THEATRE MAP ─────────────────────────────────────────
+;(function() {
+  const cv = document.getElementById('cv-map')
+  if (!cv) return
+  const ctx = fitCV(cv)
+  const CW = cv.width, CH = cv.height
+
+  // Background
+  ctx.fillStyle = '#050800'; ctx.fillRect(0,0,CW,CH)
+
+  // Coordinate → pixel
+  const LON_MIN = 34, LON_MAX = 62, LAT_MIN = 11, LAT_MAX = 39
+  function toXY(lon, lat) {
+    return [
+      (lon - LON_MIN) / (LON_MAX - LON_MIN) * CW,
+      (1 - (lat - LAT_MIN) / (LAT_MAX - LAT_MIN)) * CH
+    ]
+  }
+
+  // Grid
+  for (let lon = 35; lon <= 62; lon += 5) {
+    const [x] = toXY(lon, LAT_MIN)
+    ctx.strokeStyle = GA(0.04); ctx.lineWidth = 0.5
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,CH); ctx.stroke()
+    ctx.fillStyle = GA(0.15); ctx.font = `7px ${MF}`; ctx.textAlign = 'center'
+    ctx.fillText(lon+'°E', x, CH-3)
+  }
+  for (let lat = 15; lat <= 38; lat += 5) {
+    const [,y] = toXY(LON_MIN, lat)
+    ctx.strokeStyle = GA(0.04); ctx.lineWidth = 0.5
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(CW,y); ctx.stroke()
+    ctx.fillStyle = GA(0.15); ctx.font = `7px ${MF}`; ctx.textAlign = 'left'
+    ctx.fillText(lat+'°N', 3, y-2)
+  }
+  ctx.textAlign = 'left'
+
+  // Country outlines
+  const countries = [
+    { name:'IRAQ',          pts:[[38.8,37.1],[42,37.4],[48.5,37.5],[48.5,33],[47,30],[44,29.3],[40,31.2],[38.8,33.4]] },
+    { name:'IRAN',          pts:[[44,38],[48,38],[54,37.5],[60,36],[60,25],[56.5,25],[54,26],[51,24.4],[48,26],[44,29.3],[45,33],[44,38]] },
+    { name:'SAUDI ARABIA',  pts:[[36.5,29],[42,29],[47,30],[51,24],[55,22],[55,17],[43,16],[37,21],[36.5,29]] },
+    { name:'YEMEN',         pts:[[43,16],[55,17],[55,13],[50,12],[45,12],[42,14],[43,16]] },
+    { name:'SYRIA',         pts:[[35.7,37.1],[38.8,37.1],[42,37.4],[42,33],[38,33],[36,34.5],[35.7,37.1]] },
+    { name:'UAE',           pts:[[51,24.4],[55.8,25.8],[56.4,24.5],[54,23],[51,24.4]] },
+    { name:'OMAN',          pts:[[55.8,25.8],[59,22],[58,20],[55,22],[55.8,25.8]] },
+    { name:'KUWAIT',        pts:[[46.5,30.1],[48,30.1],[48,28.5],[46.5,28.5],[46.5,30.1]] },
+  ]
+  countries.forEach(c => {
+    ctx.beginPath()
+    c.pts.forEach(([lon,lat],i) => {
+      const [x,y] = toXY(lon,lat)
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y)
+    })
+    ctx.closePath()
+    ctx.fillStyle = 'rgba(15,22,8,.70)'; ctx.fill()
+    ctx.strokeStyle = GA(0.18); ctx.lineWidth = 0.7; ctx.stroke()
+  })
+
+  // Country labels
+  const labels = [
+    ['IRAQ',        43.5, 33.5],
+    ['IRAN',        52,   31  ],
+    ['KSA',         44,   25  ],
+    ['YEMEN',       48,   14.5],
+    ['SYRIA',       38.5, 35.5],
+    ['UAE',         54,   24.3],
+    ['OMAN',        57.5, 22  ],
+    ['KUWAIT',      47.3, 29.3],
+  ]
+  ctx.fillStyle = GA(0.35); ctx.font = `7px ${MF}`; ctx.textAlign = 'center'
+  labels.forEach(([n,lon,lat]) => {
+    const [x,y] = toXY(lon,lat)
+    ctx.fillText(n, x, y)
+  })
+  ctx.textAlign = 'left'
+
+  // Gulf water
+  ctx.fillStyle = 'rgba(10,28,18,.55)'
+  ctx.beginPath()
+  ;[[48,26],[51,24.4],[56,24],[58,23],[60,22],[60,20],[55,20],[50,22],[47,24],[46,26],[48,26]].forEach(([lon,lat],i) => {
+    const [x,y] = toXY(lon,lat)
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y)
+  })
+  ctx.closePath(); ctx.fill()
+
+  // Tehran range rings
+  const [tX,tY] = toXY(51.4, 35.7)
+  const pxPerKm = CW / (LON_MAX - LON_MIN) / 90
+  ;[300, 600, 1000, 1500].forEach(km => {
+    ctx.strokeStyle = GA(km === 1000 ? 0.12 : 0.06)
+    ctx.lineWidth = km === 1000 ? 1 : 0.5
+    ctx.setLineDash([3,4])
+    ctx.beginPath(); ctx.arc(tX, tY, km * pxPerKm, 0, Math.PI*2); ctx.stroke()
+    ctx.setLineDash([])
+    if (km <= 600) {
+      ctx.fillStyle = GA(0.25); ctx.font = `6px ${MF}`
+      ctx.fillText(km+'km', tX + km*pxPerKm + 2, tY)
+    }
+  })
+
+  // Incident nodes with network lines
+  const incidents = [
+    { lon:43.5, lat:33.2, r:5, type:'kinetic',  label:'IRQ-01' },
+    { lon:44.1, lat:33.8, r:4, type:'kinetic',  label:'IRQ-02' },
+    { lon:46.5, lat:34.1, r:3, type:'sigint',   label:'IRQ-03' },
+    { lon:51.4, lat:35.7, r:5, type:'origin',   label:'TEHRAN' },
+    { lon:44.8, lat:15.0, r:4, type:'kinetic',  label:'YEM-01' },
+    { lon:46.0, lat:14.5, r:3, type:'kinetic',  label:'YEM-02' },
+    { lon:39.0, lat:35.0, r:3, type:'sigint',   label:'SYR-01' },
+    { lon:55.2, lat:25.3, r:4, type:'monitor',  label:'UAE-01' },
+    { lon:48.5, lat:29.8, r:3, type:'monitor',  label:'KWT-01' },
+    { lon:50.5, lat:26.2, r:3, type:'sigint',   label:'BHR-01' },
+  ]
+
+  // Network connections
+  const connections = [
+    [4, 0], [4, 1], [4, 6],   // Tehran origin
+    [0, 1], [0, 2],            // Iraq cluster
+    [4, 3], [5, 4],            // Yemen cluster
+  ]
+
+  connections.forEach(([ai, bi]) => {
+    const a = incidents[ai], b = incidents[bi]
+    const [ax,ay] = toXY(a.lon, a.lat)
+    const [bx,by] = toXY(b.lon, b.lat)
+    ctx.strokeStyle = a.type==='origin' ? AM(0.20) : GA(0.10)
+    ctx.lineWidth = 0.6
+    ctx.setLineDash([3,4])
+    ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke()
+    ctx.setLineDash([])
+  })
+
+  // Nodes
+  incidents.forEach(inc => {
+    const [x,y] = toXY(inc.lon, inc.lat)
+    const col = inc.type === 'origin'  ? AM(0.90) :
+                inc.type === 'kinetic' ? GA(0.85) :
+                inc.type === 'sigint'  ? GA(0.50) : GA(0.35)
+    const ringCol = inc.type === 'origin'  ? AM(0.25) :
+                    inc.type === 'kinetic' ? GA(0.22) : GA(0.12)
+
+    // Outer ring
+    ctx.strokeStyle = ringCol; ctx.lineWidth = 0.75
+    ctx.beginPath(); ctx.arc(x,y, inc.r+4, 0, Math.PI*2); ctx.stroke()
+    // Node
+    ctx.fillStyle = col
+    ctx.beginPath(); ctx.arc(x,y, inc.r, 0, Math.PI*2); ctx.fill()
+    // Label
+    ctx.fillStyle = inc.type==='origin' ? AM(0.75) : GA(0.45)
+    ctx.font = `6px ${MF}`; ctx.textAlign = 'left'
+    ctx.fillText(inc.label, x + inc.r + 5, y + 2)
+  })
+  ctx.textAlign = 'left'
+
+  // Trajectory arcs
+  const trajectories = [
+    { from:[51.4,35.7], to:[44.2,33.5], label:'TRJ-001 SCUD-B', col:AM(0.75) },
+    { from:[44.8,15.0], to:[45.5,24.5], label:'TRJ-002 DRONE',  col:GA(0.55) },
+    { from:[44.2,33.5], to:[35.8,31.8], label:'TRJ-003 CRUISE', col:GA(0.38) },
+  ]
+  trajectories.forEach(trj => {
+    const [ox,oy] = toXY(trj.from[0], trj.from[1])
+    const [dx,dy] = toXY(trj.to[0],   trj.to[1])
+    const mx = (ox+dx)/2, my = Math.min(oy,dy) - Math.abs(dy-oy)*0.55
+    ctx.strokeStyle = trj.col; ctx.lineWidth = 1
+    ctx.setLineDash([4,3])
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.quadraticCurveTo(mx,my,dx,dy); ctx.stroke()
+    ctx.setLineDash([])
+    const ang = Math.atan2(dy-my, dx-mx)
+    ctx.fillStyle = trj.col
+    ctx.beginPath()
+    ctx.moveTo(dx,dy)
+    ctx.lineTo(dx-7*Math.cos(ang-0.35), dy-7*Math.sin(ang-0.35))
+    ctx.lineTo(dx-7*Math.cos(ang+0.35), dy-7*Math.sin(ang+0.35))
+    ctx.closePath(); ctx.fill()
+    ctx.fillStyle = trj.col; ctx.font = `6px ${MF}`
+    ctx.fillText(trj.label, mx+3, my-4)
+  })
+
+  // Airspace zones
+  const zones = [
+    { id:'IRQ-AZ1', lon1:43,lat1:33, lon2:45.5,lat2:31 },
+    { id:'YEM-AZ1', lon1:44.5,lat1:15.5, lon2:46.5,lat2:14 },
+  ]
+  zones.forEach(z => {
+    const [x1,y1] = toXY(z.lon1,z.lat1)
+    const [x2,y2] = toXY(z.lon2,z.lat2)
+    ctx.strokeStyle = AM(0.28); ctx.lineWidth = 0.75
+    ctx.setLineDash([3,3]); ctx.strokeRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1))
+    ctx.setLineDash([])
+    ctx.fillStyle = AM(0.28); ctx.font = `6px ${MF}`
+    ctx.fillText(z.id, Math.min(x1,x2)+2, Math.min(y1,y2)-2)
+  })
+
+  // Corner label
+  ctx.fillStyle = GA(0.25); ctx.font = `7px ${MF}`; ctx.textAlign = 'right'
+  ctx.fillText('THEATRE MAP · GULF REGION · HADAL INTELLIGENCE CORE', CW-8, CH-6)
+  ctx.textAlign = 'left'
+})()
+
+// ── THREAT NETWORK GRAPH ─────────────────────────────────────
+;(function() {
+  const cv = document.getElementById('cv-net')
+  if (!cv) return
+  const ctx = fitCV(cv)
+  const CW = cv.width, CH = cv.height
+  let tick = 0
+
+  // Seeded nodes
+  const nodes = [
+    { x:0.50, y:0.45, r:5, type:'hub'    },
+    { x:0.22, y:0.30, r:3, type:'node'   },
+    { x:0.75, y:0.25, r:3, type:'node'   },
+    { x:0.15, y:0.65, r:2, type:'leaf'   },
+    { x:0.38, y:0.72, r:2, type:'leaf'   },
+    { x:0.62, y:0.70, r:3, type:'node'   },
+    { x:0.84, y:0.55, r:2, type:'leaf'   },
+    { x:0.30, y:0.18, r:2, type:'leaf'   },
+    { x:0.68, y:0.85, r:2, type:'leaf'   },
+  ]
+  const edges = [[0,1],[0,2],[0,5],[1,3],[1,4],[2,6],[2,7],[5,8]]
+
+  function draw() {
+    ctx.clearRect(0,0,CW,CH)
+    // BG noise
+    ctx.fillStyle = GA(0.03)
+    for (let y=3;y<CH;y+=7) for (let x=3;x<CW;x+=7) ctx.fillRect(x,y,1,1)
+
+    // Edges with pulse
+    edges.forEach(([ai,bi]) => {
+      const a = nodes[ai], b = nodes[bi]
+      const ax = a.x*CW, ay = a.y*CH, bx = b.x*CW, by = b.y*CH
+      const p = (Math.sin(tick*0.03 + ai*1.2) + 1) / 2
+      ctx.strokeStyle = GA(0.08 + p*0.06)
+      ctx.lineWidth = 0.6
+      ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(bx,by); ctx.stroke()
+    })
+
+    // Nodes
+    nodes.forEach((n,i) => {
+      const x = n.x*CW, y = n.y*CH
+      const pulse = (Math.sin(tick*0.05 + i*0.8) + 1) / 2
+      const col = n.type === 'hub' ? GA(0.75 + pulse*0.20) : GA(0.45 + pulse*0.15)
+      // Outer ring
+      ctx.strokeStyle = n.type==='hub' ? GA(0.22) : GA(0.10)
+      ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.arc(x,y,n.r+3+pulse*1.5, 0, Math.PI*2); ctx.stroke()
+      ctx.fillStyle = col
+      ctx.beginPath(); ctx.arc(x,y,n.r, 0, Math.PI*2); ctx.fill()
+    })
+
+    // Hub label
+    const hub = nodes[0]
+    ctx.fillStyle = GA(0.40); ctx.font = `6px ${MF}`; ctx.textAlign = 'right'
+    ctx.fillText('THREAT CORE', CW-4, 10)
+    ctx.fillStyle = GA(0.25); ctx.textAlign = 'left'
+    ctx.fillText('NODES: 9 · EDGES: 8', 4, 10)
+    ctx.textAlign = 'left'
+
+    tick++
+    requestAnimationFrame(draw)
+  }
+  draw()
+})()
+
+// ── SITUATIONAL AWARENESS (timeline) ─────────────────────────
+;(function() {
+  const cv = document.getElementById('cv-situational')
+  if (!cv) return
+  const ctx = fitCV(cv)
+  const CW = cv.width, CH = cv.height
+  let tick = 0
+
+  const bars = [2,4,1,3,6,8,5,4,7,9,6,8,11,7]
+  const maxB = Math.max(...bars)
+  const kinetic = [1,2,1,1,3,4,2,2,3,5,3,4,6,4]
+
+  function draw() {
+    ctx.clearRect(0,0,CW,CH)
+    const TOP=16, BOT=12
+    const bw = Math.max(1, Math.floor((CW-16)/bars.length) - 1)
+    const usH = CH - TOP - BOT
+
+    ctx.fillStyle = GA(0.25); ctx.font = `6px ${MF}`
+    ctx.fillText('EVENT TIMELINE · 14D', 4, 10)
+
+    bars.forEach((v,i) => {
+      const x = 8 + i*(bw+1)
+      const bh = (v/maxB)*usH
+      ctx.fillStyle = GA(v>8 ? 0.40 : 0.18)
+      ctx.fillRect(x, CH-BOT-bh, bw, bh)
+    })
+
+    // Kinetic overlay line
+    ctx.strokeStyle = AM(0.72); ctx.lineWidth = 1.2
+    ctx.beginPath()
+    kinetic.forEach((v,i) => {
+      const x = 8 + i*(bw+1) + bw/2
+      const y = CH-BOT-(v/maxB)*usH
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y)
+    })
+    ctx.stroke()
+
+    // Moving scan line
+    const scanX = ((tick * 0.4) % (CW-16)) + 8
+    ctx.strokeStyle = GA(0.15); ctx.lineWidth = 0.5
+    ctx.beginPath(); ctx.moveTo(scanX, TOP); ctx.lineTo(scanX, CH-BOT); ctx.stroke()
+
+    ctx.fillStyle = AM(0.55); ctx.font = `5px ${MF}`; ctx.textAlign = 'right'
+    ctx.fillText('KINETIC', CW-4, CH-2)
+    ctx.textAlign = 'left'
+
+    tick++
+    requestAnimationFrame(draw)
+  }
+  draw()
+})()
+
+// ── SIGNAL ANALYSIS CHART ─────────────────────────────────────
+;(function() {
+  const cv = document.getElementById('cv-signal')
+  if (!cv) return
+  const ctx = fitCV(cv)
+  const CW = cv.width, CH = cv.height
+  let tick = 0
+
+  const series = [
+    { vals:[30,35,28,42,55,60,52,48,58,72,65,80,88,75], col:GC,         lbl:'SIGINT' },
+    { vals:[20,22,18,25,30,38,35,30,40,45,38,50,55,48], col:AM(0.80),   lbl:'KINETIC' },
+    { vals:[10,14,12,18,22,28,24,20,28,32,28,35,40,36], col:GA(0.40),   lbl:'OSINT' },
+  ]
+  const maxV = 100
+  const TOP=16, BOT=16, LX=4, RX=4
+
+  function draw() {
+    ctx.clearRect(0,0,CW,CH)
+    const usW = CW-LX-RX, usH = CH-TOP-BOT
+
+    // Grid
+    for (let i=1;i<=3;i++) {
+      const y = TOP + usH*(1-i/4)
+      ctx.strokeStyle = GA(0.05); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(LX,y); ctx.lineTo(CW-RX,y); ctx.stroke()
+      ctx.fillStyle = GA(0.18); ctx.font = `5px ${MF}`
+      ctx.fillText(Math.round(maxV*i/4), LX, y-1)
+    }
+
+    series.forEach(s => {
+      ctx.strokeStyle = s.col; ctx.lineWidth = 1.2
+      ctx.beginPath()
+      s.vals.forEach((v,i) => {
+        const x = LX + (i/(s.vals.length-1))*usW
+        const y = TOP + usH - (v/maxV)*usH
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y)
+      })
+      ctx.stroke()
+
+      // Animated point at last value
+      const last = s.vals[s.vals.length-1]
+      const lx = LX + usW, ly = TOP + usH - (last/maxV)*usH
+      const pulse = (Math.sin(tick*0.08)+1)/2
+      ctx.fillStyle = s.col
+      ctx.beginPath(); ctx.arc(lx, ly, 2+pulse, 0, Math.PI*2); ctx.fill()
+    })
+
+    ctx.fillStyle = GA(0.25); ctx.font = `6px ${MF}`
+    ctx.fillText('SIGNAL ANALYSIS · 14D', 4, 10)
+
+    // Legend
+    series.forEach((s,i) => {
+      ctx.fillStyle = s.col; ctx.fillRect(CW-38, CH-BOT+2+i*4, 5, 3)
+      ctx.fillStyle = GA(0.35); ctx.font = `5px ${MF}`
+      ctx.fillText(s.lbl, CW-31, CH-BOT+5+i*4)
+    })
+
+    tick++
+    requestAnimationFrame(draw)
+  }
+  draw()
+})()
+
+// ── ACTIVITY DETECTION (SIGINT spectrogram) ───────────────────
+;(function() {
+  const cv = document.getElementById('cv-activity')
+  if (!cv) return
+  const ctx = fitCV(cv)
+  const CW = cv.width, CH = cv.height
+  let tick = 0
+  const ROWS = 14, COLS = 28
+
+  function draw() {
+    ctx.clearRect(0,0,CW,CH)
+    ctx.fillStyle = GA(0.22); ctx.font = `6px ${MF}`
+    ctx.fillText('FREQ SPECTRUM · REAL-TIME', 4, 9)
+
+    const cw = (CW-8)/COLS, rh = (CH-14)/ROWS
+    for (let r=0;r<ROWS;r++) {
+      for (let c=0;c<COLS;c++) {
+        const base = Math.sin(c*0.4+r*0.8+tick*0.06)*0.35 + 0.35
+        const noise = Math.random()*0.12
+        const val = Math.max(0, Math.min(1, base+noise))
+        const alpha = val*0.70
+        const col = val > 0.65 ? AM(alpha) : GA(alpha*0.75)
+        ctx.fillStyle = col
+        ctx.fillRect(4+c*cw, 12+r*rh, cw-0.5, rh-0.5)
+      }
+    }
+
+    // Freq labels
+    ctx.fillStyle = GA(0.20); ctx.font = `5px ${MF}`; ctx.textAlign = 'right'
+    ctx.fillText('3GHz', CW-2, 14)
+    ctx.fillText('300MHz', CW-2, CH/2)
+    ctx.fillText('30MHz', CW-2, CH-2)
+    ctx.textAlign = 'left'
+
+    tick++
+    requestAnimationFrame(draw)
+  }
+  draw()
+})()
+</script>
+</body>
+</html>

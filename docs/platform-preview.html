@@ -213,56 +213,150 @@
     .maps-body {
       flex: 1; min-height: 0; display: flex; gap: 0;
     }
-    .maps-sidebar {
-      width: 300px; flex-shrink: 0; padding: 10px;
+
+    /* Institutional 3-column layout */
+    .mi-col {
+      width: 196px; flex-shrink: 0;
+      display: flex; flex-direction: column;
       background: rgba(4,6,0,.97);
-      border-right: 1px solid var(--g15);
-      display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
     }
-    .maps-section-lbl {
-      font-family: var(--MONO); font-size: 10px; letter-spacing: .22em;
-      color: rgba(218,255,74,.28); padding-bottom: 5px;
+    .mi-col.left  { border-right: 1px solid var(--g07); }
+    .mi-col.right { border-left:  1px solid var(--g07); }
+    .mi-panel {
+      display: flex; flex-direction: column;
+      border-bottom: 1px solid var(--g07);
+      overflow: hidden;
+    }
+    .mi-panel:last-child { border-bottom: none; flex: 1; }
+    .mi-panel-hdr {
+      height: 18px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 7px;
+      background: rgba(3,5,0,.9);
       border-bottom: 1px solid var(--g07);
     }
-    .az-rows { display: flex; flex-direction: column; gap: 3px; }
-    .az-row {
-      display: flex; align-items: center; gap: 6px; height: 22px;
-      padding: 0 4px; border: 1px solid var(--g07);
+    .mi-ph-title {
+      font-family: var(--MONO); font-size: 8px; letter-spacing: .20em;
+      color: rgba(218,255,74,.30); text-transform: uppercase;
     }
-    .az-id {
-      font-family: var(--MONO); font-size: 10px; color: rgba(218,255,74,.35);
-      width: 36px; flex-shrink: 0;
+    .mi-ph-status {
+      font-family: var(--MONO); font-size: 8px; letter-spacing: .10em;
+      color: rgba(218,255,74,.22);
     }
-    .az-name {
-      font-family: var(--HEAD); font-size: 9px; letter-spacing: .12em;
-      color: rgba(218,255,74,.60); flex: 1;
+    .mi-ph-status.live { color: rgba(100,200,80,.70); }
+    .mi-ph-status.warn { color: rgba(255,152,20,.75); }
+    .mi-panel-body {
+      flex: 1; min-height: 0; position: relative; overflow: hidden;
     }
-    .az-status {
-      font-family: var(--MONO); font-size: 10px; letter-spacing: .12em;
+    .mi-panel-body canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%; display: block;
     }
-    .az-status.restricted { color: rgba(255,152,20,.80); }
-    .az-status.closed     { color: rgba(255,60,60,.70); }
-    .az-status.contested  { color: rgba(255,152,20,.60); }
-    .az-status.monitor    { color: rgba(218,255,74,.55); }
-    .az-status.caution    { color: rgba(255,200,40,.70); }
 
-    .trj-rows { display: flex; flex-direction: column; gap: 3px; }
-    .trj-row {
-      display: flex; align-items: center; gap: 6px; height: 22px;
-      padding: 0 4px; border: 1px solid var(--g07);
+    /* Stat strip */
+    .mi-stat-strip {
+      height: 40px; flex-shrink: 0; display: flex;
+      border-top: 1px solid var(--g07);
+      background: rgba(3,5,0,.95);
     }
-    .trj-id    { font-family: var(--MONO); font-size: 10px; color: rgba(218,255,74,.35); width: 46px; flex-shrink: 0; }
-    .trj-type  { font-family: var(--HEAD); font-size: 9px; letter-spacing: .10em; color: rgba(218,255,74,.55); width: 48px; flex-shrink: 0; }
-    .trj-route { font-family: var(--MONO); font-size: 10px; color: rgba(218,255,74,.38); flex: 1; }
-    .trj-st    { font-family: var(--MONO); font-size: 10px; letter-spacing: .10em; }
-    .trj-st.active  { color: rgba(255,152,20,.80); }
-    .trj-st.pending { color: rgba(218,255,74,.40); }
+    .mi-stat-cell {
+      flex: 1; border-right: 1px solid var(--g07);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1px;
+    }
+    .mi-stat-cell:last-child { border-right: none; }
+    .mi-sc-val {
+      font-family: var(--HEAD); font-size: 15px; font-weight: 700;
+      color: rgba(218,255,74,.82); line-height: 1;
+    }
+    .mi-sc-lbl {
+      font-family: var(--MONO); font-size: 7px; letter-spacing: .16em;
+      color: rgba(218,255,74,.28); text-transform: uppercase;
+    }
 
+    /* Feed / table content inside panels */
+    .mi-tbl-wrap {
+      padding: 4px 6px; height: 100%;
+      display: flex; flex-direction: column; gap: 2px; overflow: hidden;
+    }
+    .mi-tbl-row {
+      display: flex; align-items: center; gap: 4px; height: 14px;
+    }
+    .mi-tr-lbl {
+      font-family: var(--MONO); font-size: 8px; letter-spacing: .04em;
+      color: rgba(218,255,74,.40); width: 60px; flex-shrink: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .mi-tr-bar-wrap {
+      flex: 1; height: 3px; background: var(--g07); position: relative;
+    }
+    .mi-tr-bar { position: absolute; left:0; top:0; height: 100%; background: rgba(218,255,74,.35); }
+    .mi-tr-bar.hi { background: rgba(218,255,74,.65); }
+    .mi-tr-bar.am { background: rgba(255,152,20,.60); }
+    .mi-tr-val {
+      font-family: var(--HEAD); font-size: 10px;
+      color: rgba(218,255,74,.65); width: 16px; text-align: right; flex-shrink: 0;
+    }
+
+    .mi-feed-wrap {
+      padding: 5px 6px; height: 100%;
+      display: flex; flex-direction: column; gap: 4px; overflow: hidden;
+    }
+    .mi-feed-item { display: flex; gap: 5px; align-items: flex-start; }
+    .mi-fi-marker {
+      font-family: var(--MONO); font-size: 8px;
+      color: rgba(218,255,74,.35); flex-shrink: 0; margin-top: 1px;
+    }
+    .mi-fi-text {
+      font-family: var(--MONO); font-size: 8px; letter-spacing: .04em;
+      color: rgba(218,255,74,.55); line-height: 1.4;
+    }
+    .mi-fi-text.hi   { color: rgba(218,255,74,.80); }
+    .mi-fi-text.warn { color: rgba(255,152,20,.80); }
+
+    .mi-trj-rows { display: flex; flex-direction: column; gap: 0; }
+    .mi-trj-row {
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 6px; border-bottom: 1px solid var(--g07);
+    }
+    .mi-trj-id   { font-family: var(--MONO); font-size: 8px; color: rgba(218,255,74,.30); width: 42px; flex-shrink: 0; }
+    .mi-trj-type { font-family: var(--MONO); font-size: 8px; letter-spacing: .06em; color: rgba(218,255,74,.50); width: 44px; flex-shrink: 0; }
+    .mi-trj-route{ font-family: var(--MONO); font-size: 8px; color: rgba(218,255,74,.35); flex: 1; }
+    .mi-trj-st   { font-family: var(--MONO); font-size: 8px; letter-spacing: .08em; flex-shrink: 0; }
+    .mi-trj-st.active  { color: rgba(255,152,20,.80); }
+    .mi-trj-st.pending { color: rgba(218,255,74,.38); }
+
+    .mi-mx-rows { display: flex; flex-direction: column; gap: 1px; padding: 4px 6px; }
+    .mi-mx-row { display: flex; align-items: center; gap: 4px; height: 13px; }
+    .mi-mx-src  {
+      font-family: var(--MONO); font-size: 7px; letter-spacing: .04em;
+      color: rgba(218,255,74,.35); width: 52px; flex-shrink: 0;
+    }
+    .mi-mx-dots { display: flex; gap: 2px; flex: 1; }
+    .mi-mx-dot  { width: 7px; height: 7px; border: 1px solid rgba(218,255,74,.12); }
+    .mi-mx-dot.on { background: rgba(218,255,74,.32); border-color: rgba(218,255,74,.32); }
+    .mi-mx-dot.hi { background: rgba(218,255,74,.70); border-color: rgba(218,255,74,.70); }
+    .mi-mx-cnt  { font-family: var(--MONO); font-size: 8px; color: rgba(218,255,74,.45); width: 14px; text-align: right; flex-shrink: 0; }
+
+    /* Map canvas center */
     .map-canvas-wrap {
       flex: 1; position: relative; overflow: hidden;
       background: rgba(3,5,0,.98);
     }
     .map-canvas-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .map-overlay-tl {
+      position: absolute; top: 8px; left: 8px;
+      display: flex; flex-direction: column; gap: 3px; pointer-events: none;
+    }
+    .map-overlay-br {
+      position: absolute; bottom: 8px; right: 8px;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 3px; pointer-events: none;
+    }
+    .map-tag {
+      font-family: var(--MONO); font-size: 8px; letter-spacing: .12em;
+      color: rgba(218,255,74,.35); background: rgba(3,5,0,.72);
+      padding: 1px 5px; text-transform: uppercase;
+    }
+    .map-tag.hi { color: rgba(218,255,74,.65); }
 
     /* ── CONSOLE VIEW ─────────────────────────────────────────── */
     .console-view-body {
@@ -822,68 +916,136 @@
 
   <!-- ── VIEW: MAPS ─────────────────────────────────────────────── -->
   <div class="view" id="view-maps">
-    <div class="maps-body">
-      <!-- Sidebar -->
-      <div class="maps-sidebar">
-        <div>
-          <div class="maps-section-lbl">AIRSPACE ZONES</div>
-          <div class="az-rows" style="margin-top:6px">
-            <div class="az-row">
-              <span class="az-id">IRQ-1</span>
-              <span class="az-name">KARBALA</span>
-              <span class="az-status restricted">RESTRICTED</span>
-            </div>
-            <div class="az-row">
-              <span class="az-id">IRQ-2</span>
-              <span class="az-name">MOSUL</span>
-              <span class="az-status closed">CLOSED</span>
-            </div>
-            <div class="az-row">
-              <span class="az-id">YEM-1</span>
-              <span class="az-name">SANAA</span>
-              <span class="az-status contested">CONTESTED</span>
-            </div>
-            <div class="az-row">
-              <span class="az-id">SYR-1</span>
-              <span class="az-name">ALEPPO</span>
-              <span class="az-status monitor">MONITOR</span>
-            </div>
-            <div class="az-row">
-              <span class="az-id">IRN-1</span>
-              <span class="az-name">TEHRAN</span>
-              <span class="az-status caution">CAUTION</span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="maps-section-lbl">ACTIVE TRAJECTORIES</div>
-          <div class="trj-rows" style="margin-top:6px">
-            <div class="trj-row">
-              <span class="trj-id">TRJ-001</span>
-              <span class="trj-type">SCUD-B</span>
-              <span class="trj-route">IRAN→IRAQ</span>
-              <span class="trj-st active">↑ ACTIVE</span>
-            </div>
-            <div class="trj-row">
-              <span class="trj-id">TRJ-002</span>
-              <span class="trj-type">DRONE</span>
-              <span class="trj-route">YEMEN→KSA</span>
-              <span class="trj-st active">↑ ACTIVE</span>
-            </div>
-            <div class="trj-row">
-              <span class="trj-id">TRJ-003</span>
-              <span class="trj-type">CRUISE</span>
-              <span class="trj-route">IRAQ→ISR</span>
-              <span class="trj-st pending">↑ PENDING</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="maps-body" style="flex-direction:column">
 
-      <!-- Map canvas -->
-      <div class="map-canvas-wrap">
-        <canvas id="cv-map"></canvas>
-      </div>
+      <!-- 3-column intel body -->
+      <div style="flex:1;min-height:0;display:flex">
+
+        <!-- LEFT COLUMN -->
+        <div class="mi-col left">
+
+          <div class="mi-panel" style="height:30%">
+            <div class="mi-panel-hdr">
+              <span class="mi-ph-title">KINETIC EVENTS // 72H</span>
+              <span class="mi-ph-status warn">⚠ 18</span>
+            </div>
+            <div class="mi-panel-body">
+              <div class="mi-tbl-wrap">
+                <div class="mi-tbl-row"><span class="mi-tr-lbl">IRAQ</span><div class="mi-tr-bar-wrap"><div class="mi-tr-bar hi" style="width:100%"></div></div><span class="mi-tr-val">12</span></div>
+                <div class="mi-tbl-row"><span class="mi-tr-lbl">IRAN</span><div class="mi-tr-bar-wrap"><div class="mi-tr-bar am" style="width:75%"></div></div><span class="mi-tr-val">9</span></div>
+                <div class="mi-tbl-row"><span class="mi-tr-lbl">YEMEN</span><div class="mi-tr-bar-wrap"><div class="mi-tr-bar" style="width:67%"></div></div><span class="mi-tr-val">8</span></div>
+                <div class="mi-tbl-row"><span class="mi-tr-lbl">SAUDI ARABIA</span><div class="mi-tr-bar-wrap"><div class="mi-tr-bar" style="width:58%"></div></div><span class="mi-tr-val">7</span></div>
+                <div class="mi-tbl-row"><span class="mi-tr-lbl">UAE</span><div class="mi-tr-bar-wrap"><div class="mi-tr-bar" style="width:50%"></div></div><span class="mi-tr-val">6</span></div>
+                <div class="mi-tbl-row"><span class="mi-tr-lbl">SYRIA</span><div class="mi-tr-bar-wrap"><div class="mi-tr-bar" style="width:25%"></div></div><span class="mi-tr-val">3</span></div>
+                <div class="mi-tbl-row"><span class="mi-tr-lbl">KUWAIT</span><div class="mi-tr-bar-wrap"><div class="mi-tr-bar" style="width:17%"></div></div><span class="mi-tr-val">2</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mi-panel" style="height:28%">
+            <div class="mi-panel-hdr">
+              <span class="mi-ph-title">FLASH INTEL // 0347Z</span>
+              <span class="mi-ph-status live">● LIVE</span>
+            </div>
+            <div class="mi-panel-body">
+              <div class="mi-feed-wrap">
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text hi">DATE: 2026-03-27 // 0347Z</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text warn">AIRSTRIKE [IRQ]: TGT CONFIRMED</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text">DRONE OPS [YEM]: 3 ACTIVE</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text">MISSILE TRACK [IRN]: MONITOR</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text">CRED AVG: 68% · SRC: 5</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text">MULTI-SRC CORROBORATION: 14</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mi-panel">
+            <div class="mi-panel-hdr">
+              <span class="mi-ph-title">SIGNAL TIMELINE // 14D</span>
+              <span class="mi-ph-status">TREND ↑</span>
+            </div>
+            <div class="mi-panel-body"><canvas id="cv-map-signal"></canvas></div>
+          </div>
+
+        </div><!-- /mi-col left -->
+
+        <!-- CENTER MAP -->
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+          <div class="map-canvas-wrap" style="flex:1">
+            <canvas id="cv-map"></canvas>
+            <div class="map-overlay-tl">
+              <div class="map-tag hi">GULF THEATRE · HD-87 · ISR</div>
+              <div class="map-tag">ACTIVE INCIDENTS: 47</div>
+              <div class="map-tag">TRAJECTORIES: 3 TRACKED</div>
+            </div>
+            <div class="map-overlay-br">
+              <div class="map-tag">SIGINT COVERAGE: 94%</div>
+              <div class="map-tag">REFRESH: 0347Z</div>
+            </div>
+          </div>
+          <!-- Stat strip -->
+          <div class="mi-stat-strip">
+            <div class="mi-stat-cell"><span class="mi-sc-val">47</span><span class="mi-sc-lbl">TOTAL</span></div>
+            <div class="mi-stat-cell"><span class="mi-sc-val">18</span><span class="mi-sc-lbl">KINETIC</span></div>
+            <div class="mi-stat-cell"><span class="mi-sc-val">68<span style="font-size:9px;color:rgba(218,255,74,.38)">%</span></span><span class="mi-sc-lbl">CRED AVG</span></div>
+            <div class="mi-stat-cell"><span class="mi-sc-val">5</span><span class="mi-sc-lbl">SRC LIVE</span></div>
+            <div class="mi-stat-cell"><span class="mi-sc-val">3</span><span class="mi-sc-lbl">TRAJECT</span></div>
+            <div class="mi-stat-cell"><span class="mi-sc-val" style="color:rgba(255,152,20,.82)">HIGH</span><span class="mi-sc-lbl">THREAT</span></div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="mi-col right">
+
+          <div class="mi-panel" style="height:28%">
+            <div class="mi-panel-hdr">
+              <span class="mi-ph-title">SOURCE MATRIX</span>
+              <span class="mi-ph-status live">● 5 LIVE</span>
+            </div>
+            <div class="mi-panel-body">
+              <div class="mi-mx-rows">
+                <div class="mi-mx-row"><span class="mi-mx-src">GOVT FEED</span><div class="mi-mx-dots"><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div></div><span class="mi-mx-cnt">8</span></div>
+                <div class="mi-mx-row"><span class="mi-mx-src">NEWS WIRE</span><div class="mi-mx-dots"><div class="mi-mx-dot on"></div><div class="mi-mx-dot on"></div><div class="mi-mx-dot on"></div><div class="mi-mx-dot on"></div><div class="mi-mx-dot"></div></div><span class="mi-mx-cnt">19</span></div>
+                <div class="mi-mx-row"><span class="mi-mx-src">SIGINT</span><div class="mi-mx-dots"><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div></div><span class="mi-mx-cnt">5</span></div>
+                <div class="mi-mx-row"><span class="mi-mx-src">SOC/CHAT</span><div class="mi-mx-dots"><div class="mi-mx-dot on"></div><div class="mi-mx-dot on"></div><div class="mi-mx-dot"></div><div class="mi-mx-dot"></div><div class="mi-mx-dot"></div></div><span class="mi-mx-cnt">11</span></div>
+                <div class="mi-mx-row"><span class="mi-mx-src">COMMERCIAL</span><div class="mi-mx-dots"><div class="mi-mx-dot on"></div><div class="mi-mx-dot on"></div><div class="mi-mx-dot on"></div><div class="mi-mx-dot"></div><div class="mi-mx-dot"></div></div><span class="mi-mx-cnt">9</span></div>
+                <div class="mi-mx-row"><span class="mi-mx-src">DRONE/ISR</span><div class="mi-mx-dots"><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot hi"></div><div class="mi-mx-dot"></div></div><span class="mi-mx-cnt">6</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mi-panel" style="height:28%">
+            <div class="mi-panel-hdr">
+              <span class="mi-ph-title">ACTIVE TRAJECTORIES</span>
+              <span class="mi-ph-status warn">3 TRACKED</span>
+            </div>
+            <div class="mi-panel-body">
+              <div class="mi-trj-rows">
+                <div class="mi-trj-row"><span class="mi-trj-id">TRJ-001</span><span class="mi-trj-type">SCUD-B</span><span class="mi-trj-route">IRN→IRQ</span><span class="mi-trj-st active">↑ ACTIVE</span></div>
+                <div class="mi-trj-row"><span class="mi-trj-id">TRJ-002</span><span class="mi-trj-type">DRONE</span><span class="mi-trj-route">YEM→KSA</span><span class="mi-trj-st active">↑ ACTIVE</span></div>
+                <div class="mi-trj-row"><span class="mi-trj-id">TRJ-003</span><span class="mi-trj-type">CRUISE</span><span class="mi-trj-route">IRQ→ISR</span><span class="mi-trj-st pending">↑ PEND</span></div>
+              </div>
+              <div style="padding:5px 6px;border-top:1px solid rgba(218,255,74,.06)">
+                <div class="mi-feed-item" style="margin-bottom:3px"><span class="mi-fi-marker">▸</span><span class="mi-fi-text">AIRSPACE ZONES: 5 ACTIVE</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text warn">IRQ-1 KARBALA: RESTRICTED</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text warn">IRQ-2 MOSUL: CLOSED</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text">YEM-1 SANAA: CONTESTED</span></div>
+                <div class="mi-feed-item"><span class="mi-fi-marker">▸</span><span class="mi-fi-text">IRN-1 TEHRAN: CAUTION</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mi-panel">
+            <div class="mi-panel-hdr">
+              <span class="mi-ph-title">ACTIVITY DETECTION // SIGINT</span>
+              <span class="mi-ph-status live">● LIVE</span>
+            </div>
+            <div class="mi-panel-body"><canvas id="cv-map-activity"></canvas></div>
+          </div>
+
+        </div><!-- /mi-col right -->
+
+      </div><!-- /3-col -->
     </div>
   </div><!-- /view-maps -->
 
@@ -1420,155 +1582,232 @@ function fitCV(cv) {
   ctx.textAlign = 'left'
 })()
 
-// ── MAPS: MAP CANVAS ───────────────────────────────────────────────
+// ── MAPS: MAP CANVAS + SIDE PANELS ────────────────────────────────
 let mapInitialized = false
 function initMapCanvas() {
   if (mapInitialized) return
   mapInitialized = true
-  const cv = document.getElementById('cv-map')
-  if (!cv) return
-  const ctx = fitCV(cv)
-  const CW = cv.width, CH = cv.height
 
-  // Dark BG
-  ctx.fillStyle = 'rgba(3,5,0,.98)'; ctx.fillRect(0, 0, CW, CH)
+  // ── Main theatre map ──
+  ;(function() {
+    const cv = document.getElementById('cv-map')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
 
-  // Grid lines
-  for (let x = 0; x < CW; x += 80) {
-    ctx.strokeStyle = GA(0.03); ctx.lineWidth = 0.5
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, CH); ctx.stroke()
-  }
-  for (let y = 0; y < CH; y += 80) {
-    ctx.strokeStyle = GA(0.03); ctx.lineWidth = 0.5
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(CW, y); ctx.stroke()
-  }
+    ctx.fillStyle = '#050800'; ctx.fillRect(0, 0, CW, CH)
 
-  // Rough Middle East coastline/borders as simple polygons
-  // Coordinate space: map region approx 24°N-38°N lat, 34°E-60°E lon
-  function toXY(lon, lat) {
-    const lonMin = 34, lonMax = 61, latMin = 12, latMax = 39
-    return [
-      (lon - lonMin) / (lonMax - lonMin) * CW,
-      (1 - (lat - latMin) / (latMax - latMin)) * CH
+    const LON_MIN = 34, LON_MAX = 62, LAT_MIN = 11, LAT_MAX = 39
+    function toXY(lon, lat) {
+      return [
+        (lon - LON_MIN) / (LON_MAX - LON_MIN) * CW,
+        (1 - (lat - LAT_MIN) / (LAT_MAX - LAT_MIN)) * CH
+      ]
+    }
+
+    // Coordinate grid
+    for (let lon = 35; lon <= 62; lon += 5) {
+      const [x] = toXY(lon, LAT_MIN)
+      ctx.strokeStyle = GA(0.04); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, CH); ctx.stroke()
+      ctx.fillStyle = GA(0.14); ctx.font = `7px ${MF}`; ctx.textAlign = 'center'
+      ctx.fillText(lon + '\u00b0E', x, CH - 4)
+    }
+    for (let lat = 15; lat <= 38; lat += 5) {
+      const [, y] = toXY(LON_MIN, lat)
+      ctx.strokeStyle = GA(0.04); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(CW, y); ctx.stroke()
+      ctx.fillStyle = GA(0.14); ctx.font = `7px ${MF}`; ctx.textAlign = 'left'
+      ctx.fillText(lat + '\u00b0N', 3, y - 2)
+    }
+    ctx.textAlign = 'left'
+
+    // Countries
+    const countries = [
+      { name:'IRAQ',         pts:[[38.8,37.1],[42,37.4],[48.5,37.5],[48.5,33],[47,30],[44,29.3],[40,31.2],[38.8,33.4]] },
+      { name:'IRAN',         pts:[[44,38],[48,38],[54,37.5],[60,36],[60,25],[56.5,25],[54,26],[51,24.4],[48,26],[44,29.3],[45,33],[44,38]] },
+      { name:'SAUDI ARABIA', pts:[[36.5,29],[42,29],[47,30],[51,24],[55,22],[55,17],[43,16],[37,21],[36.5,29]] },
+      { name:'YEMEN',        pts:[[43,16],[55,17],[55,13],[50,12],[45,12],[42,14],[43,16]] },
+      { name:'SYRIA',        pts:[[35.7,37.1],[38.8,37.1],[42,37.4],[42,33],[38,33],[36,34.5],[35.7,37.1]] },
+      { name:'UAE',          pts:[[51,24.4],[55.8,25.8],[56.4,24.5],[54,23],[51,24.4]] },
+      { name:'OMAN',         pts:[[55.8,25.8],[59,22],[58,20],[55,22],[55.8,25.8]] },
+      { name:'KUWAIT',       pts:[[46.5,30.1],[48,30.1],[48,28.5],[46.5,28.5],[46.5,30.1]] },
     ]
-  }
+    countries.forEach(c => {
+      ctx.beginPath()
+      c.pts.forEach(([lon, lat], i) => {
+        const [x, y] = toXY(lon, lat)
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+      })
+      ctx.closePath()
+      ctx.fillStyle = 'rgba(15,22,8,.72)'; ctx.fill()
+      ctx.strokeStyle = GA(0.18); ctx.lineWidth = 0.7; ctx.stroke()
+    })
 
-  function drawPoly(pts, stroke, fill) {
+    // Gulf water fill
+    ctx.fillStyle = 'rgba(10,28,18,.50)'
     ctx.beginPath()
-    pts.forEach(([lon, lat], i) => {
+    ;[[48,26],[51,24.4],[56,24],[58,23],[60,22],[60,20],[55,20],[50,22],[47,24],[46,26],[48,26]].forEach(([lon, lat], i) => {
       const [x, y] = toXY(lon, lat)
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
     })
-    ctx.closePath()
-    if (fill) { ctx.fillStyle = fill; ctx.fill() }
-    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 0.8; ctx.stroke() }
-  }
-
-  // Country fills + outlines (rough approximations)
-  const countries = [
-    { name: 'IRAQ',         pts: [[38.8,37.1],[42,37.4],[48.5,37.5],[48.5,33],[47,30],[44,29.3],[40,31.2],[38.8,33.4]] },
-    { name: 'IRAN',         pts: [[44,38],[48,38],[54,37.5],[60,36],[60,25],[56.5,25],[54,26],[51,24.4],[48,26],[44,29.3],[45,33],[44,38]] },
-    { name: 'SAUDI ARABIA', pts: [[36.5,29],[42,29],[47,30],[51,24],[55,22],[55,17],[43,16],[37,21],[36.5,29]] },
-    { name: 'YEMEN',        pts: [[43,16],[55,17],[55,13],[50,12],[45,12],[42,14],[43,16]] },
-    { name: 'SYRIA',        pts: [[35.7,37.1],[38.8,37.1],[42,37.4],[42,33],[38,33],[36,34.5],[35.7,37.1]] },
-  ]
-
-  countries.forEach(c => {
-    drawPoly(c.pts, GA(0.15), GA(0.04))
-  })
-
-  // Country labels
-  const countryLabels = [
-    { name: 'IRAQ',         lon: 43.5, lat: 33.5 },
-    { name: 'IRAN',         lon: 53,   lat: 32   },
-    { name: 'SAUDI\nARABIA',lon: 46,   lat: 24   },
-    { name: 'YEMEN',        lon: 48,   lat: 14.5 },
-    { name: 'SYRIA',        lon: 38,   lat: 35.5 },
-  ]
-  ctx.fillStyle = GA(0.45); ctx.font = `6px ${HF}`; ctx.textAlign = 'center'
-  countryLabels.forEach(c => {
-    const [x, y] = toXY(c.lon, c.lat)
-    const lines = c.name.split('\n')
-    lines.forEach((l, i) => ctx.fillText(l, x, y + i * 8))
-  })
-  ctx.textAlign = 'left'
-
-  // Airspace zone rectangles (dashed amber)
-  const zones = [
-    { id: 'IRQ-1', lon1: 43, lat1: 33, lon2: 45.5, lat2: 31 },
-    { id: 'IRQ-2', lon1: 41.5, lat1: 37, lon2: 43.5, lat2: 35.5 },
-    { id: 'YEM-1', lon1: 44.5, lat1: 15.5, lon2: 46.5, lat2: 14 },
-    { id: 'SYR-1', lon1: 36.5, lat1: 36.5, lon2: 38.5, lat2: 35.5 },
-  ]
-  zones.forEach(z => {
-    const [x1, y1] = toXY(z.lon1, z.lat1)
-    const [x2, y2] = toXY(z.lon2, z.lat2)
-    ctx.strokeStyle = AM(0.30); ctx.lineWidth = 1
-    ctx.setLineDash([4, 3])
-    ctx.strokeRect(Math.min(x1,x2), Math.min(y1,y2), Math.abs(x2-x1), Math.abs(y2-y1))
-    ctx.setLineDash([])
-    ctx.fillStyle = AM(0.30); ctx.font = `5px ${MF}`
-    ctx.fillText(z.id, Math.min(x1,x2) + 2, Math.min(y1,y2) - 2)
-  })
-
-  // Tehran range rings
-  const [tX, tY] = toXY(51.4, 35.7)
-  const kmPerLon = CW / (61 - 34) / 111
-  ;[200, 500, 1000].forEach(km => {
-    const r = km * kmPerLon
-    ctx.strokeStyle = GA(0.08); ctx.lineWidth = 0.75
-    ctx.setLineDash([3, 4])
-    ctx.beginPath(); ctx.arc(tX, tY, r, 0, Math.PI * 2); ctx.stroke()
-    ctx.setLineDash([])
-    ctx.fillStyle = GA(0.22); ctx.font = `5px ${MF}`
-    ctx.fillText(km + 'km', tX + r + 2, tY)
-  })
-
-  // Trajectories
-  const trajectories = [
-    { from: [51.4, 35.7], to: [44.2, 33.5], label: 'TRJ-001 · SCUD-B · ACTIVE', color: AM(0.72) },
-    { from: [44.8, 15.0], to: [45.5, 24.5], label: 'TRJ-002 · DRONE · ACTIVE',  color: AM(0.60) },
-    { from: [44.2, 33.5], to: [35.2, 31.8], label: 'TRJ-003 · CRUISE · PENDING', color: GA(0.45) },
-  ]
-
-  trajectories.forEach(trj => {
-    const [ox, oy] = toXY(trj.from[0], trj.from[1])
-    const [dx, dy] = toXY(trj.to[0],   trj.to[1])
-    // bezier control point (arc upward)
-    const mx = (ox + dx) / 2, my = Math.min(oy, dy) - Math.abs(dy - oy) * 0.6
-
-    // origin dot
-    ctx.fillStyle = trj.color; ctx.beginPath(); ctx.arc(ox, oy, 4, 0, Math.PI * 2); ctx.fill()
-    // arc
-    ctx.strokeStyle = trj.color; ctx.lineWidth = 1.2
-    ctx.setLineDash([5, 3])
-    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.quadraticCurveTo(mx, my, dx, dy); ctx.stroke()
-    ctx.setLineDash([])
-    // arrowhead at dest
-    const angle = Math.atan2(dy - my, dx - mx)
-    const alen = 7
-    ctx.fillStyle = trj.color
-    ctx.beginPath()
-    ctx.moveTo(dx, dy)
-    ctx.lineTo(dx - alen * Math.cos(angle - 0.4), dy - alen * Math.sin(angle - 0.4))
-    ctx.lineTo(dx - alen * Math.cos(angle + 0.4), dy - alen * Math.sin(angle + 0.4))
     ctx.closePath(); ctx.fill()
-    // dest dot
-    ctx.beginPath(); ctx.arc(dx, dy, 3, 0, Math.PI * 2); ctx.fill()
-    // midpoint label with tick
-    const lx = mx + 4, ly = my - 4
-    ctx.strokeStyle = trj.color; ctx.lineWidth = 0.75
-    ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(lx, ly - 3); ctx.stroke()
-    ctx.fillStyle = trj.color; ctx.font = `5px ${MF}`
-    ctx.fillText(trj.label, lx + 2, ly - 2)
-  })
 
-  // Label
-  ctx.fillStyle = GA(0.35); ctx.font = `5px ${MF}`; ctx.textAlign = 'right'
-  ctx.fillText('THEATRE MAP · GULF REGION', CW - 8, 14)
-  ctx.textAlign = 'left'
+    // Country labels
+    const labels = [['IRAQ',43.5,33.5],['IRAN',52,31],['KSA',44,25],['YEMEN',48,14.5],['SYRIA',38.5,35.5],['UAE',54,24.3],['KUWAIT',47.3,29.3]]
+    ctx.fillStyle = GA(0.35); ctx.font = `7px ${MF}`; ctx.textAlign = 'center'
+    labels.forEach(([n, lon, lat]) => { const [x, y] = toXY(lon, lat); ctx.fillText(n, x, y) })
+    ctx.textAlign = 'left'
+
+    // Tehran range rings
+    const [tX, tY] = toXY(51.4, 35.7)
+    const pxPerKm = CW / (LON_MAX - LON_MIN) / 90
+    ;[300, 600, 1000, 1500].forEach(km => {
+      ctx.strokeStyle = GA(km === 1000 ? 0.12 : 0.06)
+      ctx.lineWidth = km === 1000 ? 1 : 0.5
+      ctx.setLineDash([3, 4])
+      ctx.beginPath(); ctx.arc(tX, tY, km * pxPerKm, 0, Math.PI * 2); ctx.stroke()
+      ctx.setLineDash([])
+      if (km <= 600) { ctx.fillStyle = GA(0.22); ctx.font = `6px ${MF}`; ctx.fillText(km + 'km', tX + km * pxPerKm + 2, tY) }
+    })
+
+    // Incident nodes + network lines
+    const incidents = [
+      { lon:43.5, lat:33.2, r:5, type:'kinetic', label:'IRQ-01' },
+      { lon:44.1, lat:33.8, r:4, type:'kinetic', label:'IRQ-02' },
+      { lon:46.5, lat:34.1, r:3, type:'sigint',  label:'IRQ-03' },
+      { lon:51.4, lat:35.7, r:5, type:'origin',  label:'TEHRAN' },
+      { lon:44.8, lat:15.0, r:4, type:'kinetic', label:'YEM-01' },
+      { lon:46.0, lat:14.5, r:3, type:'kinetic', label:'YEM-02' },
+      { lon:39.0, lat:35.0, r:3, type:'sigint',  label:'SYR-01' },
+      { lon:55.2, lat:25.3, r:3, type:'monitor', label:'UAE-01' },
+      { lon:48.5, lat:29.8, r:3, type:'monitor', label:'KWT-01' },
+    ]
+    const edges = [[3,0],[3,1],[3,6],[0,1],[0,2],[4,5]]
+    edges.forEach(([ai, bi]) => {
+      const [ax, ay] = toXY(incidents[ai].lon, incidents[ai].lat)
+      const [bx, by] = toXY(incidents[bi].lon, incidents[bi].lat)
+      ctx.strokeStyle = incidents[ai].type === 'origin' ? AM(0.18) : GA(0.08)
+      ctx.lineWidth = 0.6; ctx.setLineDash([3, 4])
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke()
+      ctx.setLineDash([])
+    })
+    incidents.forEach(inc => {
+      const [x, y] = toXY(inc.lon, inc.lat)
+      const col = inc.type === 'origin' ? AM(0.90) : inc.type === 'kinetic' ? GA(0.82) : inc.type === 'sigint' ? GA(0.50) : GA(0.32)
+      const rc  = inc.type === 'origin' ? AM(0.22) : inc.type === 'kinetic' ? GA(0.20) : GA(0.10)
+      ctx.strokeStyle = rc; ctx.lineWidth = 0.75
+      ctx.beginPath(); ctx.arc(x, y, inc.r + 4, 0, Math.PI * 2); ctx.stroke()
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, inc.r, 0, Math.PI * 2); ctx.fill()
+      ctx.fillStyle = inc.type === 'origin' ? AM(0.65) : GA(0.38)
+      ctx.font = `6px ${MF}`; ctx.textAlign = 'left'
+      ctx.fillText(inc.label, x + inc.r + 4, y + 2)
+    })
+    ctx.textAlign = 'left'
+
+    // Trajectories
+    const trajectories = [
+      { from:[51.4,35.7], to:[44.2,33.5], label:'TRJ-001 SCUD-B', col:AM(0.72) },
+      { from:[44.8,15.0], to:[45.5,24.5], label:'TRJ-002 DRONE',  col:GA(0.52) },
+      { from:[44.2,33.5], to:[35.8,31.8], label:'TRJ-003 CRUISE', col:GA(0.38) },
+    ]
+    trajectories.forEach(trj => {
+      const [ox, oy] = toXY(trj.from[0], trj.from[1])
+      const [dx, dy] = toXY(trj.to[0],   trj.to[1])
+      const mx = (ox + dx) / 2, my = Math.min(oy, dy) - Math.abs(dy - oy) * 0.55
+      ctx.strokeStyle = trj.col; ctx.lineWidth = 1; ctx.setLineDash([4, 3])
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.quadraticCurveTo(mx, my, dx, dy); ctx.stroke()
+      ctx.setLineDash([])
+      const ang = Math.atan2(dy - my, dx - mx)
+      ctx.fillStyle = trj.col; ctx.beginPath()
+      ctx.moveTo(dx, dy)
+      ctx.lineTo(dx - 7 * Math.cos(ang - 0.35), dy - 7 * Math.sin(ang - 0.35))
+      ctx.lineTo(dx - 7 * Math.cos(ang + 0.35), dy - 7 * Math.sin(ang + 0.35))
+      ctx.closePath(); ctx.fill()
+      ctx.fillStyle = trj.col; ctx.font = `6px ${MF}`
+      ctx.fillText(trj.label, mx + 3, my - 4)
+    })
+
+    // Airspace zones
+    ;[{ id:'IRQ-AZ1', lon1:43,lat1:33,lon2:45.5,lat2:31 },
+      { id:'YEM-AZ1', lon1:44.5,lat1:15.5,lon2:46.5,lat2:14 }].forEach(z => {
+      const [x1, y1] = toXY(z.lon1, z.lat1)
+      const [x2, y2] = toXY(z.lon2, z.lat2)
+      ctx.strokeStyle = AM(0.28); ctx.lineWidth = 0.75; ctx.setLineDash([3, 3])
+      ctx.strokeRect(Math.min(x1,x2), Math.min(y1,y2), Math.abs(x2-x1), Math.abs(y2-y1))
+      ctx.setLineDash([])
+      ctx.fillStyle = AM(0.28); ctx.font = `6px ${MF}`
+      ctx.fillText(z.id, Math.min(x1,x2) + 2, Math.min(y1,y2) - 2)
+    })
+
+    ctx.fillStyle = GA(0.20); ctx.font = `7px ${MF}`; ctx.textAlign = 'right'
+    ctx.fillText('THEATRE MAP \u00b7 GULF REGION \u00b7 HADAL INTELLIGENCE CORE', CW - 8, CH - 6)
+    ctx.textAlign = 'left'
+  })()
+
+  // ── Signal timeline (left col) ──
+  ;(function() {
+    const cv = document.getElementById('cv-map-signal')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    let tick = 0
+    const bars = [2,4,1,3,6,8,5,4,7,9,6,8,11,7]
+    const kinetic = [1,2,1,1,3,4,2,2,3,5,3,4,6,4]
+    const maxB = Math.max(...bars)
+    function draw() {
+      ctx.clearRect(0, 0, CW, CH)
+      const TOP = 14, BOT = 10
+      const bw = Math.max(1, Math.floor((CW - 14) / bars.length) - 1)
+      const usH = CH - TOP - BOT
+      ctx.fillStyle = GA(0.22); ctx.font = `6px ${MF}`
+      ctx.fillText('EVENTS \u00b7 14D', 4, 9)
+      bars.forEach((v, i) => {
+        const x = 7 + i * (bw + 1), bh = (v / maxB) * usH
+        ctx.fillStyle = GA(v > 8 ? 0.38 : 0.16)
+        ctx.fillRect(x, CH - BOT - bh, bw, bh)
+      })
+      ctx.strokeStyle = AM(0.70); ctx.lineWidth = 1.2; ctx.beginPath()
+      kinetic.forEach((v, i) => {
+        const x = 7 + i * (bw + 1) + bw / 2, y = CH - BOT - (v / maxB) * usH
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
+      })
+      ctx.stroke()
+      const scanX = ((tick * 0.35) % (CW - 14)) + 7
+      ctx.strokeStyle = GA(0.12); ctx.lineWidth = 0.5
+      ctx.beginPath(); ctx.moveTo(scanX, TOP); ctx.lineTo(scanX, CH - BOT); ctx.stroke()
+      tick++
+      requestAnimationFrame(draw)
+    }
+    draw()
+  })()
+
+  // ── Activity spectrogram (right col) ──
+  ;(function() {
+    const cv = document.getElementById('cv-map-activity')
+    if (!cv) return
+    const ctx = fitCV(cv)
+    const CW = cv.width, CH = cv.height
+    let tick = 0
+    const ROWS = 14, COLS = 24
+    function draw() {
+      ctx.clearRect(0, 0, CW, CH)
+      ctx.fillStyle = GA(0.20); ctx.font = `6px ${MF}`
+      ctx.fillText('FREQ SPECTRUM', 4, 9)
+      const cw = (CW - 6) / COLS, rh = (CH - 13) / ROWS
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const val = Math.max(0, Math.min(1, Math.sin(c * 0.4 + r * 0.8 + tick * 0.06) * 0.35 + 0.35 + Math.random() * 0.10))
+          ctx.fillStyle = val > 0.62 ? AM(val * 0.65) : GA(val * 0.55)
+          ctx.fillRect(3 + c * cw, 12 + r * rh, cw - 0.5, rh - 0.5)
+        }
+      }
+      tick++
+      requestAnimationFrame(draw)
+    }
+    draw()
+  })()
 }
-
 // ── CONSOLE / WORKBENCH CANVASES ───────────────────────────────────
 const _canvasInited = {}
 function initConsoleCanvases(sfx) {
